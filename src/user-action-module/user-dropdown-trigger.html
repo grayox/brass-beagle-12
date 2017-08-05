@@ -1,0 +1,69 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="user-dropdown-trigger">
+  <template>
+    <style>
+			
+			#logoandname {
+				display:block;
+        margin-bottom:20px;
+			}
+			
+			#logoandname:hover {
+				cursor: pointer;
+			}
+			
+			#logoandname:hover #productname {
+				color: var(--app-primary-color);
+				opacity: 1.0;
+			}
+
+      #logo {
+        display: block;
+        width: 70px;
+        height: 70px;
+        margin: 24px auto;
+				/* Edit */
+				border-radius: 50%;
+				/* endEdit */
+		  }
+			
+      #productname {
+				opacity: 0.6;
+        color: white;
+				font-size: 16px;
+        text-align: center;
+        /** /
+				font-weight: 400;
+        font: 400 16px 'Open Sans', Verdana, sans-serif;
+				text-transform: uppercase;
+        letter-spacing: 2px;
+        /**/
+      }
+	
+		</style>
+
+			
+		<div id="logoandname">
+			<img id="logo" src="//uinames.com/api/photos/female/15.jpg">
+			<div id="productname">
+				Donna Morgan
+				<iron-icon icon="vaadin:angle-down" class="drop-arrow"></iron-icon>
+			</div>
+		</div>
+
+  </template>
+
+  <script>
+    class UserDropdownTrigger extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-dropdown-trigger'; }
+
+			constructor() {
+				super();
+			}
+	  
+		}
+
+    window.customElements.define(UserDropdownTrigger.is, UserDropdownTrigger);
+  </script>
+</dom-module>

@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- >
+<link rel="import" href="../redux-store/redux-store.html">
+
+<link rel="import" href="../custom-behaviors/user-setter-behavior.html">
+
+<link rel="import" href="../custom-behaviors/dialog-behavior.html">
+<link rel="import" href="toolbar-dialog-behavior.html">
+<link rel="import" href="toolbar-dialog-styles.html">
+<link rel="import" href="../custom-styles/paper-listbox-styles.html">
+<link rel="import" href="../custom-styles/editor-styles.html">
+<!--->
+<link rel="import" href="../custom-elements/category-menu.html">
+<link rel="import" href="../custom-elements/form-input-zip.html">
+
+<dom-module id="user-profile">
+  <template>
+		<style></style>
+
+		
+			<div class="form">
+				<form is="iron-form" id="form">
+					<iron-a11y-keys keys="enter" on-keys-pressed="save"></iron-a11y-keys>							
+	        <div class="layout vertical xhorizontal xwide">
+						<!---->
+						<form-input-zip zip-code="{{item.zip}}"
+														zip-state="{{item.state}}"
+														zip-county="{{item.county}}"
+														zip-city="{{item.city}}"
+														>
+						</form-input-zip>
+						<!---- >
+	        	<paper-input id="create-zip"
+	        							 name="zip"
+	        							 xis="iron-input"
+	        							 xprevent-invalid-input
+	        							 xallowed-pattern="[0-9]"
+	        							 class="align-left xwide flex"
+	        							 label="Zip Code"
+	        							 value="{{item.zip}}"
+	        							 xtype="number"
+	        							 type="string"
+	        							 xmin="1000"
+	        							 xmax="99"
+	        							 step="1000"
+	        							 xlength="55"
+	        							 required
+	        							 xmaxlength="2"
+	        							 xtype="text"
+	        							 xpattern="\d*"
+	        							 disabled$="[[!isNew]]"
+	        							 >
+	        		<!---- >
+	        		<div prefix>$</div>
+	        		<!---- >
+	        		<div suffix>USD</div>
+	        		<!---- >
+	        	</paper-input>
+            <!---- >
+	        	<paper-dropdown-menu>
+                   <paper-listbox class="dropdown-content">
+                     <paper-item>Home</paper-item>
+                     <paper-item>Mortgage</paper-item>
+                     <paper-item>Insurance</paper-item>
+                     <paper-item>Financial</paper-item>
+                   </paper-listbox>
+	        	</paper-dropdown-menu>
+            <!---->
+	        	<category-menu class="wide"
+													 category="{{item.category}}"></category-menu>
+            <!---- >
+            <paper-input id="create-zip"
+            						 name="zip"
+            						 xis="iron-input"
+            						 xprevent-invalid-input
+            						 xallowed-pattern="[0-9]"
+            						 class="align-left wide"
+            						 label="Zip Code"
+            						 value="{{item.zip}}"
+            						 xtype="number"
+            						 type="string"
+            						 xmin="1000"
+            						 xmax="99"
+            						 step="1000"
+            						 xlength="55"
+            						 required
+            						 xmaxlength="2"
+            						 xtype="text"
+            						 xpattern="\d*"
+            						 disabled$="[[!isNew]]"
+            						 >
+            	<!---- >
+            	<div prefix>$</div>
+            	<!---- >
+            	<div suffix>USD</div>
+            	<!--- ->
+            </paper-input>
+            <!---->
+					</div>
+				
+				</form>
+			</div>
+
+
+		
+		
+  </template>
+
+  <script>
+    class UserProfile extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-profile'; }
+
+      static get properties() {
+        /** /
+        return {
+					selected: {
+						type: Number,
+						value: 0,
+						//observer: '_selectedChanged',
+					}
+        };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+    }
+
+    window.customElements.define(UserProfile.is, UserProfile);
+  </script>
+</dom-module>

@@ -1,0 +1,193 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+
+<dom-module id="user-dropdown-content">
+  <template>
+
+		<style>
+			/**/
+			paper-item {
+				cursor: pointer;
+				--paper-item-focused: {
+					background-color: red;
+				};
+				--paper-item-selected: {
+					background-color: red;
+				};
+			}
+			paper-item {
+				background-color: white;
+				font-weight: normal;
+				text-decoration-style: none;
+			}
+			paper-item:hover {
+				background-color: var(--app-primary-color);
+				color: white;
+			}
+			paper-menu {
+				--paper-menu-selected-item: {
+					background-color: white;
+					font-weight: normal;  
+				}
+				--paper-menu-focused-item: {
+					background-color: var(--app-primary-color);
+					color: white;
+				}
+			}
+			paper-listbox {
+				--paper-listbox-selected-item: {
+					background-color: white;
+					font-weight: normal;  
+				}
+				--paper-listbox-focused-item: {
+					background-color: var(--app-primary-color);
+					color: white;
+				}
+			}
+			/**/
+			hr {
+				opacity: 0.33;
+			}
+			/** /
+			.my-menu {
+				padding: 8px 0;
+				background: #fff;
+			}
+
+			.my-menu-item {
+				display: block;
+				padding: 8px 24px;
+				text-decoration: none;
+				color: #000;
+			}
+
+			.my-menu-item:hover {
+				background: #eee;
+			}
+			/**/
+		</style>
+
+		<!---->
+		<paper-listbox id="listbox"
+									 xselected="{{selected}}"
+									 xattr-for-selected="item-name"
+									 xfallback-selection="None"
+									 on-iron-select="_onIronSelect"
+									 >
+      <paper-item item-name="profile"    >Edit Profile</paper-item>
+      <paper-item item-name="preferences">Preferences</paper-item>
+			<hr />
+      <paper-item item-name="logout"     >Logout</paper-item>
+    </paper-listbox>
+		
+		<!---- >
+		<paper-listbox>
+			<paper-item on-tap="_handleTap" data-args="Edit Profile">Edit Profile</paper-item>
+			<paper-item on-tap="_handleTap" data-args="Preferences" >Preferences </paper-item>
+			<hr />
+			<paper-item on-tap="_handleTap" data-args="Logout"      >Logout      </paper-item>
+		</paper-listbox>
+		
+    <!---- >
+		<paper-listbox>
+			<a href="#" class="my-menu-item" on-tap="_show" data-args="Edit Profile">Edit Profile</a>
+			<a href="#" class="my-menu-item" on-tap="_show" data-args="Preferences" >Preferences </a>
+			<hr />
+			<a href="#" class="my-menu-item" on-tap="_show" data-args="Logout"      >Logout      </a>
+		</paper-listbox>
+		<!---->
+		
+  </template>
+
+  <script>
+    class UserDropdownContent extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-dropdown-content'; }
+
+      static get properties() {
+				/** /
+        return {
+					selected: {
+						type: Number,
+						//type: String,
+						//notify: true,
+						//observer: '_selectedChanged',
+					}
+        };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/** /
+      _handleTap(e) {
+				var a = e.target.getAttribute('data-args').split(',');
+				var s = a[0];
+				//console.log('s', s);
+				this.set('selected', s);
+        this.dispatchEvent(new CustomEvent(
+					'user-action-select', {
+						detail: {
+							selected: this.selected,
+						}
+					}
+				));
+				//this.set('selected', undefined);
+      }
+			/**/
+			
+			/** /
+			_selectedChanged(newValue, oldValue) {
+				console.log('newValue', newValue, 'oldValue', oldValue,);
+				if(!newValue) return;
+        this.dispatchEvent(new CustomEvent(
+					'user-action-select', {
+						detail: {
+							selected: newValue,
+						}
+					}
+				));
+				this.set('selected', null);
+			}
+			/**/
+			
+			_onIronSelect(e) {
+				//console.log('e', e);
+				/** /
+				// For selecting strings...
+				var a = e.path[0].getAttribute('attr-for-selected'); // 'item-name'
+				console.log('a', a);
+				var s = e.detail.item//.getAttribute(a); // 'profile', 'preferences', 'logout'
+				/**/
+				// For selecting numbers...
+				var l = this.$.listbox;
+				var s = l.selected; // 0, 1, 2 ...
+				/**/
+				//console.log('s', s);
+				var d = new CustomEvent(
+					'user-action-select', {
+						bubbles: true,
+						detail: {
+							selected: s,
+						},
+					}
+				);
+				this.dispatchEvent(d);
+				//console.log('d', d);
+				this.reset(l);
+			}
+			
+			reset(l) {
+				//var l = this.$.listbox;
+				l.selected = null;
+				l.focusedItem = null;
+			}
+			
+    }
+
+    window.customElements.define(UserDropdownContent.is, UserDropdownContent);
+  </script>
+</dom-module>

@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<dom-module id="user-preferences">
+  <template>
+		<style></style>
+		This is the user PREFERENCES
+  </template>
+
+  <script>
+    class UserPreferences extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-preferences'; }
+
+      static get properties() {
+				/** /
+        return {
+					selected: {
+						type: Number,
+						value: 0,
+						//observer: '_selectedChanged',
+					}
+        };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+    }
+
+    window.customElements.define(UserPreferences.is, UserPreferences);
+  </script>
+</dom-module>

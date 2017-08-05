@@ -1,0 +1,175 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="./bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---- >
+<link rel="import" href="../../bower_components/vaadin-context-menu/vaadin-context-menu.html">
+<!---->
+<link rel="import" href="/bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="user-dropdown-trigger.html">
+<link rel="import" href="user-dropdown-content.html">
+<link rel="import" href="user-dialog.html">
+<link rel="import" href="../app-head/dialog-account.html">
+<!---- >
+user-action-module
+  user-dialog
+ (user-dropdown)
+    user-dropdown-trigger
+    user-dropdown-content
+<!---->
+
+
+<!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
+<link rel="import" href="/bower_components/neon-animation/web-animations.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+
+<!-- Demos -- >
+paper-menu-button
+http://jsbin.com/colelepacu/1/edit?html,console,output
+http://jsbin.com/kadugokade/edit?html,console,output
+<!-- endDemos -->
+
+<dom-module id="user-action-module">
+  <template>
+		<style>
+			:host {
+        display: flex;
+        justify-content: center;
+				/** /
+				text-align: center;
+        align-items: center;
+        /**/
+			}
+			paper-menu-button {
+				--paper-menu-button: {
+					width: 100%;
+				}
+			}
+		</style>
+		
+	  <!---- >
+		<vaadin-context-menu selector="#selector" open-on="tap" close-on="none">
+			<slot name="menu"></slot>
+			<!---- >
+			<template>
+				<style></style>
+				<!---- >
+				<slot name="menu"></slot>
+				<!---- >
+        new slot syntax: https://www.polymer-project.org/2.0/docs/upgrade
+				<!---- >
+				<user-dropdown-content selected="{{selected}}"></user-dropdown-content>
+				<!---- >
+			</template>
+			<!---->
+			
+			<!---- >
+			<slot name="face"></slot>
+			<!---- >
+			<user-dropdown-trigger id="selector"></user-dropdown-trigger>
+			<!---- >
+			
+			You selected: "[[selected]]"		
+		</vaadin-context-menu>
+	  <!---->
+		
+		<paper-menu-button vertical-align="top"
+											 horizontal-align="left"
+											 vertical-offset="160"
+											 horizontal-offset="98"
+											 on-user-action-select="onUserActionSelect"
+											 >
+			<!---- >
+			<button slot="dropdown-trigger">Click</button>
+			<!---->
+			<slot name="trigger" slot="dropdown-trigger">
+				<!-- Default content (slot within a slot) -->
+				<user-dropdown-trigger></user-dropdown-trigger>
+			</slot>
+			<!---->
+			<slot name="content"  slot="dropdown-content">
+				<!-- Default content (slot within a slot) -->
+				<user-dropdown-content></user-dropdown-content>
+			</slot>
+			<!---->
+		</paper-menu-button>
+		
+		<!---- >
+		<user-dialog id="dialog"></user-dialog>
+		<!---->
+		<dialog-account id="dialog"></dialog-account>
+  </template>
+
+  <script>
+    class UserActionModule extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-action-module'; }
+
+      static get properties() {}
+			
+			constructor() {
+				super();
+			}
+			
+			/** /
+			ready() {
+        super.ready();
+        window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+			afterNextRender() {
+				this.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+			}
+			/**/
+			
+			onUserActionSelect(e) {
+				var d = this.$.dialog;
+				//console.log('e', e);
+				var s = e.detail.selected;
+				//console.log('s', s);
+				if (s === 3) { // 'logout' // note <hr> is selected == 2
+          this.fireLogout();
+					return;
+				}
+				/** /
+				// For selecting strings...
+				switch(s) {
+					case 'profile':
+				    console.log('You selected: profile');
+						//set tab value to 'profile'
+						break;
+					case 'preferences':
+				    console.log('You selected: preferences');
+						//set tab value to 'preferences'
+						break;
+					case 'logout':
+				    console.log('You selected: logout');
+						// bubbling event from user-dropdown-content: 'user-action-select', e.detail.selected === 'logout';
+						return;
+						break;
+					default:
+				    console.warn('Menu selection not recognized', s);
+						return;
+				}
+				/**/
+				d.selected = s;
+				d.open();
+				/**/
+			}
+      
+			fireLogout() {
+				var o = {
+					bubbles: true,
+					detail: {
+						logout: true,
+					},
+				};
+				var e = new CustomEvent('user-logout', o);
+				this.dispatchEvent(e);
+				//console.log('e', e);
+			}
+			
+    }
+
+    window.customElements.define(UserActionModule.is, UserActionModule);
+  </script>
+</dom-module>
