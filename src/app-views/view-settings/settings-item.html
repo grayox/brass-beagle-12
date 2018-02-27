@@ -1,0 +1,206 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+
+<link rel="import" href="settings-item-switch.html">
+<link rel="import" href="settings-item-input.html">
+<link rel="import" href="settings-item-invite.html">
+<link rel="import" href="settings-item-zip.html">
+
+<dom-module id="settings-item">
+  <template>
+		<style></style>
+		
+		<template xrestamp is="dom-if" if="{{_isSwitch(type)}}">
+			<settings-item-switch icon="[[icon]]"
+														label="[[label]]"
+														checked="{{checked}}"
+														>
+			</settings-item-switch>
+		</template>
+
+		<template xrestamp is="dom-if" if="{{_isInput(type)}}">
+			<settings-item-input icon="[[icon]]"
+                           label="[[label]]"
+                           description="[[description]]"
+													 text="{{text}}"
+                           >
+			</settings-item-input>
+		</template>
+
+		<template xrestamp is="dom-if" if="{{_isInvite(type)}}">
+			<settings-item-invite icon="[[icon]]"
+                            label="[[label]]"
+                            description="[[description]]"
+                            text="{{text}}"
+                            >
+			</settings-item-invite>
+		</template>
+ 
+		<template xrestamp is="dom-if" if="{{_isZip(type)}}">
+			<settings-item-zip label="[[label]]"
+												 xzip-valid="{{zipValid}}"
+												 xzip-code="{{zipCode}}"
+												 xzip-state="{{zipState}}"
+												 xzip-county="{{zipCounty}}"
+												 xzip-city="{{zipCity}}"
+												 xzip-state-county="{{zipStateCounty}}"
+												 xzip-city-state-county="{{zipCityStateCounty}}"
+												 >
+				<slot name="zip"></slot>
+			</settings-item-zip>
+		</template>
+								
+    
+  </template>
+
+  <script>
+    class SettingsItem extends Polymer.Element {
+      static get is() { return 'settings-item'; }
+
+      static get properties() {
+        return {
+					
+					// common properties
+					
+					type: {
+						type: String, // 'switch' | 'input' | 'invite' | 'zip'
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					// label1: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//value: () => 'Home',
+					// 	//observer: '_selectedChanged',
+					// },
+					
+					// label2: {
+					description: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					/** /
+					output: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+						//computed: '_computeOutput(checked)',
+					},
+					/**/
+					
+					// properties for type='switch'
+					
+					checked: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+						//observer: '_selectedChanged',
+					},
+					
+					// properties for type='input'
+					
+					text: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+					},
+					
+					// properties for type='zip'
+
+					// zipCode: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//observer: '_zipCodeChanged',
+					// 	/** /
+					// 	value: () => null,
+					// 	/**/
+					// },
+					// zipCity: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//computed: '_computeZipCity(zipCode, zipCodeData)',
+					// },
+					// zipState: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//computed: '_computeZipState(zipCode, zipCodeData)',
+					// },
+					// zipCounty: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//computed: '_computeZipCounty(zipCode, zipCodeData)',
+					// },
+					// zipStateCounty: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//computed: '_computeZipStateCounty(zipState, zipCounty)',
+					// },
+					// zipCityStateCounty: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
+					// },
+					// zipValid: {
+					// 	type: Boolean,
+					// 	notify: true,
+					// 	//computed: '_computeZipValid(zipCity, zipState, zipCounty)',
+					// },
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+						
+			_isSwitch(s) {
+				return s === 'switch';
+			}
+						
+			_isInput(s) {
+				return s === 'input';
+			}
+						
+			_isInvite(s) {
+				return s === 'invite';
+			}
+						
+			_isZip(s) {
+				return s === 'zip';
+			}
+			
+    }
+
+    window.customElements.define(SettingsItem.is, SettingsItem);
+  </script>
+
+</dom-module>

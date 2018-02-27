@@ -1,0 +1,204 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="custom-toast">
+	
+<!--- ->
+// Example:
+<link rel="import" href="/src/custom-elements/custom-toast.html">
+<custom-toast id="toast"></custom-toast>
+...
+this.showToast({
+	//text: 'Success. Thanks! Please login!',
+	text: 'Success',
+	type: 'success',
+});
+...
+showToast: function(ob) {
+	var toast = this.$.toast;
+	toast.show(ob);
+},
+<!---->
+	
+	<template>
+		<style>
+			/** /
+			paper-toast {
+				--paper-toast-color: white;
+				--paper-toast-background-color: var(--paper-green-A700, #00C853);
+				--paper-toast-background-color: var(--paper-green-A700, #0bdb00, #00baff, #ffa800, #fb0000);
+				--paper-toast-background-color: var(--paper-light-green-A700, #64DD17);
+				--paper-toast-color: #33691E;
+			}
+			/**/
+			paper-toast {
+				/** /
+				text-align: center;
+				border-top: 3px solid --border-color;
+				border-color: yellow;
+				border-width: 4px 0 0 0;
+				/**/
+				border-width: 0 0 0 8px;
+				border-color: var(--border-color);
+				border-style: solid;
+				border-radius: 4px;
+			}
+			/** /
+			No icons, per:
+			https://material.io/guidelines/components/snackbars-toasts.html#snackbars-toasts-usage
+			/** /
+			paper-toast iron-icon {
+				margin-left: 16px;
+			}
+			/**/
+    </style>
+		<paper-toast id="toast"
+								 text="Hello world">
+			<!--- ->
+			<iron-icon icon="[[icon]]" hidden></iron-icon>
+			<paper-button id="button" on-tap="_buttonTap" hidden></paper-button>
+			<!---->
+		</paper-toast>
+	</template>
+
+  <script>
+    class CustomToast extends Polymer.Element {
+      static get is() { return 'custom-toast'; }
+
+      static get properties() {
+        /**/
+        return {
+					/** /
+					icon: {
+						type: String,
+						notify: true,
+						value: function() {
+							return '';
+						},
+					},
+					/**/
+					text: {
+						type: String,
+						notify: true,
+					},
+          type: {
+						type: String, // |'plain'|'info'|'success'|'warning'|'danger'|'error'| 'error'=='danger' |
+						notify: true,
+						value: function() {
+							return 'plain';
+						}
+					},
+        };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+				//this.getZipsData(); // use state element instead: <state-zip-code-data>
+				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
+		  }
+			
+			_computeColor(type) {
+				var ob = {
+				//            Color Combinations 
+				//            background      border-color    text
+					dark    : { bg: null      , bc: '#323232' , text: 'white' } ,
+				//blue    : { bg: 'blue'    , bc: 'blue'    , text: 'white' } ,
+				//blue    : { bg: '#00baff' , bc: '#66d6ff' , text: 'black' } ,
+				//blue    : { bg: '#00baff' , bc: '#005e80' , text: 'black' } ,
+				//blue    : { bg: '#00baff' , bc: '#0083b3' , text: 'black' } ,
+					blue    : { bg: '#00baff' , bc: '#0083b3' , text: 'white' } ,
+				//blue    : { bg: '#2f96b4' , bc: '#2f96b4' , text: 'white' } , // https://github.com/CodeSeven/toastr/blob/master/toastr.scss
+				//green   : { bg: 'green'   , bc: 'green'   , text: 'white' } ,
+				//green   : { bg: '#0bdb00' , bc: '#0bdb00' , text: 'white' } ,
+					green   : { bg: '#00C853' , bc: '#008035' , text: 'white' } , // --paper-green-A700
+				//green   : { bg: '#51a351' , bc: '#51a351' , text: 'white' } , // https://github.com/CodeSeven/toastr/blob/master/toastr.scss
+				//green   : { bg: '#64DD17' , bc: '#64DD17' , text: 'white' } , // --paper-light-green-A700
+				//green   : { bg: '#33691E' , bc: '#33691E' , text: 'white' } ,
+				//yellow  : { bg: 'orange'  , bc: 'orange'  , text: 'white' } ,
+				//yellow  : { bg: '#ffa800' , bc: '#ffd480' , text: 'black' } ,
+					yellow  : { bg: '#ffa800' , bc: '#b37700' , text: 'black' } ,
+				//yellow  : { bg: '#ffa800' , bc: '#996600' , text: 'black' } ,
+				//yellow  : { bg: '#f89406' , bc: '#f89406' , text: 'white' } , // https://github.com/CodeSeven/toastr/blob/master/toastr.scss
+				//red     : { bg: 'red'     , bc: 'red'     , text: 'white' } ,
+					red     : { bg: '#fb0000' , bc: '#990000' , text: 'white' } ,
+				//red     : { bg: '#fb0000' , bc: '#b30000' , text: 'white' } ,
+				//red     : { bg: '#fb0000' , bc: '#cc0000' , text: 'white' } ,
+				//red     : { bg: '#fb0000' , bc: '#ff4d4d' , text: 'white' } ,
+				//red     : { bg: '#bd362f' , bc: '#bd362f' , text: 'white' } , // https://github.com/CodeSeven/toastr/blob/master/toastr.scss
+				};
+				ob.plain               = ob.dark   ;
+				ob.info                = ob.blue   ;
+				ob.success             = ob.green  ;
+				ob.warning = ob.orange = ob.yellow ;
+				ob.danger  = ob.error  = ob.red    ;
+				var out    = ob[type]              ;
+				/** /
+				// No icons, per:
+				// https://material.io/guidelines/components/snackbars-toasts.html#snackbars-toasts-usage
+				var icon = { // |'plain'|'info'|'success'|'warning'|'danger'|'error'| 'error'=='danger' |
+					plain   : null            ,
+					info    : 'info-outline'  ,
+					success : 'check'         ,
+					warning : 'warning'       ,
+					danger  : 'warning'       ,
+					error   : 'error-outline' ,
+				};
+				this.set('icon', icon[type]);
+				/**/
+				return out;
+			}
+
+			_setStyles(color) {
+				//this.set('icon', color.icon);
+				//this.customStyle['--paper-toast-background-color'] = 'blue';
+				//this.customStyle['--paper-toast-background-color'] = color.bg;
+				//this.updateStyles();
+				this.updateStyles({
+					'--paper-toast-color': color.text,
+					'--paper-toast-background-color': color.bg,
+					//'--border-color': 'yellow',
+					'--border-color': color.bc,
+				});
+			}
+
+			show(ob) {
+				var toast = this.$.toast;
+				ob = ob || {};
+				var text = ob.text || 'No text field supplied';
+				var type = ob.type || 'plain';
+				//console.log('type', type);
+				var color = this._computeColor(type);
+				if(!!color) {
+					this._setStyles(color);
+				}
+				//console.log('color', color);
+				toast.text = text;
+				toast.show();
+				/** /
+				this.async(function() {
+					toast.show();
+				}, 100);
+				/**/
+			}
+
+			_buttonTap(e) {
+				this.fire('toaster-' + e.target.buttonEvent);
+				this.$.toast.close();
+				this._shift();
+			}
+			
+    }
+
+    window.customElements.define(CustomToast.is, CustomToast);
+  </script>
+</dom-module>
+

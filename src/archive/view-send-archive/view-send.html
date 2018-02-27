@@ -1,0 +1,537 @@
+<!--- ->
+Copyright (c) 2015-2017 Atlas Laboratories (atlaslive@gmail.com) - All rights reserved.
+Read full copyright notice and disclaimer contained in file labeled copyright-notice.md located in the root directory.
+<!---->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="/bower_components/iron-icons/notification-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-list/iron-list.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/vaadin-pouchdb/vaadin-pouchdb.html">
+<!---->
+<link rel="import" href="/bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="../../custom-libraries/moment-js.html">
+<link rel="import" href="item-editor.html">
+<!--- ->
+<link rel="import" href="filters-toolbar.html">
+<!---->
+
+<!-- Edit -->
+<link rel="import" href="items-grid.html">
+<!--- ->
+<link rel="import" href="items-list.html">
+<link rel="import" href="history-panel.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/app-layout/app-box/app-box.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="/bower_components/iron-resizable-behavior/iron-resizable-behavior.html">	
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/app-layout/app-grid/app-grid-style.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<!--- ->
+<link rel="import" href="../../app-head/margin-content.html">
+<link rel="import" href="../../archive/app-head-archve/margin-content.html">
+<!---->
+
+<link rel="import" href="../../custom-styles/list-view-styles.html">
+<link rel="import" href="../../custom-behaviors/zip-code-api-behavior.html">
+<link rel="import" href="../../custom-behaviors/random-users-api-behavior.html">
+
+<dom-module id="view-send">
+	<template>
+		<!---->
+		<style include="list-view-styles"></style>
+    <!---->
+		
+		<h2>View Send</h2>
+		<!--- ->
+		<button on-tap="show">Show item</button>
+    <!--- ->
+    <vaadin-pouchdb id="db" dbname="{{dbLocal}}" remote="{{dbRemote}}" data="{{items}}" status="{{status}}"></vaadin-pouchdb>
+    <!---->
+    <app-location route="{{route}}"
+									use-hash-as-path
+									>
+		</app-location>
+    <app-route route="{{route}}"
+							 pattern="/:dbId"
+               data="{{routeData}}"
+							 tail="{{subroute}}"
+							 >
+		</app-route>
+		<!--- ->
+    * The above <app-route> element uses the correct pattern ("/:dbId") necessary to delete records from the database.
+    * Replacing that pattern with the "/:page" pattern below results in a malfunction of the delete() method.
+    * The malfunction behaves by appearing to delete the record from the client side table.
+    * But the server-side data remains unaffected. The "/:page" pattern might be useful for routing page views?
+		<!--- ->
+		<app-route route="{{route}}"
+							 pattern="/:page"
+							 data="{{routeData}}"
+							 tail="{{subroute}}"
+							 >
+		</app-route>
+		<!--- ->
+    <iron-ajax id="ajax" handle-as="json" on-response="_handleBackendResponse" on-error="_handleBackendError"></iron-ajax>
+    <!---->
+		
+		<!---->
+    <firebase-query id="query"
+										app-name="app"
+									  xpath="users/[[user.uid]]/items"
+									  xpath="users/[[user.uid]]/deals"
+									  xpath="user-deals/[[user.uid]]"
+									  xpath="[[path]]"
+									  xpath="/"
+									  xpath="leads"
+									  path="user-leads-sent/[[userRemote.uid]]"
+									  data="{{items}}"
+										xorder-by-child="filterindex"
+										xstart-at="g"
+										xend-at="j"
+										>
+    </firebase-query>
+    
+		<iron-localstorage name="item-manager-db-id"
+											 value="{{dbId}}"
+											 >
+		</iron-localstorage>
+    <item-editor id="itemEditor"
+								 route="{{subroute}}"
+								 user="[[user]]"
+								 xitem="{{editableItem}}"
+								 xmerchants="[merchants]"
+								 xdb="[_db]"
+								 >
+		</item-editor>
+		
+		<!--- ->
+		<div class="horizontal layout container">
+      <div class="margin container">
+				<!--- ->[[user.uid]]<!--- ->
+				<!--- ->
+				<margin-content></margin-content>
+        <!--- ->
+				See margin-content element
+			</div>
+			<template is="dom-if" if="[[loading]]">
+				<paper-spinner active></paper-spinner>
+			</template>
+			<template is="dom-if" if="[[!loading]]">
+				<div class="flex">
+					<!--- ->
+					<template is="dom-if" if="{{!viewGrid}}">
+						<items-list id="list"
+												items="[[items]]"
+												xmedia-width="[[mediaWidth]]"
+												xfilters="[[filters]]"
+												xhidden$="{{viewGrid}}"
+												>
+						</items-list>
+					</template>
+					<!--- ->
+					<template is="dom-if" if="{{viewGrid}}">
+						<items-grid id="grid"
+												items="[[items]]"
+												xmedia-width="[[mediaWidth]]"
+												xfilters="[[filters]]"
+												xhidden$="{{!viewGrid}}"
+												>
+						</items-grid>
+					</template>
+					<!--- ->
+				</div>
+			</template>
+			<!--- ->
+			[[randomUsers]]
+			<!--- ->
+    </div>
+	  <!---->
+		<paper-spinner active hidden$="{{!loading}}"></paper-spinner>
+		<items-grid id="grid"
+								items="[[items]]"
+								xmedia-width="[[mediaWidth]]"
+								xfilters="[[filters]]"
+								hidden$="{{loading}}"
+								>
+		</items-grid>
+		
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'view-send',
+				behaviors: [
+					///ReduxBehavior,
+					///AsyncActionsBehavior,
+					///Polymer.NeonAnimationRunnerBehavior,
+					///Polymer.IronResizableBehavior,
+					///MyBehaviors.UserSetterBehavior,
+					//MyBehaviors.RandomUsersDataApiBehavior,
+					//MyBehaviors.ZipCodeApiBehavior,
+				],
+				properties: {
+					/** /
+          _db: Object,
+          dbLocal: String,
+          dbRemote: String,
+          _showInfo: Boolean,
+          status: String,
+          merchants: Array,
+          attachments: Object,
+					/**/
+          route: Object,
+          routeData: Object,
+          dbId: String,
+					/** /
+          loggedIn: {
+            type: Boolean,
+            notify: true,
+            //observer: '_loginStateChanged',
+          },
+					/**/
+          //items: Array,
+          items: {
+						type: Array,
+						notify: true,
+						value: function() {
+							return [];
+						},
+					},
+					/** /
+					totalOwed: Number,
+          filters: {
+            type: Object,
+            notify: true,
+            value: function() {
+              return {
+                start: '',
+                end: '',
+                merchant: '',
+              };
+            },
+          },
+					/**/
+					// Edit
+					/**/
+					loading: {
+						type: Boolean,
+						value: function() {
+							return false;
+						},
+					},
+					viewGrid: {
+						type: Boolean,
+						statePath: 'viewGrid',
+					},
+					/** /
+					viewState: {
+						type: String,
+						statePath: 'viewState',
+					},
+					/** /
+					userLocal: {
+						type: Object,
+						statePath: 'userLocal',
+					},
+					mediaWidth: {
+						notify: true,
+						type: Number,
+						statePath: 'mediaWidth',
+					},
+					/** /
+					user: {
+            type: Object,
+            notify: true,
+						observer: '_userChanged',
+						statePath: 'user',
+          },
+					/**/
+					editableItem: Object,
+					/** /
+					path: {
+						type: String,
+            notify: true,
+						/** /
+						value: function() {
+							return 'deals';
+						},
+						/** /
+					},
+					/** /
+					filteredItems: {
+						computed: '_computeFilteredItems(items, filters.*)'
+					},
+					/**/
+        	// endEdit
+				},
+				
+				listeners: {
+          'item-edit'   : '_itemEdit'   ,
+					/** /
+          'item-update' : '_itemUpdate' ,
+          'item-save'   : '_itemSave'   ,
+          'item-delete' : '_itemDelete' ,
+					'margin-viewgrid'  : '_setViewgrid'  ,
+					'margin-viewstate' : '_setViewstate' ,
+					/**/
+        },
+
+				/** /
+        observers: [
+          '_route(route)',
+          '_showInfoDialog(loggedIn, _showInfo)',
+          '_getUniqueMerchants(items.*)',
+          '_calculateTotal(items.*)',
+        ],
+				/**/
+				
+				/** /
+				attached: function() {
+					console.log('viewGrid', this.viewGrid);
+				},
+				/**/
+
+				/** /
+        ready: function() {
+          Polymer.RenderStatus.afterNextRender(this, function() {
+            this._setupDB();
+          }.bind(this));
+          this._db = this.$.db;
+				},
+				/** /
+				
+				/** /
+				_computeFilteredItems: function(items, filters) {
+					console.log('items', items);
+					console.log('length', items.length);
+					//return array.filter(x => x % 2 == 0);
+				},
+				/** /
+
+        _calculateTotal: function() {
+          if (this.items) {
+            var total = this.items.filter(function(exp) {
+                return exp.status === 'new';
+              }).map(function(exp) {
+                return exp.total;
+              })
+              .reduce(function(a, b) {
+                return a + b;
+              }, 0);
+            this.totalOwed = '$' + total.toFixed(2);
+          }
+        },
+
+        _showInfoDialog: function() {
+          if (this.loggedIn && this._showInfo) {
+            this.async(function() {
+              this._openInfoWindow();
+              this._showInfo = false;
+            }.bind(this), 1000);
+          }
+        },
+
+        _getUniqueMerchants: function() {
+          if (this.items) {
+            this.merchants = this.items.map(function(e) {
+              return e.merchant;
+            }).filter(function(val, index, self) {
+              return self.indexOf(val) === index;
+            });
+          }
+        },
+
+				/** /
+        _teardownDB: function() {
+          this.dbId = this.dbLocal = this.dbRemote = null;
+          this.set('route.path', '');
+        },
+
+        _setupDB: function() {
+          if (this.routeData && this.routeData.dbId) {
+            this.dbId = this.routeData.dbId;
+          }
+          if (this.dbId) {
+            this.dbLocal = 'db_' + this.dbId;
+            this.set('route.path', '/' + this.dbId);
+            this.$.ajax.url = 'https://expense-manager.demo.vaadin.com/api/db/' + this.dbId;
+          } else {
+            this.$.ajax.url = 'https://expense-manager.demo.vaadin.com/api/create';
+          }
+          this.$.ajax.generateRequest();
+        },
+
+        _update: function() {
+          console.log('update');
+          this.debounce('update', function() {
+            this._db.query();
+          }.bind(this), 10);
+        },
+
+        _handleBackendResponse: function(evt) {
+          // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+          var rsp = evt.detail.response;
+          if (rsp && rsp.backend_db_id) {
+            this.dbId = rsp.backend_db_id;
+            this.set('route.path', '/' + this.dbId);
+
+            // Setting these, makes couchdb connect to local & remote DB and start syncing
+            this.dbLocal = 'db_' + this.dbId;
+            this.dbRemote = rsp.couchdb_db_url;
+
+            if (rsp.new_db) {
+              this._showInfo = true;
+            }
+
+            // We update the entire UI on any change for simplicity.
+            this._db.changes(function() {
+              this._update();
+            }.bind(this));
+            // First hit
+            this._update();
+          } else {
+            this.dbId = null;
+            this.set('route.path', '');
+            this._setupDB();
+          }
+        },
+
+        _handleBackendError: function() {
+          // Make sure we at least populate from our local DB if the backend is unavailable
+          this._update();
+        },
+
+        _hideSyncIcon: function() {
+          return this.status !== 'syncing';
+        },
+
+        _route: function() {
+          var id = this.route.path.replace(/^\//, '');
+          if (id && id !== this.dbId) {
+            this.loggedIn = false;
+            this.loggedIn = true;
+          }
+				},
+				
+        /**/
+        _itemEdit: function(e) {
+          if (e && e.detail) {
+            var item = e.detail;
+						//console.log('item', item);
+						this.$.itemEditor.open(item);
+          }
+        },
+				
+				closeEditor: function() {
+					this.$.itemEditor.close();
+				},
+
+			  // Edit
+				
+				/** /
+				_userChanged: function() {
+					this.set('path', 'deals');
+				},
+				/** /
+
+				showSmall: function(n) {
+					return n < 4;
+				},
+				showMedium: function(n) {
+					return n == 4;
+				},
+				showLarge: function(n) {
+					return n > 4;
+				},
+				
+				/** /
+				show: function() {
+				// To import data, use Import JSON option in Firebase Console // All data is overwritten at root
+			  // Ultimately, gave up on the following... kept getting errors
+				  // Correct zip codes to actual zip codes for distance calculations etc.
+					// this.set( 'randomUsers', JSON.stringify(this.randomUsersDataReplaceZips()) );
+					// Upload to Firebase
+					this.uploadRandomUsersData();
+				},	
+				/** /
+				// Calculate distance between two zip codes
+				show: function() {
+					//console.log('viewgrid', this.viewgrid);
+					var u = this.randomUsersData;
+					//console.log('u', u);
+					var z = this.zipCodeData;
+					//console.log('z', z);
+					var zip1 = u[1].zipCode;
+					//console.log('zip1', zip1); // 69652
+					var zip2 = u[2].zipCode;
+					//console.log('zip2', zip2); // 72086
+					//console.log('z[zip1]', z[zip1]); // 69652
+					var lat1 = z[zip1].lat;
+					var lon1 = z[zip1].lon;
+					var lat2 = z[zip2].lat;
+					var lon2 = z[zip2].lon;
+					var d = this.latlon2distance(lat1, lon1, lat2, lon2);
+				  console.log('distance', d);
+				  console.log('zip1', zip1, 'zip2', zip2);
+				  console.log('lat1', lat1, 'lon1', lon1);
+				  console.log('lat2', lat2, 'lon2', lon2);
+				},
+				/**/
+				
+				/** /
+				_viewgridChanged: function() {
+					console.log('viewgrid', this.viewgrid);
+				},
+				
+				/** /
+				_setViewgrid: function(e) {
+					var b = e.detail;
+          console.log('viewgrid', b);
+					// Resize iron-list after display: none
+					//document.querySelector('iron-list').fire('iron-resize');
+					// Per https://www.webcomponents.org/element/PolymerElements/iron-list/iron-list#resizing
+        },
+				
+				_setViewstate: function(e) {
+					var s = e.detail;
+          console.log('viewstate', s);
+        },
+				/**/
+				
+				// endEdit
+
+      });
+		})();
+  </script>
+</dom-module>

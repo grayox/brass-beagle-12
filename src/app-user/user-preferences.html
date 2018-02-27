@@ -1,0 +1,82 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="user-styles.html">
+<link rel="import" href="/src/custom-elements/form-save-buttons.html">
+
+<dom-module id="user-preferences">
+  <template>
+		<style include="paper-material-styles user-styles"></style>
+		
+		<!-- notifications -->
+		<div class="field-label">Notify me of new leads by</div>
+		<paper-toggle-button>Email</paper-toggle-button>
+		<paper-toggle-button>Text/SMS</paper-toggle-button>
+		
+		<!-- email -->
+    <paper-input label="My email address"
+								 value="{{item.email}}"></paper-input>		
+		
+		<!-- sms/text -->
+    <paper-input label="My text/sms number"
+								 value="{{item.sms}}"></paper-input>		
+				
+		<!-- zips opt out/in -->
+    <div class="field-label">Turn on zips</div>
+		<paper-toggle-button class="inline" label="12345">90210</paper-toggle-button>
+		<paper-toggle-button class="inline" label="12345">02139</paper-toggle-button>
+				
+		<form-save-buttons active="[[active]]"
+											 on-form-save-buttons-tapped="_handleFormSaveButtonsTapped"
+											 >
+		</form-save-buttons>
+		
+  </template>
+
+  <script>
+    class UserPreferences extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-preferences'; }
+
+      static get properties() {
+        /**/
+        return {
+					userLocal: {
+						type: Object,
+						notify: true,
+						//value: 0,
+						//observer: '_selectedChanged',
+					},
+					item: {
+						type: Object,
+						notify: true,
+						value: () => ({}),
+					},
+					active: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},
+        };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			_handleUserSaveButtonsTapped(e) {
+				console.log('e', e);
+				const item = this.item;
+				console.log('item', item);
+			}
+			
+    }
+
+    window.customElements.define(UserPreferences.is, UserPreferences);
+  </script>
+</dom-module>

@@ -1,0 +1,157 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!---->
+
+<!---->
+<!---->
+<link rel="import" href="settings-menu-item.html">
+
+<dom-module id="settings-menu">
+  <template>
+    <!--- ->
+    <style>
+      .avatar {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--paper-amber-500);
+      }
+
+      .blue {
+        background-color: var(--paper-light-blue-300);
+      }
+
+      paper-icon-item, paper-item {
+        text-align: start;
+        background-color: white;
+        border-bottom: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
+
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      paper-item-body {
+        margin-left: 8px;
+      }
+
+      paper-icon-item {
+        padding-right: 42px;
+      }
+    </style>
+    
+    <!--- ->
+    <div role="menu">
+      <paper-item>Item 1</paper-item>
+      <paper-item>Item 2</paper-item>
+      <paper-item>Item 3</paper-item>
+    </div>
+    <!--- ->
+    [[selected]]
+    <!--- ->
+    <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
+      <paper-icon-item name="home">
+        <div class="avatar blue" slot="item-icon"></div>
+        <paper-item-body two-line>
+          <div>Home</div>
+          <div secondary>You are a real estate agent</div>
+        </paper-item-body>
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+      </paper-icon-item>
+      <paper-icon-item name="mortgage">
+        <div class="avatar" slot="item-icon"></div>
+        <paper-item-body two-line>
+          <div>Mortgage</div>
+          <div secondary>You are a mortgage agent</div>
+        </paper-item-body>
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+      </paper-icon-item>
+      <paper-icon-item name="insurance">
+        <div class="avatar blue" slot="item-icon"></div>
+        <paper-item-body two-line>
+          <div>Insurance</div>
+          <div secondary>You are an insurance agent</div>
+        </paper-item-body>
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+      </paper-icon-item>
+      <paper-icon-item name="financial">
+        <div class="avatar" slot="item-icon"></div>
+        <paper-item-body two-line>
+          <div>Financial</div>
+          <div secondary>You are a financial advisor</div>
+        </paper-item-body>
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+      </paper-icon-item>
+    </iron-selector>
+    <!--- ->
+    <settings-menu-item name="home"
+                        label="Home"
+                        description="You are a real estate agent"
+                        icon="star"
+                        alt-text="Select this!"
+                        selected
+    ></settings-menu-item>
+    <!---->
+    <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
+      <template is="dom-repeat" items="[[items]]">
+        <settings-menu-item name="[[item.name]]"
+                            label="[[item.label]]"
+                            description="[[item.description]]"
+                            icon="[[item.icon]]"
+                            alt-text="[[item.alt]]"
+                            >
+        </settings-menu-item>      
+      </template>
+    </iron-selector>
+		<!---->
+    
+  </template>
+
+  <script>
+    class SettingsMenu extends Polymer.Element {
+      static get is() { return 'settings-menu'; }
+      
+      static get properties() { return {
+        
+        items: {
+          type: Array,
+          notify: true,
+          value: () => [
+            { label: "Home"      , name: "home"      , description: "You are a real estate agent" , icon: "star" , alt: "Select this!" } ,
+            { label: "Mortgage"  , name: "mortgage"  , description: "You are a mortgage agent"    , icon: "star" , alt: "Select this!" } ,
+            { label: "Financial" , name: "financial" , description: "You are a financial planner" , icon: "star" , alt: "Select this!" } ,
+            { label: "Insurance" , name: "insurance" , description: "You are an insurance agent"  , icon: "star" , alt: "Select this!" } ,
+          ],
+        },
+				
+      }}
+
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+			_showLeadsNotice(b1, b2, b3, b4) {
+				const completed = (b1 || b2 || b3 || b4);
+				const show = !completed;
+				return show;
+			}
+			
+    }
+
+    window.customElements.define(SettingsMenu.is, SettingsMenu);
+  </script>
+
+</dom-module>

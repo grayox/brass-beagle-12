@@ -1,0 +1,144 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!-- state -->
+<link rel="import" href="state-user-remote.html">
+<!---->
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+
+<dom-module id="state-user-settings">
+  <template>
+    <style></style>
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+
+    <!---->
+    <app-localstorage-document id="storage"
+                               xlog
+                               xsession-only
+                               key="user-settings"
+                               data="{{userSettings}}"
+                               >
+    </app-localstorage-document>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-settings-home" data="{{userSettingsHome}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-mortgage" data="{{userSettingsMortgage}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-insurance" data="{{userSettingsInsurance}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-financial" data="{{userSettingsFinancial}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-text" data="{{userSettingsText}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-email" data="{{userSettingsEmail}}"> </app-localstorage-document>	
+		<!--- ->
+    <app-localstorage-document xlog session-only key="user-settings-zip" data="{{userSettingsZip}}"> </app-localstorage-document>	
+    <app-localstorage-document xlog session-only key="user-settings-switch" data="{{userSettingsSwitch}}"> </app-localstorage-document>	
+    <app-localstorage-document xlog session-only key="user-settings-input" data="{{userSettingsInput}}"> </app-localstorage-document>	
+    <!---->
+    
+    <!--- ->
+    <firebase-query id="query"
+                    app-name="app"
+                    name="app"
+                    path="/users/[[userRemote.uid]]/settings"
+                    xpath="/users/[[userUid]]/settings"
+                    data="{{userSettings}}"
+                    xdata="{{userLocal}}"
+                    xlog
+                    xlimit-to-last="1"
+                    xlimit-to-first="1"
+                    xorder-by-child="timestamp"
+                    xorder-by-value="timestamp"
+                    >
+    </firebase-query>
+    <!---->
+    <firebase-document id="doc"
+										   app-name="app"
+										   name="app"
+                       path="/users/[[userRemote.uid]]/settings"
+                		   data="{{userSettings}}"
+										   >
+    </firebase-document>
+	
+	</template>
+
+  <script>
+    class StateUserSettings extends Polymer.Element {
+      static get is() { return 'state-user-settings'; }
+
+      static get properties() { return {
+				userSettings: {
+					// initial value fetched by app-main.html > firebase-auth.user > path.
+					type: Object,
+					notify: true,
+					// observer: '_userSettingsChanged',
+				},
+				/** /
+				userSettingsHome: {
+					type: Boolean,
+					notify: true,
+				},
+				userSettingsMortgage: {
+					type: Boolean,
+					notify: true,
+				},
+				userSettingsInsurance: {
+					type: Boolean,
+					notify: true,
+				},
+				userSettingsFinancial: {
+					type: Boolean,
+					notify: true,
+				},
+				userSettingsText: {
+					type: String,
+					notify: true,
+				},
+				userSettingsEmail: {
+					type: String,
+					notify: true,
+				},
+				userSettingsZip: {
+					type: String,
+					notify: true,
+				},
+				/** /
+				userSettingsZip: {
+          type: Object,
+					notify: true,
+				},
+				userSettingsSwitch: {
+          type: Object,
+					notify: true,
+				},
+				userSettingsInput: {
+          type: Object,
+					notify: true,
+				},
+        /**/
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        this.$.storage.destroy();
+      }
+      /**/
+      
+      // _userSettingsChanged(newData, oldData) {
+      //   // console.log('uid\n', this.userRemote.uid);
+      //   //console.log('userSettings\n', r);
+      //   console.log('oldData\n', oldData);
+      //   console.log('newData\n', newData);
+      // }
+			
+    }
+
+    window.customElements.define(StateUserSettings.is, StateUserSettings);
+  </script>
+</dom-module>

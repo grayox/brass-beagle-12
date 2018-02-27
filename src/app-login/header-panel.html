@@ -1,0 +1,81 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+
+<dom-module id="header-panel">
+  <template>
+		<style>
+
+			:host {}
+
+			.header {
+				height: 36%;
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				justify-content: flex-end;
+				margin: 0 !important;
+				padding: 0 !important;
+			}
+
+			/**/
+			.header::after {
+				content: "";
+				position: absolute;
+				width: 100%;
+				top: 36%;
+				border-bottom: 2px solid var(--accent-color);
+			}
+			/**/
+
+			.header h1 {
+				color: var(--text-primary-color);
+				font-size: 24px;
+				font-weight: 300;
+				margin: 0 auto 16px;
+				width: 300px;
+				/*Edit*/
+				@apply(--layout-horizontal);       /* Remove to left-align with form */
+				@apply(--layout-center-justified); /* Remove to left-align with form */
+				/*endEdit*/
+			}
+
+			.logo img {
+				height: 52px;
+			}
+
+			.header p {
+				color: white;
+				text-align: center;
+				font-weight: 100;
+				opacity: 0.33;
+			}
+
+			h1 {
+				margin-bottom: 16px;
+			}
+
+		</style>
+
+		<div id="header" class="header">
+			<p>Sales referral network</p>
+			<!--- ->
+			<p>Subprime lead exchange</p>
+			<!---->
+      <h1>
+				<!--- ->
+				Blast
+				<!---->
+				<img class="logo" src="/images/logo.svg" />
+			</h1>
+	  </div>
+  </template>
+	
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'header-panel',
+      });
+    })();
+  </script>
+</dom-module>

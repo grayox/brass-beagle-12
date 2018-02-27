@@ -1,0 +1,48 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+
+<script>
+  //(function() {
+    //'use strict';
+			
+		// https://www.polymer-project.org/1.0/docs/tools/documentation
+		/**
+		 * Behavior that highlights stuff.
+		 *
+		 * @polymerBehavior
+		 */
+	
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.DialogBehaviorImpl = {
+
+				save: function() {
+					//console.log('item', this.item);
+					//console.log('userLocal', this.userLocal);
+					this.$.error.innerText = '';
+					//var form = this.isNew ? this.$$('#form-create') : this.$$('#form-update') ; // Only necessary for dom-if
+					var form = this.$.form;
+					/**/
+					var item = this.item ? this.item : {} ;
+					this.writeUser2Firebase('local', item);
+					/** /
+					} else {
+						console.log('Form validation failed');
+						this.$.dialog.scrollTop = 0;
+						this.errorText = 'Please fill all required fields';
+					}
+					/**/
+					//this.set('item', {});
+				},
+				
+			
+		};
+		
+    MyBehaviors.DialogBehavior = [
+      MyBehaviors.DialogBehaviorImpl,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

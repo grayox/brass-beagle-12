@@ -1,0 +1,80 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- ->
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+<!---->
+
+<!-- state -->
+<!--- ->
+<link rel="import" href="state-user-settings.html">
+<!---->
+
+<dom-module id="state-user-local">
+  <!--- ->
+  <template>
+		<style></style>
+		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
+		<!--- ->
+  </template>
+  <!---->
+
+  <script>
+    class StateUserLocal extends Polymer.Element {
+      static get is() { return 'state-user-local'; }
+
+      static get properties() { return {
+				userLocalExtended: {
+					type: Object,
+					notify: true,
+					//observer: '_userLocalExtendedChanged',
+				},
+				userLocal: {
+					type: Object,
+					notify: true,
+					//observer: '_userLocalChanged',
+					computed: '_computeUserLocal(userLocalExtended)',
+				},
+				userSettings: {
+					// initial value fetched by app-main.html > firebase-auth.user > path.
+					type: Object,
+					notify: true,
+					//observer: '_userSettingsChanged',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+				//console.log('user-local-extended', this.userLocalExtended);
+        // this.$.doc.destroy();
+      }
+			/**/
+			
+			/** /
+			_userLocalChanged(userLocal) {
+				//console.log('userLocal', userLocal);
+			}
+			/**/
+			
+			_computeUserLocal(a) {
+				//console.log('user-local-extended', a);
+				const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
+				//console.log('out', out);
+				return out;
+			}
+			
+    }
+
+    window.customElements.define(StateUserLocal.is, StateUserLocal);
+  </script>
+</dom-module>

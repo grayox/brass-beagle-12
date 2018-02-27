@@ -1,0 +1,179 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
+<dom-module id="form-save-buttons">
+  <template>
+		<style include="paper-material-styles">
+			
+			:host {
+				display: block;
+				margin-top: 1em;
+			}
+			
+			paper-button {
+				font-family: 'Roboto', 'Noto', sans-serif;
+				font-weight: normal;
+				font-size: 14px;
+				-webkit-font-smoothing: antialiased;
+				
+				opacity: 1.0;
+			}
+			
+			.disabled {
+				/** /
+				background-color: var(--paper-grey-200);
+				/**/
+				opacity: 0.33;
+			}
+			
+			.reset {
+				color: var(--app-primary-color);
+			}
+			
+			.save {
+        background-color: var(--app-primary-color);
+        color: white;
+        --paper-button-raised-keyboard-focus: {
+          background-color: var(--app-primary-color) !important;
+          color: white !important;
+        };
+      }
+			
+      .save:hover {
+        background-color: var(--app-primary-color-light);
+      }
+			
+		</style>
+		
+		<paper-toast id="toast"
+								 text="Item saved"
+								 >
+		</paper-toast>
+				
+		<paper-button id="reset-disabled"
+									xraised
+									class="reset disabled"
+									disabled
+									hidden$="{{active}}"
+									>Reset</paper-button>
+		
+		<paper-button id="save-disabled"
+									raised
+									class="save disabled"
+									disabled
+									hidden$="{{active}}"
+									>Save</paper-button>
+		
+		<!---->
+		<paper-button id="reset-active"
+									xraised
+									class="reset active"
+									xdisabled
+									hidden$="{{!active}}"
+									on-tap="_execute"
+									data-action="reset"
+									>Reset</paper-button>
+		
+		<!---->
+		<paper-button id="save-active"
+									raised
+									class="save active"
+									xdisabled
+									hidden$="{{!active}}"
+									on-tap="_execute"
+									data-action="save"
+									>Save</paper-button>
+		<!---->
+		
+		<!--- ->
+		<button on-tap="_toggleActive">Toggle Active</button>
+		<!---->
+		
+  </template>
+
+  <script>
+    class FormSaveButtons extends Polymer.Element {
+      static get is() { return 'form-save-buttons'; }
+
+      static get properties() {
+				/**/
+        return {
+					active: {
+						type: Boolean,
+						notify: true,
+						//observer: '_activeChanged',
+						value: () => false,
+					},
+					showToast: {
+						type: Boolean,
+						value: () => false,
+					},
+    	  };
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+			/** /
+			_toggleActive() {
+				//console.log('active', this.active);
+				this.set('active', !this.active);
+			}
+			/**/
+			
+			_execute(e) {
+        //console.log('e', e);
+				const action = e.target.dataset.action;
+        //console.log('action', action);
+				//const detail = e.detail.value;
+        //console.log('detail', detail);
+				//const n = 'nav-menu-desktop-selected-changed';
+				const n = 'form-save-buttons-tapped';
+				const o = {
+					//bubbles: true,
+					//composed: true,
+					detail: {
+						//selected: detail,
+						action: action,
+					},
+				};
+				const d = new CustomEvent(n, o);
+				this.dispatchEvent(d);
+				/**/
+				
+				//this.set('active', false); // opt for unidirectional flow only // set in parent using event
+				
+				if(action == 'save') {
+					this._showToast(action);
+				}
+			}
+			
+			/**/
+			_showToast(s) {
+				if(!this.showToast) return;
+				
+				//console.log('s', s);
+				const t = this.$.toast;
+				//t.text = 'Item ' + s + 'd';
+				t.show(); //t.open();
+			}
+			/**/
+			
+    }
+
+    window.customElements.define(FormSaveButtons.is, FormSaveButtons);
+  </script>
+</dom-module>

@@ -1,0 +1,66 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="list-view-styles">
+  <template>
+		<!---->
+		<style>
+    	div.container,
+      div.wrapper {
+				/* For displaying random users' updated zip codes * /
+				overflow: scroll;
+				font-size: 1px;
+				background-color: var(--paper-grey-100);
+				/**/
+        width: 100vw;
+				height: 100vh;
+			}
+			div.margin {
+				border-right: 1px solid #bbbbbb;
+				background-color: white;
+			}
+		</style>
+    <!---->
+		<!--- ->
+		<style>
+			:host {
+				height: 100vh;
+				color: yellow;
+				background-color: red;
+			}
+		</style>
+		<!--- ->
+		<style>
+			.flex-vertical {
+				@apply(--layout-vertical);
+        height: calc(100vh - 64px);
+  		}
+			.flex-horizontal {
+				@apply(--layout-horizontal);
+			}
+			.flexchild {
+				@apply(--layout-flex);
+			}
+			.item {
+				/** /
+				border-style: solid;
+				border-width: 1px;
+				border-color: #dddddd;
+				/** /
+				background-size: cover;
+				background-position: center center;
+				/**/
+				position: relative;
+				background-color: white;
+				margin: 0;
+				padding: 0;
+			}
+			.item-horizontal {
+				height: 100vh;
+			}
+			.item-vertical {
+				width: 100%;
+			}
+		</style>
+		<!---->
+  </template>
+</dom-module>

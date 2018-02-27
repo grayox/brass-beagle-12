@@ -1,0 +1,80 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- ->
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<!---->
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="/src/app-state/state-user.html">
+
+
+<dom-module id="database-inbox">
+  <template>
+		<style></style>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="inbox-data" data="{{inboxData}}"></app-localstorage-document>
+		<!---->
+		
+		<!-- state  -->
+		<state-user user-remote="{{userRemote}}"
+								user-local="{{userLocal}}"
+								>
+		</state-user>
+		
+		<!-- query database -->
+    <firebase-query id="query-received"
+										app-name="app"
+									  xpath="users/[[user.uid]]/items"
+									  xpath="users/[[user.uid]]/deals"
+									  xpath="user-deals/[[user.uid]]"
+									  xpath="deals"
+									  xpath="leads"
+										xpath="[[path]]"
+									  xpath="leads-state-county/[[userLocal.state]]/[[userLocal.county]]/[[userLocal.category]]"
+									  path="user-leads-received/[[userRemote.uid]]"
+									  data="{{itemsReceived}}"
+										xorder-by-child="filterindex"
+										xstart-at="g"
+										xend-at="j"
+										>
+    </firebase-query>
+		<!---->
+    <firebase-query id="query-available"
+										app-name="app"
+									  path="leads-state-county-category-index/[[userLocal.state]]/[[userLocal.county]]/[[userLocal.category]]"
+									  data="{{itemsAvailable}}"
+										>
+    </firebase-query>
+		<!---->
+  </template>
+	
+  <script>
+    class DatabaseInbox extends Polymer.Element {
+      static get is() { return 'database-inbox'; }
+
+      static get properties() { return {
+				itemsReceived: {
+					type: Object,
+					notify: true,
+				},
+				itemsAvailable: {
+					type: Object,
+					notify: true,
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/** /
+			ready() {
+        super.ready();
+      }
+			/**/
+		
+		}
+
+    window.customElements.define(DatabaseInbox.is, DatabaseInbox);
+  </script>
+</dom-module>

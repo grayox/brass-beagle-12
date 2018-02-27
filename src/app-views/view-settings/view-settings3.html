@@ -1,0 +1,237 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/app-main/app-methods.html">
+<!-- state -->
+<link rel="import" href="/src/app-state/state-media.html">
+<!--- ->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!---->
+
+<link rel="import" href="settings-group-a.html">
+<link rel="import" href="settings-group-b.html">
+
+<dom-module id="view-settings">
+  <template>
+		<style>
+			:host {
+				--line-color: #DDDDDD;
+			}
+			.split {
+				border-bottom: 1px var(--line-color) solid;
+				
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+				grid-template-columns: 1fr 1fr;
+			}
+		</style>
+		
+		<!-- v.3 | css-grid layout, responsive, two columns -->
+
+		<!--- ->
+		<app-methods id="methods" xshow-toast xdispatch-event></app-methods>
+		<!---->
+	  <!-- state -->
+		<state-media media-type="{{mediaType}}"></state-media>
+		<!--- ->
+		<state-user-settings user-settings="{{settings}}"
+                         user-settings-zip="{{settingsZip}}"
+                         user-settings-switch="{{settingsSwitch}}"
+                         user-settings-input="{{settingsInput}}"
+                         >
+    </state-user-settings>
+    <!---->
+
+		<template is="dom-if" if="{{!_split}}">
+			<settings-group-a></settings-group-a>
+			<settings-group-b></settings-group-b>
+		</template>
+		
+		<template is="dom-if" if="{{_split}}">
+		  <div class="split">
+		    <settings-group-a></settings-group-a>
+		    <settings-group-b></settings-group-b>  		
+		  </div>
+		</template>
+		
+  </template>
+
+  <script>
+    class ViewSettings extends Polymer.Element {
+      
+			static get is() { return 'view-settings'; }
+			
+      static get properties() { return {
+				
+				mediaType: {
+					type: String,
+					notify: true,
+				},
+				
+				_split: {
+					type: Boolean,
+					notify: true,
+					computed: '_computeSplit(mediaType)',
+				},
+				
+				// settings: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	computed: '_computeSettings(settingsZip, settinsSwitch, settingsInput)',
+				// },
+				
+				// settingsZip: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	//computed: '_computeSplit(mediaType)',
+				// 	value: () => ({}),
+				// },
+				
+				// settingsSwitch: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	value: () => ({}),
+				// 	//computed: '_computeSplit(mediaType)',
+				// },		
+				
+				// settingsInput: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	//computed: '_computeSplit(mediaType)',
+				// 	value: () => ({}),
+				// },
+				
+				/** /
+				settingsInvite: {
+					type: Object,
+					notify: true,
+					//computed: '_computeSplit(mediaType)',
+				},
+				/**/
+				
+			}}
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        // //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        // window.addEventListener( 'update-user-zip'    , e => this._onUpdateUserZip(e)    );
+        // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
+        // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
+        // //window.addEventListener( 'update-user-invite' , (e) => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
+		  }
+			
+			/** /
+			connectedCallback() {
+				super.connectedCallback();
+				window.addEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
+			}
+
+			disconnectedCallback() {
+				super.disconnectedCallback();
+				window.removeEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
+			}
+			/**/
+			
+			// static get observers() {
+			// 	return [
+			// 		'_computeSettings(settingsZip.*, settinsSwitch.*, settingsInput.*)',
+			// 	]
+			// }
+			
+			_computeSplit(s) {
+				return s !== 'mobile';
+			}
+
+			// save(data) {
+				
+			// 	//const timestamp = new Date().getTime();
+			// 	const methods = this.$.methods;
+				
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
+			// 	//const data = data;
+			// 	//const timestampedData = { ...data, ...{timestamp: timestamp} };
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 		//data: timestampedData,
+			// 	};
+				
+			// 	methods.method(detail);
+			// }
+			
+			// _computeSettings(sZip, sSwitch, sInput) {
+			// 	const out = {};
+				
+			// 	if(sZip    === undefined) { sZip    = {} }
+			// 	if(sSwitch === undefined) { sSwitch = {} }
+			// 	if(sInput  === undefined) { sInput  = {} }
+				
+			// 	out.zip = sZip;
+			// 	out.switch = sSwitch;
+			// 	out.input = sInput;
+			// 	console.log('settings\n', out);
+			// 	return out;
+			// }
+			
+			// _onUpdateUserZip(e) {
+			// 	console.log('on-update-user-zip\n', e);
+			// 	const data = e.detail;
+			// 	this.set('settingsZip', data);
+			// 	console.log('settings-zip\n', this.settingsZip);
+				
+			// 	const settings = this.settings;
+			// 	console.log('settings\n', settings);
+			// 	this.save(settings);
+			// }
+			
+			// _onUpdateUserSwitch(e) {
+			// 	//console.log('on-update-user-switch\n', e); // {detail: {data: true, label: 'home'|'mortgage'|...}}
+			// 	const data = e.detail;
+			// 	if(!this.settingsSwitch) {
+			// 		this.set('settingsSwitch', {});
+			// 	}
+			// 	this.set(['settingsSwitch', data.label], data.data);
+			// 	console.log('settings-switch\n', this.settingsSwitch); // {data: true, label: 'home'|'mortgage'|...}
+				
+			// 	//const settings = this.settings;
+			// 	const settings = this._computeSettings(this.settingsZip, this.settingsSwitch, this.settingsInput);
+			// 	console.log('settings\n', settings);
+			// 	this.save(settings);
+			// }
+			
+			// _onUpdateUserInput(e) {
+			// 	//console.log('on-update-user-input\n', e); // {detail: {data: 'somestring', label: 'text'|'email'}}
+			// 	const data = e.detail;
+			// 	if(!this.settingsInput) {
+			// 		this.set('settingsInput', {});
+			// 	}
+			// 	this.set(['settingsInput', data.label1], data.data);
+			// 	//console.log('settings-input\n', this.settingsInput); // {data: 'somestring', label: 'text'|'email'}
+				
+			// 	const settings = this.settings;
+			// 	console.log('settings\n', settings);
+			// 	this.save(settings);
+			// }
+			
+			/** /
+			_onUpdateUserInvite(e) { // no need to save prior invitations to settings
+				//console.log('on-update-user-invite\n', e); // {detail: {data: 'somestring', label: 'contact'}}
+				const data = e.detail;
+				this.set('settingsInvite', {});
+				this.set('settingsInvite[label]', data);
+				console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
+			}
+			/**/
+			
+    }
+
+    window.customElements.define(ViewSettings.is, ViewSettings);
+  </script>
+
+</dom-module>

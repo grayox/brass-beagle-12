@@ -1,0 +1,124 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-media.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<!--- ->
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<!---->
+
+
+<dom-module id="item-controls">
+  <template>
+		
+    <style>
+			.dim {
+        opacity: var(--opacity-dim);
+      }
+			/** /
+			:host {
+				--horizontal-spacer-length: 24px;
+			}
+			.spacer {
+				margin: 0 var(--horizontal-spacer-length);
+			}
+			/**/
+		</style>
+		
+		<!-- state - ->
+		<state-media media-width="{{mediaWidth}}"></state-media>
+		<!---->
+		
+		<iron-icon icon="vaadin:trash" xclass="dim"></iron-icon>
+		<!--- ->
+		<paper-icon-button class="dim" icon="remove">
+		  <paper-tooltip >Remove from this list</paper-tooltip>
+		</paper-icon-button>
+		<span class="spacer" hidden$=[[!mediaWidth]]></span>
+		<paper-icon-button class="dim" icon="add">
+		  <paper-tooltip>Add to my list</paper-tooltip>
+		</paper-icon-button>
+		<!--- ->
+		<paper-icon-button class="dim" icon="vaadin:minus"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:plus"></paper-icon-button>
+		<paper-icon-button class="dim" icon="expand-more"></paper-icon-button>
+		<paper-icon-button class="dim" icon="more-horiz"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:chevron-circle-down-o"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:ellipsis-dots-h"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:ellipsis-h"></paper-icon-button>
+		<paper-icon-button class="dim" icon="chevron-right"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:chevron-right"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:angle-right"></paper-icon-button>
+		<paper-icon-button class="dim" icon="arrow-forward"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:arrow-right"></paper-icon-button>
+		<paper-icon-button class="dim" icon="arrow-drop-down"></paper-icon-button>
+		<paper-icon-button class="dim" icon="vaadin:caret-down"></paper-icon-button>
+		<paper-button>Show</paper-button>
+		<iron-icon class="star"
+							 xicon$="[[iconForItem(selected)]]"
+							 icon="add-shopping-cart"
+							 >
+		</iron-icon>
+		<!---->
+		
+	</template>
+
+  <script>
+    class ItemControls extends Polymer.Element {
+      static get is() { return 'item-controls'; }
+
+			/**/
+      static get properties() { return {
+        item: {
+					type: Object,
+				}
+			}}
+			/**/
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+  		}
+			/**/
+			
+			/** /
+			_itemChanged(item) {
+				console.log('item', item);
+			}
+			/**/
+			
+			_handleTap(e) {
+				//console.log('e', e);
+				const item = this.item;
+				//console.log('item', this.item);
+				//console.log('item', item);
+				const n = 'inbox-item-control-tapped';
+				const o = {
+					//bubbles: true,
+					//composed: true,
+					//detail: {item: item},
+				};
+				const d = new CustomEvent(n, o);
+				//const d = new CustomEvent(n, o);
+				this.dispatchEvent(d);
+			}
+			
+		}
+
+    window.customElements.define(ItemControls.is, ItemControls);
+  </script>
+</dom-module>

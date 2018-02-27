@@ -1,0 +1,151 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="nav-theme-velo.html">
+<link rel="import" href="nav-theme-koloro.html">
+
+<dom-module id="shell-styles">
+
+  <template>
+
+		<!--- ->
+		<style>
+		<style include="nav-theme-koloro">
+		<!---->
+		<style include="nav-theme-velo">
+			/** /
+			:host {
+				/** /
+				--bg-1: var(--paper-blue-grey-700, #455A64);
+				--bg-1: red;
+				/** /
+				--bg-1: #4285f4;
+				--bg-2: #ef6c00;
+				--bg-3: black; /* #B0BEC5; */
+				/** /
+				--charcoal: rgb(75, 75, 75);
+				--water: rgb(24, 121, 219);
+				--mist: rgb(250, 250, 250);
+				/** /
+				--test-border: {
+					border: red solid 2px;			
+				}
+				/** /
+			}			
+			/** /
+			.test-border > * {
+			  @apply(--test-border);
+			}
+			/**/
+			
+			app-toolbar {
+				/** /
+				background-color: #4285f4;
+				background-color: var(--bg-1);
+				background-color: var(--water);
+				/**/
+				background-color: var(--app-primary-color);
+				color: #ffffff;
+			}
+
+			paper-icon-button {
+				--paper-icon-button-ink-color: white;
+			}
+
+			paper-icon-button + [main-title] {
+				margin-left: 24px;
+			}
+			paper-progress {
+				display: block;
+				width: 100%;
+				--paper-progress-active-color: rgba(255, 255, 255, 0.5);
+				--paper-progress-container-color: transparent;
+			}
+			/** /
+			app-header {
+				@apply --layout-fixed-top;
+				color: #fff;
+				--app-header-background-rear-layer: {
+					background-color: var(--bg-2);
+				};
+			}
+			/**/
+			app-drawer {
+				/** /
+				z-index: 1; /* Stacking induced by opacity < 1 solved by <app-drawer-layout> instead | https://stackoverflow.com/a/45745347/1640892 * /
+				--app-drawer-scrim-background: rgba(0, 0, 100, 0.8);
+				/**/
+				--app-drawer-content-container: {
+					/** /
+					background-color: var(--bg-3);
+					background-color: #4B4B4B;
+					/**/
+					background-color: var(--charcoal);
+					color: white;
+				}
+			}
+			
+			paper-item, .paper-item {
+				font-weight: 400;
+			}
+			
+			#brand {
+				background-color: var(--water);
+				opacity: 1.0;
+				--paper-item-min-height: 45px; /*48px default*/
+				/** /
+				font-weight: bold;
+				/**/
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+			}
+			
+			#main-content {
+				background-color: var(--mist);
+				min-height: 100vh;
+				/** /
+				min-height: calc(100vh - 64px);
+				background-color: red;
+				width: calc(100vw - 250px);
+				/**/
+			}
+			
+			img.logo {
+				height: 1.25em;
+			}
+			
+			paper-listbox, #listbox {
+				display: block;
+				cursor: pointer;
+			}				
+			
+			a {
+				text-decoration: none;
+				color: white;
+			}
+			
+			sample-content {
+				padding-top: 64px;
+			}
+			
+			#menu, #account {
+				cursor: pointer;
+			}
+			
+			paper-button {
+				text-transform: none;
+			}
+						
+		</style>
+
+  </template>
+
+</dom-module>

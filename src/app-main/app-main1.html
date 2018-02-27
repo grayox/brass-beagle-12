@@ -1,0 +1,451 @@
+<!--- ->
+Copyright (c) 2015-2017 Atlas Laboratories (atlaslive@gmail.com) - All rights reserved.
+Read full copyright notice and disclaimer contained in file labeled copyright-notice.md located in the root directory.
+<!---->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="/src/app-state/my-redux-store.html">
+<link rel="import" href="/src/custom-behaviors/user-setter-behavior.html">
+<link rel="import" href="/src/custom-behaviors/user-getter-behavior.html">
+<!--- ->
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+Update: Can not use <iron-meta> for state management; does not dynamically update properties
+Instead, use custom state elements (e.g., <state-user-remote>) which wraps <app-localstorage-document> 
+and exposes custom properties and methods.
+<!--- ->
+<link rel="import" href="/src/app-state/state-user.html">
+<!---->
+<link rel="import" href="/src/app-state/state-user-auth.html">
+<!--- ->
+
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<!---->
+<link rel="import" href="/src/app-login/login-view.html">
+<link rel="import" href="/src/app-login/loggedin-view.html">
+
+<!-- Edit -->
+<!--- ->
+<link rel="import" href="/src/redux-store/redux-js.html">
+<!--- ->
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<!--- ->
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<!--- ->
+<link rel="import" href="app-methods.html">
+<link rel="import" href="media-query.html">
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!-- endEdit -->
+
+<dom-module id="app-main">
+  <template>
+		<!---->
+    <style>
+			/**/
+      :host {
+        display: block;
+      }
+
+			/** /
+      #pages,
+      #pages > * ,
+			/** /
+			#views,
+      #views > * {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+			/**/
+      :root {
+        --dark-primary-color: #33383a;
+        --primary-color: #00b4f0;
+        --light-primary-color: #F2FAF9;
+        --text-primary-color: #FFFFFF;
+        --accent-color: #ff3a39;
+        --light-accent-color: #F2FAF9;
+        --primary-text-color: rgba(0, 0, 0, 0.87);
+        --secondary-text-color: #727272;
+        --primary-background-color: #FFFFFF;
+        --disabled-text-color: *#BDBDBD;
+        --divider-color: #B6B6B6;
+        --paper-menu-background-color: #fff;
+        --menu-link-color: #111111;
+        --paper-input-container-underline: {
+          background: #dbdbdb;
+        }
+        --paper-header-panel-shadow: {
+          display: none;
+        }
+        --paper-header-panel-standard-container: {
+          overflow: visible;
+        }
+        --vaadin-upload-button-add: {
+          background: transparent;
+          color: var(--primary-color);
+          box-shadow:
+						0 2px 2px 0 rgba(0, 0, 0, 0.14),
+						0 1px 5px 0 rgba(0, 0, 0, 0.12),
+						0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+        --vaadin-upload-buttons-primary: {
+          flex-direction: column;
+          align-items: center;
+        }
+        --section-title: {
+          font-weight: 400;
+          font-size: 13px;
+          display: block;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+          padding-bottom: 6px;
+          margin-bottom: 18px;
+          margin-top: 4px;
+          color: rgba(0, 0, 0, 0.54);
+        }
+        iron-overlay-backdrop {
+          --iron-overlay-backdrop-background-color: #33383A;
+        }
+      }
+			/**/
+    </style>
+
+		<!-- Edit -->
+		
+		<!--- ->
+		<iron-meta type="media-width"
+							 key="head"
+							 value="[[mediaWidthHead]]"
+							 >
+		</iron-meta>
+		<iron-meta type="media-width"
+							 key="page"
+							 value="[[mediaWidthPage]]"
+							 >
+		</iron-meta>
+		<!--- ->
+		<media-query media-width="{{mediaWidthHead}}"
+								 breakpoints="575 700 840"
+								 ><!-- toolbar-panel - ->
+		</media-query>
+		<media-query media-width="{{mediaWidthPage}}"
+								 breakpoints="700 900 1125"
+								 ><!-- loggedin-view - ->
+		</media-query>
+		<!--- ->
+		<iron-meta type="media"
+							 key="width"
+							 value="[[mediaWidth]]"
+							 >
+		</iron-meta>
+		<!--- ->
+		<iron-meta id="meta"
+							 xtype="media-width"
+							 xkey="user"
+							 key="info"
+							 xvalue="[[user]]"
+							 value="[[user.email]]"
+							 xvalue="foo"
+							 >
+		</iron-meta>
+		<!--- ->
+		<iron-ajax id="ajax"
+							 auto
+							 url="/src/app-main/app-data.json"
+							 handle-as="json"
+							 on-response="_handleAjaxResponse"
+							 xdebounce-duration="300"
+							 last-response="{{appData}}"
+							 >
+		</iron-ajax>
+		
+    <!-- state -->
+    <!--- ->
+		<state-app-data app-data="{{appData}}"></state-app-data>
+    <!--- ->
+		<state-user user-remote="[[userRemote]]"
+								user-logged-in="[[loggedIn]]"
+								xuser-auth-provider="[[authProvider]]"
+								>
+		</state-user>
+		<!---->
+		<state-user-auth id="auth" user-logged-in="{{loggedIn}}"></state-user-auth>
+		<!--- ->
+		
+		<app-methods id="app-methods"></app-methods>
+
+		<!--- ->
+    Called by app-shell
+		<!--- ->
+		<media-query xmedia-width="{{mediaWidth}}"
+								 breakpoints="[[appData.breakpoints]]"
+								 >
+		</media-query>
+		<!---->
+
+		<!--- ->
+		<firebase-app id="app"
+									name="app"
+									auth-domain="[[appData.firebase.authDomain]]"
+									database-url="[[appData.firebase.databaseUrl]]"
+									api-key="[[appData.firebase.apiKey]]"
+									>
+		</firebase-app>
+		<!--- ->
+		<firebase-app name="app"
+									auth-domain="green-comet.firebaseapp.com"
+									database-url="green-comet.firebaseio.com"
+									api-key="AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+									>
+		</firebase-app>
+		<!--- ->
+		<firebase-auth id="auth"
+									 app-name="app"
+									 user="{{userRemote}}"
+									 provider="{{authProvider}}"
+                   signed-in="{{loggedIn}}"
+									 on-error="handleError"
+									 >
+		</firebase-auth>
+		<!---->
+		
+		<login-view hidden$="{{loggedIn}}"></login-view>
+		<template restamp is="dom-if" if="[[loggedIn]]">
+		  <loggedin-view hidden$="{{!loggedIn}}"></loggedin-view>
+		</template>
+		<!--- ->
+		<div id="views"></div>
+		<!-- endEdit -->
+		<!--- ->
+    <iron-pages id="pages"
+								selected="[[selected]]"
+								>
+      <login-view></login-view>
+      <loggedin-view></loggedin-view>
+    </iron-pages>
+		<!---->
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'app-main',
+				/** /
+				behaviors: [
+					//ReduxBehavior,
+					//AsyncActionsBehavior,
+					//MyBehaviors.UserGetterBehavior,
+					//Polymer.IronResizableBehavior,
+				],
+				/** /
+        properties: {
+					/** /
+          loggedIn: {
+            type: Boolean,
+            notify: true,
+            observer: '_loggedInChanged',
+            value: () => false,
+					},
+					/** /
+					authProvider: {
+					  // provider signal is only sent upon login event
+					  type: String,
+						notify: true,
+					},
+					/** /
+					userRemote: {
+						type: Object,
+						notify: true,
+            observer: '_userRemoteChanged',
+          },
+					/** /
+          selected: {
+            type: Number,
+            notify: true
+          },
+					/**/
+					// Edit
+					/** /
+					appData: {
+						type: Object,
+            //observer: '_appDataChanged',
+						//notify: true,
+					},
+					/** /
+					mediaWidth: {
+						type: Number,
+						notify: true,
+						//observer: '_mediaWidthChanged',
+					},ll
+					mediaWidthHead: {
+						type: Number,
+						notify: true,
+					},
+					mediaWidthPage: {
+						type: Number,
+						notify: true,
+					},
+					/** /
+					mediaWidth: {
+						type: Object,
+            notify: true,
+						//observer: '_mediaWidthChanged',
+						value: function() {
+							return {};
+						},
+					},
+					//loginData: Object,
+					/** /
+					userInitialized: {
+            type: Boolean,
+            notify: true,
+          },
+					/** /
+					// endEdit
+				},
+				/**/
+				
+				/** /
+				attached: function() {
+					//console.log('app-data', this.appData);
+				},
+				/**/
+				
+        ready: function() {
+					// super.ready();
+          // Start downloading and initializing the loggedin-view once the login page has rendered
+          Polymer.RenderStatus.afterNextRender(this.$.login, function() {
+            this.importHref(this.resolveUrl('/src/app-login/loggedin-view.html'),
+              null, null, true);
+          }.bind(this));
+        },
+
+				/** /
+        _selectPage: function() {
+          //this.selected = this.loggedIn ? 1 : 0;
+          this.set( 'selected' , this.loggedIn ? 1 : 0 );
+        },
+				/**/
+				
+				// Edit
+				
+				/** /
+        _loggedInChanged: function(bool) {
+					console.log('loggedIn', bool);
+					//console.log('user', this.user); //null
+					/** /
+					var value = this.$.meta.byKey('info');;
+					console.log('value', value); //null
+					//this.dispatch('updateLoggedIn', bool); // Update state with new login status
+					/** /
+        	this.set( 'selected' , bool ? 1 : 0 ); //_selectPage()
+          if(bool) {
+						// No need to determine: has user logged in before? // login-view-plus._checkInit(ob) // Checked prior to login
+						// Redux Store // fetch and set user-specific data // loggedin-view._userChanged(u)
+        	} else {
+						// Redux Store // reset app to initial values
+					}
+					/** /
+        },
+				/**/
+				
+				/** /
+				_appDataChanged: function(appData) {
+					//console.log('appData', appData);
+					//this.dispatch('updateAppData', appData);
+				},
+        
+				/** /
+				_userRemoteChanged: function(userRemote) {
+					console.log('userRemote', userRemote);
+					//this.dispatch('updateAppData', userRemote);
+				},
+        
+				/** /
+				observers: [
+					//'_mediaWidthChanged(mediaWidth.*)',
+				],
+				/**/
+				
+				/** /
+				_mediaWidthChanged: function() {
+					console.log('media-width', this.mediaWidth);
+				},
+				/** /
+				
+				_handleAjaxResponse: function() {
+					//this.$.loggedin.pageChanged();
+				},
+				/** /
+				
+				listeners: {
+          'login'  : '_login'  ,
+          'logout' : '_logout' ,
+          //'item-method' : '_itemMethod' ,
+        },
+				
+				_login: function(e) {
+					const auth = this.$.auth;
+					//console.log('loggedIn\n', this.loggedIn);
+					//auth.login(e);
+				},
+				
+				_logout: function(e) {
+				  const auth = this.$.auth;
+					//console.log('loggedIn\n', this.loggedIn);
+					//auth.logout(e);
+				},
+				
+				/** /
+				_login: function(e) {
+					//console.log('e', e);
+					var authProvider = e.detail;
+					this.set('authProvider', authProvider);
+					var auth = this.$.auth;
+					var _this = this;
+					auth.signInWithPopup(authProvider)
+						.then(function(response) {
+							//console.log('response', response);
+							//console.log('loggedIn', auth.signedIn);
+							//_this.set('loggedIn', auth.signedIn);
+							//console.log('user', auth.user);
+							//console.log('user', _this.user);
+						  //this.fire('logged-in', response);
+					}).catch(function(error) {
+						//console.log('error', error);
+						console.error(error.code, error.message);
+					});
+				},
+				
+				_logout: function(e) {
+					var auth = this.$.auth;
+					var _this = this;
+					auth.signOut()
+		          .then(function(response) {
+						    //console.log('auth.signedIn', auth.signedIn);
+						    //console.log('loggedIn', _this.loggedIn);
+					      //_this.set('loggedIn', auth.signedIn);
+						    //_this.set('loggedIn', false);
+					    })
+              .catch(function(error) {
+						    //console.log('error', error);
+						    console.error(error.code, error.message);
+					    });
+				},
+				/** /
+				_itemMethod: function(e) {
+					console.log('e', e);return;
+				},
+				/**/
+				// endEdit
+				
+      });
+    })();
+  </script>
+</dom-module>

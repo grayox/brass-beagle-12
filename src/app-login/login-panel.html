@@ -1,0 +1,161 @@
+<!---->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="/src/custom-elements/custom-icons.html">
+<!--- ->
+<link rel="import" href="/src/custom-elements/custom-avatars.html">
+<!---->
+
+<dom-module id="login-panel">
+	<template>
+		<style>
+			:host {
+				--icon-color: white;
+				--icon-color-hover: var(--paper-grey-500); /*var(--primary-color);*/
+			}
+			/* button */
+			/* http://www.w3schools.com/css/css3_animations.asp */
+			@-webkit-keyframes slide-right { /* Chrome, Safari, Opera */
+					0% { right: 200px; opacity: 0; -webkit-transform: rotateY( 90deg); }
+				100% { right:   0  ; opacity: 1; -webkit-transform: rotateY(  0deg); }
+			}
+			@keyframes slide-right { /* Standard syntax */
+					0% { right: 200px; opacity: 0;         transform: rotateY( 90deg); }
+				100% { right:   0  ; opacity: 1;         transform: rotateY(  0deg); }
+			}
+			/** /
+			These animation delays are no longer the preferred pattern.
+			Use neon-animation/cascaded-animation instead.
+			/**/
+			#b01 { animation-delay: 1.24s; }
+			#b02 { animation-delay: 1.20s; }
+			#b03 { animation-delay: 1.12s; }
+			#b04 { animation-delay: 0.96s; }
+			#b05 { animation-delay: 0.64s; }
+			paper-icon-button {
+				/** /
+				color: var(--icon-color, --paper-orange-500); Removed default because icons might handle change of background
+				/**/
+				color: var(--icon-color, white);
+				padding: 1em;
+				height: 4em;
+				width: 4em;
+				cursor: pointer;
+				border-radius: 50%;
+				/* animations */
+				position: relative;
+				animation-delay: 1s;
+				animation-name: slide-right;
+				-webkit-animation-name: slide-right; /* Chrome, Safari, Opera */
+				animation-duration: .8s;
+				-webkit-animation-duration: .8s; /* Chrome, Safari, Opera */
+				animation-timing-function: ease-in; /* none linear ease ease-in ease-out ease-in-out */
+				animation-fill-mode: both;
+				/* transitions */
+				-moz-transition:    .5s;
+				-webkit-transition: .5s;
+				-o-transition:      .5s;
+				transition:         .5s;
+			}
+			paper-icon-button[selected=true] { /*Don't use :hover because :hover condition remains true after clicking followed by page reload*/
+				/**/
+				color: var(--icon-color-hover, --paper-grey-500);
+				/** /
+				opacity: 0.67;
+				background-color: rgba(0,0,0,0.3);
+				background-color: rgba(255,255,255,0.3);
+				/**/
+				background-color: rgba(255,255,255,0.075);
+				/**/
+				/**/
+			}
+		</style>
+		<div class="layout horizontal row wrap center-justified flex-center-align">
+			<template is="dom-repeat" items="[[buttons]]">
+			  <span>
+					<paper-icon-button id$="[[item.id]]"
+														 icon="custom-icons:[[item.icon]]"
+														 on-tap="login"
+														 on-mouseover="_handleIn"
+														 on-mouseout="_handleOut">
+					</paper-icon-button>
+					<paper-tooltip>login with [[item.name]]</paper-tooltip>
+			  </span>
+			</template>
+		</div>
+		<!--- ->
+		<div class="layout horizontal row wrap center-justified flex-center-align">
+			<template is="dom-repeat" items="[[avatars]]">
+			  <span>
+					<paper-icon-button icon="custom-avatars:[[item.icon]]"></paper-icon-button>
+			  </span>
+			</template>
+		</div>
+		<!---->
+	</template>
+
+  <script>
+    (function() {
+      //'use strict';
+      Polymer({
+				
+        is: 'login-panel',
+				properties: {
+					buttons: {
+						value: function(){
+							return [
+								{ id: 'b01', name: 'Google'      , icon: 'google'      , provider: 'google'   },
+								{ id: 'b02', name: 'Facebook'    , icon: 'facebook'    , provider: 'facebook' },
+							//{ id: 'b03', name: 'Gmail'       , icon: 'envelope'    , provider: 'google'   },
+								{ id: 'b03', name: 'Gmail'       , icon: 'gmail'       , provider: 'google'   },
+								{ id: 'b04', name: 'Twitter'     , icon: 'twitter'     , provider: 'twitter'  },
+								{ id: 'b05', name: 'Google Plus' , icon: 'google-plus' , provider: 'google'   },
+							];
+						},
+					},
+					/** /
+					avatars: {
+						value: function(){
+							return [
+								{ icon: 'avatar-01' },
+								{ icon: 'avatar-02' },
+								{ icon: 'avatar-03' },
+								{ icon: 'avatar-04' },
+								{ icon: 'avatar-05' },
+								{ icon: 'avatar-06' },
+							  { icon: 'avatar-07' },
+								{ icon: 'avatar-08' },
+								{ icon: 'avatar-09' },
+								{ icon: 'avatar-10' },
+								{ icon: 'avatar-11' },
+								{ icon: 'avatar-12' },
+							  { icon: 'avatar-13' },
+								{ icon: 'avatar-14' },
+								{ icon: 'avatar-15' },
+								{ icon: 'avatar-16' },
+							];
+						},
+					},
+					/**/
+				},
+				_handleIn: function(e) {
+					var r = e.model.item;
+				  var s = this.$$('#' + r.id);
+					s.setAttribute('selected', true);
+				},
+				_handleOut: function(e) {
+					var r = e.model.item;
+				  var s = this.$$('#' + r.id);
+					s.setAttribute('selected', false);
+				},
+				login: function(e) {
+					this.fire('login', e.model.item.provider); 
+				},
+      });
+    })();
+  </script>
+</dom-module>

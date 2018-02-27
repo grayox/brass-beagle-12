@@ -1,0 +1,104 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!---->
+
+<!--- ->
+<!---->
+
+<dom-module id="settings-menu-item">
+  <template>
+    <style include="paper-item-styles"></style>
+    
+    <!-- state - ->
+    <state-user-settings user-settings="{{settings}}"
+                         user-settings-zip="{{settingsZip}}"
+                         user-settings-switch="{{settingsSwitch}}"
+                         user-settings-input="{{settingsInput}}"
+                         >
+    </state-user-settings>
+    <!---->
+		
+    <paper-icon-item name="[[name]]" role="menuitemradio">
+      <div class="avatar" slot="item-icon"></div>
+      <paper-item-body two-line>
+        <div>[[label]]</div>
+        <div secondary>[[description]]</div>
+      </paper-item-body>
+      <!---->
+      <paper-icon-button class="red"
+                         icon="[[icon]]"
+                         alt="[[altText]]"
+                         class$="_computeClass(selected)"
+                         >
+      </paper-icon-button>
+      <!---->
+    </paper-icon-item>
+		
+  </template>
+
+  <script>
+    class SettingsMenuItem extends Polymer.Element {
+      static get is() { return 'settings-menu-item'; }
+			
+      static get properties() { return {
+        
+        selected: {
+          type: Boolean,
+          notify: true,
+        },
+				
+				name: {
+					type: String, // "financial"
+					notify: true,
+				},
+				
+				label: {
+					type: String, // "Financial"
+					notify: true,
+				},
+
+        description: {
+					type: String, // "You are a financial planner"
+					notify: true,
+				},
+				
+				icon: {
+					type: String, // "star"
+					notify: true,
+				},
+
+        altText: {
+					type: String, // "Select this!"
+					notify: true,
+				},
+				
+      }}
+      			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+      
+      _computeClass(b) {
+        return b ? "selected" : "default";
+      }
+			
+    }
+
+    window.customElements.define(SettingsMenuItem.is, SettingsMenuItem);
+  </script>
+
+</dom-module>

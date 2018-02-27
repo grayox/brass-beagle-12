@@ -1,0 +1,67 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="settings-item.html">
+
+<dom-module id="settings-items-switches">
+  <template>
+    <style></style>
+
+    <settings-item type="switch"
+									 label="Home"
+									 icon="home"
+									 xchecked="{{leadHome}}"
+									 xchecked="[[settingsSwitch.home]]"
+									 xchecked="{{settingsSwitch.home}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Mortgage"
+									 icon="account-balance"
+									 xchecked="{{leadMortgage}}"
+									 xchecked="[[settingsSwitch.mortgage]]"
+									 xchecked="{{settingsSwitch.mortgage}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Insurance"
+									 xicon="description"
+									 icon="vaadin:diploma"
+									 xchecked="{{leadInsurance}}"
+									 xchecked="[[settingsSwitch.insurance]]"
+									 xchecked="{{settingsSwitch.insurance}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Financial"
+									 icon="assessment"
+									 xchecked="{{leadFinancial}}"
+									 xchecked="[[settingsSwitch.financial]]"
+									 xchecked="{{settingsSwitch.financial}}"
+									 >
+		</settings-item>
+		
+  </template>
+
+  <script>
+    class SettingsItemsSwitches extends Polymer.Element {
+      static get is() { return 'settings-items-switches'; }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+    }
+
+    window.customElements.define(SettingsItemsSwitches.is, SettingsItemsSwitches);
+  </script>
+
+</dom-module>

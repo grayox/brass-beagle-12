@@ -15,49 +15,140 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <base href="/">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-  <title>My App Name 1</title><!-- Browser tab label -->
+	<!-- browser tab label - ->
+  <title>My App Name 1</title>
+	<!---->
+  <title>Swap</title>
 
+	<!-- browser tab icon -- >
   <link rel="shortcut icon" sizes="32x32" href="images/shop-icon-32.png">
+	<!---->
+  <link rel="shortcut icon" sizes="32x32" href="images/shop-icon-32.png">
+
+	<!-- copied from https://www.favicon-generator.org -- >
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+	<!---->
 
   <meta name="theme-color" content="#fff">
   <link rel="manifest" href="manifest.json">
 
+	<!-- style sheet import - ->
+	<link rel="stylesheet" href="css/style.css">
+	<!---->
   <style>
 
-    body {
+		/* font imports */
+		/** /
+		@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+		@import url('https://fonts.googleapis.com/css?family=Lato:300,400');
+		/**/
+		
+    html,
+		body {
+			
       margin: 0;
-      font-family: 'Roboto', 'Noto', sans-serif;
-      font-size: 13px;
-      line-height: 1.5;
+      font-family: 'Roboto', 'Noto', 'Lato', 'Open Sans', sans-serif;
+      font-size: 15px; /* 13px */
+      line-height: 1.15; /* 1.5 */
       min-height: 100vh;
-    }
+			background-color: red; /* should never see; indicates problem */
+			
+			/* variables */
+			
+			/* https://codecrafted.net/randommaterial/                 */
+			/* https://www.materialpalette.com/deep-purple/deep-orange */
+			/* theme-colors.html                                       */
+			/* --dark-primary-color                                    */
+			/* --primary-color                                         */
+			/* --light-primary-color                                   */
+			/* --accent-color                                          */
+			/* --text-icons             #FFFFFF opacity: 1.00          */
+			/* --primary-text           #212121 opacity: 0.87          */
+			/* --secondary-text         #757575 opacity: 0.54          */
+			/* --divider-color-text     #BDBDBD opacity: 0.26          */
+			--opacity-normal:   0.87; /* #212121 --primary-text         */
+			--opacity-dim:      0.54; /* #757575 --secondary-text       */
+			--opacity-divider:  0.26; /* #BDBDBD --divider-color        */
+			--opacity-disabled: 0.26; /* #BDBDBD --divider-color        */
+			
+			--water: #1879DB; /* #187CDD #1778DC */
+			--water-light: #1B87E3;
+			--water-dark: #166ED5;
+			--charcoal: rgb(75, 75, 75); /*#4B4B4B;*/
+			--charcoal-light: #585858;
+			--charcoal-dark: rgb(67, 67, 67); /*#434343;*/
+			--mist: #FAFAFA;
+			--highlight: var(--paper-amber-500);/*var(--paper-red-500);/*#FFBB00;/*#FFFF00;#FFEE00;>#FFEA00;#FFDD00;#FFCC00;#FFBB00;#FFAA00;#FF9900;#FF8800;yellow;/*#DB6318;*/
 
+			--app-primary-color: var(--water);
+			--app-primary-color-light: var(--water-light);
+			--app-primary-color-dark: var(--water-dark);
+			--app-background-color: var(--mist);
+			--app-highlight-color: var(--highlight);
+			
+			--dashboard-element: var(--charcoal);
+			--dashboard-element-hover: var(--charcoal-dark);
+
+			--primary-color: var(--app-primary-color);
+			--accent-color: var(--app-highlight-color);
+		}
+		
     /* styling for render while resources are loading */
-    app-shell[unresolved] {
+    app-main[unresolved] {
       display: block;
       min-height: 101vh;
-      text-align: center;
       font-weight: normal;
-      line-height: 68px;
-      font-size: 16px;
+      text-align: center;
 			/** /
+      font-size: 16px;
+      line-height: 68px;
       font-weight: 600;
       letter-spacing: 0.3em;
 			/**/
       color: #202020;
       padding: 0 16px;
       overflow: visible;
-    }
-
+			
+			background-color: var(--app-primary-color); /*rgb(24, 121, 219); /* rgb(250, 250, 250) */
+	  }
+		
+		app-main[unresolved] > img.brand {
+			margin-top: 25%;
+			height: 8em;
+		  max-width: 50vw;
+		}
+	
   </style>
 
 </head>
 <body>
 
-  <app-shell unresolved>My App Name 2</app-shell><!-- Initial load text -->
+	<!-- initial load content -->
+  <app-main unresolved>
+		<img src="/images/logo.svg" class="brand" />
+		<!--- ->
+		My App Name 2
+		<!---->
+	</app-main>
 
   <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
-  <link rel="import" href="src/app-shell.html">
+  <link rel="import" href="src/app-main/app-main.html">
 
   <script>
     window.performance && performance.mark && performance.mark('index.html');

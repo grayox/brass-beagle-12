@@ -1,0 +1,496 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/iron-resizable-behavior/iron-resizable-behavior.html">	
+
+<link rel="import" href="/src/custom-styles/shared-styles.html">
+
+<link rel="import" href="/src/app-main/my-drawer-panel.html">
+<link rel="import" href="/src/app-main/app-methods.html">
+
+<!--- ->
+Opted against toolbar-panel-listbox and for toolbar-panel-buttons because
+could not achieve "fullbleed" effect (zero padding and margin) in app-toolbar
+using squared paper-items as menu buttons that extend all the way to the edge
+<link rel="import" href="../app-head/toolbar-panel-listbox.html">
+<!---->
+<link rel="import" href="/src/app-head/toolbar-panel-buttons.html">
+<link rel="import" href="/src/app-head/dialog-info.html">
+<link rel="import" href="/src/app-head/dialog-settings.html">
+<link rel="import" href="/src/app-head/dialog-account.html">
+<link rel="import" href="/src/app-head/dialog-margin-zip.html">
+<link rel="import" href="/src/app-head/dialog-margin-category.html">
+
+<link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
+<link rel="import" href="/src/app-views/view-inbox/view-inbox.html">
+<!--- ->
+<link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
+<link rel="import" href="/src/app-views/view-deals/view-deals.html">
+<link rel="import" href="/src/app-views/view-network/view-network.html">
+<link rel="import" href="/src/app-views/view-trade/view-trade.html">
+<link rel="import" href="/src/app-views/view-settle/view-settle.html">
+<!---->
+
+<dom-module id="loggedin-view">
+	<template>
+
+		<style include="shared-styles">
+
+			/** /
+			app-header-layout ::content #contentContainer {
+				z-index: 2!important;
+			}
+			/**/
+			
+      app-header {
+				color: white;
+				background-color: var(--dark-primary-color);
+				/** /
+				background-color: red;
+				z-index: 1;
+				/**/
+			}
+			
+			app-toolbar {
+			  --app-toolbar-font-size: 16px;
+				color: var(--icon-color, white);
+				xcursor: pointer;
+				-moz-transition:    .5s;
+				-webkit-transition: .5s;
+				-o-transition:      .5s;
+				transition:         .5s;
+			}
+			
+			app-toolbar > div[main-title] > .text {
+				/** /
+				xcursor: pointer;
+				color: var(--primary-color);
+				-webkit-text-stroke-width: 0;
+				font-family: 'Impact', 'Roboto', sans-serif;/** /
+			  font-size: 24px;
+				font-style: italic;
+				-moz-transition:    1s;
+				-webkit-transition: 1s;
+				-o-transition:      1s;
+				transition:         1s;
+				/**/
+				opacity: 0.43;
+        font-weight: 100;
+				margin-left: 1em;
+			}
+			
+			app-toolbar img {
+				height: 22px;
+			}
+			
+			.drawer-menu-button {
+				/** /
+				color: var(--icon-color, --paper-orange-500); Removed default because icons might handle change of background
+				/**/
+				color: var(--icon-color, white);
+				xcursor: pointer;
+				--paper-icon-button: {
+					border-radius: 50%;
+				}
+				--paper-icon-button-hover: {
+					/** /
+				  background-color: rgba(0, 0, 0, 0.3);
+					/**/
+				  background-color: rgba(255, 255, 255, 0.3);
+					opacity: 0.67;
+				  /**/
+				}
+				-moz-transition:    .5s;
+				-webkit-transition: .5s;
+				-o-transition:      .5s;
+				transition:         .5s;
+			}
+			/** /
+			.drawer-menu-button:hover {
+				background-color: rgba(0,0,0,0.3);
+				opacity: 0.75;
+				/** /
+				background-color: fadeout(hsla(90, 90%, 50%, 0.5), 10%);
+				color: fadeout(hsla(90, 90%, 50%, 0.5), 10%);
+				color: rgba(255, 255, 255, .5);
+				background-color: rgba(255, 0, 0, .5);
+				background-color: var(--paper-grey-700);
+				color: var(--paper-grey-200);
+				color: var(--icon-color-hover, --paper-grey-500);
+				background: transparent\9; 
+				/** /
+		  }
+			/**/
+			app-drawer-layout > app-drawer {
+				--app-drawer-content-container: {
+					background-color: black;
+				}
+			}
+		</style>
+		
+    <app-methods id="app-methods"
+									xapp-name="app"
+									xpath="[editableItemId]"
+									data="{editableItem}"
+									xuser="[[user]]"
+									xapp-data="[[appData]]"
+									>
+    </app-methods>
+
+		<firebase-document id="doc-user"
+										   app-name="app"
+											 xdata="{{userDoc}}"
+										   >
+		</firebase-document>
+	
+		<!-- Header dialogs -->
+		<dialog-info     id="info"     name="user-data"></dialog-info>
+		<dialog-settings id="settings" name="user-data"></dialog-settings>
+		<dialog-account  id="account"  name="user-data"></dialog-account>
+		<!-- end Header dialogs -->
+		
+		<!-- Margin dialogs -->
+		<dialog-margin-zip      id="zip"      name="user-data"></dialog-margin-zip>
+		<dialog-margin-category id="category" name="user-data"></dialog-margin-category>
+		<!--- ->
+		<dialog-settings        id="settings" ></dialog-settings>
+		<!---->
+		<!-- end Margin dialogs -->
+		
+		<app-drawer-layout fullbleed force-narrow>
+			<app-drawer id="drawer"
+									transition-duration="450"
+									>
+				<!--- ->
+				drawer content
+				<!---->
+				<my-drawer-panel id="drawer-panel"
+												 pages="{{pages}}"
+												 route="{{page}}"
+												 on-select-item="_onSelectItem"
+												 >
+				</my-drawer-panel>
+				<!---->
+			</app-drawer>
+
+			<app-header xcondenses xreveals xeffects="waterfall">
+				<app-toolbar>
+					<paper-icon-button icon="menu"
+														 class="drawer-menu-button"
+														 drawer-toggle
+														 xspacer
+														 >
+					</paper-icon-button>
+					<div id="main-title"
+							 main-title xcondensed-title
+							 spacer$="[[_computeSpacer(mediaWidth)]]"
+							 class="drawer-menu-button"
+							 >
+						<!--- ->
+						Blast
+						<img src="../images/app-icon-32.png" />
+						<!---->
+						<img src="/images/logo.svg" />
+						<span class="text">
+							<span hidden$="[[!mediaWidth]]">[[pageName]]</span>
+							<iron-icon icon="[[pageIcon]]"></iron-icon>
+						</span>
+					</div>
+					<!--- ->
+					<iron-icon id="sync" icon="notification:sync" hidden$="[[_hideSyncIcon(status)]]" title="Syncing…"></iron-icon>
+					<!---->
+					<span class="flex"></span>
+					<!--- ->
+					<paper-button on-tap="_openInfoWindow" class="about-button">Info</paper-button>
+					<paper-button on-tap="_logout" class="logout-button">Logout</paper-button>
+					<!---->
+					<!-- Edit -->
+					<toolbar-panel-buttons user="[[user]]"
+																 on-logout="_logout"
+																 on-info="_openInfoWindow"
+																 on-settings="_openSettingsWindow"
+																 on-account="_openAccountWindow"
+																 xmedia-width="[[mediaWidth]]"
+																 xtop-item xbottom-item
+																 >
+					</toolbar-panel-buttons>
+					<!-- endEdit -->
+				</app-toolbar>
+			</app-header>				
+			<!---->
+			<neon-animated-pages role="main"
+													 selected="[[page]]"
+													 xattr-for-selected="name"
+													 selected-attribute="visible"
+													 xon-iron-select="_onIronSelect"
+													 >
+				<!---->
+				<view-inbox id="view-inbox"
+										  entry-animation="slide-from-right-animation"
+									    exit-animation="slide-left-animation"
+									    xmedia-width="[[mediaWidth]]"
+									    user="[[user]]"
+									    loading="[[loading]]"
+									    >
+				</view-inbox>
+				<!---->
+				<view-outbox id="view-outbox"
+									 entry-animation="slide-from-right-animation"
+									 exit-animation="slide-left-animation"
+									 xmedia-width="[[mediaWidth]]"
+									 user="[[user]]"
+									 loading="[[loading]]"
+									 >
+				</view-outbox>
+				<!---->
+			</neon-animated-pages>
+			<!---->
+
+		</app-drawer-layout>
+		
+
+	</template>
+
+ <script>
+    (function() {
+      'use strict';
+      Polymer({
+				
+        is: 'loggedin-view',
+				
+				behaviors: [
+					//ReduxBehavior,
+					//AsyncActionsBehavior,
+					Polymer.IronResizableBehavior,
+				],
+
+        properties: {
+					// Edit
+					/**/
+					viewGrid: {
+						type: Boolean,
+						statePath: 'viewGrid',
+					},
+					viewState: {
+						type: String,
+						statePath: 'viewState',
+					},
+					/**/
+					pageIcon: String,
+					pageName: String,
+					appData: {
+						type: Object,
+						statePath: 'appData',
+					},
+					loggedIn: {
+						type: Boolean,
+						statePath: 'loggedIn',
+					},
+					//loginData: Object,
+					mediaWidth: {
+						type: Number,
+						statePath: 'mediaWidth',
+						//notify: true,
+					},
+					/** /
+					userRemote: {
+            type: Object,
+            //notify: true,
+						statePath: 'userRemote',
+						observer: '_userRemoteChanged',
+          },
+					/** /
+					userDoc: {
+            type: Object,
+						observer: '_userDocChanged',
+          },
+					/**/
+					pages: {
+						type: Object,
+						statePath: 'appData.pages',
+						//computed: '_computePages(appData)',
+						//observer: '_pagesChanged',
+					},
+					//userInitialized: Boolean,
+        	// endEdit
+					
+					// Edit: Imported from Shop Demo App /shop-app.html
+					page: {
+						type: Number,
+						//observer: '_pageChanged',
+						value: function() {
+							return 0;
+						},
+					},
+					// endEdit: Imported from Shop Demo App /shop-app.html
+					
+        },
+
+        // Edit
+				
+				observers: [
+					'_pageChanged(pages, page)',
+				],
+				
+				listeners: {
+					'item-method'   : '_itemMethod' ,
+					'margin-dialog' : '_openWindow' ,
+					//'margin-viewgrid'  : '_setViewgrid'  ,
+					//'margin-viewstate' : '_setViewstate' ,
+				},
+				
+				_itemMethod: function(e) {
+					//console.log('e', e);
+					var detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+					var entity = detail.entity; // 'deal'|'bid'|'network'
+					/** /
+					var method = detail.method; // 'save'|'delete'
+					//this.$['app-methods'][method](detail);
+					/**/
+					//console.log('detail', detail);
+					//console.log('entity', entity);
+					this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+					this._closeEditor(entity);
+				},
+				
+				_closeEditor: function(s) { // s = entity: e.g., 'network' | 'deal' | 'bid' | 'user'
+					//console.log('s', s);
+					var id = this._pageEditor(s); // id = 'view-deals' | 'view-network'
+					if(!!id) {
+					  //console.log('id', id);
+						if(this.$[id]) {
+							this.$[id].closeEditor();
+						} else {
+							//console.log('id', id);
+							var a = Polymer.dom(this.root).querySelectorAll('[name="' + id + '"]');
+							var i = a.length;
+							//console.log('i', i);
+							while(i--) {
+								try {
+									a[i].closeEditor();
+								} catch(e) {
+									//console.log(e.message);
+								}
+							}
+						}
+					}
+				},
+				
+				_pageEditor(s) {
+					return this.appData.entities[s].page ? // .page property is optional
+						     this.appData.entities[s].page : null;
+					/** /
+					return {
+						deal    : 'view-deals'   ,
+						bid     : 'view-deals'   ,
+						network : 'view-network' ,
+					};
+					/**/
+				},
+				
+				_pageChanged: function(pages, page) {
+					this.set('pageName', pages ? pages[page].name : null);
+					this.set('pageIcon', pages ? pages[page].icon : null);
+				},
+				
+				/**/
+				_onSelectItem: function(e) {
+					//console.log('selected page', e.detail);
+					this.$.drawer.close();
+				},
+				/**/
+				
+        _openInfoWindow: function() {
+          this.$.info.open();
+        },
+				
+        _openSettingsWindow: function() {
+          this.$.settings.open();
+        },
+				
+        _openAccountWindow: function() {
+          this.$.account.open();
+        },
+				
+        _openWindow: function(e) {
+					var s = e.detail;
+					//console.log('s', s);
+          this.$[s].open();
+        },
+				
+				/** /
+				_setViewgrid: function(e) {
+					var b = e.detail;
+          console.log('viewgrid', b);
+					// Resize iron-list after display: none
+					//document.querySelector('iron-list').fire('iron-resize');
+					// Per https://www.webcomponents.org/element/PolymerElements/iron-list/iron-list#resizing
+        },
+				
+				_setViewstate: function(e) {
+					var s = e.detail;
+          console.log('viewstate', s);
+        },
+				/**/
+				
+				_computeSpacer: function(n) {
+					return n > 3;
+				},
+				
+				/** /
+				_userChanged: function(u) {
+					if(u) {
+						//console.log('user', u);
+						var doc = this.$['doc-user'];
+						var path = [ 'users' , u.uid ].join('/');
+						doc.path = path;
+					}					
+				},
+				/** /
+				_userDocChanged: function(user) {
+					console.log('user', user);
+					if( this.loggedIn
+						  && (!this.userInitialized)
+						  && (!Object.keys(user).length)
+						  && (user.constructor === Object)
+						){
+						//console.log('userDoc', user);
+						var detail = {
+							method: 'save',
+							entity: 'user',
+							data: {
+								user: this.user,
+								signup: this.loginData,
+							},
+						};
+						//console.log('detail', detail);
+						this.$['app-methods'].method(detail); //this.fire('item-method', detail);
+					}
+				},
+				/**/
+				
+        _logout: function() {
+          this.set('loggedIn', false); //this.loggedIn = false;
+        },
+				
+				// endEdit
+
+				/** /
+        _loginStateChanged: function() {
+          if (!this.loggedIn) {
+            //this._teardownDB();
+						// Execute function when user logs out
+          }
+        },
+				/**/
+
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,184 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<script>
+  //(function() {
+    //'use strict';
+			
+		// https://www.polymer-project.org/1.0/docs/tools/documentation
+		/**
+		 * Behavior that highlights stuff.
+		 *
+		 * @polymerBehavior
+		 */
+	
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.RandomUsersDataApiBehaviorImpl = {
+			
+			properties: {
+        randomUsersData: Array,
+        //randomUsersDataZips: Object,
+        randomUsersDataApp: Object,
+				randomUsersDataPaths: {
+					type: String,
+					value: function() {
+						return {
+							users: 'src/custom-libraries/random-users.json', // User data
+							//zips: 'src/custom-libraries/zip-code-data.json', // Zip data
+							app: 'src/app-main/app-data.json', // Firebase data
+						};
+					},
+				},
+      },
+			
+			attached: function() {
+				this.getRandomUsersData();
+				// Not DRY bc can't figure out how to return from inside event listener (two levels deep)
+				//this.getRandomUsersDataZips();
+				this.getRandomUsersDataApp();
+			},
+			
+			getRandomUsersData: function() {
+				var path = this.randomUsersDataPaths.users;
+				// var path = 'src/custom-libraries/random-users.json';
+				// http://stackoverflow.com/a/42763681/1640892
+				// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+        var ajax = document.createElement('iron-ajax');
+        ajax.contentType = 'application/json';
+        ajax.handleAs = 'json';
+        ajax.url = path;
+        ajax.method = 'get';
+				var _this = this;
+        ajax.addEventListener('response', function(e) {
+          //response handler
+					//console.log('ajax', e);
+					//console.log('ajax', ajax.lastResponse);
+					//return ajax.lastResponse; // does not work
+				  _this.randomUsersData = ajax.lastResponse;
+			  });
+        ajax.generateRequest();
+			},
+			
+			/** /
+			getRandomUsersDataZips: function() {
+				var path = this.randomUsersDataPaths.zips; // edited 'zips'
+				// var path = 'src/custom-libraries/random-users.json';
+				// http://stackoverflow.com/a/42763681/1640892
+				// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+        var ajax = document.createElement('iron-ajax');
+        ajax.contentType = 'application/json';
+        ajax.handleAs = 'json';
+        ajax.url = path;
+        ajax.method = 'get';
+				var _this = this;
+        ajax.addEventListener('response', function(e) {
+          //response handler
+					//console.log('ajax', e);
+					//console.log('ajax', ajax.lastResponse);
+					//return ajax.lastResponse; // does not work
+				  _this.randomUsersDataZips = ajax.lastResponse; // edited 'zips'
+			  });
+        ajax.generateRequest();
+			},
+			/**/
+			
+			/**/
+			getRandomUsersDataApp: function() {
+				var path = this.randomUsersDataPaths.app; // edited 'app'
+				// var path = 'src/custom-libraries/random-users.json';
+				// http://stackoverflow.com/a/42763681/1640892
+				// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+        var ajax = document.createElement('iron-ajax');
+        ajax.contentType = 'application/json';
+        ajax.handleAs = 'json';
+        ajax.url = path;
+        ajax.method = 'get';
+				var _this = this;
+        ajax.addEventListener('response', function(e) {
+          //response handler
+					//console.log('ajax', e);
+					//console.log('ajax', ajax.lastResponse);
+					//return ajax.lastResponse; // does not work
+				  _this.randomUsersDataApp = ajax.lastResponse; // edited 'app'
+			  });
+        ajax.generateRequest();
+			},
+			/**/
+			
+			/** /
+			randomUsersDataReplaceZips: function() {
+				var au = this.randomUsersData;     // au - Array of randomly generated users
+				var zd = this.randomUsersDataZips; // zd - Zip code data as keyed object
+				var za = Object.keys(zd);          // za - Array of actual zip codes
+				var zN = za.length;                // zN - Number of actual zip codes
+				var  i = au.length;
+				while(i--) {
+					var r = Math.random();
+					var x = Math.round(r * zN);      // Index of randomly selected zip code
+					var zip         = za[x];         // 5-digit zip string; e.g., 90210
+					var zo          = zd[zip];       // zo - Zip code as object
+					au[i].zipCode   = zip;
+					au[i].stateName = zo.state;
+					au[i].cityName  = zo.city;
+					au[i].county    = zo.county;
+				}
+				return au;
+			},
+			/**/
+			
+			/** /
+			uploadRandomUsersData: function() {
+				// To import data, use Import JSON option in Firebase Console // All data is overwritten at root
+			  // Ultimately, gave up on the following... kept getting errors
+				var app = document.createElement('firebase-app');
+				var query = document.createElement('firebase-query');
+				var doc = document.createElement('firebase-document');
+				var users = this.randomUsersData;
+				var fb = this.randomUsersDataApp.firebase;
+				
+				// app
+				app.authDomain  = fb.authDomain  ; //"polymerfire-test.firebaseapp.com"; // per official documentation
+				app.databaseUrl = fb.databaseUrl ; //"https://polymerfire-test.firebaseio.com/"; // per official documentation
+				app.apiKey      = fb.apiKey      ; //"AIzaSyDTP-eiQezleFsV2WddFBAhF_WEzx_8v_g"; // per official documentation
+			  console.log('app', app.properties);
+			  console.log('doc', doc.properties);
+			  console.log('query', query.properties);
+				
+				// update
+				// var update = {};
+        // update['test/users'] = users;
+				
+				var paths = ['test-users'];
+				//doc.data = users;
+				//doc.db.ref('/').update(paths);
+        query.data = users;
+				query.db.ref('/').update(paths);
+        //firebase.database().ref().update(update);			
+        //this.firebase.database().ref().update(update);			
+        //this.firebase.db().ref('/').update(update);			
+				//query.ref().update(update);
+				//query.ref('/').update(update);
+				//doc.db.ref().update(update);
+				//doc.database.ref().update(update);
+				//doc.db().ref().update(update);
+				//doc.database().ref().update(update);
+				//doc.ref.update(update);
+				//query.ref.update(update);
+				//query.db().ref('/').update(update);			
+        //query.database().ref('/').update(update);			
+			},
+			/**/
+			
+    };
+	
+    MyBehaviors.RandomUsersDataApiBehavior = [
+      MyBehaviors.RandomUsersDataApiBehaviorImpl,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

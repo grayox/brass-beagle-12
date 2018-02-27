@@ -1,0 +1,294 @@
+{							
+	"comment-breakpoints": "alternate: 575 700 840 900 1125",
+	"breakpoints": "500 800 1100",
+	"comments": [
+		"emailServerUrl is link to Google Apps Script Web App",
+    "Following comments refer to 'type' property",
+    "create : Writes new data object to Firebase; 'key' property generates unique Firebase key via .push() method",
+		"index : Writes created key and timestamp to target node; minimizes byte count over-the-wire and saves key-only index by reducing data value to timestamp",
+    "Restatement of above: paths.type = 'create' posts entire data object",
+    "Restatement of above: paths.type = 'index' only posts timestamp",
+		"update : Writes data to existing target node",
+		"data : data object of update action",
+		"delete : Removes object from target node",
+		"page: property corresponds to id in loggedin-view.html; for closing dialog;",
+    "~@this.newPostKey@~ creates new record when added to path array",
+    "Example: Overwrites data   : 'path': ['users', '~@this.userRemote.uid@~', 'settings'], 'comment-path': 'overwrites data'",
+    "Example: Creates new record: 'path': ['users', '~@this.userRemote.uid@~', 'settings-archive', '~@this.newPostKey@~'], 'comment-path': 'creates new record'",
+		"Rule 1: every entity needs either 'key' or 'init' property",
+		"Rule 1a: (maybe) 'key' property must match name of parent node in database node tree(?)",
+		"Rule 2: 'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()"
+	],
+	"emailService": {
+		"comment-emailServerUrl-sourcecode": "https://script.google.com/d/1gFTVaEblhYcjXg9bXtvYZyxRF59Bc_sHIZbXGbhtxYbeMOZ5-klkP78N/edit?usp=drive_web",
+		"xemailServerUrl": "http://httpbin.org/get",
+		"emailServerUrl": "https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec",
+	  "emailServerKey": "wjs66mhgxfputsdf1gne"
+	},
+	"firebase": {
+		"authDomain": "green-comet.firebaseapp.com",
+		"databaseUrl": "https://green-comet.firebaseio.com/",
+		"apiKey": "AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+	},
+	"comment-nav-menu-1": "Reference: https://material.io/guidelines/patterns/navigation-drawer.html",
+	"comment-nav-menu-2": "Reminder: After editing nav-menu items, manually edit /src/app-shell/my-app.html (previously loggedin-view.html) to match pages order sequence",
+	"nav-menu": [
+		{ "label": "Dashboard" , "name": "view-dashboard" , "icon": "vaadin:dashboard"      } ,
+		{ "label": "Outbox"    , "name": "view-outbox"    , "icon": "vaadin:cloud-upload"   } ,
+		{ "label": "Inbox"     , "name": "view-inbox"     , "icon": "vaadin:cloud-download" } ,
+		{ "label": "Archive"   , "name": "view-archive"   , "icon": "vaadin:database"       } ,
+		{ "label": "Contacts"  , "name": "view-contacts"  , "icon": "social:person-add"     } ,
+		{ "label": "Settings"  , "name": "view-settings"  , "icon": "settings"              }
+	],
+	"comment-overflow-menu-1": "Reference: https://material.io/guidelines/patterns/settings.html",
+	"comment-overflow-menu-2": "Reference: https://material.io/guidelines/patterns/help-feedback.html",
+	"overflow-menu": [
+		{ "label": "Feedback"  , "name": "view-feedback"  , "icon": "feedback"              } ,
+		{ "label": "Help"      , "name": "view-help"      , "icon": "help"                  } ,
+		{ "label": "Logout"    , "name": "view-logout"    , "icon": "power-settings-new"    }
+	],
+	"comment-unused-nav-menu-items": "Temp storage for dev purposes only for views not used in production",
+	"unused-nav-menu-items": [
+		{ "label": "Account"   , "name": "view-account"   , "icon": "vaadin:user"           }		
+	],
+	"entities": {
+		"comment-1": "For user-* entities, top level children should be user-remote, user-local",
+		"comment-2": "For user-local, children should be 'settings' and 'balances'; see schema",
+		"comment-3": "We will designate the following user 'state entities' for updating: user-remote, user-settings, user-balances",
+		"comment-4": "Each update to state entities should send snapshot of entire entity",
+		"comment-5": "e.g., updating 'settings.zip' should also update 'settings' but not 'balances'",
+		"comment-6": "This is done to optimize the number of queries vs. change/update/data volume",
+		"user-remote": {
+			"init": "_initUser('remote', e)", "comment-init": "Needs 'init' property if no 'key' property",
+			"paths": [
+				{
+					"comments": [
+						"Remote | Record user remote",
+						"Path also set at app.methods._initUser()"
+					],
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "remote"]
+				}, {
+					"comments": [
+						"----------Entities above this line have been implemented----------",
+						"Lineage | Memorialize and record network ancestry (descent from root node) of current user"
+					],
+					"xpath-1": ["users", "~@this.userRemote.uid@~", "remote", "~@this.newPostKey@~"],
+					"xpath-2": ["users", "~@this.userRemote.uid@~", "lineage", "~@parent.user.uid.lineage.push(inviter)@~"]
+				}, {
+					"comment": "Children | Add current user to list of child nodes of the parent",
+					"xpath": ["users-children", "~@parent.user.uid@~", "~@this.userRemote.uid@~"]
+				}, {
+					"comments": [
+						"Add flag to initial data (inviter/invitee combo) if user has already been 'initialized'",
+						"Need to check flag upon login and initialize user iff no flag"
+					],
+					"xpath": ["emails", "~@this.userRemote.uid@~", "user-initialized"]
+				}, {
+					"comment": "Add flag to initial data (invitation key) if user has already been 'initialized'",
+					"xpath": ["invitations", "~@this.key@~", "user-initialized"]
+				}, {
+					"comment": "----------Paths above this line have been thought through----------"
+				}, {
+					"xpath": ["user-email-keys", "~@this.userRemote.uid@~", "~@newPostKey@~"]
+				}
+			]
+		},
+		"user-settings": {
+			"comment": "Do not use user-zip entity; Instead, use 'user-settings'",
+			"page": "view-settings", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog; (not needed here)",
+			"key": "settings", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+        {
+          "comment-1": "We only need to create new record; because will use limit-to-last='1' in firebase query",
+          "comment-2": "Therefore, DO NOT use this path",
+          "comment-3": "Correction to above: We WILL use the /settings path to get the current settings",
+          "comment-4": "We will use a single record at the /settings path and will not use limit-to-last='1' in firebase query",
+          "comment-5": "Correction continued: We will use the /settings-archive to record prior settings",
+          "type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+          "path": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
+        },
+				{
+					"comment-1": "Renames 'settings' to 'settings-archive'", 
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "settings-archive", "~@this.newPostKey@~"], "comment-path": "creates new record"
+				},
+				{
+					"comment-1": "We only need to create new record; because will use limit-to-last='1' in firebase query",
+					"comment-2": "Therefore, ONLY use this path",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["users", "~@this.userRemote.uid@~", "settings", "~@this.newPostKey@~"], "comment-path": "creates new record"
+				}
+			]
+		},
+		"user-balances": {
+			"initValues": {
+				"net": 0,
+				"up": 0,
+				"down": 0
+			},
+			"init": "_initUser('balances', e)", "comment-init": "Needs 'init' property if no 'key' property",
+			"page": "user-data", "comment-page": "page property corresponds to 'id' (or 'name') in loggedin-view.html; for closing dialog",
+			"xkey": "user-balances",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "balances"]
+				}
+			]
+		},
+		"xuser-local": {
+			"comment": "Do not use 'user-local' entity; Instead, use 'user-settings' and 'user-balances', etc.",
+			"init": "_initUser('local', e)", "comment-init": "Needs 'init' property if no 'key' property",
+			"page": "user-data", "comment-page": "page property corresponds to 'id' (or 'name') in loggedin-view.html; for closing dialog",
+			"key": "user-local", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "local", "~@this.newPostKey@~"]
+				}
+			]
+		},
+		"user-zip": {
+			"comment-1": "Do not use 'user-zip' entity; Instead, use 'user-settings'",
+			"comment-2": "Update to above comment: archive 'user-zip' entity in addition to updating 'user-settings'",
+			"page": "view-outbox", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog; (not needed here)",
+			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "zip", "~@this.newPostKey@~"], "comment-path": "creates new record"
+				},
+				{
+					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
+				}
+			]
+		},
+		"user-input-text": {
+			"comment-1": "Do not use 'user-input' entity; Instead, use 'user-settings'",
+			"comment-2": "Update to above comment: archive 'user-input' entity in addition to updating 'user-settings'",
+			"page": "view-outbox", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog; (not needed here)",
+			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "input-text", "~@this.newPostKey@~"], "comment-path": "creates new record"
+				},
+				{
+					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
+				}
+			]
+		},
+		"user-input-email": {
+			"comment-1": "Do not use 'user-input' entity; Instead, use 'user-settings'",
+			"comment-2": "Update to above comment: archive 'user-input' entity in addition to updating 'user-settings'",
+			"page": "view-outbox", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog; (not needed here)",
+			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "input-email", "~@this.newPostKey@~"], "comment-path": "creates new record (because of newPostKey)"
+				},
+				{
+					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
+				}
+			]
+		},
+		"user-invite": {
+			"comment": "Archive 'user-invite' entity only, without saving to settings",
+			"page": "view-settings", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog; (not needed here)",
+			"key": "invite", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+        {
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+          "path": ["invites-outbox", "~@this.newPostKey@~"]
+        },
+        {
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["invites-archive", "~@this.newPostKey@~"]
+				},
+				{
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["invitee-user", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
+				},
+				{
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["user-invites", "~@this.userRemote.uid@~", "~@this.newPostKey@~"]
+				},
+				{
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
+        },
+        {
+          "comment": "-----------Properties above this line have been implemented-----------"
+        },
+				{
+        	"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["invites-sent", "~@this.data.emailKey@~"]
+				},
+        {
+          "comment": "user-invites",
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+          "xpath": ["users", "~@this.userRemote.uid@~", "archive", "invite-contact", "~@this.newPostKey@~"]
+        },
+				{
+					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
+				}
+			]
+		},
+		"lead-sent": {
+			"page": "view-outbox", "comment-page": "page property corresponds to id in loggedin-view.html; for closing dialog",
+			"key": "leads", "comment-key": "every entity needs either 'key' or 'init' property",
+			"paths": [
+				{
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["leads", "~@this.newPostKey@~"]
+				}, {
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["user-leads-sent", "~@this.userRemote.uid@~", "~@this.newPostKey@~"]
+				}, {
+					"type": "index",
+					"path": ["leads-state-county-category-index", "~@this.data.state@~", "~@this.data.county@~", "~@this.data.category@~", "~@this.newPostKey@~"]
+				}, {
+					"type": "index",
+					"path": ["leads-emails", "~@this.emailKey@~", "~@this.newPostKey@~"]
+				}, {
+					"comment": "----------Paths above this line have been implemented----------",
+					"xpath": ["leads-state-county", "~@data.state@~", "~@data.county@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"comment": "----------Paths above this line have been thought through----------"
+				}, {
+					"xpath": ["leads-zip", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"xpath": ["leads-state-county-zip", "~@data.state@~", "~@data.county@~", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"xpath": ["leads-state-county-city-zip", "~@data.state@~", "~@data.county@~", "~@data.city@~", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}
+			]
+		},
+		"lead-received": {
+			"read": ["leads", "~@this.data.key@~"],
+			"page": "view-inbox", "comment": "page property corresponds to id in loggedin-view.html; for closing dialog",
+			"paths": [
+				{
+					"type": "update", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["leads", "~@this.data.key@~", "received"],
+					"data": {
+						"user": "~@this.userRemote.uid@~",
+						"timestamp": "~@this.timestamp@~"
+					}
+				}, {
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["user-leads-received", "~@this.userRemote.uid@~", "~@this.data.key@~"]
+				}, {
+					"type": "delete", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding|'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"path": ["leads-state-county-category-index", "~@this.readData.state@~", "~@this.readData.county@~", "~@this.readData.category@~", "~@this.data.key@~"]
+				}
+			]
+		}
+	}
+}

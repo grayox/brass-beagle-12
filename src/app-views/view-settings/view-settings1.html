@@ -1,0 +1,311 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="/bower_components/neon-animation/web-animations.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+
+<link rel="import" href="/src/app-user/user-profile.html">
+<link rel="import" href="/src/app-user/user-preferences.html">
+
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+<!--- ->
+<link rel="import" href="/src/app-head/toolbar-dialog-styles.html">
+<!---->
+
+<link rel="import" href="/src/custom-elements/form-input-zip.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
+<link rel="import" href="/src/custom-styles/paper-listbox-styles.html">
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+<link rel="import" href="/src/custom-styles/dialog-animated-tabs-styles.html">
+
+<link rel="import" href="/src/custom-elements/category-menu.html">
+<link rel="import" href="/src/custom-elements/form-input-zip.html">
+
+<link rel="import" href="settings-item.html">
+
+<!-- https://plnkr.co/edit/zxL2K854TbjO1kGQqG5t?p=preview -->
+<dom-module id="view-settings">
+  <template>
+		<style include="paper-material-styles">
+			:host {
+				/* https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing */
+				--header-height: 48px;
+				--item-height: 72px;
+				--line-color: #DDDDDD;
+				--item-padding: 0 48px 0 80px;
+			}
+			
+			.item, .header {
+				@apply --layout-horizontal;
+				@apply --layout-center;
+				
+				padding: var(--item-padding);
+				
+				border: 0px grey solid;
+			}
+			
+			.header {
+				background-color: #CCCCCC;
+				color: var(--app-primary-color);
+			}
+			
+			div.item:hover {
+				background-color: white;
+				border: 1px var(--line-color) solid;
+			}
+			
+			div.item {
+				height: var(--item-height);
+				opacity: var(--opacity-normal);
+				cursor: pointer;
+				
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+				grid-template-columns: auto auto;
+			}
+			
+			div.header {
+				/** /
+				color: var(--app-primary-color);
+				/**/
+				height: var(--header-height);
+				color: black;
+				opacity: var(--opacity-dim);
+				font-size: 13px;
+			}
+			
+			hr.separator {
+				height: 17px;
+				margin-top: 16px;
+				border-top: 1px var(--line-color) solid;
+			}
+			
+			paper-toggle-button {
+				border: 0px blue solid;
+				width: 48px;
+				margin-right: -12px;
+			}
+			
+			.start {
+				display: flex;
+				justify-self: start;
+				border: 0px grey solid;
+			}		
+			
+			.end {
+				justify-self: end;
+				border: 0px grey solid;
+			}
+		</style>
+		
+		<!-- v.1 | direct layout -->
+		
+		<div class="header">Lead requirements</div>
+		
+		<div class="item">
+			<!-- zip code -->
+			<div class="start">Your zip code</div>
+			<form-input-zip class="end"
+											name="form-input-zip"
+											zip-valid="{{zipValid}}"
+											zip-code="{{item.zip}}"
+											zip-state="{{item.state}}"
+											zip-county="{{item.county}}"
+											zip-city="{{item.city}}"
+											>
+			</form-input-zip>
+		</div>
+		
+		<div class="item" on-tap="_toggleCollapse">
+			<!-- zip code -->
+			<div class="start">Your zip code</div>
+			<paper-ripple></paper-ripple>
+		</div>
+		<iron-collapse id="collapse">
+			<div class="collapse-content">
+				<form-input-zip class="end"
+												name="form-input-zip"
+												zip-valid="{{zipValid}}"
+												zip-code="{{item.zip}}"
+												zip-state="{{item.state}}"
+												zip-county="{{item.county}}"
+												zip-city="{{item.city}}"
+												>
+				</form-input-zip>
+			</div>
+		</iron-collapse>
+		
+		<settings-item>
+		  <span slot="primary">Home</span>
+      <span slot="secondary">buyers needing agents</span>
+		</settings-item>
+		
+		<div class="item">
+			<div class="start">
+				Home
+				<!--- ->
+        buyers needing agents
+				<!---->
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="home" checked="{{item.home}}"></paper-toggle-button>
+			</div>
+		</div>
+		
+		<div class="item">
+			<div class="start">
+				Mortgage
+				<!--- ->
+        purchase, refi borrowers needing brokers
+				<!---->
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="mortgage" checked="{{item.mortgage}}"></paper-toggle-button>
+			</div>
+		</div>
+		
+		<div class="item">
+			<div class="start">
+				Insurance
+				<!--- ->
+        needing property, casualty, life
+        <!---->
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="insurance" checked="{{item.insurance}}"></paper-toggle-button>
+			</div>
+		</div>
+		
+		<div class="item">
+			<div class="start">
+				Financial
+				<!--- ->
+        people needing planning advice
+        <!---->
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="financial" checked="{{item.financial}}"></paper-toggle-button>		
+			</div>
+    </div>
+		
+		<hr class="separator" />
+		
+		<div class="header">Communication preferences</div>
+		
+		<!-- notifications -->
+		
+		<div class="item">
+			<div class="start primary">
+				Email notifications
+			</div>
+			<div class="start secondary">
+				Email notifications
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="notification-email" checked="{{item.notification-email}}"></paper-toggle-button>		
+			</div>
+    </div>
+		
+		<div class="item">
+			<div class="start">
+				Text/SMS notifications
+			</div>
+			<div class="end">
+			  <paper-toggle-button name="notification-text" checked="{{item.notification-text}}"></paper-toggle-button>		
+			</div>
+    </div>
+
+		<!--- ->
+		<!-- invite contact - ->
+		<div class="field-label">Invite a contact or referral partner</div>
+		<!-- enter email address - ->
+		<paper-input name="email" label="Email address" value="{{item.email}}" ></paper-input>
+		
+		<!-- email - ->
+    <paper-input label="My email address"
+								 value="{{item.email}}"></paper-input>		
+		
+		<!-- sms/text - ->
+    <paper-input label="My text/sms number"
+								 value="{{item.sms}}"></paper-input>		
+				
+		<!-- zips opt out/in - ->
+    <div class="field-label">Turn on zips</div>
+		<paper-toggle-button class="inline" label="12345">90210</paper-toggle-button>
+		<paper-toggle-button class="inline" label="12345">02139</paper-toggle-button>
+    <!---->
+		
+  </template>
+
+  <script>
+    class ViewSettings extends Polymer.Element {
+      static get is() { return 'view-settings'; }
+
+      static get properties() {
+        return {
+					selected: {
+						type: Number,
+						value: 0,
+						//observer: '_selectedChanged',
+					}
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+						
+			open() {
+				//console.log('opening...');
+				var dialog = this.$.dialog;
+				
+				/** /
+				//The following two lines are only necessary because of this bug:
+				//https://github.com/PolymerElements/paper-dialog/issues/152
+				//var body = document.querySelector('body');
+        //Polymer.dom(body).appendChild(dialog);
+				/**/
+        
+				//console.log(dialog);
+				dialog.open();
+				//console.log('opened!');
+			}
+			
+			close() {
+				var dialog = this.$.dialog;
+				dialog.close();
+			}
+			
+			_toggleCollapse() {
+				const r = this.$.collapse;
+				r.toggle();
+				//r.opened = !r.opened;
+			}
+			
+    }
+
+    window.customElements.define(ViewSettings.is, ViewSettings);
+  </script>
+
+</dom-module>

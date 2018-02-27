@@ -1,0 +1,163 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!---->
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+<!---->
+<link rel="import" href="../../custom-elements/avatar-hash.html">
+
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--- ->
+<!-- https://www.webcomponents.org/element/Abe90/paper-avatar - ->
+<link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
+<!---->
+<link rel="import" href="../../custom-libraries/moment-js.html">
+
+<link rel="import" href="../../custom-styles/iron-list-grid-styles.html">
+
+<dom-module id="items-grid-item">
+  <template>
+		<style>
+			paper-card {
+				width: 210px;
+				height: 90px;
+				cursor: pointer;
+				overflow: auto;
+			}
+      paper-card:hover {
+        background-color: var(--paper-grey-200);
+			}
+			.small {
+				font-size: small;
+			}
+			.dim {
+				opacity: 0.7;
+			}
+			.column-left {
+				margin-right: 0.35em;
+			}
+      .column-right {
+				margin-left: 0.35em;
+			}
+		</style>
+
+		<div class="card" on-tap="selected">
+			<paper-card xheading="[[fromNow]]">
+				<div class="card-content layout horizontal xvertical">
+					<div class="column-left">
+						<avatar-hash message="[[key]][[timestamp]]"></avatar-hash>
+					</div>
+					<div class="column-right">
+						[[nameFirst]]<br>[[nameLast]]<br>
+						<span class="small dim">[[fromNow]]</span>
+					</div>
+					<!---->
+				</div>
+			</paper-card>
+		</div>
+		
+		<!--- ->
+		<div class="item">
+				[[item.nameFirst]] [[item.nameLast]]<br>
+				[[item.address]] [[item.zip]]<br>
+				[[item.email]]<br>
+				[[item.phone]]<br>
+				<!--- ->
+				<paper-button>Edit</paper-button>
+				<!--- ->
+		</div>
+		<!--- ->
+		<div style="width: 200px; height: 200px;"> 
+		<paper-card heading="Lead">
+			<div class="card-content">
+				[[item.nameFirst]] [[item.nameLast]]<br>
+				[[item.address]] [[item.zip]]<br>
+				[[item.email]]<br>
+				[[item.phone]]
+			</div>
+			<!--- ->
+			<div class="card-actions">
+				<paper-button>Edit</paper-button>
+			</div>
+			<!--- ->
+		</paper-card>
+		</div>
+		<!--- ->
+		<paper-card ximage="../../../images/app-icon-32.png">
+			<div class="card-content">
+				<div class="cafe-header">Cafe Basilico
+					<div class="cafe-location cafe-light">
+						<iron-icon icon="communication:location-on"></iron-icon>
+						<span>250ft</span>
+					</div>
+				</div>
+				<div class="cafe-rating">
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+				</div>
+				<p>$・Italian, Cafe</p>
+				<p class="cafe-light">Small plates, salads &amp; sandwiches in an intimate setting.</p>
+			</div>
+			<div class="card-actions">
+				<div class="horizontal justified">
+					<paper-icon-button icon="icons:event"></paper-icon-button>
+					<paper-button>5:30PM</paper-button>
+					<paper-button>7:30PM</paper-button>
+					<paper-button>9:00PM</paper-button>
+					<paper-button class="cafe-reserve">Reserve</paper-button>
+				</div>
+			</div>
+		</paper-card>
+		<!---->
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'items-grid-item',
+				behaviors: [
+					Polymer.IronResizableBehavior,
+					///MyBehaviors.UserSetterBehavior,
+				],
+				properties: {
+          key: String,
+					timestamp: String,
+					nameFirst: String,
+					nameLast: String,
+					fromNow: {
+						type: String,
+						computed: '_computeFromNow(timestamp)'
+					},
+				},
+				
+				_computeFromNow: function(s) {
+					return moment(s).fromNow();
+				},
+				
+				selected: function(e) {
+					//console.log('e', e);
+					var key = this.key;
+					var timestamp = this.timestamp;
+					var fromNow = this.fromNow;
+					var detail = {
+						key: key,
+						timestamp: timestamp,
+						fromNow: fromNow,
+					}
+					//console.log('key', key);
+					//console.log('timestamp', timestamp);
+					//console.log('fromNow', fromNow);
+					//console.log('detail', detail);
+					this.fire('grid-item-select', detail);
+				}
+				
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,102 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+<link rel="import" href="/src/app-state/state-user-remote.html">
+
+<link rel="import" href="user-styles.html">
+
+<dom-module id="user-droptrig-desktop">
+  <template>
+    <style include="user-styles">
+		
+			:host {
+				--avatar-size: 60px;
+			}
+			
+			#avatar {
+			  display: block;
+        width: var(--avatar-size);
+        height: var(--avatar-size);
+        margin: 15px auto 2px;
+			}  
+					
+		</style>
+
+		<!--- ->
+		<iron-meta id="meta"
+							 xtype="media-width"
+							 xkey="user"
+							 key="info"
+							 value="{{email}}"
+							 >
+		</iron-meta>
+		<!---->
+		<state-user-remote user-remote="{{userRemote}}"
+											 user-photo-url="{{userPhotoUrl}}"
+											 >
+		</state-user-remote>
+		
+		<div id="avatarandname">
+			<!--- ->
+			<img id="avatar" src="//uinames.com/api/photos/female/15.jpg">
+			<img id="avatar" src="//[[userRemote.providerData.0.photoUrl]]">
+			<img id="avatar" src="[[userPhotoUrl]]">
+			<!---->
+			<img id="avatar" src="[[userPhotoUrl]]">
+			<!---->
+			<div id="username">
+				<!--- ->
+				Donna Morgan
+				<!---->
+				[[userRemote.displayName]]
+				<iron-icon icon="vaadin:angle-down" class="drop-arrow"></iron-icon>
+			</div>
+		</div>
+
+  </template>
+
+  <script>
+    class UserDropTrigDesktop extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-droptrig-desktop'; }
+
+      static get properties() {
+        return {
+				  userRemote: {
+				    type: Object,
+				    notify: true,
+            //observer: '_userRemoteChanged',
+          },
+				  userPhotoUrl: {
+				  	type: String,
+				  	notify: true,
+				  },
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+				/** /
+				//var meta = this.$.meta.byKey('user');
+				var meta = this.$.meta.byKey('info');
+				//console.log('ready');
+				console.log('meta', meta);
+				/**/
+			}
+			
+			/** /
+			_userRemoteChanged(userRemote) {
+				console.log('userRemote', userRemote);
+			}
+			/**/
+	  
+		}
+
+    window.customElements.define(UserDropTrigDesktop.is, UserDropTrigDesktop);
+  </script>
+</dom-module>

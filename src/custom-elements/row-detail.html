@@ -1,0 +1,38 @@
+<!---->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+
+<dom-module id="row-detail">
+	<template>
+		<!--- ->
+		<style>
+			:host {
+
+			}
+		</style>
+		<paper-button>Edit</paper-button>
+		<!---->
+		<paper-input value="{{item.comment}}"></paper-input>
+		<!--- ->
+		<span>[[item.comment]]</span>
+		<span>[[item.total]]</span>
+		<span>[[item.merchant]]</span>
+		<!---->
+	</template>
+
+  <script>
+    (function() {
+      //'use strict';
+      Polymer({
+				
+        is: 'row-detail',
+				
+				properties: {
+          item: Object,
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

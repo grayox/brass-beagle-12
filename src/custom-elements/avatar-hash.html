@@ -1,0 +1,108 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-image/iron-image.html">
+<link rel="import" href="../custom-libraries/md5-js.html">
+<!--- ->
+<link rel="import" href="../custom-libraries/asmcrypto-js.html">
+<!---->
+
+<!-- https://www.webcomponents.org/element/Abe90/paper-avatar - ->
+<link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
+<!---->
+
+<!--- ->
+Usage example:
+<link rel="import" href="/src/custom-elements/avatar-hash.html">
+<avatar-hash message="[[data]]"></avatar-hash>
+<!---->
+<dom-module id="avatar-hash">
+  <template>
+		<style>
+			:host {
+				display: block;
+			}
+			img,
+			iron-image {
+				border-radius: 50%;
+				/** /
+				height: 50px;
+				width: 50px;
+				/**/
+			}
+		</style>
+
+		<!---->
+		<iron-image preload fade
+								src="http://www.gravatar.com/avatar/[[digest]]?f=y&s=[[size]]&d=[[type]]"
+								height="[[size]]"
+								width="[[size]]"
+								placeholder="[[placeholder]]"
+								crossorigin="anonymous"
+								xcrossorigin="use-credentials"
+								>
+		</iron-image>
+		<!--- ->
+		<img src="//www.gravatar.com/avatar/[[digest]]?f=y&s=[[size]]&d=[[type]]">
+    <img src="//www.gravatar.com/avatar/5b068a95442c7d5505b4166a77357ea5?f=y&s=800&d=wavatar">
+    <img src="//www.gravatar.com/avatar/[[_computemd5(item.phone)]]?f=y&s=50&d=wavatar">
+		<img src="//www.gravatar.com/avatar/[[item.phone]][[item.zip]]?f=y&s=50&d=wavatar">
+		<img src="//robohash.org/[[item.$key]].png?set=set2">
+		<!--- ->
+		<img src="//api.adorable.io/avatars/50/[[item.$key]].png">
+		<!--- ->
+		<paper-avatar jdenticon
+									xlabel="[[item.timestamp]]"
+									label="[[item.$key]]"
+									></paper-avatar>
+		<!---->
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'avatar-hash',
+				properties: {
+          digest: { // output
+						type: String,
+				    computed: 'computeDigest(message)',
+					},
+				  message: { // input
+						type: String,
+						value: () => '3.1', // '3' // Lorem ipsum // 3.1415926535 8979323846 2643383279 5028841971 6939937510 5820974944 5923078164 0628620899 8628034825 3421170679
+					},
+					size: {
+						type: Number,
+						value: () => 50,
+					},
+					placeholder: {
+						type: String,
+						value: () => '/images/user.jpg',
+					},
+					type: {
+						/** /
+						Reference: https://en.gravatar.com/site/implement/images/
+						'404': do not load any image if none is associated with the email hash, instead return an HTTP 404 (File Not Found) response
+						'mm': (mystery-man) a simple, cartoon-style silhouetted outline of a person (does not vary by email hash)
+						'identicon': a geometric pattern based on an email hash
+						'monsterid': a generated 'monster' with different colors, faces, etc
+						'wavatar': generated faces with differing features and backgrounds
+						'retro': awesome generated, 8-bit arcade-style pixelated faces
+						'blank': a transparent PNG image (border added to HTML below for demonstration purposes)
+						/**/
+						type: String,
+						value: () => 'wavatar', // 404 mm identicon monsterid wavatar retro blank
+					},
+				},
+				
+				computeDigest: function(s) {
+					var out = md5(s);
+					//var out = asmCrypto.SHA256.hex(s); //md5(s);
+					return out;
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,44 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/src/custom-styles/shared-styles.html">
+
+<dom-module id="login-styles">
+  <template>
+		<style include="shared-styles">
+			:host {}
+
+			.login {
+				width: 300px;
+				margin: 16px auto;
+			}
+
+			.login paper-input,
+			.login gold-email-input
+			{
+				width: 100%;
+				--paper-input-container-input-color: var(--text-primary-color);
+				--paper-input-container-underline: {
+					background: rgba(255, 255, 255, 0.2);
+				}
+			}
+			
+			paper-button {
+				color: var(--text-primary-color);
+				opacity: 0.2;
+			}
+
+			paper-button.primary {
+				margin: 20px 0 0 0;
+				padding-left: 30px;
+				padding-right: 30px;
+				background: var(--primary-color);
+				opacity: 1;
+			}
+
+			.error-message {
+				color: red;
+			}
+			
+		</style>
+  </template>
+</dom-module>

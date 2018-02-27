@@ -1,0 +1,95 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+
+<link rel="import" href="state-app-data.html">
+<link rel="import" href="state-route.html">
+
+<!---->
+<!---->
+
+<!--- ->
+Description
+state-route exposes numerical value of selected route
+state-view exposes string value of view label corresponding to selected route
+<!---->
+
+<dom-module id="state-view">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="view-label" data="{{viewLabel}}"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="view-icon"  data="{{viewIcon}}" ></app-localstorage-document>
+
+		<state-route route="{{route}}"></state-route>
+		<state-app-data app-data="{{appData}}"></state-app-data>
+  </template>
+
+  <script>
+    class StateView extends Polymer.Element {
+      static get is() { return 'state-view'; }
+
+      static get properties() { return {
+				viewLabel: {
+					type: String,
+					notify: true,
+					//observer: '_viewLabelChanged',
+				},
+				viewIcon: {
+					type: String,
+					notify: true,
+					//observer: '_viewIconChanged',
+				},
+			}}
+			
+			static get observers() {
+				return [
+					'_updateViews(appData.*, route)',
+				];
+			}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+			
+			/** /
+			_viewLabelChanged(route) {
+				console.log('viewLabel', viewLabel);
+			}
+			/**/
+				
+			_updateViews(data, route) {
+				//console.log('route', route);
+				if (!this.appData) return null;
+				const appData = this.appData;
+				//console.log('appData', appData);
+				//if (!appData.views) return null;
+				if (!appData['nav-menu']) return null;
+				//const views = appData.views;
+				const views = appData['nav-menu'];
+				//console.log('views', views);
+				const view = views[route];
+				//console.log('view', view);
+				const label = view.label;
+				const icon  = view.icon;
+				//console.log('label', label);
+				this.set('viewLabel', label);
+				//console.log('icon', icon);
+				this.set('viewIcon', icon);
+			}
+			
+    }
+
+    window.customElements.define(StateView.is, StateView);
+  </script>
+</dom-module>

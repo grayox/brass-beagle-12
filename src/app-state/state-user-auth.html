@@ -1,0 +1,142 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<!--- ->
+<link rel="import" href="state-user-remote.html">
+<link rel="import" href="state-user-local.html">
+<!---->
+
+<dom-module id="state-user-auth">
+  <template>
+		<style></style>
+		<!---->
+		<app-localstorage-document xlog xsession-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
+		
+    <!--- ->
+    <!-- Do not include firebase-app here to avoid multiple instances - ->
+		<firebase-app name="app"
+									auth-domain="green-comet.firebaseapp.com"
+									database-url="green-comet.firebaseio.com"
+									api-key="AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+									>
+		</firebase-app>
+		<!---->
+		<firebase-auth id="auth"
+									 app-name="app"
+									 xlog verbose
+									 user="{{userRemote}}"
+									 provider="{{authProvider}}"
+                   signed-in="{{userLoggedIn}}"
+									 on-error="_handleError"
+									 >
+		</firebase-auth>
+		<!---->
+		
+  </template>
+
+  <script>
+    class StateUserAuth extends Polymer.Element {
+      static get is() { return 'state-user-auth'; }
+
+      static get properties() { return {
+				/**/
+				userLoggedIn: {
+					type: Boolean,
+					notify: true,
+					//observer: '_userLoggedInChanged',
+					value: () => false,
+				},
+				/**/
+				authProvider: {
+					// provider signal is only sent upon login event
+					type: String,
+					notify: true,
+				},
+				userRemote: {
+					type: Boolean,
+					notify: true,
+					//observer: '_userRemoteChanged',
+				},
+				/**/
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        //window.addEventListener('item-method', () => this._itemMethod());
+        window.addEventListener('login'  , e => this.login (e) );
+        window.addEventListener('logout' , e => this.logout(e) );
+      }
+
+			login(e) {
+				//console.log('e\n', e);
+				const authProvider = e.detail;
+				this.set('authProvider', authProvider);
+				const auth = this.$.auth;
+				//const _this = this;
+				auth.signInWithPopup(authProvider)
+					.then(response => {
+					
+						// console.log('response\n', response);
+						//console.log('userLoggedIn\n', auth.signedIn);
+						//this.set('userLoggedIn', auth.signedIn);
+						//console.log('userLoggedIn\n', this.userLoggedIn); // true|false
+						//console.log('user\n', auth.user);
+					  // console.log('user\n', this.userRemote); // object
+						//this.fire('logged-in', response);
+			
+			      // Upon login, user must do the following:
+			      // 1. Obtain current user state (=> use app.method: save entity)
+			      // 2. Archive snapshot of current user state (=> use app.method: save entity)
+			      // 3. Make current user state available to other web components (=> use state element)
+						
+				}).catch(error => {
+					//console.log('error\n', error);
+					console.error(error.code, error.message);
+				});
+      }
+      
+      signOut(e) {
+        this.logout(e);
+      }
+
+			logout(e) {
+				const auth = this.$.auth;
+				//const _this = this;
+				auth.signOut()
+						.then(response => {
+							//console.log('auth.signedIn\n', auth.signedIn);
+							//console.log('userLoggedIn\n', this.userLoggedIn);
+							//this.set('userLoggedIn', auth.signedIn);
+							//this.set('userLoggedIn', false);
+						})
+						.catch(error => {
+							//console.log('error\n', error);
+							console.error(error.code, error.message);
+						});
+			}
+			
+			_handleError(e) {
+				console.log('error message:\n', e);
+      }
+      
+      // _userRemoteChanged(u) {
+      //   console.log('user\n', u);
+      // }
+     
+		}
+
+    window.customElements.define(StateUserAuth.is, StateUserAuth);
+  </script>
+</dom-module>

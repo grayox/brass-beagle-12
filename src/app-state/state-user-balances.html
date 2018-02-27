@@ -1,0 +1,62 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<!---->
+<!---->
+
+<dom-module id="state-user-balances">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="user-balances" data="{{userBalances}}"></app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-balances-deposits" data="{{userBalancesDeposits}}"></app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-balances-withdrawals" data="{{userBalancesWithdrawals}}"></app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-balances-net-deposits" data="{{userBalancesNetDeposits}}"></app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-balances-available-items" data="{{userBalancesAvailableItems}}"></app-localstorage-document>	
+	</template>
+
+  <script>
+    class StateUserBalances extends Polymer.Element {
+      static get is() { return 'state-user-balances'; }
+
+      static get properties() { return {
+				userBalances: {
+					// initial value fetched by app-main.html > firebase-auth.user > path.
+					type: Object,
+					notify: true,
+					//observer: '_userRemoteChanged',
+				},
+				userBalancesDeposits: {
+					type: Number,
+					notify: true,
+				},
+				userBalancesWithdrawals: {
+					type: Number,
+					notify: true,
+				},
+				userBalancesNetDeposits: {
+					type: Number,
+					notify: true,
+				},
+				userBalancesAvailableItems: {
+					type: Number,
+					notify: true,
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+			
+    }
+
+    window.customElements.define(StateUserBalances.is, StateUserBalances);
+  </script>
+</dom-module>

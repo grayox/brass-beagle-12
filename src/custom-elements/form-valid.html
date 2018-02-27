@@ -1,0 +1,353 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<dom-module id="form-valid">
+	<template>
+		<style>
+		  /**/
+			p {
+				opacity: 0.67;
+			}
+			.separator {
+				font-weight: 100;
+				opacity: 0.5;
+			}
+			.checkmark {
+				font-weight: bold;
+				color: lightgreen;
+				opacity: 1;
+			}
+			.exmark {
+				font-weight: bold;
+				color: red;
+				opacity: 1;
+			}
+			.group {
+				white-space: nowrap;
+			}
+		  /**/
+		</style>
+		<p>
+		  <!--- ->
+			<template is="dom-repeat" items="[[items]]">
+				<!--- ->
+			  <span class="separator">[[item.separator]]</span>
+			  <span class="checkmark" hidden$="[[!item.boolean]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[item.boolean]]">&times;</span>
+		    <!--- ->
+			  [[item.label]][[item.value]]
+		    <!--- ->
+			</template>
+		  <!---->
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!valid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[valid]]">&times;</span>
+		    <!---->
+			  Form ready
+		    <!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!nameFirstValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[nameFirstValid]]">&times;</span>
+			  First name<!--- ->: [[nameFirst]]<!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!nameLastValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[nameLastValid]]">&times;</span>
+			  Last name<!--- ->: [[nameLast]]<!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!emailValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[emailValid]]">&times;</span>
+			  Email<!--- ->: [[email]]<!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!phoneValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[phoneValid]]">&times;</span>
+			  Phone<!--- ->: [[phone]]<!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!zipValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[zipValid]]">&times;</span>
+			  Zip<!--- ->: [[zip]]<!---->
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!categoryValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[categoryValid]]">&times;</span>
+			  Category<!--- ->: [[category]]<!---->
+			</span>
+			<!--- ->
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!stateValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[stateValid]]">&times;</span>
+			  State: [[state]]
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!cityValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[cityValid]]">&times;</span>
+			  City: [[city]]
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!countyValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[countyValid]]">&times;</span>
+			  County: [[county]]
+			</span>
+      <!---->
+		  <!--- ->
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!emailBlacklistValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[emailBlacklistValid]]">&times;</span>
+			  emailBlacklistValid: [[emailBlacklistValid]]
+			</span>
+			<span class="separator">|</span>
+			<span class="group">
+			  <span class="checkmark" hidden$="[[!emailDuplicateValid]]">&#10003;</span>
+			  <span class="exmark" hidden$="[[emailDuplicateValid]]">&times;</span>
+			  emailDuplicateValid: [[emailDuplicateValid]]
+			</span>
+		  <!---->
+		</p>		
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'form-valid',
+				properties: {
+					email: String,
+					phone: String,
+					zip: String,
+					state: String,
+					county: String,
+					city: String,
+					category: String,
+					nameFirst: String,
+					nameLast: String,
+					
+					/** /
+					items: {
+						type: Array,
+						notify: true,
+						computed: 'computeItems(valid, nameFirst, nameFirstValid, nameLast, nameLastValid, email, emailValid, phone, phoneValid, zip, zipValid, state, stateValid, city, cityValid, county, countyValid, category, categoryValid)',
+						//computed: 'computeItems(valid, nameFirst, nameFirstValid, nameLast, nameLastValid, email, emailValid)',
+					},
+					/**/
+					
+					valid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeValid(emailValid, phoneValid, zipValid, categoryValid, nameFirstValid, nameLastValid)',
+						value: function() {
+							return false;
+						},
+ 					},
+					zipValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeZipValid(stateValid, countyValid, cityValid)',
+						value: function() {
+							return false;
+						},
+					},
+					phoneValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computePhoneValid(phone)',
+						value: function() {
+							return false;
+						},
+					},
+					emailValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeEmailValid(email)',
+						value: function() {
+							return false;
+						},
+					},
+					stateValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeStateValid(state)',
+						value: function() {
+							return false;
+						},
+					},
+					countyValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeCountyValid(county)',
+						value: function() {
+							return false;
+						},
+					},
+					cityValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeCityValid(city)',
+						value: function() {
+							return false;
+						},
+					},
+					categoryValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeCategoryValid(category)',
+						value: function() {
+							return false;
+						},
+					},
+					nameFirstValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeNameFirstValid(nameFirst)',
+						value: function() {
+							return false;
+						},
+					},
+					nameLastValid: {
+						type: Boolean,
+						notify: true,
+						computed: 'computeNameLastValid(nameLast)',
+						value: function() {
+							return false;
+						},
+					},
+				},
+				
+				/** /
+				observers: [
+					'validateForm(emailValid, phoneValid, zipValid, categoryValid, nameFirstValid, nameLastValid)',
+				],
+				/** /
+				attached: function() {
+					console.log('items', this.items);
+					this.computeItems(false, );
+				},
+				/**/
+				
+				/** /
+				computeItems: function(a, b, c, d, e, f, g, h, i) {
+					console.log('arguments', arguments);
+				},
+				
+				xcomputeItems: function(valid, nameFirst, nameFirstValid, nameLast, nameLastValid, email, emailValid, phone, phoneValid, zip, zipValid, state, stateValid, city, cityValid, county, countyValid, category, categoryValid) {
+					//console.log('hello');
+					nameFirst = nameFirst || '';
+					nameLast  = nameLast  || '';
+					email     = email     || '';
+					phone     = phone     || '';
+					zip       = zip       || '';
+					state     = state     || '';
+					city      = city      || '';
+					county    = county    || '';
+					category  = category  || '';
+					var a = [
+				  	{ separator: ''  , label: 'Form'         , value: null      , boolean: valid          , },
+				  	{ separator: '|' , label: 'First Name: ' , value: nameFirst , boolean: nameFirstValid , },
+				  	{ separator: '|' , label: 'Last Name: '  , value: nameLast  , boolean: nameLastValid  , },
+				  	{ separator: '|' , label: 'Email: '      , value: email     , boolean: emailValid     , },
+				  	{ separator: '|' , label: 'Phone: '      , value: phone     , boolean: phoneValid     , },
+				  	{ separator: '|' , label: 'Zip: '        , value: zip       , boolean: zipValid       , },
+				  	{ separator: '|' , label: 'State: '      , value: state     , boolean: stateValid     , },
+				  	{ separator: '|' , label: 'City: '       , value: city      , boolean: cityValid      , },
+				  	{ separator: '|' , label: 'County: '     , value: county    , boolean: countyValid    , },
+				  	{ separator: '|' , label: 'Category: '   , value: category  , boolean: categoryValid  , },
+				  ];
+					//console.log('a', a);
+					return a;
+				},
+				/**/
+				
+				computeValid: function(b1, b2, b3, b4, b5, b6) {
+					return (b1 && b2 && b3 && b4 && b5 && b6);
+				},
+				
+				computeEmailValid: function(s) {
+					var b1 = this.validEmailPattern(s);   // Casual filter only
+					var b2 = this.validEmailDuplicate(s); // true // Business logic
+					var b3 = this.validEmailBlacklist(s); // true // Business decision
+					return (b1 && b2 && b3);
+				},
+				
+				validEmailPattern: function(s) {
+					// Recommended here: http://emailregex.com
+					//var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					// html5, type="email" w3c per here: http://emailregex.com
+					//var re = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+					// Casual recommended by user in comments here: http://emailregex.com
+					var re = /^(\S+)@(\S+)\.(\S+)$/;
+					// Minimalist recommended by user in comments here: http://emailregex.com
+					//var re = /.+@.+/
+					return re.test(s);
+				},
+				
+				validEmailDuplicate: function(s) {
+					// Business logic makes duplicates filter unnecessary.
+					// i.e., Don't need to check for duplicates because repeat clients are allowed and encouraged
+				  //return (!!s && (s.length > 2)); // Example for length
+					return true;
+				},
+				
+				validEmailBlacklist: function(s) {
+					// Temporary business decision.
+					// Allow burner email accounts for now. Reasons:
+					// 1. Takes time to implement countermeasures.
+					// 2. Countermeasures can be circumvented as new services are continually popping up. i.e., "Arms race" scenario.
+					// 3. Abuse can be addressed using flagging system which must be implemented anyway.
+				  //return (!!s && (s.length > 2)); // Example for length
+					return true;
+				},
+				
+				computePhoneValid: function(s) {
+					if(s) {
+						s = s.replace(/\D/g, '');
+					}
+				  return (!!s && s.length==10);
+				},
+				
+				computeZipValid: function(b1, b2, b3) {
+					return (b1 && b2 && b3);
+				},
+				
+				computeStateValid: function(s) {
+				  return (!!s && !!s.length);
+				},
+				
+				computeCountyValid: function(s) {
+				  return (!!s && !!s.length);
+				},
+				
+				computeCityValid: function(s) {
+				  return (!!s && !!s.length);
+				},
+				
+				computeCategoryValid: function(s) {
+				  return (!!s && !!s.length);
+				},
+				
+				computeNameFirstValid: function(s) {
+				  return (!!s && !!s.length);
+				},
+				
+				computeNameLastValid: function(s) {
+				  return (!!s && (s.length > 1));
+				},
+				
+			});
+		})();
+  </script>
+</dom-module>

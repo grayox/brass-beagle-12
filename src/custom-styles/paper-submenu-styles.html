@@ -1,0 +1,53 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="paper-submenu-styles">
+  <template>
+		<style>
+			/**/
+			paper-item {
+				--paper-item: {
+					cursor: pointer;
+					/**/
+					transition         : .5s;
+					-o-transition      : .5s;
+					-ms-transition     : .5s;
+					-moz-transition    : .5s;
+					-webkit-transition : .5s;
+					/**/
+				};
+				--paper-item-selected: {
+					color: white;
+					background-color: black;
+					/**/
+					transition         : .5s;
+					-o-transition      : .5s;
+					-ms-transition     : .5s;
+					-moz-transition    : .5s;
+					-webkit-transition : .5s;
+					/**/
+				}
+			}
+			
+			paper-item.input {
+				--paper-item-selected: {
+					color: black;
+					background-color: transparent;
+				}
+			}
+			
+			.sublist paper-item {
+				margin-left: 2em;
+			}
+			
+			.sublist2 paper-item {
+				margin-left: 4em;
+			}
+			
+			.sublist3 paper-item {
+				margin-left: 6em;
+			}
+			
+		</style>
+  </template>
+</dom-module>

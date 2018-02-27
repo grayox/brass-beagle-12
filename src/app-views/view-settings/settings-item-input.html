@@ -1,0 +1,435 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<link rel="import" href="settings-item-styles.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="settings-item-input">
+  <template>
+		<style include="settings-item-styles">
+			.wrapper {
+				cursor: auto;
+			}
+			.wrapper > .collapse {
+				padding-bottom: 16px;
+			}
+			paper-input {
+				text-align: left;
+			}
+			paper-button.save {
+				background-color: var(--app-primary-color);
+				color: white;
+				opacity: 1.0;
+			}
+			.buttons {
+				margin-top: 12px;
+			}
+		</style>		
+
+    <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<!---->
+		<app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
+    <!---->
+    <!---->
+		<paper-toast id="toast" text="[[label]] saved"></paper-toast>
+		<iron-a11y-keys id="a11y"
+										xtarget="[[target]]"
+										keys="enter"
+                    xon-keys-pressed="onEnter"
+                    on-keys-pressed="_save"
+										>
+		</iron-a11y-keys>
+		
+		<div class="wrapper">
+			<iron-icon icon="[[icon]]"
+								 xicon="communication:location-on"
+								 xicon="maps:place"
+								 class="icon"></iron-icon>
+			<div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!--- ->
+					Zip code
+					<!---->
+					[[label]]
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					<!--- ->
+					[[_output]]
+					<!---->
+					[[text]]
+				</div>
+			</div>
+			<div class="end">
+			  <paper-ripple xrecenters></paper-ripple>
+				<!--- ->
+				<paper-icon-button icon="create"
+													 on-tap="_toggleCollapse"
+													 xhidden$="{{opened}}"
+													 >
+				</paper-icon-button>	
+				<!---->
+				<paper-icon-button icon="expand-more"
+													 on-tap="_toggleCollapse"
+													 hidden$="{{opened}}"
+													 >
+				</paper-icon-button>	
+				<paper-icon-button icon="expand-less"
+													 on-tap="_toggleCollapse"
+													 hidden$="{{!opened}}"
+													 >
+				</paper-icon-button>
+			</div>
+
+			<iron-collapse id="collapse" class="collapse" opened="{{opened}}">
+			  <div class="collapse-content">
+				  <paper-input label="[[description]]"
+					  					 value="{{text}}"
+											 >
+				  </paper-input>
+					
+					<div class="buttons">
+						<!--- ->
+						<paper-button class="cancel">Cancel</paper-button>
+						<!---->
+						<paper-button class="reset" on-tap="_reset">Clear</paper-button>
+						<paper-button class="save" on-tap="_save">Save</paper-button>
+					</div>
+			  </div>
+		  </iron-collapse>
+			
+		</div>
+						
+    
+  </template>
+
+  <script>
+    class SettingsItemInput extends Polymer.Element {
+      static get is() { return 'settings-item-input'; }
+
+      static get properties() {
+        return {
+				  
+          // global state
+
+          userSettings: {
+            type: Object,
+            notify: true,
+            observer: '_userSettingsChanged',
+          },
+
+					// common properties
+					
+					/** /
+					opened: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},				
+					/**/
+					
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					_labelMod: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+            //observer: '_selectedChanged',
+            computed: '_computeLabelMod(label)',
+					},
+
+					description: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					_labelMod: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+            //observer: '_selectedChanged',
+            computed: '_computeLabelMod(label)',
+					},
+
+					/** /
+					_output: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+						computed: '_computeOutput(checked)',
+					},
+					
+					/** /
+					checked: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+						//observer: '_selectedChanged',
+					},
+					/**/
+					
+					// unique properties
+					
+					text: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
+					},
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+
+      _userSettingsChanged(newData, oldData) {
+        // console.log('userSettingsChanged\n', newData);
+        // console.log('connected...');
+        // console.log('user-settings', newData); // undefined
+        // console.log('label-mod', this._labelMod);
+        // this.set( 'checkedState', this._initCheckedState(newData, this._labelMod) );
+        // this.set('text', 'test');
+        this.set( 'text', this._initText(newData, this._labelMod) );
+      }
+
+      _computeLabelMod(s) {
+        const out = s.toLowerCase().split(' ').pop(); // 'mortgage'
+				return out;
+      }
+
+      _computeNewSettings(oldSettings, label, text) {
+        // oldSettings = oldSettings || this.userSettings;
+        // console.log('oldSettings\n', oldSettings);
+        // label = label || this._labelMod;
+        // console.log('labelMod\n', label);
+        // text = text || this.text;
+        // console.log('text\n', text);
+        
+        const timestamp = new Date().getTime();
+        const out = oldSettings ? { ...oldSettings } : {};
+        // if(oldSettings) {
+        //   out = { ...oldSettings };
+        // }
+        out.timestamp = timestamp;
+        if(!out.input) {
+          out.input = {};
+        }
+        out.input.timestamp = timestamp; // updated on load
+        out.input[label] = text;
+        // console.log('newSettings\n', out);
+        return out;
+      }
+
+      /** /
+			_toggle() {
+				// must add to "on-tap" event of switch to "double toggle"
+				// switch because item's "on-tap" event also toggles switch
+				// in reverse direction when switch is tapped
+				const s = this.$.switch;
+				s.checked = !s.checked;
+			}
+			
+			/** /
+			_computeOutput(b) {
+				return !!b ? 'On' : 'Off';
+			}
+			/**/
+			
+			_toggleCollapse() {
+				const r = this.$.collapse;
+				r.toggle();
+				//r.opened = !r.opened;
+			}
+			
+			_reset() {
+				this.set('text', '');
+			}
+
+      _initText(r, s) {
+        // Only call this method once, after user-settings loads
+        // appears to occur after connectedCallback() and attributeChangedCallback() lifecycle events occur
+        // const init = this.initCheckedState;
+        // if(init) {
+        //   console.log('output\n', this._output);
+        //   return this.checkedState;
+        // }
+
+        r = r || this.userSettings;
+        // console.log('r\n', r);
+        s = s || this._labelMod;
+        // console.log('s\n', s);
+
+        let out = '';
+        if(r) {
+          // console.log('r\n', r);
+          if(r.input) {
+            // console.log('r.input\n', r.input);
+            out = r.input[s] ? r.input[s] : '';
+            // if(r.switch[s]) {
+            //   // console.log('r.input[s]\n', r.input[s]);
+            //   out = true;
+            // }
+            // if(r.switch[s] != undefined) {
+            //   this.set('initCheckedState', true);
+            //   console.log('initCheckedState\n', this.initCheckedState);
+            // }
+          }
+        }
+        // console.log('out\n', out);
+        return out;
+      }
+			
+			// _save() {
+				
+			// 	const timestamp = new Date().getTime();
+				
+			// 	// Save to two locations:
+			// 	//   1. /user/archive for search/retrieve
+			// 	//   2. local.settings-main for fetch/local use
+				
+			// 	const XFIX = 'user-input';
+			// 	const data = { 
+			// 		timestamp: timestamp,
+			// 		value: this.text, //const data = this.checked; // true|false
+			// 	};				
+				
+			// 	const label = this.label.toLowerCase().split(' ').pop(); // 'text'
+			// 	const entity = [XFIX, label].join('-'); // 'user-input-text'
+			// 	//const name = ['update', entity].join('-');
+				
+			// 	// 1. save record to archive
+				
+			// 	const methods = this.$.methods;
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 	};
+			// 	methods.method(detail);
+				
+			// 	// 2. dispatch event to mediator element to save entire 'settings'
+				
+			// 	//const name = ['update', entity].join('-');
+			// 	//console.log('name\n', name);
+			// 	//console.log('data\n', data);
+			// 	const name = ['update', XFIX].join('-'); // 'update-user-input'
+			// 	const eventData = {
+			// 		data: data.value,
+			// 		label: label,
+			// 	};
+			// 	this._dispatchEvent(name, eventData);
+				
+			// 	// cleanup
+			// 	this.$.toast.open();
+			// 	this.set('opened', false);				
+			// }
+
+			// _dispatchEvent(name, data) {
+			// 	/** /
+			// 	const m = this.$.methods;
+			// 	m.fireEvent(name, data);
+			// 	/**/
+				
+			// 	const n = name;
+			// 	const o = {
+			// 		bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);
+			// }
+
+			_save() {
+        const text = this.text;
+        
+        const settings = this.userSettings;
+        // console.log('settings\n', settings);
+        if(!settings) {
+          // console.error('settings is ', settings, '\nData not saved');
+          return;
+        }
+
+        const labelMod = this._labelMod;
+        // console.log('labelMod\n', _labelMod);
+        if(!labelMod) {
+          console.error('labelMod is ', labelMod, '\nData not saved');
+          return;
+        }
+
+        const data = this._computeNewSettings(settings, labelMod, text);
+
+				const entity = 'user-settings';
+				const methods = this.$.methods;
+				const method = 'save'; // 'save'|'delete'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
+
+				// cleanup
+				this.$.toast.open();
+				this.set('opened', false);
+
+			}
+			
+    }
+
+    window.customElements.define(SettingsItemInput.is, SettingsItemInput);
+  </script>
+
+</dom-module>

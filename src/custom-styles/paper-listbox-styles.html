@@ -1,0 +1,109 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="paper-listbox-styles">
+  <template>
+		<!---->
+    <style>
+			
+			:host {
+				/** /
+				--menu-background-color: var(--primary-color);
+			  --menu-background-color: yellow;
+			  --menu-background-color: #555555;
+			  --menu-background-color: white;
+				/**/
+			  --menu-background-color: var(--paper-grey-700);
+				--menu-text-color: white;
+				/**/
+			}
+
+			div.spacer {
+				margin: 3em 0;
+			}
+			/**/
+			.light {
+				color: var(--paper-grey-500);
+			}
+			/**/
+			paper-listbox {
+				--paper-listbox: {
+					/** /
+					display: block;
+					/**/
+					margin: 1em;
+					width: 100%;
+				};
+			}
+			paper-menu {
+				/**/
+				margin: 0 !important;
+				padding: 0 !important;
+				/**/
+				--paper-menu: {
+					/** /
+					display: block;
+					/**/
+					margin: 1em;
+					width: 100%;
+				};
+			}
+			paper-item.horizontal {
+				/**/
+				display: inline; /* inline-block; causes vertical-top misalignment */
+        padding: 1em;
+				/**/
+			}
+			paper-item {
+				margin: 0;
+				color: grey;
+        --paper-item: {
+          cursor: pointer;
+			  };
+				--paper-item-selected: {
+					background-color: var(--menu-background-color);
+					color: var(--menu-text-color);
+				};
+				--paper-item-focused: {
+					background-color: var(--menu-background-color);
+					color: var(--menu-text-color);
+				};
+				--paper-item-focused-before: {
+					background-color: var(--menu-background-color);
+					color: var(--menu-text-color);
+				};
+        /* transitions */
+        -moz-transition:    .75s;
+        -webkit-transition: .75s;
+        -o-transition:      .75s;
+        transition:         .75s;
+			}
+			
+			paper-item.hover:hover {
+				/** /
+				color: var(--primary-color);
+				/**/
+				color: white;
+				background-color: var(--menu-background-color);
+				/* transitions */
+        -moz-transition:    .75s;
+        -webkit-transition: .75s;
+        -o-transition:      .75s;
+        transition:         .75s;
+			}
+			
+			/** /
+			paper-item.dark:hover {
+				color: white;
+				background-color: var(--menu-background-color);
+				/* transitions * /
+        -moz-transition:    0;
+        -webkit-transition: 0;
+        -o-transition:      0;
+        transition:         0;
+			}
+			/**/
+
+			/**/
+		</style>
+  </template>
+</dom-module>

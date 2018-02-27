@@ -1,0 +1,159 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- ->
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<!---->
+<link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="user-styles.html">
+
+
+<dom-module id="user-droptrig-mobile">
+  <template>
+		<style include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning"></style>
+    <style include="user-styles">
+			:host {
+				--avatar-size: 35px;
+				/** /
+				display: block;
+				height: 100%;
+				height: 24px;
+				/**/
+				height: var(--app-toolbar-height);
+				display: inline-block;
+				--fullbleed: {
+					padding: 0;
+					margin: 0;
+				}
+			}
+			#avatar {
+				@apply(--fullbleed);
+				display: inline-block; /* 'inline' disables 'border: 50%;' and creates break between #avatar and #username */
+				/** /
+				width: var(--avatar-size); /*21px;* /
+				height: var(--avatar-size); /*21px;* /
+				width: 21px;
+				height: 21px;
+				--iron-image-placeholder: {
+					border-radius: 50%;
+				};
+				/**/
+				border-radius: 50%;
+				--iron-image-width: var(--avatar-size);
+				--iron-image-height: var(--avatar-size);
+			}
+			#username {
+				font-size: 14px;
+				@apply(--fullbleed);
+			}
+			#avatarandname {
+				@apply(--fullbleed);
+			}
+			#avatarandname:hover #username {
+				color: white;
+				opacity: 0.3;
+			}
+		</style>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user"         data="{{user}}"         ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="userPhotoUrl" data="{{userPhotoUrl}}" ></app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="mediaWidth"   data="{{mediaWidth}}"   ></app-localstorage-document>	
+		<!---->
+		<state-media media-width="{{mediaWidth}}"></state-media>
+		<state-user-remote user-remote="{{userRemote}}"
+											 user-photo-url="{{userPhotoUrl}}"
+											 >
+		</state-user-remote>
+		<!---->
+   
+		<div id="avatarandname" class="layout horizontal center xtest-border">
+		  <!--- ->
+		  <paper-icon-button icon="account-circle"></paper-icon-button>
+		  <!--- ->
+		  <iron-icon icon="account-circle"></iron-icon>
+			<!--- ->
+			<img id="avatar" src="//uinames.com/api/photos/female/15.jpg">
+			<img id="avatar" src="//[[userRemote.providerData[0].photoUrl]]">
+		  <!-- ->
+			<!--- ->
+			<img id="avatar" src="[[userPhotoUrl]]">
+			<!---->
+			<iron-image id="avatar"
+									preload fade
+		  						src="[[userPhotoUrl]]"
+		  						xheight="30"
+		  						xwidth="30"
+		  						xheight="[[size]]"
+		  						xwidth="[[size]]"
+		  						xplaceholder="'/images/user.jpg'"
+		  						xplaceholder="[[placeholder]]"
+		  						crossorigin="anonymous"
+		  						xcrossorigin="use-credentials"
+		  						>
+		  </iron-image>
+			<!---->
+			<span hidden$="[[!mediaWidth]]" id="username">
+				<!--- ->
+				Lorem Ipsumdolor
+				<!---->
+				[[userRemote.displayName]]
+				<iron-icon icon="expand-more" class="drop-arrow"></iron-icon>
+				<!--- ->
+				<iron-icon icon="vaadin:angle-down" class="drop-arrow"></iron-icon>
+				<!---->
+			</span>
+			<!---->
+		</div>
+
+  </template>
+
+  <script>
+    class UserDropTrigMobile extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-droptrig-mobile'; }
+
+      static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+					//reflectToAttribute: true,
+				},
+				userRemote: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userRemoteChanged',
+					//reflectToAttribute: true,
+        },
+				userPhotoUrl: {
+					type: String,
+					notify: true,
+					//reflectToAttribute: true,
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/** /
+			_userRemoteChanged(userRemote) {
+				console.log('userRemote', userRemote);
+			}
+			/** /
+			_mediaWidthChanged(n) {
+				//console.log('media-width', n);
+				//this.$.username.hidden = !n;
+			}
+			/**/
+			
+		}
+
+    window.customElements.define(UserDropTrigMobile.is, UserDropTrigMobile);
+  </script>
+</dom-module>

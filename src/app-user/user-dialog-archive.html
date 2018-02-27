@@ -1,0 +1,255 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+
+<link rel="import" href="/bower_components/neon-animation/web-animations.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+
+<link rel="import" href="user-profile.html">
+<link rel="import" href="user-preferences.html">
+
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+<!--- ->
+<link rel="import" href="/src/app-head/toolbar-dialog-styles.html">
+<!---->
+
+<link rel="import" href="/src/custom-styles/paper-listbox-styles.html">
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+<link rel="import" href="/src/custom-styles/dialog-animated-tabs-styles.html">
+
+<link rel="import" href="/src/custom-elements/category-menu.html">
+<link rel="import" href="/src/custom-elements/form-input-zip.html">
+<!--- ->
+<link rel="import" href="/src/custom-styles/patternfly-webcomponents.html">
+<!---->
+
+<!-- Demos - ->
+paper-dialog
+http://jsbin.com/yudavucola/1/edit?html,console,output
+http://jsbin.com/juqibohapo/1/edit?html,console,output
+
+plunker demo
+http://plnkr.co/edit/X4Ld2qHjw8wyfFYlF23Q?p=preview
+<!-- endDemos -->
+
+<dom-module id="user-dialog">
+  <template>
+		
+		<!--- ->
+		Partially complete layout references:
+    v1.0 http://embed.plnkr.co/1UKMQz/
+		v2.0 https://jsfiddle.net/1dywxzo2/1/ | https://codepen.io/anon/pen/gxydEG?editors=1001
+		<!---->
+		<style include="editor-styles iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+		/** / 
+		omitted styles: "toolbar-dialog-styles paper-listbox-styles dialog-animated-tabs-styles"
+		/**/
+			:host {
+				--dialog-width: 65%;
+				--dialog-standard: {
+					width: var(--dialog-width);
+				}
+				/* temporary until modal bug is fixed */
+				--alt-dialog-height: 100vh;
+				--alt-dialog-width: 100vw;
+				--dialog-temp: {
+					width: var(--alt-dialog-width);
+					height: var(--alt-dialog-height);
+				}
+				/** /
+				--dialog-temp: {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          padding: 0;
+          margin: 0;        
+        }
+				/**/
+			}
+			paper-dialog {
+				@apply --dialog-temp; /* temporary until modal bug is fixed */
+				/** /
+				@apply --dialog-standard;
+				/**/
+			}
+		</style>
+		<!--- ->
+		<style>
+      paper-button, #button-ok {
+				--paper-button: {
+					background: blue;
+					color: white;
+				};
+				/** /
+				background-color: var(--app-primary-color);
+				--paper-button-raised-keyboard-focus: {
+					background-color: var(--paper-pink-a200) !important;
+					color: white !important;
+				};
+				/**/
+			}
+			paper-button:hover {
+				background-color: var(--app-primary-color-dark);
+			}
+			paper-tabs {
+				--paper-tabs: {
+					color: red;
+					text-transform: uppercase;
+					background-color: var(--paper-blue-900);
+				};
+			}
+			iron-icon {
+				display: block;
+			}
+		</style>
+		<!---->
+		<paper-dialog id="dialog"
+									xmodal
+									xwith-backdrop
+									entry-animation="scale-up-animation"
+									exit-animation="fade-out-animation"
+									>
+			<!--- ->
+			<h2>Edit User Settings</h2>
+			<!---->
+			<div class="xlayout self-end">
+				<paper-icon-button icon="close" on-tap="close"></paper-icon-button>
+			</div>
+			<paper-tabs selected="{{selected}}" autoselect xautoselect-delay="1000">
+				<paper-tab>
+					<!--- ->
+					<iron-icon icon="vaadin:user"></iron-icon>
+					<!---->
+					<iron-icon icon="account-circle"></iron-icon>
+					Profile
+				</paper-tab>
+				<paper-tab>
+					<!--- ->
+					<iron-icon icon="vaadin:cogs"></iron-icon>
+					<!---->
+					<iron-icon icon="settings"></iron-icon>
+					Preferences
+				</paper-tab>
+			</paper-tabs>
+			<!--- ->
+			<pf-tabs>
+				<pf-tab tab-title="Cupcakes">
+					<p>Cupcake ipsum dolor. Sit amet topping. Jelly-o cake ice cream jujubes marshmallow cotton candy.</p>
+				</pf-tab>
+				<pf-tab tab-title="Caramels">
+					<p>Candy caramels sweet roll macaroon pastry cupcake liquorice. Cookie I love topping I love cookie toffee chocolate bar. Jelly-o sweet roll I love dessert powder.</p>
+				</pf-tab>
+			</pf-tabs>
+			<!---->
+			<paper-dialog-scrollable class="flex self-stretch xtest-border">
+				<iron-pages selected="[[selected]]">
+					<user-profile></user-profile>
+					<user-preferences></user-preferences>
+				</iron-pages>
+			</paper-dialog-scrollable>
+			<!--- ->
+			<div class="buttons">
+				<!--- ->
+				<paper-button>More Info...</paper-button>
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<!--- ->
+				<paper-button id="button-ok"
+											dialog-confirm
+											autofocus
+											>Ok</paper-button>
+			</div>
+			<!---->
+			<div class="buttons layout horizontal xend xtest-border" hidden$="[[!isNew]]">
+				<!--- ->
+				<paper-button id="button-delete"
+											on-tap="_delete"
+											class="delete-button"
+											xdialog-dismiss
+											hidden
+											>Delete</paper-button>
+				<!---->
+				<paper-button id="button-reset"
+											on-tap="reset"
+											class="reset-button"
+											xdialog-dismiss
+											xhidden
+											>Reset</paper-button>
+				<div class="flex"></div>
+				<paper-button id="button-cancel"
+											xon-tap="close"
+											class="cancel-button"
+											dialog-dismiss
+											xhidden
+											>Cancel</paper-button>
+				<paper-button id="button-save"
+											raised
+											on-tap="_save"
+											class="save-button"
+											dialog-confirm
+											xhidden
+											>Save</paper-button>
+			</div>
+			<!---->
+		</paper-dialog>
+		
+  </template>
+
+  <script>
+    class UserDialog extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-dialog'; }
+
+      static get properties() {
+        return {
+					selected: {
+						type: Number,
+						value: 0,
+						//observer: '_selectedChanged',
+					}
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			open() {
+				//console.log('opening...');
+				var dialog = this.$.dialog;
+				
+				/** /
+				//The following two lines are only necessary because of this bug:
+				//https://github.com/PolymerElements/paper-dialog/issues/152
+				//var body = document.querySelector('body');
+        //Polymer.dom(body).appendChild(dialog);
+				/**/
+        
+				//console.log(dialog);
+				dialog.open();
+				//console.log('opened!');
+			}
+			
+			close() {
+				var dialog = this.$.dialog;
+				dialog.close();
+			}
+			
+    }
+
+    window.customElements.define(UserDialog.is, UserDialog);
+  </script>
+
+</dom-module>

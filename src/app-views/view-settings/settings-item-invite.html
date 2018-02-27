@@ -1,0 +1,349 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!-- state -->
+<link rel="import" href="/src/app-main/app-methods.html">
+<link rel="import" href="/src/app-state/state-app-data.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
+
+<!--- ->
+<link rel="import" href="/src/custom-elements/email-service.html">
+<!---->
+<link rel="import" href="/src/custom-behaviors/email-coding.html">
+
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<link rel="import" href="settings-item-styles.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="settings-item-invite">
+  <template>
+		<style include="settings-item-styles">
+			.wrapper {
+				cursor: auto;
+			}
+			.wrapper > .collapse {
+				padding-bottom: 16px;
+			}
+			paper-input {
+				text-align: left;
+			}
+			paper-icon-button.send {
+				background-color: var(--app-primary-color);
+				color: white;
+				opacity: 1.0;
+			}
+		</style>		
+		
+		<!-- state -->
+		<state-app-data app-data="{{appData}}"></state-app-data>
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+		<app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
+		<!---->
+		<!---->
+    
+    <email-coding id="emailencoder"></email-coding>
+    <!--- ->
+		<email-service id="emailer"
+                   url="[[appData.emailService.emailServerUrl]]"
+                   email-key="[[appData.emailService.emailServerKey]]"
+                   email-name="[[userRemote.email]]"
+                   email-to="[[text]]"
+                   >
+		</email-service>
+		<!---->
+		<paper-toast id="toast" text="Email sent"></paper-toast>
+		
+		<iron-a11y-keys id="a11y"
+                    xtarget="[[target]]"
+                    keys="enter"
+                    xon-keys-pressed="onEnter"
+                    on-keys-pressed="send"
+                    >
+		</iron-a11y-keys>
+		<!---->
+		
+		<div class="wrapper">
+			<iron-icon icon="[[icon]]"
+								 xicon="communication:location-on"
+								 xicon="maps:place"
+								 class="icon"></iron-icon>
+			<div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!--- ->
+					Zip code
+					<!---->
+					[[label]]
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					<!--- ->
+					[[_output]]
+					<!---->
+					[[count]]
+				</div>
+			</div>
+			<div class="end">
+			  <paper-ripple xrecenters></paper-ripple>
+				<!--- ->
+				<paper-icon-button icon="add"
+                           class="add"
+                           on-tap="_toggleCollapse"
+                           xhidden$="{{opened}}"
+                           >
+				</paper-icon-button>
+				<!---->
+				<paper-icon-button icon="expand-more"
+                           on-tap="_toggleCollapse"
+                           hidden$="{{opened}}"
+                           >
+				</paper-icon-button>	
+        <paper-icon-button icon="expand-less"
+                           on-tap="_toggleCollapse"
+                           hidden$="{{!opened}}"
+                           >
+				</paper-icon-button>
+			</div>
+
+			<iron-collapse id="collapse" class="collapse" opened="{{opened}}">
+			  <div class="collapse-content">
+				  <paper-input label="[[description]]"
+                       xvalue="[[userRemote.email]]"
+                       xvalue="[[appData.emailService.emailServerKey]]"
+                       value="{{text}}"
+                       >
+				  </paper-input>
+				  <paper-icon-button icon="send" class="send" on-tap="_save"></paper-icon-button>
+			  </div>
+		  </iron-collapse>
+			
+		</div>
+						
+    
+  </template>
+
+  <script>
+    class SettingsItemInvite extends Polymer.Element {
+      static get is() { return 'settings-item-invite'; }
+
+      static get properties() {
+        return {
+					
+					// common properties
+					
+					/** /
+					opened: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},
+					/**/
+					
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					description: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					text: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
+					},
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+			/** /
+			_toggle() {
+				// must add to "on-tap" event of switch to "double toggle"
+				// switch because item's "on-tap" event also toggles switch
+				// in reverse direction when switch is tapped
+				const s = this.$.switch;
+				s.checked = !s.checked;
+			}
+			
+			/** /
+			_computeOutput(b) {
+				return !!b ? 'On' : 'Off';
+			}
+			/**/
+			
+			_toggleCollapse() {
+				const r = this.$.collapse;
+				r.toggle();
+				//r.opened = !r.opened;
+			}
+			
+			send() {
+        // // Replaced by Cloud Function for Firebase
+        // // to make server-to-server API call to GAS to avoid CORS
+				// const r = this.$.emailer;
+        // r.generateRequest();
+        
+        // console.log('user', this.user);
+        // return;
+				
+				this._save();
+				
+				this.$.toast.open();
+				this.set('opened', false);
+			}
+      
+			
+			_save() {
+        // console.log('user-remote', this.userRemote);
+        // console.log('user-settings', this.userSettings);
+        // console.log('user-local', this.userLocal);
+        //return;
+				
+				// Save to multiple locations:
+				//   1. /user/archive for search/retrieve
+        //   2. local.settings-main for fetch/local use // not for 'user-invite' entity
+        //   3. TODO: update above and add more...
+				
+				const XFIX = 'user-invite';
+        //const data = this.checked; // true|false
+        // const label = this.label.toLowerCase().split(' ').pop(); // 'mortgage'
+        // const entity = [XFIX, label].join('-'); // 'user-switch-mortgage'
+        const entity = XFIX;
+        //const name = ['update', entity].join('-');
+        const coder = this.$.emailencoder;
+
+        const email = this.text;
+        const emailKey = coder.encode(email);
+        
+        const timestamp = new Date().getTime();
+        const userRemote = this.userRemote;
+        const userLocal = this.userLocal;
+        // console.log('userRemote\n', userRemote);
+        // console.log('email\n', userRemote.email);
+        const referrer = {
+          email: userRemote.email,
+          name: userRemote.displayName,
+          // zip: userLocal.zip,
+          // city: userLocal.city,
+          // state: userLocal.state,
+        };
+
+				const data = {
+          email: email,
+          emailKey: emailKey,
+          timestamp: timestamp,
+          referrer: referrer,
+        };
+				
+        // 1. Save record to archive
+        // Note: This will trigger a Cloud Function to dispatch email
+        // Server-to-server avoids CORS issues inherent in client-side dispatch via Google Apps Service API
+
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
+				
+				/** /
+				// omit for this case: contact invitation
+				// 2. Dispatch event to mediator element to save entire 'settings'
+				
+				//const name = ['update', entity].join('-');
+				//console.log('name\n', name);
+				//console.log('data\n', data);
+				const name = ['update', XFIX].join('-'); // 'update-user-invite'
+				const eventData = {
+					data: data,
+					label: label,
+				};
+				this._dispatchEvent(name, eventData);
+				/**/
+        
+        // // 3. Dispatch email // Now do this with a Cloud Function for Firebase
+				
+				// const emailer = this.$.emailer;
+        // emailer.generateRequest();
+        
+        this._reset();
+      }
+      
+      _reset() {
+        this.set('text', '');
+      }
+
+			_dispatchEvent(name, data) {
+				/** /
+				const m = this.$.methods;
+				m.fireEvent(name, data);
+				/**/
+				
+				const timestamp = new Date().getTime();
+				const eventData = {...{data: data}, ...{timestamp: timestamp}};
+				
+				const n = name;
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: eventData,
+				};
+				//console.log('o\n', o);
+				const d = new CustomEvent(n, o);
+				//console.log('d\n', d);
+				this.dispatchEvent(d);
+			}
+			
+    }
+
+    window.customElements.define(SettingsItemInvite.is, SettingsItemInvite);
+  </script>
+
+</dom-module>

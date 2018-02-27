@@ -1,0 +1,54 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/src/custom-styles/paper-listbox-styles.html">
+
+<dom-module id="category-menu">
+  <template>
+		<style include="paper-listbox-styles"></style>
+    <div class="layout horizontal wide">
+      <span class="light" xon-tap="show">Category</span>
+      <paper-listbox xclass="dropdown-content"
+                     attr-for-selected="value"
+                     selected="{{category}}"
+                     >
+        <template is="dom-repeat" items="{{categories}}">
+          <paper-item class="horizontal"
+											value="{{item}}">{{item}}</paper-item>
+        </template>
+        <!--- ->
+        <paper-item value="Home"     >Home</paper-item>
+        <paper-item value="Mortgage" >Mortgage</paper-item>
+        <paper-item value="Insurance">Insurance</paper-item>
+        <paper-item value="Financial">Financial</paper-item>
+        <!---->
+      </paper-listbox>
+		</div>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'category-menu',
+				properties: {
+					category: {
+						type: String,
+						notify: true,
+					},			
+					categories: {
+						type: Array,
+						value: function() {
+							return [ 'Home', 'Mortgage', 'Insurance', 'Financial', ];
+						},
+					},
+        },
+				show: function() {
+					console.log('category', this.category);
+				}
+      });
+    })();
+  </script>
+</dom-module>

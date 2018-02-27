@@ -1,7 +1,16 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="my-redux-store.html">
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
 
-<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
+<!--- ->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="redux-mixin.html">
+<link rel="import" href="redux-store.html">
+<link rel="import" href="my-redux-store.html">
+<!---->
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
 
 <dom-module id="media-query">
   <template>
@@ -32,8 +41,9 @@
 		<iron-media-query query="(min-width: 700px) AND (max-width: 839px)" query-matches="{{queryMatches.medium}}" full></iron-media-query>
 		<iron-media-query query="(min-width: 840px)"                        query-matches="{{queryMatches.large}}"      ></iron-media-query>
 		<!--- ->
-		mediaWidth  0     1     2     3     4      5
-    pixels        575   700   840   900   1125
+		mediaWidth  0     1     2      3     4      5
+    pixels        575   700    840   900   1125
+    pixels        500   800   1100
 		<!---->	
 		<template is="dom-repeat"
 							items="[[queries]]"
@@ -44,12 +54,19 @@
 												>
 				<span hidden>{{queryResult(index, item.queryMatches)}}</span>
 			</iron-media-query>
+			<!--- ->
+			<iron-meta key="mediaWidth"
+								 value="[[mediaWidth]]"
+								 >
+			</iron-meta>
+			<!---->
 		</template>
 		
 	</template>
 
   <script>
 		
+    //class MediaQuery extends ReduxMixin(Polymer.Element) { // Use iron-meta to manage state
     class MediaQuery extends Polymer.Element {
 
       static get is() { return 'media-query'; }
@@ -57,8 +74,9 @@
       static get properties() { return {
 
 				mediaWidth: {
-					type: Number,
+					type: Number, // 0, 1, 2, 3
 					notify: true,
+					//statePath: 'mediaWidth',
 				},
 				
 				// breakpoints: String, // space delimited
@@ -95,6 +113,7 @@
 
       ready() {
         super.ready();
+				//console.log('Hello world from media-query.html');
 			}
 			
 			_computeBreakpointArray(s) {
@@ -127,7 +146,7 @@
 				if(queryMatches) {
 					this.set('mediaWidth', index);
 					//this.dispatch('updateMediaWidth', index);
-					console.log('media-width', this.mediaWidth);
+					//console.log('media-width', this.mediaWidth);
 				}
 			}
 		
@@ -135,73 +154,4 @@
 
     customElements.define(MediaQuery.is, MediaQuery);
   </script>
-</dom-module>	
-
-<!---- >
-    (function() {
-      'use strict';
-      Polymer({
-        is: 'media-query',
-				behaviors: [
-					ReduxBehavior,
-					AsyncActionsBehavior,
-					//MyBehaviors.RandomUsersDataApiBehavior,
-					//MyBehaviors.ZipCodeApiBehavior,
-					//Polymer.NeonAnimationRunnerBehavior,
-					//Polymer.IronResizableBehavior,
-				],
-				/** /
-				attached: function() {
-					//console.log('breakpointArray', this.breakpointArray);
-					//console.log('media-width', this.mediaWidth);
-				},
-				/**/
-				
-				// Redux
-				// https://github.com/Polymer/polycasts/blob/master/ep61-redux/friend-input.html
-				/** /
-	      actions: {
-		      add: function(name) {
-			      return {
-				      type: 'ADD_FRIEND',
-				      friend: name,
-			      };
-		      }
-		      _updateViewstate: function(s) {
-						var viewState = s;
-						var viewGrid = (s === 'grid');
-			      return {
-				      type: 'VIEWSTATE',
-				      payload: {
-								viewState : viewState ,
-								viewGrid  : viewGrid  ,
-							}
-			      };
-		      },
-	      },
-	      addFriend: function() {
-		      var input = this.$.field;
-		      if (input.value) {
-			      this.dispatch('add', input.value);
-			      input.value = '';
-			      input.focus();
-		      }
-	      },
-				/** /
-				actions: {
-		      updateMediaWidth: function(index) {
-						var mediaWidth = index;
-						return {
-				      type: 'MEDIA_WIDTH',
-				      payload: {
-								mediaWidth : mediaWidth ,
-							}
-			      };
-		      }
-	      },
-				/** /
-	      // endRedux
-      });
-    })();
-		/**/
-<!---->
+</dom-module>

@@ -1,0 +1,73 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<dom-module id="paper-menu-styles">
+  <template>
+		<style>
+			/**/
+			
+			:host {
+				--transition-period: 0.5s;
+				--web-transition-periods: {
+					transition         : var(--transition-period) ;
+					-o-transition      : var(--transition-period) ;
+					-ms-transition     : var(--transition-period) ;
+					-moz-transition    : var(--transition-period) ;
+					-webkit-transition : var(--transition-period) ;
+				}
+			}
+			
+			paper-menu {
+				--paper-menu-background-color: white;
+				--paper-menu-selected-item: {
+        	color: white;
+					background-color: var(--accent-color);
+				  @apply --web-transition-periods;
+					/** /
+					transition         : .5s ;
+					-o-transition      : .5s ;
+					-ms-transition     : .5s ;
+					-moz-transition    : .5s ;
+					-webkit-transition : .5s ;
+					/**/
+				}
+				/**/
+				--paper-menu-focused-item: {
+				  @apply --web-transition-periods;
+					/** /
+					transition         : .5s ;
+					-o-transition      : .5s ;
+					-ms-transition     : .5s ;
+					-moz-transition    : .5s ;
+					-webkit-transition : .5s ;
+					/**/
+				}
+				--paper-menu-focused-item-after: {
+        	color: var(--primary-text-color);
+					background-color: var(--accent-color);
+				}
+				/**/
+			}
+			/**/
+			paper-item {
+				--paper-item: {
+					cursor: pointer;
+				};
+			}
+			paper-item:hover {
+				background-color: var(--paper-grey-200);
+				font-weight: bold;
+				@apply --web-transition-periods;
+				/** /
+        color: white;
+				transition         : .5s;
+				-o-transition      : .5s;
+				-ms-transition     : .5s;
+				-moz-transition    : .5s;
+				-webkit-transition : .5s;
+				/**/
+			}
+			
+		</style>
+  </template>
+</dom-module>

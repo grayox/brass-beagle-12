@@ -1,0 +1,64 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+
+<dom-module id="toolbar-dialog-styles">
+  <template>
+		<style include="editor-styles"></style>
+    <style>
+      :host {
+        display: block;
+				--dialog-border-color: var(--primary-color); /*--accent-color*/
+      }
+
+      paper-dialog {
+        overflow: auto;
+      }
+
+      paper-button {
+        background: var(--primary-color);
+        color: var(--text-primary-color);
+      }
+
+      #dialog {
+        max-width: 600px;
+      }
+
+      code {
+        font-weight: 600;
+        color: var(--paper-pink-a400);
+        background: #eee;
+        padding: 5px;
+      }
+
+      .highlight {
+        font-weight: 600;
+      }
+
+      .instructions {
+        display: flex;
+      }
+
+      #close-button {
+        margin: 0 16px 16px 0;
+      }
+
+      #qr {
+        align-self: center;
+        margin-left: 32px;
+        height: 150px;
+        width: 150px;
+      }
+
+      a {
+        text-decoration: none;
+        color: var(--primary-color);
+      }
+
+      @media (max-width: 600px) {
+        #qr {
+          display: none;
+        }
+      }
+    </style>
+  </template>
+</dom-module>

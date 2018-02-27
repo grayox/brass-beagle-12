@@ -1,0 +1,537 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+<link rel="import" href="/src/custom-behaviors/user-setter-behavior.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<link rel="import" href="/src/custom-behaviors/email-coding-behavior.html">
+
+<!--- ->
+Use databinding (from app-main.html) to save calls from iron-ajax
+<link rel="import" href="app-data.html">
+<!---->
+<!--- ->
+Example usage:
+
+  this.fire('item-method', {
+    method: 'save',           // {string}: 'save'|'delete'
+    entity: 'user-balances',  // {string}: 'deal'|'bid'|'network'
+    data: {                   // {object}: entity data passed from save event; {new: 'data'}
+      net: net,
+      up: up,
+    },
+  });
+<!---->
+
+<dom-module id="app-methods">
+	<template>
+		<style></style>
+		<paper-toast id="toast"></paper-toast>
+		<firebase-document id="document"
+											 app-name="app"
+											 xpath="/emails/[[emailKey]]"
+											 xpath="/[[emailKey]]"
+											 xdata="{emailData}"
+											 xlog
+											 >
+		</firebase-document>
+		<iron-ajax id="ajax"
+							 xauto
+							 xverbose
+							 xurl="https://www.googleapis.com/youtube/v3/search"
+							 xurl="http://httpbin.org/get"
+							 xparams='{"part":"snippet", "q":"polymer", "key": "YOUTUBE_API_KEY", "type": "video"}'
+							 handle-as="json"
+							 on-response="handleAjaxResponse"
+							 debounce-duration="300"
+							 >
+		</iron-ajax>
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'app-methods',
+				
+				/**/
+				behaviors: [
+					//ReduxBehavior,
+					//AsyncActionsBehavior,
+					//MyBehaviors.UserSetterBehavior,
+					MyBehaviors.EmailCodingBehavior,
+				],
+				/**/
+									
+				properties: {
+					appData: {
+						type: Object,
+						statePath: 'appData',
+					},
+					userRemote: {
+						type: Object,
+						statePath: 'userRemote',
+					},
+					editableItem: Object,
+					emailKey: {
+						type: String,
+						computed: '_computeEmailKey(userRemote)',
+					},
+					timestamp: Number,
+					newPostKey: String,
+					data: Object,
+					readData: {
+						type: Object,
+						observer: '_readDataChanged',
+					},
+					methodArg: {
+						type: Object,
+						observer: '_methodArgChanged',
+					},
+				},
+				
+				/** /
+				observers: [
+					'_readDataOrMethodArgChanged(readData, methodArg)',
+				],
+
+				/** /
+				listeners: {
+					//'item-update': '_itemUpdate',
+				},
+				/**/
+				
+				_resetVariables: function() {
+					this.set( 'timestamp'  , null );
+					this.set( 'newPostKey' , null );
+					this.set( 'data'       , null );
+					this.set( 'readData'   , null );
+					this.set( 'methodArg'  , null );
+				},
+				
+				// Property functions (observers, computed, handlers)
+		
+				/** /
+				_readDataOrMethodArgChanged: function(readData, methodArg) {
+					console.log('readData', readData);
+					console.log('methodArg', methodArg);
+					if((!!readData) && (!!methodArg)) {
+						this.method();
+					}
+				},
+				/**/
+				
+				/**/
+				_readDataChanged: function(ob) {
+					//console.log('ob', ob);
+					if(!!ob) {
+						this.method();
+					}
+				},
+				
+				_methodArgChanged: function(ob) {
+					//console.log('ob', ob);
+					if(!!ob) {
+						this.method(ob);
+					}
+				},
+				/**/
+					
+				_computeEmailKey: function(user) {
+					if(!!user) {
+						return this._emailEncode(user.email);
+					}
+				},
+				
+				handleAjaxResponse: function(e) {
+					//console.log('e', e);
+					var ajax = this.$.ajax;
+					var r = ajax.lastResponse;
+					//console.log('r', r);
+				},
+				
+				// end Property functions
+				
+				// Utilities
+				
+				_readFirebaseData: function(s) {
+					// Reference: https://firebase.google.com/docs/database/web/read-and-write
+					// Reference: http://stackoverflow.com/a/43240014/1640892
+					var _this = this;
+					//var userFirebase;
+				  firebase.app('app').database().ref(s).once('value', function(snapshot) {
+						_this.set('readData', snapshot.val());
+						//console.log('readData', snapshot.val());
+						//return snapshot.val();
+					});
+				},
+				
+				_evalString4Token: function(s) {
+					// Replaces token with evaluated expression inside token template
+					var out = s;  // '~@foo@~'
+					var re = /~@(.*?)@~/;
+					var match = re.exec(s); // ['~@foo@~', 'foo']
+					//console.log('s', s);
+					if(!!match && !!match[0] && !!match[1]) {
+						out = s.replace(match[0], eval(match[1]));
+						//console.log('out', out);
+					}
+					return out;
+				},
+				
+				_array2string_path: function(a) {
+					var timestamp = this.timestamp ? this.timestamp : Date.now();
+					if (typeof a != 'object') return a;
+					var out = [];
+					var i = a.length;
+					while(i--) {
+						out[i] = this._evalString4Token(a[i]);
+					}
+					return out.join('/');
+				},
+				
+				/**/
+				_toastSuccessful: function(method) {
+					var toast = this.$.toast;
+					toast.text = 'Item ' + method + 'd';
+					toast.show();
+				},
+				/**/
+				
+				// end Utilities
+				
+				// Configurations and initializations
+				
+				_initUser: function(type, e) {
+					//console.log('e', e);
+					this._resetVariables();
+					var ref        = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					if(typeof e.data == 'object') { // e.data {object}: entity data passed from save event; {new: 'data'}
+						var data = JSON.parse(JSON.stringify(e.data)); // Clone to preserve original appData values
+					} else {
+						var data = e.data;   
+					}
+					//console.log('data', data);
+					var out = {};
+					var uid = data.uid ? data.uid : this.userRemote.uid;
+					//console.log('uid', uid);
+					//console.log('userRemote', this.userRemote);
+					var timestamp = Date.now(); //new Date().getTime();
+					this.set('timestamp', timestamp);
+					data.timestamp = timestamp;
+					var keystub = [ 'users', uid, type, ].join('/');
+					var newPostKey;
+					switch (type) {
+						case 'remote':
+					    newPostKey = null; // Design decision: Do not write each login; only record latest; using timestamp;
+					    //newPostKey = ref.child(keystub).push().key; // var ref = this.$.document.db.ref('/');
+							break;
+						case 'local':
+					    newPostKey = ref.child(keystub).push().key; // var ref = this.$.document.db.ref('/');
+							break;
+						case 'balances':
+					    newPostKey = null;
+							break;
+						default:
+							//do something;
+					}
+					this.set('newPostKey', newPostKey);
+					var targetNode = [ keystub, newPostKey, ].join('/');
+					out[targetNode] = data;
+					//console.log('out', out);
+					return out;
+				},
+
+				_initNetwork: function(e) {
+					// 'self-paths' are used when the data value itself becomes the key of the new record in the db.
+					// Aka 'self-key' property in the app-data file // e.g., email addresses
+					// Alternative to 'standard-paths'
+					//var selfKey  = ob['self-key']; // e.g., 'emails'
+					// Note: Pivoted away from 'self-paths' toward 'init' property specifying custom function.
+					// 'config' property also specifies custom function to be run after init
+					var ref        = e.r;      // e.r: Firebase database reference;
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data       = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					//var ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
+					var out = {};
+					var a = data.reverse(); // e.g., [ 'email1@example,com', 'email2@example,com', ... ]
+					var i = a.length;
+					var uid = this.user.uid;
+					var timestamp = Date.now(); //new Date().getTime();
+					while(i--) {
+						var newPostKey = a[i]; // e.g., 'email2@example,com'
+						out[ [ 'emails', newPostKey, 'added-by', this.emailKey, timestamp, ].join('/') ] = {
+							'adder-uid': uid,
+						};
+						out[ [ 'user-emails', uid, newPostKey, timestamp, ].join('/') ] = {
+							exists: true, 
+						};
+					}
+					//console.log('out', out);
+					return out;
+				},
+
+				_initData: function(ob) {
+					//console.log('this.data', this.data);
+					var timestamp = this.timestamp ? this.timestamp : Date.now();
+					var out = {};
+					//console.log('ob', ob);
+					if (typeof ob != 'object') {
+						console.warn ('Not an object', ob)
+						return ob;
+					}
+					var keys = Object.keys(ob);
+					var i = keys.length;
+					while(i--) {
+						var key = this._evalString4Token(keys[i]); // eval key
+						var val = this._evalString4Token(ob[keys[i]]); // eval value
+            out[key] = val;
+					}
+					return out;
+				},
+				
+				_configInvitation: function(key, data) {
+					var appData = this.appData;
+					data.url = appData.firebase.authDomain;
+					data['invitation-key'] = key;
+					var ajax = this.$.ajax;
+					ajax.url = 'https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec';
+					//ajax.method = 'GET';
+					ajax.method = 'POST';
+					ajax.params = {
+						k: 'gviot90sqobjc16chfj7',
+						//m: key,
+						/** /
+						m: JSON.stringify({
+							// Must stringify parameter to pass JSON object
+							// https://datatables.net/forums/discussion/14501/post-with-parameters-and-content
+							// Can't yet extract POST body
+							// https://developers.google.com/apps-script/guides/content
+							'invitation-key': key,
+							'inviter-email': this.user.email,
+							'invitee-email': '',
+							'app-url': this.appData.firebase.databaseUrl,
+						}),
+						/**/
+						m: JSON.stringify(data),
+					};
+					/**/
+					ajax.generateRequest();
+				},
+				
+				// end Configurations and Initializations
+
+				// Main Flow
+				
+				/**/
+				_itemPaths: function(e) {
+					var ref        = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data       = this.readData ? this.readData : e.data; // e.data {object}: entity data passed from save event; {new: 'data'}
+					var newPostKey = e.newPostKey; 
+					var ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
+					var out = {};
+					//var timestamp = Date.now();
+					
+					//console.log('ob', ob);
+					// Path // string interpolation
+					var a = ob.paths;
+					var i = a.reverse().length;//i=1;
+					//var re = /~@(.*?)@~/;
+					//console.log('e', e, 'ob', ob);
+					while(i--) {
+						var type, path, dat, key;
+						if(a[i].type && a[i].path) {
+							type = a[i].type;
+							path = a[i].path;
+						  key = this._array2string_path(path);
+							/**/
+							switch(type) {
+								case 'create':
+									dat = data;
+									break;
+								case 'index':
+									//dat = true;
+									dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
+									break;
+								/**/
+								case 'update':
+									if(a[i].data) {
+										//console.log('typeof data', typeof a[i].data);
+										//console.log('data', a[i].data);
+										dat = this._initData(a[i].data);
+										//console.log('typeof dat', typeof dat);
+										//console.log('dat', dat);
+									} else {
+										console.warn('Attempted to update node with no "data" property');
+										continue;
+									}
+									break;
+								/**/
+								case 'delete':
+									dat = null;
+									break;
+								default:
+									//code block
+									continue;
+							}
+							/**/
+						} else {
+							continue;
+						}
+						out[key] = dat;
+					  //console.log('out', out);
+					}
+					//console.log('out', out);//x(y);
+					return out;
+				},
+				/**/
+				
+				_itemsPath: function(e) {
+					//console.log('e', e);
+					var ref    = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					//console.log('entity', entity);
+					var data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					//console.log('data', data);
+					var appData = this.appData;
+					//console.log('appData', appData);
+					var entities = appData.entities;
+					//console.log('entities', entities);
+					var r = entities[entity];
+					//console.log('r', r);
+					var ob = JSON.parse(JSON.stringify(r)); // Clone to preserve original appData values
+					//console.log('ob', ob);
+					var out, newPostKey;
+					
+					var read = ob.read;
+					//console.log('read', read);
+					//console.log('this.readData', this.readData);
+					//console.log('e', e);
+					//console.log('ob', ob);
+					if(!!read && !this.readData){
+					  //console.log('e', e);
+						this.set('methodArg', e);
+						var path = this._array2string_path(read);
+						this._readFirebaseData(path);
+						return;
+					}
+					
+					//console.log('self-key', ob['self-key']);
+					// Key and explicated paths
+					if(!!ob.key) { // ob.key = 'deals'|'bids'|'users'
+						// Get a key for a new Post.
+						newPostKey = ref.child(ob.key).push().key; // var ref = this.$.document.db.ref('/');
+						//console.log('newPostKey', newPostKey);
+						this.set('newPostKey', newPostKey);
+						e.newPostKey = newPostKey;
+					}
+					if(!!ob.paths) {
+						out = this._itemPaths(e);
+						//console.log('out', out);
+					} //else if(!!ob['self-key']) {
+						// If no ob.key, data is array, and ob['self-key'] is present,
+						// make individual elements their own key under self-key node
+					  // Note: As of 3/5/2017, ob['self-key'] is not present in app-data-demo.json
+					//console.log('ob', ob);
+					
+					// Initialize
+					if(!!ob.init) {
+						//out = this._selfPaths(e);
+						out = eval( 'this.' + ob.init );
+					  //console.log('out', out);
+					}
+					
+					// Configure
+					if(!!ob.config) {
+						eval( 'this.' + ob.config );
+					}
+					//console.log('out', out);
+					return out;
+				},
+				
+				_execute: function(e) {
+					/** /   
+					var entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					/**/
+					var r      = e.r;      // e.r: Firebase database reference;
+					var paths  = e.ob;
+					var doc    = e.doc;
+					var method = e.method; // e.method {string}: method name; 'save'|'delete'
+					/**/
+					switch(method) {
+						case 'save':
+							//console.log('paths', paths);
+							if(!!paths) {
+								return r.update(paths);
+							}
+							break;
+						/** /
+						case 'delete':
+							doc.destroy();
+							break;
+						/** /
+						case 'delete':
+						  // Reference: https://firebase.google.com/docs/reference/js/firebase.database.Reference#remove
+							var adaRef = firebase.database().ref('users/ada');
+							adaRef.remove()
+								.then(function() {
+									console.log("Remove succeeded.")
+								})
+								.catch(function(error) {
+									console.log("Remove failed: " + error.message)
+								});
+							break;
+						/**/
+						default:
+							console.error('Method not defined');
+					}
+					/**/
+				},
+				
+				method: function(e) { // e = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+					e = (!!e) ? e : this.methodArg; // _itemsPath() sets methodArg before calling _readFirebaseData()
+					if(!e) {
+						return;
+					}
+					//console.log('e', e);
+					//console.log('this.methodArg', this.methodArg);
+					//this._resetVariables();
+					var entity = e.entity ; //console.log('entity', entity); // 'deal'|'bid'|'network'
+					var method = e.method ; //console.log('method', method); // 'save'|'delete'
+					var data   = e.data   ; //console.log('data'  , data  );
+					if(data) {
+					  //console.log('e', e);
+						this.set('data', data);
+					}
+					//this.toEditableItem(item); // this.toEditableItem(data);
+					var doc = this.$.document;
+					//e.id = this.editableItemId;
+					//console.log('e', e);
+					e.doc = doc;
+					e.r = doc.db.ref('/');
+					//console.log('e', e);
+					e.ob = this._itemsPath(e);
+					//console.log('e', e);
+					this._execute(e);
+					this._toastSuccessful(method);
+					this.fire('method-success', method);
+					doc.reset();
+				},
+				
+				// end Main Flow
+      });
+		})();
+  </script>
+</dom-module>

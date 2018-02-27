@@ -1,0 +1,135 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+
+<!-- Edit -->
+<link rel="import" href="/bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="login-styles.html">
+<link rel="import" href="/src/custom-behaviors/email-coding-behavior.html">
+<!---->
+<!---->
+<!-- endEdit -->
+
+<dom-module id="user-panel">
+	<style include="login-styles"></style>
+
+  <template>
+		
+    <iron-a11y-keys xkeys="pageup pagedown left right down up shift+a alt+a home end space enter tab"
+										keys="enter tab" on-keys-pressed="_primary"></iron-a11y-keys>
+		
+		<paper-tooltip id="tooltip"
+									 for="email"
+									 position="top"
+									 animation-delay="1000"
+									 entry-animation="slide-from-bottom-animation"
+									 exit-animation="fade-out-animation"
+									 opened
+									 >
+			Network integrity is very important. Enter your email address.
+			(Step 1 of 3)
+		</paper-tooltip>
+		<paper-toast id="toast"
+								 duration="0"
+								 opened
+								 text="Network integrity is very important. Enter your email address. (Step 1 of 3)"
+								 >
+			Network integrity is very important. Enter your email address.
+			(Step 1 of 3)
+		</paper-toast>
+		
+		<div class="login">
+			<!---->
+      <gold-email-input id="email"
+											  label="Your email address"
+											  value={{emailRaw}}
+											  name="email"
+											  >
+			</gold-email-input>
+			<!--- ->
+			<paper-input id="email"
+									 label="Your email address"
+								   value={{emailRaw}}
+								   name="email"
+									 >
+			</paper-input>
+			<!---->
+      <span class="error-message">[[errorMessage]]</span>
+      <paper-button class="primary" on-tap="_primary"    raised>Next</paper-button>
+      <paper-button                 on-tap="_secondary" xraised>Go back</paper-button>
+			<!--- ->
+			<button on-tap="_clear">Clear</button>
+			<!---->
+    </div>
+		
+		<!--- ->
+    <div class="login">
+      <paper-input value={{username}} label="Username" name="username"></paper-input>
+      <paper-input value="{{password}}" label="Password" name="password" type="password"></paper-input>
+      <span class="error-message">[[errorMessage]]</span>
+      <paper-button id="login-button" on-tap="_logIn" raised>Login</paper-button>
+    </div>
+		<!---->
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'user-panel',
+				/**/
+				behaviors: [
+					MyBehaviors.EmailCodingBehavior,
+				],
+				/**/
+				properties: {
+					errorMessage: String,
+					emailRaw: {
+						type: String,
+						notify: true,
+					},
+					email: {
+						type: String,
+						notify: true,
+						computed: '_computeEmail(emailRaw)',
+					}
+				},
+				attached: function() {
+					//this.$.tooltip.show();
+					//this.$.toast.open();
+				},
+				_primary: function(e) {
+					var s = this.email;
+					//console.log('email', this.email);
+					//console.log('e', e);
+					//console.log('s', s);
+					this.fire('fetch-user', {
+						type: 'primary',
+						payload: s,
+					});
+					this._clear();
+				},
+				_secondary: function(e) {
+					this.fire('fetch-user', {type: 'secondary'});
+					this._clear();
+				},
+				_computeEmail: function(s) {
+					if(!!s) {
+						var out = this._emailEncode(s);
+						//console.log('email', out);
+						return out;
+					}
+				},
+				_clear: function() {
+					this.set('emailRaw', '');
+					//console.log('email', this.email);
+				},
+      });
+    })();
+  </script>
+</dom-module>

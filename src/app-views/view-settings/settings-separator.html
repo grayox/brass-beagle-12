@@ -1,0 +1,78 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="notification-shield.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="settings-separator">
+  <template>
+		<style include="paper-material-styles">
+			:host {
+				/* https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing */
+				--separator-height: 72px;
+				--label-color: var(--app-primary-color);
+				--border-opacity: 0.12;
+			}
+				
+			.wrapper {
+				height: var(--separator-height);
+				border-top: 1px solid rgba(0, 0, 0, var(--border-opacity));
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+        align-content: center;
+        justify-content: start;
+				
+				overflow: auto;
+			}
+			
+			.label {
+				padding: 0 80px;
+				color: var(--label-color);
+				font-size: smaller;
+			}
+		</style>
+		
+		<div class="wrapper">
+			<div class="label">
+				[[label]]
+			  <slot></slot>
+			</div>
+		</div>
+    
+  </template>
+
+  <script>
+    class SettingsSeparator extends Polymer.Element {
+      static get is() { return 'settings-separator'; }
+
+      static get properties() {
+        return {
+					label: String,
+				};
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+    }
+
+    window.customElements.define(SettingsSeparator.is, SettingsSeparator);
+  </script>
+
+</dom-module>

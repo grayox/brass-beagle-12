@@ -1,0 +1,131 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="paper-item-styles">
+  <template>
+		<!---->
+    <style>
+      :host {
+        --highlight: {
+          background-color: var(--app-primary-color);
+          color: white;
+          border-radius: 4px;
+        };
+      }
+
+      .button-save {
+        @apply --highlight;
+      }
+
+			paper-fab {
+        position: fixed;
+        top: 54px;
+        right: 8px;
+        z-index: 1;
+        /** /
+        margin: auto;
+        right: 24px;
+        bottom: 32px;          
+        /**/
+      }
+
+      div[role="listbox"] {
+        border: 1px solid #DDDDDD;
+      }
+
+      .avatar {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 40px; /*40px*/
+        height: 40px; /*40px*/
+        border-radius: 50%;
+        /** /
+        background: var(--app-primary-color);
+        background: var(--paper-amber-500);
+        /**/
+        opacity: var(--opacity-dim); /*0.54;*/
+      }
+
+      .avatar-small {
+        width: 20px;
+        height: 20px;
+      }
+
+      .dim {
+        opacity: var(--opacity-dim); /*0.54;*/
+      }
+
+      .italic {
+        font-style: italic;
+      }
+
+      .urgent {
+        font-weight: 900;
+        opacity: 1.0;
+        color: white;
+        background-color: red;
+      }
+
+      /** /
+      .blue {
+        background-color: var(--paper-light-blue-300);
+      }
+      /**/
+
+      paper-icon-item, paper-item {
+        text-align: start;
+        background-color: white;
+        border-bottom: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
+
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .header {
+        background-color: var(--primary-color); /* --primary-color */
+        color: white;
+        text-transform: initial; /* capitalize; /* uppercase */
+      }
+
+      .subheader {
+        background-color: var(--paper-gray-300);/*lightgrey; /*var(--primary-color); /* --primary-color */
+        color: var(--primary-color);
+      }
+
+      .buttons {
+        text-align: end;
+      }
+
+      .menu-icon-selected {
+        color: var(--app-primary-color);
+        /** /
+        color: var(--paper-green-500);
+        color: var(--paper-yellow-500);
+        /**/
+      }
+
+      /* test-1 */
+
+      .selected {
+        color: var(--paper-amber-500);
+        /** /
+        --paper-icon-button-ink-color: var(--paper-amber-500);;
+        /**/
+      }
+
+      .default {
+        color: var(--primary-text-color);
+      }
+
+      /* test-2 */
+
+      paper-item-body {
+        margin-left: 8px;
+      }
+
+      paper-icon-item {
+        padding-right: 42px;
+      }
+
+    </style>
+  </template>
+</dom-module>

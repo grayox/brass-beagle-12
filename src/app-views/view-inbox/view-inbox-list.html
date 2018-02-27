@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-list/iron-list.html">
+
+<!---->
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
+<!---->
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+<link rel="import" href="/src/app-data/app-database.html">
+
+<!--- ->
+<!--- ->
+Demos
+https://gridbyexample.com/patterns/header-asmany-footer/
+https://codepen.io/rachelandrew/pen/zwPEoX
+<!---->
+
+<dom-module id="view-inbox-list">
+
+  <template>
+
+    <style include="paper-item-styles">
+      :host {
+        display: block;
+      }
+  
+      iron-list {
+        height: 100vh; /* don't use % values unless the parent element is sized. */
+      }
+    </style>
+
+    <app-database items-available="[[items]]"></app-database>
+
+    <div role="listbox">
+      <iron-list items="[[items]]">
+        <template>
+
+          <paper-icon-item xclass="urgent">
+            <!---->
+            <div class="avatar-small" slot="item-icon"></div>
+            <!---->
+            <paper-item-body xtwo-line>
+              <div xclass="dim">[[item.name]]</div>
+              <!--- ->
+              <div secondary>Jan 17, 2014</div>
+              <!---->
+            </paper-item-body>
+            <!---->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <!--- ->
+            <div>12</div>
+            <!---->
+          </paper-icon-item>
+          
+        </template>
+      </iron-list>
+    </div>
+
+  </template>
+
+  <script>
+
+    class ViewInboxList extends Polymer.Element {
+
+      static get is() { return 'view-inbox-list'; }
+
+      /** /
+			static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+      /**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/**/
+		
+    }
+
+    customElements.define(ViewInboxList.is, ViewInboxList);
+
+  </script>
+
+</dom-module>

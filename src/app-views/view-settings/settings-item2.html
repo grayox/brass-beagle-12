@@ -1,0 +1,217 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="settings-item">
+  <template>
+		<style include="paper-material-styles">
+			:host {
+				/* https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing */
+				--item-height: 72px;
+				--item-padding: 4px 48px 4px 24px;
+				--line-color: #DDDDDD;
+				--test-border: 0px grey solid;
+				
+				border: var(--test-border);
+				border-color: darkorange;
+			}
+			
+			.wrapper {
+				height: var(--item-height);
+				padding: var(--item-padding);
+				opacity: var(--opacity-normal);
+				cursor: pointer;
+				
+				@apply --layout-horizontal;
+				@apply --layout-center;
+				
+				/** /
+				border: var(--test-border);
+				border-width: 4px;
+				border-color: red;
+				/**/
+				
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+				grid-template-columns: 56px auto auto;
+			}
+			
+		  .wrapper:hover {
+				background-color: white;
+				border: 1px var(--line-color) solid;
+			}
+			
+			paper-toggle-button {
+				border: var(--test-border);
+				border-color: blue;
+				
+				width: 48px;
+				margin-right: -12px;
+			}
+			
+			.start {
+				border: var(--test-border);
+				@apply --layout-vertical;
+				justify-content: start;
+			}
+			
+			.primary {
+				border: var(--test-border);
+				display: flex;
+				/** /
+				justify-self: start;
+				/**/
+				opacity: var(--opacity-normal);
+			}
+			
+			.secondary {
+				border: var(--test-border);
+				display: flex;
+				/** /
+				justify-self: start;
+				/**/
+				font-size: smaller;
+				opacity: var(--opacity-dim);
+			}
+			
+			.end {
+				border: var(--test-border);
+				justify-self: end;
+			}
+			
+			.icon {
+				opacity: var(--opacity-dim);
+			}
+			
+		</style>
+		
+		<!-- v.1 | slots - ->
+		
+		<div class="wrapper" on-tap="_toggle">
+			<paper-ripple xrecenters></paper-ripple>
+			<div class="start">
+				<div class="primary">
+					<slot name="primary"></slot>
+				</div>
+				<div class="secondary">
+					<slot name="secondary"></slot>
+				</div>
+			</div>
+			<div class="end">
+				<paper-toggle-button id="switch"
+														 name="notification-email"
+														 checked="{{item.notification-email}}"
+														 on-tap="_toggle"
+														 ></paper-toggle-button>		
+			</div>
+		</div>
+		
+		<!-- usage -->
+    <!--- ->
+		<settings-item>
+			<span slot="primary">Home</span>
+			<span slot="secondary">Off</span>
+		</settings-item>
+		<!---->
+		
+		<!-- v.2 | properties -->
+		
+		<div class="wrapper" on-tap="_toggle">
+			<paper-ripple xrecenters></paper-ripple>
+			<iron-icon icon="[[icon]]" class="icon"></iron-icon>
+			<div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!---->
+					[[label]]
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					<!---->
+					[[output]]
+				</div>
+			</div>
+			<div class="end">
+				<paper-toggle-button id="switch"
+														 name="notification-email"
+														 checked="{{checked}}"
+														 on-tap="_toggle"
+														 ></paper-toggle-button>		
+			</div>
+		</div>
+    
+  </template>
+
+  <script>
+    class SettingsItem extends Polymer.Element {
+      static get is() { return 'settings-item'; }
+
+      static get properties() {
+        return {
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					output: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+						computed: '_computeOutput(checked)',
+					},
+					checked: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+						//observer: '_selectedChanged',
+					},
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+						
+			_toggle() {
+				// must add to "on-tap" event of switch to "double toggle"
+				// switch because item's "on-tap" event also toggles switch
+				// in reverse direction when switch is tapped
+				const s = this.$.switch;
+				s.checked = !s.checked;
+			}
+			
+			_computeOutput(b) {
+				return !!b ? 'On' : 'Off';
+			}
+			
+    }
+
+    window.customElements.define(SettingsItem.is, SettingsItem);
+  </script>
+
+</dom-module>

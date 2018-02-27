@@ -1,0 +1,69 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<dom-module id="email-listbox">
+	<template>
+		<style></style>
+		<paper-textarea label="Email list"
+                    value="{{emailsString}}"
+                    >
+			<paper-tooltip>Enter list of email addresses separated by commas or spaces</paper-tooltip>
+    </paper-textarea>
+		<!--- ->
+    <hr />
+    [[emails]]
+		<!---->
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'email-listbox',
+				behaviors: [
+					Polymer.NeonAnimationRunnerBehavior,
+				],
+        properties: {
+          patterns: {
+            type: Object,
+            value: function() {
+              //return /(\S+?@\S+?\.\S+?)[,|;|\|\s|\n|\r|\t|\0|\b|$]/gmi; // http://plnkr.co/edit/Bgc4KjYFpZW9BRfH5kWG?p=preview
+            	//https://regex101.com/r/43RnKi/1
+						  //delete: https://regex101.com/delete/awUzC6wgkCD4x1ScdFLH0e7o
+							//http://stackoverflow.com/q/40268441/1640892
+							return {
+								split  : /[\s,;\|\n\r\t\0\b]+/gm , // Split list into individual email addresses
+								filter : /(\S+?@{1}\S+?\.\S*)/gm , // Filter strings not matching email pattern
+							};
+						},
+          },
+          emailsString: {
+            type: String,
+            observer: '_emailsStringChanged',
+          },
+					emails: {						
+						type: Array,
+						notify: true,
+					},
+        },
+        _emailsStringChanged: function(s) {
+					var r_split = this.patterns.split;
+					var r_filter = this.patterns.filter;
+					var a = s.split(r_split);
+					var i = a.length;//console.log('a', a);
+					while(i--) {
+						var match = a[i].match(r_filter);
+						if(match) {
+							a[i] = match[0];//console.log('a[i]', a[i]);
+						} else {
+							a.splice(i, 1);
+						}
+					}
+  				this.set('emails', a);
+	      },
+			});
+		})();
+  </script>
+</dom-module>

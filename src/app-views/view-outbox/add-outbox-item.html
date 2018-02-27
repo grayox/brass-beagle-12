@@ -1,0 +1,199 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<link rel="import" href="/src/custom-elements/paper-item-zip.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<!---->
+
+<dom-module id="add-outbox-item">
+  <template>
+    <style include="paper-item-styles"></style>
+    <app-methods id="methods"></app-methods>
+    <!---->
+    <paper-item class="header">
+      <!--- ->
+      <paper-ripple></paper-ripple>
+      <!--- ->
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+        </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        Send a new lead
+        <!--- ->
+        <div secondary>Jan 9, 2014</div>
+        <!---->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-item>
+    <!---->
+    <paper-icon-item>
+      <paper-ripple></paper-ripple>
+      <!---->
+      <div class="avatar xblue" slot="item-icon">
+        <paper-icon-button icon="vaadin:user" alt="inbox"></paper-icon-button>
+      </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        <paper-input label="Name" value="{{item.name}}"></paper-input>
+        <!--- ->
+        <div secondary>Jan 9, 2014</div>
+        <!---->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-icon-item>
+    
+    <paper-item-zip></paper-item-zip>
+
+    <paper-icon-item>
+      <paper-ripple></paper-ripple>
+      <!---->
+      <div class="avatar xblue" slot="item-icon">
+        <paper-icon-button icon="vaadin:map-marker" alt="inbox"></paper-icon-button>
+      </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        <paper-input label="Zip code" value="{{item.zip}}"></paper-input>
+        <!--- ->
+        <div secondary>Jan 9, 2014</div>
+        <!---->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-icon-item>
+
+    <paper-icon-item>
+      <paper-ripple></paper-ripple>
+      <!---->
+      <div class="avatar xblue" slot="item-icon">
+        <paper-icon-button icon="vaadin:phone" alt="inbox"></paper-icon-button>
+      </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        <paper-input label="Phone" value="{{item.phone}}"></paper-input>
+        <!--- ->
+        <div secondary>Jan 9, 2014</div>
+        <!---->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-icon-item>
+    <paper-icon-item>
+      <paper-ripple></paper-ripple>
+      <!---->
+      <div class="avatar xblue" slot="item-icon">
+        <paper-icon-button icon="communication:email" alt="inbox"></paper-icon-button>
+      </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        <paper-input label="Email" value="{{item.email}}"></paper-input>
+        <!--- ->
+        <div secondary>Jan 9, 2014</div>
+        <!---->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-icon-item>
+
+    <dashboard-detail-type></dashboard-detail-type>
+
+    <paper-item class="buttons">
+      <!--- ->
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+        </div>
+      <!---->
+      <paper-item-body xtwo-line>
+        <div>
+          <paper-button on-tap="_reset">Cancel</paper-button>
+          <paper-button on-tap="_save">Save</paper-button>
+        </div>
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- ->
+      <div>0/2</div>
+      <!---->
+    </paper-item>
+    
+		
+	</template>
+
+  <script>
+    class AddOutboxItem extends Polymer.Element {
+      static get is() { return 'add-outbox-item'; }
+
+      static get properties() { return {
+				item: {
+					type: Object,
+					notify: true,
+          value: () => ({}),
+					// observer: '_itemChanged',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			// ready() {
+      //   super.ready();
+      //   window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      // }
+			
+			// _itemChanged(o) {
+			// 	console.log('item', o);
+			// }
+			
+      _save() {
+        const data = this.item;
+				const entity = 'lead-sent';
+				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
+				//const name = ['update', entity].join('-');
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+        console.log('detail\n', detail);
+				methods.method(detail);
+
+        // new Promise().then()
+        this._reset();       
+      }
+
+      _reset() {
+        this.set('item', {});
+      }
+		
+		}
+
+    window.customElements.define(AddOutboxItem.is, AddOutboxItem);
+  </script>
+</dom-module>

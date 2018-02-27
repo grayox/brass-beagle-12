@@ -1,0 +1,28 @@
+<link rel="import" href="/bower_components/polymer-redux/polymer-redux.html">
+<script src="/node_modules/redux/dist/redux.js"></script>
+<!--- ->
+References
+https://tur-nr.github.io/polymer-redux/docs
+https://github.com/tur-nr/polymer-redux/blob/master/demo/redux-mixin.html
+<!---->
+<script>
+  // Setup a Redux store
+  const initial = {
+		message: 'Hello, World! ...from PolymerRedux'
+	};
+  //const reducer = state => state;
+	const reducer = (state = initial, action) => {
+		switch (action.type) {
+			case 'UPDATE_MESSAGE':
+				return Object.assign({}, state, {
+					message: action.message
+				});
+			default:
+				return state;
+		}
+	};
+	//const store = Redux.createStore(reducer);
+  const store = Redux.createStore(reducer, initial);
+  // Export the ReduxMixin
+	ReduxMixin = PolymerRedux(store);
+</script>

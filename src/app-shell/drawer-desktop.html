@@ -1,0 +1,163 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/helpers/helpers.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="shop-app/shop-category-data.html">
+<!-- Since 'home' is the default route, eagerly load it. - ->
+<link rel="import" href="shop-app/shop-home.html">
+<link rel="import" href="shop-app/shop-app.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<!---->
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="shell-styles.html">
+
+<link rel="import" href="/src/app-user/app-user.html">
+<link rel="import" href="nav-menu-desktop.html">
+
+
+<!--- ->
+<link rel="import" href="/bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<!--- ->
+Demos
+http://jsbin.com/degifisici/1/edit?html,console,output
+https://stackoverflow.com/a/45498792/1640892
+<!---->
+
+<dom-module id="drawer-desktop">
+
+  <template>
+
+		<style include="shell-styles">
+			#brand {
+				--paper-item-min-height: 48px; /*48px default*/ /*42px Velo theme */
+			}
+		</style>
+		
+		<!---->
+		<paper-item id="brand">
+		  <!--- ->
+			My App Logo
+		  <!---->
+			<img src="/images/logo.svg" class="logo"/>
+		</paper-item>
+		<!--- ->
+		<app-user user="[[user]]"
+								 media-width="[[mediaWidth]]"
+								 >
+		</app-user>
+		<!---->
+		<app-user></app-user>
+		<nav-menu-desktop></nav-menu-desktop>
+		<!--- ->
+		<view-menu media-width="[[mediaWidth]]"></view-menu>
+		<!--- ->
+		<paper-item>Inbox</paper-item>
+		<paper-item>Starred</paper-item>
+		<paper-item>Sent mail</paper-item>
+		<paper-item>Drafts</paper-item>
+		<!--- ->
+		<iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">				
+			<paper-item>
+			  <a name="view-dashboard" href="#/view-dashboard" xname="row-types" xhref="#/row-types">
+			  	<paper-icon-button icon="vaadin:dashboard"></paper-icon-button>
+			  	Dashboard
+			  </a>
+			</paper-item>
+			<paper-item>
+			  <a name="view-inbox" href="#/view-inbox" xname="image-collage" xhref="#/image-collage">
+			  	<paper-icon-button icon="vaadin:cloud-download"></paper-icon-button><!--vaadin:download, vaadin:inbox- ->
+			  	Inbox
+			  </a>
+			</paper-item>
+			<paper-item>
+			  <a name="view-outbox" href="#/view-outbox" xname="sales-dashboard" xhref="#/sales-dashboard">
+			  	<paper-icon-button icon="vaadin:cloud-upload"></paper-icon-button><!--vaadin:upload, vaadin:outbox- ->
+			  	Outbox
+			  </a>
+			</paper-item>
+		</iron-selector>
+		<!---->
+
+  </template>
+
+  <script>
+
+    // performance logging
+    //window.performance && performance.mark && performance.mark('shop-app - before register');
+
+    class DrawerDesktop extends Polymer.Element {
+
+      static get is() { return 'drawer-desktop'; }
+
+			/** /
+			static get properties() { return {
+				user: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userChanged',
+        },
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+			/**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+
+			/** /
+			_userChanged(user) {
+				console.log('user', user);
+			}
+			/**/
+		
+    }
+
+    customElements.define(DrawerDesktop.is, DrawerDesktop);
+
+  </script>
+
+</dom-module>

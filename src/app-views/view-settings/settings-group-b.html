@@ -1,0 +1,84 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!---->
+
+<link rel="import" href="settings-item.html">
+<link rel="import" href="settings-separator.html">
+
+<dom-module id="settings-group-b">
+  <template>
+		<style>
+			/**/
+			:host {
+				/* https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing */
+				--border-opacity: 0.12;
+				
+				border-left: 1px solid rgba(0, 0, 0, var(--border-opacity));
+			}
+
+		</style>
+		
+		<!-- state - ->
+    <state-user-settings user-settings="{{settings}}"
+												 user-settings-zip="{{settingsZip}}"
+												 user-settings-switch="{{settingsSwitch}}"
+												 user-settings-input="{{settingsInput}}"
+												 >
+		</state-user-settings>
+		<!---->
+			
+		<settings-separator label="Notification of new leads"></settings-separator>
+		
+		<settings-item type="input"
+									 label="Text"
+									 description="Your mobile/text number"
+									 icon="communication:textsms"
+									 xtext="{{item.notifications-text}}"
+									 xtext="{{settingsInput.text}}"
+									 >
+		</settings-item>
+
+		<settings-item type="input"
+									 label="Email"
+									 description="Your email address"
+									 icon="communication:email"
+									 xtext="{{item.notifications-email}}"
+									 xtext="{{settingsInput.email}}"
+									 >
+		</settings-item>
+
+		<settings-separator label="Referral partners"></settings-separator>
+
+		<settings-item type="invite"
+									 label="Invite contact"
+									 description="Email address"
+									 xicon="add-circle"
+									 icon="social:person-add"
+									 xchecked="{{item.add-contact}}"
+									 >
+		</settings-item>
+		
+  </template>
+
+  <script>
+    class SettingsGroupB extends Polymer.Element {
+      static get is() { return 'settings-group-b'; }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+    }
+
+    window.customElements.define(SettingsGroupB.is, SettingsGroupB);
+  </script>
+
+</dom-module>

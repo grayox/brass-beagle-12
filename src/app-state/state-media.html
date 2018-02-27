@@ -1,0 +1,61 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- ->
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<!---->
+<link rel="import" href="media-query.html">
+
+<dom-module id="state-media">
+  <template>
+		<style></style>
+    <!--- ->
+		<app-localstorage-document xlog xsession-only key="mediaWidth" data="{{mediaWidth}}"></app-localstorage-document>
+    <!---->
+		<media-query media-width="{{mediaWidth}}"></media-query>			
+  </template>
+
+  <script>
+    class StateMedia extends Polymer.Element {
+      static get is() { return 'state-media'; }
+
+      static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//statePath: 'mediaWidth',
+					//observer: '_mediaWidthChanged',
+				},
+				mediaType: {
+					type: String, // 'mobile' | 'tablet' | 'desktop'
+					notify: true,
+					computed: '_computeMediaType(mediaWidth)',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			
+			/** /
+			_mediaWidthChanged(n) {
+				console.log('media-width', n);
+			}
+			/**/
+			
+			_computeMediaType(n) {
+				const a = [ 'mobile', 'mobile', 'tablet', 'desktop', ];
+				return a[n];
+			}
+			
+    }
+
+    window.customElements.define(StateMedia.is, StateMedia);
+  </script>
+</dom-module>

@@ -1,0 +1,220 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<!--- ->
+<link rel="import" href="state-user-remote.html">
+<link rel="import" href="state-user-local.html">
+<!---->
+<link rel="import" href="state-user-auth.html">
+
+<dom-module id="state-user">
+  <template>
+		<style></style>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user"                data="{{user}}"              ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}" ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-local"          data="{{userLocal}}"         ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-photo-url"      data="{{userPhotoUrl}}"      ></app-localstorage-document>	
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-uid"            data="{{userUid}}"           ></app-localstorage-document>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-settings"       data="{{userSettings}}"      ></app-localstorage-document>
+		
+		<app-localstorage-document xlog xsession-only key="user-remote"         data="{{userRemote}}"        ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-logged-in"      data="{{userLoggedIn}}"      ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="auth-provider"       data="{{authProvider}}"      ></app-localstorage-document>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-auth-provider" data="{{userAuthProvider}}" ></app-localstorage-document>
+		<!---->
+		
+		<!--- ->
+		<state-user-local user-remote="{{userRemote}}"
+											user-remote-extended="{{userRemoteExtended}}"
+											>
+		</state-user-local>
+		<!--- ->
+		
+    <firebase-query id="query"
+										app-name="app"
+										name="app"
+									 	path="/users/[[userUid]]/local"
+										data="{{userLocalExtended}}"
+										xdata="{{userLocal}}"
+									  limit-to-last="1"
+										xlog
+									  xlimit-to-first="1"
+									  xorder-by-child="timestamp"
+									  xorder-by-value="timestamp"
+										>
+    </firebase-query>
+		
+    <!--- ->
+    hello
+    [[userLocal.city]] <!-- works - ->
+    location
+    [[user.local.city]]  <!-- does not work - ->
+    world
+    <button on-tap="_show">Show</button>
+    <!---->
+		
+  </template>
+
+  <script>
+    class StateUser extends Polymer.Element {
+      static get is() { return 'state-user'; }
+
+      static get properties() { return {
+				/**/
+				userLoggedIn: {
+					type: Boolean,
+					notify: true,
+				},
+				/**/
+				userUid: {
+					type: String,
+					notify: true,
+					computed: '_computeUserUid(userRemote)',
+				},
+				user: {
+					type: Object,
+					notify: true,
+					computed: '_computeUser(userLocal, userRemote)'
+					//observer: '_userChanged',
+				},
+				userRemote: {
+					// initial value fetched by app-main.html > firebase-auth.user > path.
+					type: Object,
+					notify: true,
+					//observer: '_userRemoteChanged',
+				},
+				/**/
+				userLocalExtended: {
+					type: Object,
+					notify: true,
+				},
+				userLocal: {
+					type: Object,
+					notify: true,
+					computed: '_computeUserLocal(userLocalExtended)',
+					/** /
+					value: () => null,
+					//observer: '_userLocalChanged',
+					/**/
+				},
+				userPhotoUrl: {
+					type: String,
+					notify: true,
+					//computed: '_computeUserPhotoUrl(userRemote)',
+				},
+				/** /
+				userAuthProvider: {
+				  // provider signal is only sent upon login event
+					type: String,
+					notify: true,
+				},
+				/**/
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			
+			/** /
+			static get observers() {
+        return [
+          // Observer method name, followed by a list of dependencies, in parenthesis
+          '_userLocalChanged(userLocal.*)',
+        ]
+      }
+			
+			/** /
+			_userRemoteChanged(userRemote) {
+				//console.log('userRemote', userRemote);
+				//this.set('photoUrl', this._computePhotoUrl(userRemote));
+				//console.log('photoUrl', this.photoUrl);
+			}
+			/**/
+			
+			query() {
+				const q = this.$.query;
+				q.getStoredValue();
+			}
+			
+			_computeUserUid(o) {
+				if(!!!o || !!!o.uid) return null;
+			  const uid = o.uid ? o.uid : null;
+				//console.log('user-uid', uid);
+				return uid;
+			}
+			
+			_computeUserLocal(a) {
+				//console.log('user-local-extended', a);
+				const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
+				//console.log('out', out);
+				return out;
+			}
+			
+			_computeUser(uLocal, uRemote) {
+			  return {
+					userLocal: uLocal,
+					userRemote: uRemote,
+				};
+			}
+			
+			/** /	
+			_computeUser(uLocal, uRemote) {
+			  try {
+          const keys = Object.keys(ob);
+          const x = _.maxBy(keys, (e) => {
+						return ob[e].lottery.jackpotAmount;
+				  }, ob);
+					
+			    return {
+				    //userLocal: uLocal['-KindZZyx8ZaXa7E-aCz'],
+				    userLocal: u,
+		        userRemote: uRemote,
+				  };
+				} catch(e) {
+					console.log(e.message);
+					return null;
+				}
+			}
+			
+			/** /
+			_computeUserLocal(s) {}
+			/**/
+			
+			/** /
+			_userLocalChanged(newOb, oldOb) {
+				//console.log('userLocal-old', oldOb);
+				//console.log('userLocal-new', newOb);
+				//console.log('userLocal-new-this', this.userLocal);
+			}
+			/**/
+			
+			/** /
+			_show() {
+				console.log('user', this.user);
+				console.log('user-local', this.userLocal);
+				console.log('user-remote', this.userRemote);
+				console.log('user-uid', this.userUid);
+				console.log('user-photo-url', this.userPhotoUrl);
+				console.log('user-logged-in', this.userLoggedIn);
+			}
+			/**/
+			
+    }
+
+    window.customElements.define(StateUser.is, StateUser);
+  </script>
+</dom-module>

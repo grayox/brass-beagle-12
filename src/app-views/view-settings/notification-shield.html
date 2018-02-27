@@ -1,0 +1,204 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<link rel="import" href="/src/custom-styles/animate-css.html">
+
+
+<dom-module id="notification-shield">
+  <template>
+		<style include="paper-material-styles animate-css">
+			/**/
+			:host {
+				display: inline-block;
+				opacity: 1.0;
+				margin-left: 0.5em;
+				
+				--color-danger: {
+					background-color: red;
+					color: white;
+				}
+				--color-warning: {
+					background-color: orange;
+					color: black;
+				}
+				--color-success: {
+					background-color: green;
+					color: white;
+				}
+				--color-info: {
+					background-color: blue;
+					color: white;
+				}
+				--markup-shield: {
+					border-radius: 4px;
+					padding: 4px 8px;
+					text-transform: uppercase;
+				}
+			}
+			
+			/** /
+			.text {
+				font-size: 11px;
+				@apply --color-danger;
+				@apply --markup-shield;
+				@apply --shadow-elevation-2dp;
+			}
+			/**/
+			
+			.text > iron-icon {
+				border-radius: 50%;
+				@apply --color-danger;
+				@apply --shadow-elevation-2dp;
+			}
+			
+			.danger > iron-icon {
+				color: red;
+			}
+		</style>
+		
+		<div id="animated"
+		  	 on-animationend="_onAnimationEnd"
+	       xclass="animated bounce"
+				 xon-tap="test"
+		  	 xhidden$="{{hixde}}"
+				 >
+			<span class="xtext danger">
+			  <!--- ->
+				[[text]]
+			  <!---->
+				<iron-icon xicon="vaadin:exclamation"
+				           icon="vaadin:asterisk"
+									 xicon="error"
+									 xicon="flag"
+									 >
+				</iron-icon>
+				<paper-tooltip>[[text]]</paper-tooltip>
+			</span>
+			<!---->
+		</div>
+		
+  </template>
+
+  <script>
+    class NotificationShield extends Polymer.Element {
+      static get is() { return 'notification-shield'; }
+			
+			static get properties() {
+        return {
+					
+					text: {
+						type: String, // 'required'
+						notify: true,
+						value: () => 'Required',
+						//observer: '_selectedChanged',
+					},
+					
+					show: {
+						type: Boolean,
+						//notify: true,
+						value: () => true,
+						observer: '_showChanged',
+					},
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('animationend', (e) => { this.onAnimationEnd(e); });
+				//window.addEventListener('animationend', () => this.onAnimationEnd());
+				//window.addEventListener('animationEnd', () => this.onAnimationEnd());
+				//window.addEventListener('webkitAnimationEnd', () => this.onAnimationEnd());
+				//window.addEventListener('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => this.onAnimationEnd());
+		  }
+			
+			_showChanged(b) {
+				//console.log('b\n', b);
+				const ENTRY_ANIMATION = 'zoomIn';
+				const EXIT_ANIMATION = 'fadeOutDown';
+				
+				// prepare the target
+				const r = this.$.animated;
+				//const t = r.classList;
+				
+				let animation;			
+				
+				// show
+				if(b) {
+				  r.hidden = false;
+				  animation = ENTRY_ANIMATION;			
+				  this.animate(animation);
+				  //console.log( 'animation\n' , animation );
+				} else {
+				// hide
+				  animation = EXIT_ANIMATION;			
+				  this.animate(animation);
+				  //r.hidden = true; // _onAnimationEnd()
+				  //console.log( 'animation\n' , animation );
+				}
+				
+				//this.animate(animation);
+				//console.log( 'animation\n' , animation );
+				//return;
+			}
+			
+			/** /
+			test() {
+				this.animate('tada');
+				//this.animate('orange');
+				//this.animate('purple');
+			}
+			/**/
+			
+			_onAnimationEnd(e) {
+				console.log('something called:\n_onAnimationEnd...');
+				console.log('e\n', e);
+				
+				// define animation variable
+				const s = e.animationName;
+				
+				// appropriately hide or unhide target
+				const r = this.$.animated;
+				const show = this.show;
+				r.hidden = !show;
+				
+				// remove animated class
+				const t = r.classList;
+				t.remove('animated', s);
+				//return;
+			}
+			
+			animate(animation) {
+				// list of animations: https://github.com/daneden/animate.css
+				const r = this.$.animated;
+				//console.log('r\n', t);
+				const t = r.classList;
+				//console.log('t\n', t);
+				t.add('animated', animation);
+				//t.toggle(animation);
+				//t.toggle(animation);
+				/*
+				t.add('animated', animation).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
+				  console.log('t\n', t);
+					t.remove('animated', animation);
+				});*/
+				//console.log('t\n', t);
+				//t.remove('animated', 'tada');
+				//t.add('animated', 'tada');
+			}
+			
+    }
+
+    window.customElements.define(NotificationShield.is, NotificationShield);
+  </script>
+
+</dom-module>

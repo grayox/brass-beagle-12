@@ -1,0 +1,190 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!---->
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+<!---->
+
+
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/iron-list/iron-list.html">
+
+<!--- ->
+<!-- https://www.webcomponents.org/element/Abe90/paper-avatar - ->
+<link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
+<!---->
+<link rel="import" href="items-grid-receive-item.html">
+
+<link rel="import" href="../../custom-styles/iron-list-grid-styles.html">
+
+<dom-module id="items-grid-receive">
+  <template>
+		<style include="iron-list-grid-styles"></style>
+		<style>
+			/** /
+			iron-list {
+			 --iron-list-items-container: {
+					margin: auto;
+				};
+			}
+			/**/
+		</style>
+		
+		<iron-list id="list"
+							 xmedia-width="[[mediaWidth]]"
+							 items="[[items]]"
+							 as="item"
+							 filters="[[filters]]"
+							 grid
+							 >
+			<template>
+				<div>
+					<items-grid-receive-item key="[[item.$key]]"
+																	 timestamp="[[item.timestamp]]"
+																	 >
+					</items-grid-receive-item>
+				</div>
+			</template>
+		</iron-list>
+		<!---->
+    <paper-fab icon="add"
+							 id="add-button"
+							 on-tap="_showItemEditor"
+							 xon-tap="show">
+		</paper-fab>
+		<!---->
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'items-grid-receive',
+				behaviors: [
+					Polymer.IronResizableBehavior,
+					///MyBehaviors.UserSetterBehavior,
+				],
+				properties: {
+          items: {
+						type: Array,
+						notify: true,
+					},
+					/** /
+					dataSource: Function,
+          filters: {
+						type: Object,
+						notify: true,
+					},
+					/** /
+					selectedItem: {
+						type: Object,
+						notify: true,
+					},
+          //sortColumn: String,
+          //sortDirection: String,
+					// Edit
+					/** /
+					mediaWidth: { // xsmall, small, medium, large
+						type: String,
+						notify: true,
+					},
+					/**/
+					// endEdit
+				},
+				
+				listeners: {
+					'grid-item-select' : '_gridItemSelect' ,
+				},
+				
+				/** /
+				observers: [
+          '_selectedItemChanged(selectedItem)'   ,
+					//'_computeDataSource(items, filters.*)' , 
+				],
+				/** /
+				
+        _deselecting: function(e) {
+          e.preventDefault();
+					this._selectedItemChanged(e.detail.item);
+        },
+
+				_selectedItemChanged: function(ob) {
+					//console.log('selectedItem', ob);
+					this.fire('item-edit', ob);
+				},
+
+				_showItemEditor: function() {
+          this.fire('item-edit', {}/*this.selectedItem* /);
+        },
+				
+				reset: function() {
+					this.set('selectedItem', null);
+				},
+
+				_computeSelectedStr: function(ob) {
+				  return JSON.stringify(ob);
+        },
+
+				show: function() {
+					console.log('selectedItem', this.selectedItem);
+				},
+				/**/
+				
+				_gridItemSelect: function(e) {
+					//console.log('e', e);
+					var detail = e.detail;
+					//console.log('detail', detail);
+					this._save(detail);
+				},
+				
+				_save: function(ob) {
+					//console.log('ob', ob);
+
+					/**/ // Reinstated 4/17/2017 // Replaced by snapshot.numChildren() // Reference: https://firebase.google.com/docs/database/web/read-and-write
+					// Increment balances
+					// user.balances
+					var net  =     this.userBalances.net - 1;
+					var down = 1 + this.userBalances.down;
+					this.fire('item-method', {
+						method: 'save',
+						entity: 'user-balances',
+						data: {
+							net: net,
+							down: down,
+						},
+					});
+
+					// Save lead
+					var timestamp = Date.now();
+					var data = Object.assign({}, ob, {
+						timestamp : timestamp ,
+					});
+					//this.item.total = parseFloat(this.item.total);
+					//console.log('item', this.item);
+					//this.fire('item-save', this.item);
+					//this.fire('item-save', {
+					this.fire('item-method', {
+						method: 'save',
+						entity: 'lead-received',
+						data: data,
+					});
+					/** /
+					this.set('item', {});
+				//} else {
+					console.log('Form validation failed');
+					this.$.dialog.scrollTop = 0;
+					this.errorText = 'Please fill all required fields';
+					this.showToast({
+						//text: 'Success. Thanks! Please login!',
+						text: 'Form failed',
+						type: 'error',
+					});
+
+				/**/
+			},
+				
+      });
+    })();
+  </script>
+</dom-module>

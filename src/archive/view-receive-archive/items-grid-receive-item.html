@@ -1,0 +1,196 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!---->
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+<!---->
+
+<link rel="import" href="../../custom-elements/avatar-hash.html">
+
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--- ->
+<!-- https://www.webcomponents.org/element/Abe90/paper-avatar - ->
+<link rel="import" href="/bower_components/paper-avatar/paper-avatar.html">
+<!---->
+<link rel="import" href="../../custom-libraries/moment-js.html">
+
+<link rel="import" href="../../custom-styles/iron-list-grid-styles.html">
+
+<dom-module id="items-grid-receive-item">
+  <template>
+		<style>
+			paper-card {
+				width: 170px;
+				height: 140px;
+				cursor: pointer;
+				overflow: auto;
+			}
+      paper-card:hover {
+        background-color: var(--paper-grey-200);
+			}
+			.small {
+				font-size: small;
+			}
+			.dim {
+				opacity: 0.7;
+			}
+		</style>
+		
+		<paper-dialog id="dialog"
+									modal
+									entry-animation="scale-up-animation"
+									exit-animation="fade-out-animation"
+									>
+			<h2>Insufficient Balance</h2>
+			<paper-dialog-scrollable>
+				<p>Receiving leads requires a positive send-receive balance.</p>
+				<p>Please <strong>send</strong> a lead first.</p>
+			</paper-dialog-scrollable>
+			<div class="buttons">
+				<!--- ->
+				<paper-button dialog-dismiss>Cancel</paper-button>
+				<!---->
+				<paper-button dialog-confirm
+											autofocus
+											on-tap="closeDialog"
+											>Got it</paper-button>
+			</div>
+		</paper-dialog>
+
+		<div class="card" on-tap="selected">
+			<paper-card xheading="[[fromNow]]">
+				<div class="card-content xlayout xvertical">
+					<avatar-hash message="[[key]][[timestamp]]"></avatar-hash>
+					<div>
+						[[fromNow]]
+					</div>
+					<div class="small dim">
+						[[userLocal.category]]<br />
+						[[userLocal.county]]<br />
+					  <!--- ->
+						[[userLocal.state]] [[userLocal.zip]]<br />
+					  <!---->
+					</div>
+					<!---->
+				</div>
+			</paper-card>
+		</div>
+		<!--- ->
+		<div class="item">
+				[[item.nameFirst]] [[item.nameLast]]<br>
+				[[item.address]] [[item.zip]]<br>
+				[[item.email]]<br>
+				[[item.phone]]<br>
+				<!--- ->
+				<paper-button>Edit</paper-button>
+				<!--- ->
+		</div>
+		<!--- ->
+		<div style="width: 200px; height: 200px;"> 
+		<paper-card heading="Lead">
+			<div class="card-content">
+				[[item.nameFirst]] [[item.nameLast]]<br>
+				[[item.address]] [[item.zip]]<br>
+				[[item.email]]<br>
+				[[item.phone]]
+			</div>
+			<!--- ->
+			<div class="card-actions">
+				<paper-button>Edit</paper-button>
+			</div>
+			<!--- ->
+		</paper-card>
+		</div>
+		<!--- ->
+		<paper-card ximage="../../../images/app-icon-32.png">
+			<div class="card-content">
+				<div class="cafe-header">Cafe Basilico
+					<div class="cafe-location cafe-light">
+						<iron-icon icon="communication:location-on"></iron-icon>
+						<span>250ft</span>
+					</div>
+				</div>
+				<div class="cafe-rating">
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+					<iron-icon class="star" icon="star"></iron-icon>
+				</div>
+				<p>$・Italian, Cafe</p>
+				<p class="cafe-light">Small plates, salads &amp; sandwiches in an intimate setting.</p>
+			</div>
+			<div class="card-actions">
+				<div class="horizontal justified">
+					<paper-icon-button icon="icons:event"></paper-icon-button>
+					<paper-button>5:30PM</paper-button>
+					<paper-button>7:30PM</paper-button>
+					<paper-button>9:00PM</paper-button>
+					<paper-button class="cafe-reserve">Reserve</paper-button>
+				</div>
+			</div>
+		</paper-card>
+		<!---->
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'items-grid-receive-item',
+				behaviors: [
+					///MyBehaviors.UserSetterBehavior,
+					///Polymer.IronResizableBehavior,
+					///Polymer.NeonAnimationBehavior,
+					///Polymer.NeonAnimationRunnerBehavior,
+				],
+				properties: {
+          key: String,
+					timestamp: String,
+					fromNow: {
+						type: String,
+						computed: '_computeFromNow(timestamp)'
+					},
+				},
+				
+				_computeFromNow: function(s) {
+					return moment(s).fromNow();
+				},
+				
+				selected: function(e) {
+					//console.log('e', e);
+					if(!this.userBalances.net){
+						//alert('You need a positive balance. Enter a lead first.');
+						this.openDialog();
+						return;
+					}
+					var key = this.key;
+					var timestamp = this.timestamp;
+					var fromNow = this.fromNow;
+					var detail = {
+						key: key,
+						timestamp: timestamp,
+						fromNow: fromNow,
+					}
+					//console.log('key', key);
+					//console.log('timestamp', timestamp);
+					//console.log('fromNow', fromNow);
+					//console.log('detail', detail);
+					this.fire('grid-item-select', detail);
+				},
+				
+				openDialog: function() {
+					this.$.dialog.open();
+				},
+				
+				closeDialog: function() {
+					this.$.dialog.close();
+				},
+      });
+    })();
+  </script>
+</dom-module>

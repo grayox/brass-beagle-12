@@ -1,0 +1,14 @@
+{
+	"users": {
+		"<user-fbkey>": {
+      "remote": {...},
+      "settings": {...},
+      "remote-archive": {...},
+      "settings-archive": {...}, 
+			"local": {
+				"settings": {...},
+				"balances": {...},
+			},
+		}
+	}
+}

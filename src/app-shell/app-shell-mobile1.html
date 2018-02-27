@@ -1,0 +1,275 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/helpers/helpers.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="shop-app/shop-category-data.html">
+<!-- Since 'home' is the default route, eagerly load it. - ->
+<link rel="import" href="shop-app/shop-home.html">
+<link rel="import" href="shop-app/shop-app.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state -->
+<!--- ->
+<link rel="import" href="/src/app-user/app-user.html">
+<link rel="import" href="/src/app-state/state-route.html">
+<link rel="import" href="/src/app-state/state-app-data.html">
+<!---->
+<link rel="import" href="/src/app-state/state-view.html">
+
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<!---->
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="shell-styles.html">
+
+<link rel="import" href="drawer-mobile.html">
+<link rel="import" href="my-app.html">
+<link rel="import" href="mobile-bottom-nav.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<!--- ->
+Demos
+http://jsbin.com/degifisici/1/edit?html,console,output
+https://stackoverflow.com/a/45498792/1640892
+<!---->
+
+<dom-module id="app-shell-mobile">
+
+  <template>
+
+		<style include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning"></style>
+		<style include="shell-styles">
+			/**/
+			:host {
+				/** /
+				https://material.io/guidelines/layout/structure.html#structure-app-bar
+				Default heights:
+          64px Tablet/Desktop 
+          56px Mobile Portrait 
+          48px Mobile Landscape    
+				  38px Velo Theme
+				/**/
+				--app-toolbar-height: 64px;
+				
+				
+				--app-toolbar-font-size: 20px; /* MD spec: 20px */
+				--app-drawer-top-margin: 16px; /* Default: 16px */
+				
+				--icon-label-space: 8px;
+				--app-toolbar-font-weight: 400;
+			}
+			
+			app-toolbar {
+				height: var(--app-toolbar-height); /* Default: 64px // Velo Theme: 38px; */
+				font-size: var(--app-toolbar-font-size); /* MD spec: 20px; */
+				font-weight: var(--app-toolbar-font-weight); /* 400 normal */
+			}
+			/**/
+			app-drawer {
+			  /** /
+				margin-top: 80px; 
+				margin-top: calc(64px + 16px); 
+				margin-top: calc(38px + 16px); 
+				/**/
+				margin-top: calc(var(--app-toolbar-height) + var(--app-drawer-top-margin)); 
+			  /**/
+			}
+			iron-icon {
+				opacity: var(--opacity-dim);
+				margin-right: var(--icon-label-space);
+			}
+		</style>
+		
+		<!-- state -->
+		<!--- ->
+		<state-route route="{{route}}"></state-route>
+		<state-app-data app-data="{{appData}}"></state-app-data>
+		<!---->
+		<state-view view-label="{{viewLabel}}"
+								view-icon="{{viewIcon}}"
+								>
+		</state-view>
+		
+		<app-header-layout fullbleed>
+			<app-header slot="header" reveals xfixed xcondenses xeffects="waterfall">
+				<app-toolbar class="layout horizontal xlayout-start xcenter xtest-border">
+					<!---->
+					<paper-icon-button icon="menu"
+														 on-tap="_toggle"
+														 ></paper-icon-button>
+					<!--- ->
+					<paper-button id="menu" on-tap="_toggle">
+						<iron-icon icon="menu"></iron-icon>
+						<span xhidden>Menu</span>
+					</paper-button>
+					<!--- ->
+					<div main-title>My App Name 3</div>
+					<!--- ->
+					<div main-title><img src="/images/logo.svg" /></div>
+					<!--- ->
+					<div main-title>[[route]]</div>
+					<!--- ->
+					<div main-title>[[_viewLabel(appData.*, route)]]</div>
+					<!---->
+					<div main-title class="flexchild">
+					  <!--- ->
+						<iron-icon icon="[[viewIcon]]"></iron-icon>
+					  <!---->
+						[[viewLabel]]
+					</div>
+					<!--- ->
+					<app-user user="[[user]]"
+										media-width="[[mediaWidth]]"
+										>
+					</app-user>
+					<!---->
+					<app-user></app-user>
+					<!---->
+					<paper-progress value="10" indeterminate bottom-item></paper-progress>
+				</app-toolbar>
+			</app-header>
+			<!---->
+			<app-drawer-layout force-narrow xopened-when-narrow>
+			<!---->
+			  <app-drawer id="drawer"
+										slot="drawer"
+                    swipe-open
+										>
+			  	<drawer-mobile></drawer-mobile>
+			  </app-drawer>
+			  <div id="main-content">
+			  	<my-app></my-app>
+					<!--- ->
+					<mobile-bottom-nav></mobile-bottom-nav>
+					<!---->
+			  </div>
+			<!---->
+			</app-drawer-layout>
+			<!---->
+		</app-header-layout>
+	
+  </template>
+
+  <script>
+
+    // performance logging
+    //window.performance && performance.mark && performance.mark('shop-app - before register');
+
+    class AppShellMobile extends Polymer.Element {
+
+      static get is() { return 'app-shell-mobile'; }
+
+			/**/
+			static get properties() { return {
+			  /** /
+				user: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userChanged',
+        },
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+			  /** /
+				route: {
+				  type: Number,
+				  notify: true,
+        },
+	    	appData: {
+				  type: Object,
+				  notify: true,
+        },
+			  /**/
+	    	viewLabel: {
+				  type: String,
+				  notify: true,
+          //computed: '_computeViewLabel(route)',
+          //computed: '_computeViewLabel(route, appData)', // changes not observed
+          observer: '_viewLabelChanged',
+        },
+			  /**/
+	    }}
+			/**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+    	_open() {
+				const drawer = this.$.drawer;
+				drawer.opened = true;
+			}
+			 
+    	_close() {
+				const drawer = this.$.drawer;
+				//console.log('drawer status', drawer.opened);
+				drawer.opened = false;
+			}
+			
+			/**/
+    	_toggle() {
+				//console.log('Toggle method engaged');
+				var drawer = this.$.drawer;
+				drawer.toggle();
+			}
+			/** /
+			_userChanged(user) {
+				console.log('user', user);
+			}
+			/**/
+			/** /
+			_mediaWidthChanged(n) {
+				//console.log('media-width', n);
+				//this.$.username.hidden = !n;
+			}
+			
+			/**/
+			_viewLabelChanged(s) {
+				//console.log('viewLabel', s);
+				this._close();
+			}
+			/**/
+			
+    }
+
+    customElements.define(AppShellMobile.is, AppShellMobile);
+
+  </script>
+
+</dom-module>

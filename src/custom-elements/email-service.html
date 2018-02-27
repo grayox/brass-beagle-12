@@ -1,0 +1,188 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<!---->
+<link rel="import" href="/bower_components/byutv-jsonp/byutv-jsonp.html" />
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-app-data.html">
+
+<dom-module id="email-service">
+	<template>
+		<style></style>
+		
+		<state-app-data app-data="{{appData}}"></state-app-data>
+		
+		<!-- api -->
+		<!-- https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec -->
+		<!-- source -->
+		<!-- https://script.google.com/d/1gFTVaEblhYcjXg9bXtvYZyxRF59Bc_sHIZbXGbhtxYbeMOZ5-klkP78N/edit?usp=drive_web -->
+		<!--- ->
+		<iron-ajax id="ajax"
+							 auto$="[[auto]]"
+							 xurl="https://www.googleapis.com/youtube/v3/search"
+							 xurl="[[url]]"
+							 url="[[appData.emailServerUrl]]"
+							 xparams='{"part":"snippet", "q":"polymer", "key": "YOUTUBE_API_KEY", "type": "video"}'
+							 xparams="data"
+               handle-as="json"
+							 xcrossorigin="anonymous"
+							 on-response="_handleResponse"
+							 debounce-duration="300"
+							 >
+		</iron-ajax>
+		<!--- ->
+		<byutv-jsonp id="ajax"
+			           auto
+			           url="http://jsonplaceholder.typicode.com/posts"
+			           params='{"userId":"1"}'
+			           on-response="handleResponse"
+			           debounce-duration="300"
+								 >
+		</byutv-jsonp>
+		<!--- ->
+		<byutv-jsonp xid="jsonp"
+		<!---->
+		<iron-ajax xid="jsonp"
+                 id="ajax"
+                 auto verbose
+                 xurl="https://ajax.googleapis.com/ajax/services/search/news"
+                 xurl="https://jsonplaceholder.typicode.com/users"
+                 xurl="https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec?k=nuif5m139vvfc7neixak"
+                 xurl="https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec?k=wjs66mhgxfputsdf1gne"
+                 xurl="https://script.google.com/macros/s/AKfycbwSfavLpvsLITN4tWkR_w7n6qdCAtSuEN4DrvZyG-LGvt0Uaqw/exec"
+                 url="[[url]]"
+                 xparams='{"v":"1.0","rsz":"8","pz":"1","cf":"all","ned":"in","hl":"en","topic":"tc"}'
+                 params='{"k":"[[emailKey]]"}'
+                 last-response="{{lastResponse}}"
+                 last-error="{{lastError}}"
+                 debounce-duration="300"
+								 on-response="_handleResponse"
+								 >
+		</iron-ajax>		
+		<!--- ->
+		</byutv-jsonp>		
+		<!--- ->
+    usage example
+		<!-- v1 - ->
+		<email-service id="email-service"
+									 url="https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec"
+									 xurl="[[url]]"
+									 >
+		</email-service>
+		<!-- v2 - ->
+    <email-service id="emailer" data="[[emailData]]"></email-service>
+		<!--- ->
+		send() {
+			const r = this.$.emailer;
+			r.generateRequest();
+      ...
+		<!---->
+		
+	</template>
+
+  <script>
+    class EmailService extends Polymer.Element {
+      static get is() { return 'email-service'; }
+
+      static get properties() {
+        return {
+					
+					appData: {
+					  type: Object,
+					  notify: true,
+					  //observer: '_appDataChanged',
+					},
+					
+					auto: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},
+					
+					url: {
+						type: String, // web app service endpoint
+						notify: true,
+					},
+          
+          /** /
+          // https://developers.google.com/apps-script/reference/mail/mail-app#sendEmail(Object)
+          attachments	  BlobSource[] an array of files to send with the email
+          bcc           String   a comma-separated list of email addresses to BCC
+          body          String   the body of the email
+          cc            String   a comma-separated list of email addresses to CC
+          htmlBody      String   if set, devices capable of rendering HTML will use it instead of the required body argument; you can add an optional inlineImages field in HTML body if you have inlined images for your email
+          inlineImages  Object   a JavaScript object containing a mapping from image key (String) to image data (BlobSource); this assumes that the htmlBody parameter is used and contains references to these images in the format <img src="cid:imageKey" /> (see example)
+          name          String   the name of the sender of the email (default: the user's name)
+          noReply       Boolean  true if the email should be sent from a generic no-reply email address to discourage recipients from responding to emails; this option is only possible for G Suite accounts, not Gmail users
+          replyTo       String   an email address to use as the default reply-to address (default: the user's email address)
+          subject       String   the subject of the email
+          to            String   the address of the recipient
+          /**/
+          
+					emailKey: { // key signaling server which body and subject to attach
+            type: String,
+						notify: true,
+					},
+          
+          /** /
+					emailHtmlBody: {
+						type: String, // body of email
+						notify: true,
+					},
+          
+					emailSubject: { // subject line or re:
+            // subject - String - the subject of the email
+						type: String,
+						notify: true,
+					},
+					/**/
+					
+					emailName: { // sender's name
+            // name - String - the name of the sender of the email (default: the user's name)
+            type: String,
+						notify: true,
+					},
+					
+					emailTo: { // recipient's email address
+            // to - String - the address of the recipient
+						type: String,
+						notify: true,
+					},
+				
+				};
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+
+			generateRequest() {
+				const ajax = this.$.ajax;
+				ajax.generateRequest();
+				
+				console.log('ajax-active-requests\n', ajax.activeRequests);
+				console.log('ajax-url\n', ajax.url);
+				console.log('ajax\n', ajax);
+				//console.log('ajax-params', ajax.params);
+			}
+
+			_handleResponse(e) {
+				// handle 'response' event
+				console.log('response\n', e);
+			}
+							
+    }
+
+    window.customElements.define(EmailService.is, EmailService);
+  </script>
+
+</dom-module>
+

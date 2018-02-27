@@ -1,0 +1,87 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<!---->
+<!---->
+
+<dom-module id="state-counties-by-state">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="counties-by-state" data="{{countiesByState}}"></app-localstorage-document>
+		
+		<iron-ajax id="ajax"
+							 auto
+							 url="/src/custom-libraries/counties-by-state.json"
+							 handle-as="json"
+							 xon-response="_handleAjaxResponse"
+							 xdebounce-duration="300"
+							 last-response="{{countiesByState}}"
+							 >
+		</iron-ajax>
+		
+  </template>
+
+  <script>
+    class StateCountiesByState extends Polymer.Element {
+      static get is() { return 'state-counties-by-state'; }
+
+      static get properties() { return {
+				countiesByState: {
+					type: Object,
+					notify: true,
+					observer: '_dataChanged',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+
+      _dataChanged(newData, oldData) {
+        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+        if(!newData && oldData) {
+          // console.log('newData\n', newData);
+          // console.log('oldData\n', oldData);
+          this.set('countiesByState', oldData);
+        }
+      }
+			
+      // _appDataChanged(data) {
+			// 	console.log('data', data);
+			// 	this._dispatchEvent('app-data-changed', data);
+			// }
+			
+			// _handleAjaxResponse(e) {
+			// 	//console.log('e', e);
+			// 	// how to get this.data from event e? // use observer instead
+			// 	console.log('zipCodeData', this.zipCodeData);
+			// 	//this._dispatchEvent('app-data-changed', data);
+			// }
+		
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 		//bubbles: true,
+			// 		//composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+			// }
+		
+	  }
+
+    window.customElements.define(StateCountiesByState.is, StateCountiesByState);
+  </script>
+</dom-module>

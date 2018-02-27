@@ -1,0 +1,349 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-zip-code-data.html">
+
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="form-input-zip">
+  <template>
+		<style>
+			:host {
+				--prefix-margin: 6px;
+				--prefix-styles: {
+					margin-right: var(--prefix-margin);
+				}
+			}
+			.suffix {
+				font-weight: 300;
+				opacity: var(--opacity-dim); /*0.54;*/
+				font-size: smaller;
+			}
+			/**/
+			.checkmark {
+				color: lightgreen;
+				@apply --prefix-styles;
+			}
+			.exmark {
+				color: red;
+				@apply --prefix-styles;
+			}
+			/** /
+			paper-input {
+        max-width: 5em;
+        margin: auto;
+      }
+			/**/
+		</style>
+		
+		<state-zip-code-data zip-code-data="{{zipCodeData}}"></state-zip-code-data>
+		
+		<!--- ->
+		<paper-input label="simple character counter"
+								 char-counter
+								 value="{{zipCode}}"
+								 ></paper-input>
+		<!---->
+	  <paper-input id="create-zip"
+	  						 name="zip"
+	  						 xis="iron-input"
+	  						 xprevent-invalid-input
+	  						 xallowed-pattern="[0-9]"
+	  						 class="align-left xwide"
+								 char-counter
+								 maxlength="5"
+	  						 label="Zip code"
+	  						 value="{{zipCode}}"
+	  						 type="string"
+	  						 xtype="number"
+	  						 xmin="1000"
+	  						 xmax="99"
+	  						 xstep="1000"
+	  						 xlength="55"
+	  						 xrequired
+	  						 xmaxlength="2"
+	  						 xtype="text"
+	  						 xpattern="\d*"
+	  						 xdisabled$="[[!isNew]]"
+	  						 >
+	  	<!---->
+	  	<div slot="prefix" xclass="checkmark">
+				<!--- ->
+				&#10003;
+				<!---->
+				<iron-icon icon="check-circle"
+									 class="checkmark"
+									 hidden$="[[!zipValid]]"
+									 xon-tap="_show"></iron-icon>
+			</div>
+			<div slot="prefix" xclass="exmark">
+				<!--- ->
+				&times;
+				<!---->
+				<iron-icon icon="cancel"
+									 class="exmark"
+									 hidden$="[[zipValid]]"
+									 xon-tap="_show"></iron-icon>
+			</div>
+	  	<!--- ->
+	  	<div slot="suffix">[[zipCityStateCounty]]</div>
+	  	<!---->
+	  </paper-input>
+		<div class="suffix">[[zipCityStateCounty]]</div>
+	  <!--- ->
+		<button on-tap="_show">Show</button>
+	  <!---->
+  </template>
+
+  <script>
+		class FormInputZip extends Polymer.Element {
+      static get is() { return 'form-input-zip'; }
+
+      static get properties() {
+        /**/
+        return {
+					/** /
+					zipCodeDataAjaxPath: {
+						type: String,
+						value: function() {
+							return 'src/custom-libraries/zip-code-data.json';
+						},
+					},
+					/**/
+					zipCodeData: {
+						type: Object,
+						notify: true,
+						//observer: '_zipCodeDataChanged', // For declarative binding only
+					},
+					zipCode: {
+						type: String,
+						notify: true,
+						// observer: '_zipCodeChanged',
+						// value: () => null,
+					},
+					zipCity: {
+						type: String,
+						notify: true,
+						computed: '_computeZipCity(zipCode, zipCodeData)',
+					},
+					zipState: {
+						type: String,
+						notify: true,
+						computed: '_computeZipState(zipCode, zipCodeData)',
+					},
+					zipCounty: {
+						type: String,
+						notify: true,
+						computed: '_computeZipCounty(zipCode, zipCodeData)',
+					},
+					zipStateCounty: {
+						type: String,
+						notify: true,
+						computed: '_computeZipStateCounty(zipState, zipCounty)',
+					},
+					zipCityStateCounty: {
+						type: String,
+						notify: true,
+						computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
+					},
+					zipValid: {
+						type: Boolean,
+						notify: true,
+						computed: '_computeZipValid(zipCity, zipState, zipCounty)',
+					},
+				};
+			}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+				//this.getZipsData(); // use state element instead: <state-zip-code-data>
+				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
+		  }
+			
+			/** /
+			connectedCallback() {
+				super.connectedCallback();
+				//console.log('connected!');
+				//this._init();
+		  }
+			/**/
+			
+			/** /
+			_init(s) {
+				//const z = this.zipCode;
+				//console.log('s\n', s);
+				const city = this._computeZipCity(s);
+				//console.log('city\n', city);
+				const state = this._computeZipState(s);
+				//console.log('state\n', state);
+				const county = this._computeZipCounty(s);
+				//console.log('county\n', county);
+				this.set('zipCity', city);
+				this.set('zipState', state);
+				this.set('zipCounty', county);
+			}
+			/**/
+			
+			/** /
+			getZipsData() { // use state element instead: <state-zip-code-data>
+				const path = this.zipCodeDataAjaxPath;
+				// const path = 'src/custom-libraries/zip-code-data.json';
+				// http://stackoverflow.com/a/42763681/1640892
+				// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+				const ajax = document.createElement('iron-ajax');
+				ajax.method = 'get';
+				ajax.handleAs = 'json';
+				ajax.contentType = 'application/json';
+				ajax.url = path;
+				const _this = this;
+				ajax.addEventListener('response', function(e) {
+					// Use imperative method for updating as declarative binding is unavailable in a behavior
+					//response handler
+					//console.log('ajax', e);
+					//console.log('ajax', ajax.lastResponse);
+					//return ajax.lastResponse; // does not work
+					_this.zipCodeData = ajax.lastResponse;
+				});
+				ajax.generateRequest();
+			}
+			/**/
+
+			latlon2distance(lat1, lon1, lat2, lon2) {
+				Number.prototype.toRadians = function() {
+					return this * Math.PI / 180; // http://stackoverflow.com/a/5260472/1640892
+				}
+				/** /
+				// Source: http://www.movable-type.co.uk/scripts/latlong.html
+
+				Distance
+					This uses the 'haversine' formula to calculate the great-circle distance between two points – that is, the shortest distance over the earth's surface – giving an 'as-the-crow-flies' distance between the points (ignoring any hills they fly over, of course!).
+
+				Haversine
+					formula:	a = sin(deltaPhi/2)^2 + cos(phi1) * cos(phi2) * sin(deltaLambda/2)^2
+					c = 2 * atan2( sqrt(a), sqrt(1−a) )
+					d = R * c
+					where	phi is latitude, lambda is longitude, R is earth’s radius (mean radius = 6,371km);
+					note that angles need to be in radians to pass to trig functions!
+
+				JavaScript:	
+				/**/
+				const R = 6.371e6; // metres
+				const phi1 = lat1.toRadians();
+				const phi2 = lat2.toRadians();
+				//const deltaPhi = (lat2-lat1).toRadians();
+				const deltaPhi = phi2-phi1;
+				const deltaLambda = (lon2-lon1).toRadians();
+
+				const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+								Math.cos(phi1) * Math.cos(phi2) *
+								Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+				const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+				const d = R * c;
+				return d; // distance in meters
+			}
+
+			/** /
+			_zipCodeChanged(s) {
+				//const zipCode = this.zipCode;
+				//const zipCity = this.zipCity;
+				const zipState = this.zipState;
+				//console.log('zip-code\n', s);
+				//console.log('zip-code-this\n', zipCode);
+				//console.log('city\n', zipCity);
+				//console.log('state\n', zipState);
+				if(!zipState) {
+				  //console.log('initializing...', s);
+					this._init(s);
+				}
+			}
+			/**/
+			
+			_computeZipCity(zip, zips) {
+				//console.log('zip', zip);
+				//console.log('zips', zips);
+				let out = null;
+				//const zips = this.zipCodeData;
+				if(zips && zips[zip] && zips[zip].city) {
+					out = zips[zip].city;
+				}
+				//console.log('out', out);
+				return out;
+			}
+
+			_computeZipState(zip, zips) {
+				//console.log('zip', zip);
+				//console.log('zips', zips);
+				let out = null;
+				//const zips = this.zipCodeData;
+				if(zips && zips[zip] && zips[zip].state) {
+					out = zips[zip].state;
+				}
+				//console.log('out', out);
+				return out;
+			}
+
+			_computeZipCounty(zip, zips) {
+				//console.log('zip', zip);
+				//console.log('zips', zips);
+				let out = null;
+				//const zips = this.zipCodeData;
+				if(zips && zips[zip] && zips[zip].county) {
+					out = zips[zip].county;
+				}
+				//console.log('out', out);
+				return out;
+			}
+
+			_computeZipStateCounty(state, county) {
+				if(state && county) {
+					return [ county , 'County,' , state ].join(' ');
+				} else {
+					return '';
+				}
+			}
+
+			_computeZipCityStateCounty(city, state, county) {
+				if(city && state && county) {
+					return [ city , ', ' , state, ' (', county, ' County)' ].join('');
+				} else {
+					return '';
+				}
+			}
+
+			_computeZipValid(city, state, county) {
+				//console.log('computeZipValid', city, state, county);
+				const b1 = !!city && city.length;
+				const b2 = !!state && state.length;
+				const b3 = !!county && county.length;
+				return !!(b1 && b2 && b3);
+			}
+			
+			/** /
+			_zipCodeDataChanged(o) {
+				//console.log('zipCodeData', o);
+    	}
+			/** /
+			_show() {
+				console.log('zipValid\n', this.zipValid);
+				console.log('zip\n', this.zip);
+				console.log('zipCodeData\n', this.zipCodeData);
+			}
+			/**/
+			
+		}
+				
+    window.customElements.define(FormInputZip.is, FormInputZip);
+  </script>
+</dom-module>

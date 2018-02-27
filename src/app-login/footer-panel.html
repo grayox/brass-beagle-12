@@ -1,0 +1,69 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<!--- ->
+<link rel="import" href="../app-head/dialog-info.html">
+<link rel="import" href="../app-head/dialog-terms.html">
+<!---->
+
+<dom-module id="footer-panel">
+  <template>
+		<style>
+			:host {}
+			
+			.wrapper{
+				font-size: 14px;
+				background: #3d4446;
+				padding: 14px 26px;
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				box-sizing: border-box;
+				align-items: center;
+				position: absolute;
+				bottom: 0;
+				color: var(--text-primary-color);
+			}
+
+			a {
+				text-decoration: none;
+				color: var(--primary-color);
+				cursor: pointer;
+			}
+		</style>
+
+		<!--- ->
+		<dialog-info  id="info" ></dialog-info>
+		<dialog-terms id="terms"></dialog-terms>
+		<!---->
+		
+		<div class="wrapper">
+			<span>
+				<a on-tap="_openInfoWindow">Learn more</a>
+			</span>
+			<span>
+				<!--- ->
+				<a on-tap="_openTermsWindow">Terms and Conditions</a>
+				<!---->
+				<a href="https://docs.google.com/document/d/1B61ZdKL93-AtBP6aWBgQLJ-fbpf36Fn1vDFQ-k7kvo0/preview"
+					 target="_blank"
+					 >Terms and Conditions</a>
+			</span>
+		</div>
+		
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+				is: 'footer-panel',
+				_openInfoWindow: function() {
+          this.$.info.open();
+        },	
+  			_openTermsWindow: function() {
+          this.$.terms.open();
+        },	
+      });
+    })();
+  </script>
+</dom-module>

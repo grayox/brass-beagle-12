@@ -1,0 +1,26 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<script>
+  //(function() {
+    //'use strict';
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.ToolbarDialogBehaviorImpl = {
+			open: function() {
+				this.$$('toolbar-dialog').open();
+			},
+		};
+		
+    MyBehaviors.ToolbarDialogBehavior = [
+      MyBehaviors.ToolbarDialogBehaviorImpl,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

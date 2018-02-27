@@ -1,0 +1,43 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="email-coding">
+  <template></template>
+
+  <script>
+    class EmailCoding extends Polymer.Element {
+      static get is() { return 'email-coding'; }
+
+      static get properties() {
+        return {};
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+						
+			encode(s) {
+				if(!!s) {
+					//console.log('s', s);
+					return s.replace(/\./gm, ',');
+				}
+			}
+
+			decode(s) {
+				if(!!s) {
+					//console.log('s', s);
+					return s.replace(/,/gm, '.');
+				}
+			}
+			
+    }
+
+    window.customElements.define(EmailCoding.is, EmailCoding);
+  </script>
+
+</dom-module>

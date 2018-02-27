@@ -1,0 +1,293 @@
+<!--- ->
+Using email addresses as keys in Firebase requires encoding.
+This is because Firebase does not allow keys to contain the dot (.) character.
+Best practice is to substitute all dots (.) with commas (,).
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../app-main/app-methods.html">
+
+<script>
+  //(function() {
+    //'use strict';
+	
+		// https://www.polymer-project.org/1.0/docs/tools/documentation
+		/**
+		 * Behavior that highlights stuff.
+		 *
+		 * @polymerBehavior
+		 */
+	
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.UserGetterBehaviorImpl = {
+			
+			/** /
+			<!--- ->
+			<firebase-document id="document"
+												 path="/users/{{userId}}/local"
+												 data="{{userLocalSeries}}"
+												 on-fetch-user-local="fetchUserLocal"
+												 >
+			</firebase-document>
+			<!---->
+			/**/
+
+			properties: {
+				/**/
+				appData: {
+					type: Object,
+					statePath: 'appData',
+					//observer: '_appDataChanged',
+				},
+				// Fetches current userRemote from firebase-auth
+				// On change assigns latest to Firebase then updates Redux Store
+				user: {
+					type: Object,
+					observer: '_userChanged', // New user comes in from firebase-auth in importing parent element (app.main)
+					//notify: true,
+				},
+				/**/
+				// Fetches series of userLocal updates
+				// On change selects latest update then updates Redux store
+				userFirebase: {
+					type: Object,
+					observer: '_userFirebaseChanged',
+					//notify: true,
+				},
+      	userLocalSeries: {
+					type: Object,
+					observer: '_userLocalSeriesChanged',
+					//notify: true,
+				},
+				// App specific properties
+				/**/
+      	userAvailableLeadsCount: {
+					type: Number,
+					observer: '_userAvailableLeadsCountChanged',
+				},
+				/** /
+				userAvailableLeadsKeys: {
+					type: Object,
+					observer: '_userAvailableLeadsKeysChanged',
+				},
+				/** /
+      	userBalanceNet: {
+					type: Number,
+					observer: '_userBalanceNetChanged',
+				},
+      	userBalanceUp: {
+					type: Number,
+					observer: '_userBalanceUpChanged',
+				},
+      	userBalanceDown: {
+					type: Number,
+					observer: '_userBalanceDownChanged',
+				},
+				/**/
+      },
+			
+			//attached: function() {},
+			
+			/** /
+			_appDataChanged: function(appData) {
+				console.log('appData', appData);
+			},
+			/**/
+			_userChanged: function(u) {
+				// Check-guard
+				if(!u) return;
+				//console.log('user', u);
+				var uid = u.uid;
+				// Remote
+				this.dispatch('updateUserRemote', u); // Redux // Update state: userRemote
+				this._writeUser2Firebase('remote', u); // Firebase // Write userRemote to Firebase
+				// Local
+				this._getUserFirebase(uid); // Fetch // Redux // Update state: userLocal
+			},
+			
+			_writeUser2Firebase: function(type, data) {
+				// type: 'remote' | 'local'
+				// Write user data to database // loggedin-view._userDocChanged();
+				// Timestamp is appended at app-methods._initUser()
+				/** /
+				var timestamp = Date.now(); //new Date().getTime();
+				var data = Object.assign({}, u, {
+					timestamp : timestamp ,
+				});
+				/** /
+				this.fire('item-method', {
+					method: 'save',
+					entity: 'user-remote',
+					data: u,
+				});
+				/**/
+				// Append new userRemote object to users/[[uid]]/remote
+        var entity = [ 'user', type ].join('-'); // 'user-remote'
+				var methods = document.createElement('app-methods'); // http://stackoverflow.com/a/42763681/1640892 // https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+				var detail = {
+					method: 'save',
+					entity: entity, //'user-remote',
+					data: data,
+				};
+				methods.method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+			},
+
+			_userFirebaseChanged: function(ufb) {
+				this._getUserLocalSeries(ufb); // set users.uid.local
+				this._getUserBalances(ufb); // lead Demand // set users.uid.balances
+				this._getUserAvailableLeadsIndex(ufb); // lead Supply // fetch leads-state-county-categoy-index/state/county/category
+			},
+
+			/**/
+			_getUserFirebase: function(uid) {
+				// Reference: https://firebase.google.com/docs/database/web/read-and-write
+				// Reference: http://stackoverflow.com/a/43240014/1640892
+				var path = [ 'users', uid, ].join('/');
+				var _this = this;
+				//var userFirebase;
+				firebase.app('app').database().ref(path).on('value', function(snapshot) {
+					_this.set('userFirebase', snapshot.val());
+					//userFirebase = snapshot.val();
+				});
+			},
+			/**/
+			
+			_getUserAvailableLeadsIndex: function(ufb) {
+				var u        = this.userLocal ; if(!u) return;
+				var state    = u.state        ;
+				var county   = u.county       ;
+				var category = u.category     ;
+				var path;
+				if(state && county && category) {
+					path = [ 'leads-state-county-category-index', state, county, category, ].join('/');
+				} else {
+					return;
+				}
+				var _this = this;
+				//var userFirebase;
+				// Reference: https://firebase.google.com/docs/database/web/read-and-write
+				// Reference: http://stackoverflow.com/a/43240014/1640892
+				firebase.app('app').database().ref(path).on('value', function(snapshot) {
+					var val = snapshot.val(); //console.log('val', val);
+					var num = snapshot.numChildren(); //console.log('num', num);
+					_this.set( 'userAvailableLeadsCount' , num );
+					//_this.set( 'userAvailableLeadsKeys'  , val ); // array of lead indices
+					//_this.set( 'userAvailableLeadsCount' , val.length );
+					//userFirebase = snapshot.val();
+				});
+			},
+			
+			/** /
+			_userAvailableLeadsKeysChanged: function(ob) {
+				//console.log('ob', ob);
+				if(!ob) return;
+				this.dispatch('updateUserAvailableLeadsKeys', ob);
+			},
+			/**/
+			
+			_userAvailableLeadsCountChanged: function(int) {
+				//console.log('int', int);
+				this.dispatch('updateUserAvailableLeadsCount', !!int ? int : 0);
+			},
+			
+			_getUserBalances: function(ufb) {
+				var balances;
+				/**/
+				if((!!ufb) && (!!ufb.balances)) {
+					balances = ufb.balances;
+				} else {
+					balances = this.appData.entities['user-balances'].initValues;
+					//console.log('balances', balances);
+					this._writeUser2Firebase('balances', balances);
+				}
+				/**/
+				this.dispatch('updateUserBalances', balances);
+			},
+			
+			_getUserLocalSeries: function(ufb) {
+				if(!!ufb && !!ufb.local) {
+					this.set('userLocalSeries', ufb.local);
+				}
+			},
+			/** /
+			xgetUserLocalSeries: function(uid) {
+				// Replaced by: Reference: http://stackoverflow.com/a/43240014/1640892
+				//console.log('uid', uid);
+			  var doc = document.createElement('firebase-document'); // http://stackoverflow.com/a/42763681/1640892 // https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+				var path = ['users', uid, 'local'].join('/');
+			  doc.appName = 'app';
+				doc.path = path;
+			  //this.set('userLocalSeries', doc.data);
+				/** /
+				var _this = this;
+				console.log('path', path);
+        doc.addEventListener('response', function(e) {
+					// Use imperative method for updating as declarative binding is unavailable in a behavior
+          //response handler
+					//console.log('doc', e);
+					console.log('doc', doc.lastResponse);
+					//return doc.lastResponse; // does not work?
+				  _this.set('userLocalSeries', doc.lastResponse);
+			  });
+				//doc.getStoredValue(path);
+				/** /
+				//this.set('userLocalSeries', doc.getStoredValue(path));
+			  this.set('userLocalSeries', doc.data);
+			},
+			/**/
+			
+			_userLocalSeriesChanged: function(ob) {
+				// Logic: After remote user authentication (userRemote),
+				// next: Update userLocal in app state (locally managed user data)
+				//console.log('userLocalSeries', ob);
+				var data;
+				if(ob) {
+					data = this.extractLatestTimestamp(ob);
+				}
+				//console.log('data', data);
+				this.set('userLocal', data);
+				this.dispatch('updateUserLocal', data);
+				// this.writeUser2Firebase('local', u); // Do not write to Firebase now; Write only after update;
+				//this.loading = false;
+			},
+			
+			extractLatestTimestamp: function(ob) {
+				// ob = {key1: {timestamp:123,...},...}
+				//console.log('ob', ob);
+				if( !(ob || Object.keys(ob)) ) {
+					console.log('Local User object userLocal is null');
+					return;
+				}
+				// Sort newest (largest) timestamps to the front
+				var keys = Object.keys(ob).sort(function(a, b) {
+					return ob[b].timestamp - ob[a].timestamp;
+				});
+				//console.log('keys', keys);
+				// Select last snapshot (first array element)
+				return ob[keys[0]];
+			},
+			
+			// App specific methods
+			
+			
+							
+		};
+		
+    MyBehaviors.UserGetterBehavior = [
+      MyBehaviors.UserGetterBehaviorImpl,
+			ReduxBehavior,
+			AsyncActionsBehavior,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

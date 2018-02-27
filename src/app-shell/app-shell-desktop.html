@@ -1,0 +1,112 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/helpers/helpers.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="shop-app/shop-category-data.html">
+<!-- Since 'home' is the default route, eagerly load it. - ->
+<link rel="import" href="shop-app/shop-home.html">
+<link rel="import" href="shop-app/shop-app.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+<link rel="import" href="shell-styles.html">
+<link rel="import" href="drawer-desktop.html">
+<link rel="import" href="my-app.html">
+
+
+<!--- ->
+<link rel="import" href="/bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<!--- ->
+Demos
+http://jsbin.com/degifisici/1/edit?html,console,output
+https://stackoverflow.com/a/45498792/1640892
+<!---->
+
+<dom-module id="app-shell-desktop">
+
+  <template>
+
+		<style include="shell-styles">
+			:host {
+				/** /
+				--app-drawer-width: 256px; /* default * /
+				--app-drawer-width: 281px; /* middle ground 1/2 50% * /
+				--app-drawer-width: 289px; /* middle ground 2/3 67% * /
+				--app-drawer-width: 292px; /* middle ground 3/4 75% * /
+				--app-drawer-width: 306px; /* Vaadin "Velo" theme * /
+				/**/
+				/**/
+			}
+		</style>
+		
+		<!---->
+		<app-drawer-layout fullbleed>
+			<app-drawer slot="drawer" opened persistent>
+				<drawer-desktop></drawer-desktop>
+			</app-drawer>
+			<div id="main-content">
+				<my-app></my-app>
+			</div>
+		</app-drawer-layout>
+		<!---->
+
+  </template>
+
+  <script>
+
+    // performance logging
+    //window.performance && performance.mark && performance.mark('shop-app - before register');
+
+    class AppShellDesktop extends Polymer.Element {
+
+      static get is() { return 'app-shell-desktop'; }
+
+			/** /
+			static get properties() { return {
+				user: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userChanged',
+        },
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+			/**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+		
+    }
+
+    customElements.define(AppShellDesktop.is, AppShellDesktop);
+
+  </script>
+
+</dom-module>

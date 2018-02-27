@@ -1,0 +1,347 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<!---->
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
+<!---->
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
+
+<!---->
+
+<dom-module id="view-settings-list">
+
+  <template>
+
+    <style include="paper-item-styles"></style>
+    
+    <div role="listbox">
+      <paper-icon-item class="urgent">
+        <paper-ripple></paper-ripple>
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Enter zip code...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item class="urgent">
+        <paper-ripple></paper-ripple>
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Select lead type...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Required information</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>0/2</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:flag" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>State</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>Mississippi</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:map-marker" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>County</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>Biloxi</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:pin" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Zip</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>90210</div>
+      </paper-icon-item>
+
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:phone" alt="phone"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Phone</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>555-555-1234</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:envelope" alt="email"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Email</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>myemailaddress@example.com</div>
+      </paper-icon-item>
+
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="track-changes" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Add counties...</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="communication:textsms" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Notify me with text</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!--- ->
+        <paper-toggle-button></paper-toggle-button>
+        <!---->
+        <paper-checkbox></paper-checkbox>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="communication:email" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Notify me with email</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!--- ->
+        <paper-toggle-button></paper-toggle-button>
+        <!---->
+        <paper-checkbox></paper-checkbox>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:bolt" alt="auto text"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Auto text to new leads</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!--- ->
+        <paper-toggle-button></paper-toggle-button>
+        <!---->
+        <paper-checkbox></paper-checkbox>
+      </paper-icon-item>
+      <paper-icon-item>
+        <paper-ripple></paper-ripple>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:magic" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Auto email to new leads</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!--- ->
+        <paper-toggle-button></paper-toggle-button>
+        <!---->
+        <paper-checkbox></paper-checkbox>
+      </paper-icon-item>
+
+      <app-item icon="star"
+                text="Lead type"
+                type="subheader"
+                xdata="[[selected]]"
+                >
+      </app-item>
+      <app-item icon="vaadin:envelope"
+                text="This is a test text"
+                type="output"
+                data="888-555-1234"
+                >
+      </app-item>
+      <app-item icon="vaadin:user"
+                text="This is text"
+                type="input"
+                input-type="text"
+                >
+      </app-item>
+      <app-item icon="vaadin:user"
+                text="Check this"
+                type="input"
+                input-type="checkbox"
+                >
+      </app-item>
+      <app-item icon="vaadin:user"
+                text="Check this"
+                type="input"
+                input-type="toggle"
+                >
+      </app-item>
+    </div>
+
+  </template>
+
+  <script>
+
+    class ViewSettingsList extends Polymer.Element {
+
+      static get is() { return 'view-settings-list'; }
+
+      /** /
+			static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+      /**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/**/
+		
+    }
+
+    customElements.define(ViewSettingsList.is, ViewSettingsList);
+
+  </script>
+
+</dom-module>

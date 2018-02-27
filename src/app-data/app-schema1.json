@@ -1,0 +1,120 @@
+{
+	"users": {
+		"<user-fbkey>": {
+			"deals": {
+				"stats": {
+					"total": 9987,
+					"avg-rate": 12.99,
+					"total-bid": 9987,
+					"avg-rate-bid": 12.99,
+				},
+				"<deal-fbkey>": {
+					"title": "My Title",
+					"amount": 123454,
+					"rate": 12.5,
+					"total-bid": 9987,
+					"avg-rate-bid": 12.99,
+				},
+			},
+			"bids": {
+				"stats": {
+				},
+				"<bid-fbkey>": {
+					"status": "completed", // "active", "suspended", "withdrawn", "accepted", "pending"
+					"deal": "<deal-fbkey>",
+					"amount": "Number",
+					"rate": "Number",
+					"accepted": false,
+				},
+			},
+			"emails": {
+				"user1@example.com": {
+					"parent": "<parent.user-fbkey>",
+					"timestamp": "<timestamp>",
+					"user": "<user-fbkey>",
+				},
+			},
+			"network": [
+				1234567788, // total network size, all levels
+				1212234,    // total network size, level 1
+				26346375,   // total network size, level 2 ... continue indefinitely
+			],
+			"downline": { // Only go one-level deep
+				"<user-fbkey>": {
+					"email": "user1@example.com",
+					"timestamp": 14608389925,
+				},
+			},
+			"upline": [ // Created once. Static. Extends parent's chain. 
+				"<user-fbkey>", // root
+				"<user-fbkey>", // intermediary
+				"<user-fbkey>", // parent // Use .push() to add new
+			]
+		}
+	},
+	"emails": { // Quick check for new entries
+		"user1@example,com": { // email.replace(/\./g, ',') to avoid exception to Firebase key rules prohibiting dot (.) character
+			"parent": "<user-fbkey-parent>", 
+			"uid": "<user-fbkey>", // Add after signup // Presence indicates signup status: accepted = true
+			"invited": true,
+			"accepted": true,
+			"name": "string",
+			"phone": "string",
+			"aliases": {
+				"user1@example.com": true,
+				"user2@example.com": true,
+				"user3@example.com": true
+			}
+		} 
+	},
+	"deals": { // index owner
+		"<deal-fbkey>": {
+			"owner": "<user-fbkey>",
+			"title": "Title Goes Here",
+			"amount": 123456,
+			"tenor": 300,
+			"all_other_fields": {}
+		}
+	},
+	"bids": {
+		"<bid-fbkey>": {
+			"parent_deal": "<deal-fbkey>",
+			"amount": 123453,
+			"rate": 12.5,
+			"maker": "<user-fbkey>",
+			"accepted": false
+		}
+	},
+	"invitations": {
+	},
+	"user-deals": {
+		"<user-fbkey>": {
+			"<deal-fbkey>": {},
+		},
+	},
+	"user-bids": {
+		"<user-fbkey>": {
+			"<bid-fbkey>": {},
+		},
+	},
+	"user-invitations": {
+		"<user-fbkey>": {
+			"user1@example,com": {},
+		},
+	},
+	"user-emails": {
+		"<user-fbkey>": {
+			"user1@example,com": {},
+		},
+	},
+	"user-email-keys": {
+		"<user-fbkey>": {
+			"<email-fbkey>": {},
+		},
+	},
+	"deal-bids": {
+		"<deal-fbkey>": {
+			"<bid-fbkey>": {},
+		},
+	},
+}

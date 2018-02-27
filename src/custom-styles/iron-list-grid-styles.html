@@ -1,0 +1,48 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+https://saulis.github.io/iron-data-table/demo/styling.html
+<!---->
+
+<dom-module id="iron-list-grid-styles">
+  <template>
+		<style>
+
+			iron-list {
+        height: 100vh; /* don't use % values unless the parent element is sized. */
+        width: 100vw; /* don't use % values unless the parent element is sized. */
+				padding: 5px;
+				--iron-list-items-container: {
+					margin: 0;
+					/** /
+					margin: 10px;
+					margin: auto;
+					/**/
+				};
+      }
+			
+      .item, paper-card {
+        @apply(--layout-vertical);
+        background-color: white;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        margin: 5px;
+				overflow: hidden;
+			  /** /
+				text-overflow: ellipsis;
+				border-radius: 10px;
+        padding: 5px;
+			  /**/
+			}
+      .item:hover, paper-card:hover {
+        background-color: var(--paper-grey-200);
+			}
+			
+			/** /
+			paper-card {
+				margin: 5px;
+			}
+			/**/
+			
+		</style>
+  </template>
+</dom-module>

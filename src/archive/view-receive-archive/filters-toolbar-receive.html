@@ -1,0 +1,520 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<!--- ->
+<link rel="import" href="search-filters-receive.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../custom-styles/shared-styles.html">
+
+<dom-module id="filters-toolbar-receive">
+  <template>
+    <style include="shared-styles">
+		  /**/
+      :host {
+				display: block;
+        background: #f8f9f9;
+				/** /
+        background: var(--paper-grey-200), #f8f9f9;
+				/**/
+				        box-shadow: inset -4px 0 16px -9px rgba(0, 0, 0, 0.5); /* right border side shadow */
+				   -moz-box-shadow: inset -4px 0 16px -9px rgba(0, 0, 0, 0.5);
+				-webkit-box-shadow: inset -4px 0 16px -9px rgba(0, 0, 0, 0.5);
+				/**/
+			}
+			/** /
+			.shadow {
+				/** /
+				http://stackoverflow.com/a/2402560/1640892
+				/** /
+				position : absolute ;
+				left     : 0px      ;
+				top      : 0px      ;
+				right    : 0px      ;
+				bottom   : 0px      ;
+				        box-shadow: rgba(0, 0, 0, 0.2) 0px -10px 6px -10px inset;
+           -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px -10px 6px -10px inset;
+        -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px -10px 6px -10px inset;
+				pointer-events: none;
+			}
+			/** /
+			search-filters-receive.media-width-xsmall ,
+			search-filters-receive.media-width-small  {
+			}
+			search-filters-receive.media-width-xsmall #total ,
+			search-filters-receive.media-width-small  #total {
+			}
+			search-filters-receive.media-width-medium ,
+			search-filters-receive.media-width-large  {
+				width: 308px;				
+			}
+			                        #header , #header .button-clear ,
+			search-filters-receive.media-width-medium .button-clear ,
+			search-filters-receive.media-width-large  .button-clear {
+				font-size: 13px;
+				text-transform: none;
+      }
+			search-filters-receive.media-width-medium #total .sum ,
+			search-filters-receive.media-width-large  #total .sum {
+				font-size: 32px;
+        font-weight: 300;
+      }
+			/**/
+			iron-collapse {
+			  --iron-collapse-transition-duration: 450ms;
+			}
+			.collapse-content {
+				/** /
+				padding-bottom: 32px;
+				border: 1px solid #dedede;
+				border-bottom: 1px solid;
+				padding: 15px;
+				/**/
+			}
+
+			#header {
+			}
+			
+			#toolbar {
+				padding: 8px 16px;
+			}
+			
+      #total {
+				padding: 4px 0;
+        font-size: 12px;
+				font-weight: 300;
+        pointer-events: none;
+      }
+			
+      #total > .sum {
+        font-size: 140%;
+      }
+			
+			#filters, #toolbar {
+				box-shadow: rgba(0, 0, 0, 0.2) 0px -10px 6px -10px inset;
+      }
+			
+      #filters-toggle {
+        color: var(--primary-color);
+				cursor: pointer;
+	    }
+			
+			#filters-toggle paper-icon-button {
+				border-radius: 50%;
+				--paper-icon-button-ink-color: var(--primary-color);
+				/** /
+				background-color: rgba(255, 255, 255, 0.3);
+				opacity: 0.67;
+				/**/
+				-moz-transition:    .5s;
+				-webkit-transition: .5s;
+				-o-transition:      .5s;
+				transition:         .5s;
+			}
+			
+			#filters-toggle paper-icon-button:hover {
+				border-radius: 50%;
+				/**/
+				background-color: rgba(0, 0, 0, 0.1);
+				/** /
+				background-color: rgba(255, 255, 255, 0.3);
+				opacity: 0.67;
+				/**/
+				-moz-transition:    .5s;
+				-webkit-transition: .5s;
+				-o-transition:      .5s;
+				transition:         .5s;
+			}
+			
+			/** /
+      #filters-toggle .count {
+				/** /
+        position: absolute;
+        top: 6px;
+        right: 0;
+        z-index: 1;
+				/** /
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        overflow: hidden;
+        text-align: center;
+        border-radius: 50%;
+        background: var(--accent-color);
+        color: var(--text-primary-color);
+        font-size: 12px;
+        transform: scale(0);
+        transition: all 400ms cubic-bezier(0.4, 0.0, 0.2, 1);
+      }
+
+      #filters-toggle .count[has-filters] {
+        transform: scale(1);
+      }
+			/**/
+			paper-badge {
+				z-index: 1;
+			}
+
+      .buttons-bottom {
+      	padding: 0 24px 32px 8px;
+      }
+				
+			.button-done {
+        background: var(--primary-color);
+        color: var(--text-primary-color);
+        text-align: center;
+      }
+
+      .button-clear {
+        color: var(--primary-color);
+      }
+    </style>
+		
+		<style>
+			.flex-horizontal {
+				@apply(--layout-horizontal);
+			}
+			.flexchild {
+				@apply(--layout-flex);
+			}
+		</style>
+		
+		<!--- ->
+		<paper-button on-tap="toggle">toggle collapse</paper-button>
+		<template is="dom-if" if="{{_computedSmall}}">
+		</template>
+		<!--- ->
+		<div class="shadow"></div>
+		<!--- ->
+		<div id="header"
+				 hidden$="[[_computedSmall]]"
+			   >
+			<!--- ->
+			<div class="container flex-horizontal">
+			  <!--- ->
+		  	<div class="shadow"></div>
+			  <!--- ->
+				<div class="title">Filter Items</div>
+				<div class="flexchild"></div>
+				<div>
+					<paper-button class="button-clear"
+												on-tap="_clearFilters"
+												>Clear Filters</paper-button>
+				</div>
+			</div>
+			<!--- ->
+		</div>
+		<!---->
+					
+		<div id="toolbar"
+				 class="container flex-horizontal"
+				 hidden$="[[!_computedSmall]]"
+				 >
+			<div id="total">
+				<div>To be reimbursed</div>
+				<!---->
+				<div class="sum">$957.00</div>
+				<!--- ->
+				<div class="sum">[[totalOwed]]</div>
+				<!---->
+			</div>
+			<div class="flexchild"></div>
+			<div id="filters-toggle" on-tap="toggle">
+				<span id="filters-label">Filters</span>
+				<paper-badge id="badge"
+										 label="[[appliedFilters]]"
+										 for="filters-label"
+										 hidden
+										 entry-animation="scale-up-animation"
+										 exit-animation="scale-down-animation"
+										 >
+				</paper-badge>
+				<!--- ->
+				<span class="count" has-filters$="[[_hasFilters(appliedFilters)]]">[[appliedFilters]]</span>
+				<!---->
+				<paper-icon-button icon="filter-list"></paper-icon-button>
+			</div>
+		</div>
+		<!---->
+		<iron-collapse id="collapse">
+			<div class="collapse-content">
+				<search-filters-receive id="filters"
+												        filters="{{filters}}"
+												        status-options="[[_statusOptions]]"
+												        merchants="[[merchants]]"
+												        media-width="[[mediaWidth]]"
+												        class$="media-width-[[mediaWidth]]"
+												        on-clear-filters="_clearFilters"
+												        >
+				 	<!---->
+					<div id="bottom-buttons"
+							 class="container flex-horizontal buttons-bottom"
+							 hidden$="[[!_computedSmall]]"
+							 >
+						<div>
+				 	    <paper-button id="done-button"
+														class="button-clear"
+														on-tap="_resetFilters">Clear Filters</paper-button>
+						</div>
+						<div class="flexchild"></div>
+						<div>
+							<paper-button id="done-button"
+														class="button-done"
+														on-tap="_hideFilters"
+														raised>Done</paper-button>
+						</div>
+					</div>
+					<!---->
+				</search-filters-receive>
+			</div>
+		</iron-collapse>
+		<!--- ->
+		<!---->
+  </template>
+  <script>
+    Polymer({
+      is: 'filters-toolbar-receive',
+			// Edit
+			behaviors: [
+				Polymer.NeonAnimationRunnerBehavior,
+			],
+      properties: {
+				/**/
+				animationConfig: {
+					value: function() {
+						return {
+							entry: {
+								name: 'scale-up-animation',
+								node: this.$.badge,
+								timing: {
+									duration: 750,
+								},
+							},
+							exit: {
+								name: 'scale-down-animation',//'fade-out-animation',
+								node: this.$.badge,
+								timing: {
+									duration: 750,
+								},
+							},
+							rotateUp: {
+								name: 'transform-animation',
+								node: this.$.badge,
+								transformTo: 'rotate(360deg)',
+								timing: {
+									duration: 750,
+								},
+							},
+							rotateDown: {
+								name: 'transform-animation',
+								node: this.$.badge,
+								transformTo: 'rotate(-360deg)',
+								timing: {
+									duration: 750,
+								},
+							},
+						}
+					}
+				},
+				/** /
+				entryAnimation: {
+					value: 'scale-up-animation',
+				},
+				exitAnimation: {
+					value: 'scale-down-animation',//'fade-out-animation'
+				},
+				/**/
+			// endEdit
+        filters: Object,
+        items: Array,
+        totalOwed: Number,
+        merchants: Array,
+				/** /
+        expanded: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+				/**/
+        appliedFilters: Number,
+        _statusOptions: {
+          type: Array,
+          value: [{
+            name: 'new',
+            label: 'New'
+          }, {
+            name: 'in_progress',
+            label: 'In Progress'
+          }, {
+            name: 'reimbursed',
+            label: 'Reimbursed'
+          }]
+        },
+				// Edit
+				mediaWidth: { // xsmall, small, medium, large
+					type: String,
+					update: true,
+					observer: '_mediaWidthChanged'
+				},
+				// endEdit
+      },
+
+      observers: [
+        '_calculateNumFilters(filters.*)',
+      ],
+			
+			// Edit
+			listeners: {
+				'neon-animation-finish': '_onNeonAnimationFinish'
+			},
+			
+			_onNeonAnimationFinish: function() {
+				var count = this.appliedFilters;
+				this.set( '$.badge.hidden' , ( count === 0 || count == '' ) );
+			},
+			
+			_computeAnimation: function(ctOld, ctNew) {
+				if ( ctNew === 0 || ctNew === '' ) {
+					this.playAnimation('exit');
+				} else if ( ( ctOld === 0 || ctOld === '' )
+					            && 
+					          ( ctNew === 1 ) 
+				          ) {
+					this.set( '$.badge.hidden' , false );
+					this.playAnimation('entry');
+				} else if ( ctNew > ctOld ) {
+					this.playAnimation('rotateUp');
+				} else if ( ctNew < ctOld ) {
+					this.playAnimation('rotateDown');
+				}
+			},
+			// endEdit
+
+			/** /
+      _hasFilters: function(appliedFilters) {
+				return appliedFilters > 0;
+      },
+			/**/
+			
+      _calculateNumFilters: function() {
+        var numFilters = 0;
+        for (var f in this.filters) {
+          if (this.filters.hasOwnProperty(f)) {
+            var filter = this.filters[f];
+            if (filter) {
+              if (Array.isArray(filter)) {
+                numFilters += this._statusOptions.length - filter.length;
+              } else {
+                numFilters++;
+              }
+            }
+          }
+        }
+				// Edit
+				this._computeAnimation(this.appliedFilters, numFilters);
+				// endEdit
+        this.appliedFilters = numFilters ? numFilters : '';
+      },
+
+			/** /
+      _toggleFilters: function() {
+        this.expanded = !this.expanded;
+        if (this.expanded) {
+          this.$.filters.style.maxHeight = this.$.filters.scrollHeight + 'px';
+        } else {
+          this.$.filters.style.maxHeight = '4px';
+        }
+      },
+			/**/
+
+      _hideFilters: function() {
+        this.toggle();
+			  /** /
+        // add delay or tap will go through and hit grid
+        if (this.expanded) {
+          this.async(function() {
+            this._toggleFilters();
+          }, 100);
+        }
+			  /**/
+      },
+			
+      _clearFilters: function() {
+        this.set('filters.start', '');
+        this.set('filters.end', '');
+        this.set('filters.min', '');
+        this.set('filters.max', '');
+        this.set('filters.merchant', '');
+        this.set('filters.status', this._statusOptions.map(function(option) {
+          return option.name;
+        }));
+		  },
+			
+			_resetFilters: function() {
+				this._clearFilters();
+				this.toggle();//this._hideFilters();
+			},
+			
+			// Edit
+			
+			toggle: function() {
+				this.$.collapse.toggle();
+			},
+			
+			attached: function() {
+				//this._setStyles();
+				this._computeSmall();
+			},
+			
+			_mediaWidthChanged: function() {
+				//this._setStyles();
+				this._computeSmall();
+				this.set( '$.collapse.opened' , !!!this._computedSmall );
+			},
+			
+			_computeSmall: function() {
+				this.set( '_computedSmall' , this.mediaWidth ===  'small'
+								                  || this.mediaWidth === 'xsmall' );
+			},
+				
+			/** /
+			_setStyles: function() {
+			  /** / // Replace with attribute data binding //class$="media-width-[[mediaWidth]]"
+				console.log('mediaWidth', this.mediaWidth);
+				var m = this.mediaWidth;
+				switch(m) {
+					case 'xsmall':
+						this.set( 'style.width'   , '100%'  );
+						this.set( 'style.padding' , '1em'   );
+						break;
+					case 'small':
+						this.set( 'style.width'   , '100%'  );
+						this.set( 'style.padding' , '1em'   );
+						//this.$$('#filters-toggle').color = 'red';
+						break;
+					case 'medium':
+						this.set( 'style.width'   , '308px' );
+						this.set( 'style.padding' , '0'     );
+						break;
+					case 'large':
+						this.set( 'style.width'   , '308px' );
+						this.set( 'style.padding' , '0'     );
+						break;
+					/** /
+					default:
+						default code block;
+					/** /
+			  //this.updateStyles();
+				}
+			  /** /
+		  },
+			/**/
+			
+			// endEdit
+			
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,51 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-auth.html">
+
+<link rel="import" href="/src/app-login/login-view.html">
+<link rel="import" href="/src/app-login/loggedin-view.html">
+
+<dom-module id="app-main">
+  <template>
+    <style></style>
+    
+    <!---->
+    <!-- Include firebase-app here to avoid multiple instances -->
+		<firebase-app name="app"
+									auth-domain="green-comet.firebaseapp.com"
+									database-url="green-comet.firebaseio.com"
+									api-key="AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+									>
+		</firebase-app>
+		<!---->
+
+		<state-user-auth user-logged-in="{{userLoggedIn}}"></state-user-auth>
+		
+		<login-view hidden$="{{userLoggedIn}}"></login-view>
+		<template restamp is="dom-if" if="[[userLoggedIn]]">
+		  <loggedin-view hidden$="{{!userLoggedIn}}"></loggedin-view>
+		</template>
+
+  </template>
+
+  <script>
+    class AppMain extends Polymer.Element {
+      static get is() { return 'app-main'; }
+				
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+				//window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }				
+		}
+
+    window.customElements.define(AppMain.is, AppMain);
+  </script>
+</dom-module>

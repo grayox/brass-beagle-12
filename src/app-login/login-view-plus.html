@@ -1,0 +1,683 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+
+<!-- Edit -->
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="/bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/src/custom-elements/custom-toast.html">
+<link rel="import" href="login-styles.html">
+<link rel="import" href="header-panel.html">
+<link rel="import" href="key-panel.html">
+<link rel="import" href="user-panel.html">
+<link rel="import" href="parent-panel.html">
+<link rel="import" href="login-panel.html">
+<link rel="import" href="footer-panel.html">
+
+<!--- ->
+<link rel="import" href="../redux-store/redux-store.html">
+<!---->
+<!-- endEdit -->
+
+<dom-module id="login-view">
+	
+	<style>
+		.flex-center-justified {
+			@apply(--layout-horizontal);
+			@apply(--layout-center-justified);
+		}
+	</style>
+	<style include="login-styles">
+		#back-button {
+			color: white;
+			opacity: 0.2;
+		}
+	</style>
+	<style>
+		#login {
+			margin-top: 2em;
+		}
+		paper-button {
+			margin-top: 3em;
+		}
+	</style>
+ 
+  <template>
+		
+		<firebase-auth app-name="app"
+									 user="{{user}}"
+									 >
+		</firebase-auth>
+		<!--- ->
+		<firebase-query id="query"
+										app-name="app"
+										path="invitations"
+										data="{{invitations}}"
+										>
+		</firebase-query>    
+		<!---->
+		<firebase-document id="doc-key"
+										   app-name="app"
+											 data="{{invitation}}"
+											 xtransactions-complete="{{transComplete}}"
+											 xsequential-transactions
+											 xlog
+											 >
+		</firebase-document>
+		<firebase-document id="doc-user-email"
+										   app-name="app"
+											 data="{{userEmail}}"
+											 xlog
+										   >
+		</firebase-document>
+		<firebase-document id="doc-parent"
+										   app-name="app"
+											 data="{{parent}}"
+											 xlog
+										   >
+		</firebase-document>
+		
+		<header-panel entry-animation="scale-up-animation"></header-panel>
+    
+		<!--- ->
+		<button on-tap="_show">Show Item</button>
+		<!--- ->
+		<button on-tap="_clear">Clear Item</button>
+		<!---->
+		
+		<iron-collapse id="key"
+									 opened="{{showPanelKey}}"
+									 horizontal
+									 xno-animation
+									 >
+			<key-panel xhidden
+								 key="{{item.key}}"
+								 >
+			</key-panel>
+		</iron-collapse>
+		
+		<iron-collapse id="user"
+									 opened="{{showPanelUserEmail}}"
+									 horizontal
+									 xno-animation
+									 >
+			<user-panel xhidden
+									emailRaw="{{userEmailRaw}}"
+									email="{{item.user}}"
+									xemail="{{itemuser}}"
+									>
+			</user-panel>
+		</iron-collapse>
+		
+		<iron-collapse id="parent"
+									 opened="{{showPanelParentEmail}}"
+									 horizontal
+									 xno-animation
+									 >
+			<parent-panel xhidden
+										email="{{item.parent}}"
+										>
+			</parent-panel>
+		</iron-collapse>
+    
+		<iron-collapse id="login"
+									 opened="{{showPanelLogin}}"
+									 horizontal
+									 xno-animation
+									 >
+			<login-panel xhidden></login-panel>
+			<!---->
+			<div hidden class="container flex-center-justified">
+      	<paper-button id="back-button" on-tap="reset" xraised>Start Over</paper-button>
+			</div>
+			<!---->
+		</iron-collapse>
+		
+		<footer-panel></footer-panel>
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'login-view',
+				behaviors: [
+					//ReduxBehavior,
+					//AsyncActionsBehavior,
+					Polymer.NeonAnimationBehavior,
+					Polymer.NeonAnimationRunnerBehavior,
+					//Polymer.IronResizableBehavior,
+				],
+				/**/
+        properties: {
+					/**/
+					errorMessage: String,
+					hasKey: Boolean,
+					hasUserEmail: Boolean,
+					hasUserInit: Boolean,
+					hasParentEmail: Boolean,
+					showPanelKey: Boolean,
+					showPanelUserEmail: Boolean,
+					showPanelParentEmail: Boolean,
+					showPanelLogin: Boolean,
+					loggedIn: Boolean,
+					/**/
+					user: {
+            type: Object,
+						//observer: '_userChanged',
+          },
+					item: {
+						type: Object,
+						notify: true,
+						value: function() {
+							return {};
+						},
+          },
+					panel: {
+						type: String,
+						notify: true,
+						observer: '_panelChanged',
+						value: function() {
+							return null;
+						},
+          },
+					invitation: {
+						type: Object,
+						notify: true,
+						observer: '_invitationChanged',
+						/**/
+						value: function() {
+							return {};
+						},
+						/**/
+					},
+					userEmail: {
+            type: Object,
+						observer: '_userEmailChanged',
+          },
+					userEmailRaw: {
+            type: String,
+						notify: true,
+				  },
+					parent: {
+            type: String,
+						observer: '_parentChanged',
+          },
+					pageActivated: { // Require user to press button // security from automation
+						type: Boolean,
+						value: function() {
+							return false;
+						},
+					},
+          userInitialized: { // Has user ever logged in before?
+						type: Boolean,
+						observer: '_userInitializedChanged',
+						value: function() {
+							return false;
+						},
+					},
+			  },
+				
+				// Redux
+				// https://github.com/Polymer/polycasts/blob/master/ep61-redux/friend-input.html
+				/** /
+	      actions: {
+		      add: function(name) {
+			      return {
+				      type: 'ADD_FRIEND',
+				      friend: name,
+			      };
+		      }
+	      },
+	      addFriend: function() {
+		      var input = this.$.field;
+		      if (input.value) {
+			      this.dispatch('add', input.value);
+			      input.value = '';
+			      input.focus();
+		      }
+	      },
+				/** /
+				actions: {
+		      updateTryKey: function(str) {
+			      return {
+				      type: 'TRY_KEY',
+				      payload: str,
+			      };
+		      }
+	      },
+	      // endRedux
+
+				/** /
+        _logIn: function() {
+          this.set('loggedIn', true); //this.loggedIn = true;
+        },
+				/**/
+				listeners: {
+					'fetch-key'    : '_fetchKey'    ,
+					'fetch-user'   : '_fetchUser'   ,
+					'fetch-parent' : '_fetchParent' ,
+					//login: 'reset',
+				},
+
+				attached: function() {
+					var DELAY = 3500;
+					this.async(function() {
+						this.reset();
+					}.bind(this), DELAY);
+				},
+				
+				detached: function() {
+					this.reset();
+				},
+				
+				_userChanged: function() {
+					var item = this.item;
+					if( !this.user && Object.keys(item).length && item.constructor === Object ) {
+						console.log('user', this.user);
+						//location.reload(); // location = location; // refresh reset reload browser page // Deprecated (bug fix)
+						this.reset();
+					}
+				},
+				
+				_panelChanged: function(panel) {
+					//console.log(e.detail);
+					var DELAY = 250;
+					var _this = this;
+					this.closeAll();
+					this.async(function() {
+						switch(panel) {
+							case 'key'    : _this.set( 'showPanelKey'         , true ); break;
+							case 'user'   : _this.set( 'showPanelUserEmail'   , true ); break;
+							case 'parent' : _this.set( 'showPanelParentEmail' , true ); break;
+							case 'login'  : _this.set( 'showPanelLogin'       , true ); break;
+							//default:
+								//default code block
+						}
+					}, DELAY);
+					//}.bind(this), DELAY);
+				},
+				
+				closeAll: function() {
+					this.set( 'showPanelKey'         , false );
+					this.set( 'showPanelUserEmail'   , false );
+					this.set( 'showPanelParentEmail' , false );
+					this.set( 'showPanelLogin'       , false );
+				},
+				
+				reset: function() {
+					this.set( 'item'  , {}    );
+					this.set( 'panel' , 'key' ); // For production (switch from 'login')
+					//this.set( 'panel' , 'login' ); // For development (switch from 'key', for convenience)
+					//console.log('panel', this.panel);
+				},
+				
+				showToast: function(ob) {
+					var toast = this.$.toast;
+					toast.show(ob);
+				},
+				
+				_fetchKey: function(e) { // -KZtC4A1JUF4KYe-0Z4D
+					//console.log('_fetchKey');
+					//console.log('invitations', this.invitations);
+					//console.log('invitation', this.invitation); //return;
+					//console.log('e.detail', e.detail);
+					this.set('pageActivated', true);
+					var d = e.detail;
+					if(d.type) {						
+						var type = d.type;
+					} else {
+						console.error('Action type not defined');
+						return;
+					}
+					if(d.payload) {						
+						var payload = d.payload;
+						var key = payload; //this.item.key; // a string
+					}
+					switch(type) {
+						case 'primary':
+					    //console.log('key', key);
+							if(!key) {
+								//console.log('Please enter key');
+								this.showToast({
+									//text: 'Please enter a key',
+									text: 'No key',
+									type: 'error',
+									//type: 'warning',
+								});
+							} else {
+								var doc = this.$['doc-key'];
+								var path = [ 'invitations' , key ].join('/');
+								//console.log('path', path);
+								//doc.getStoredValue(path);
+								doc.path = path;
+							}
+							break;
+						case 'secondary':
+							this.set( 'item'  , {}     );
+							this.set( 'panel' , 'user' );
+							break;
+						//default:
+							//default code goes here
+							
+							/** / Promise Example
+							auth.signInWithPopup(provider)
+								.then(function(response) {
+									//this.fire('logged-in', response);
+							}).catch(function(error) {
+								console.log('error', error);
+							});
+							/**/
+					}
+				},
+								
+				_checkKey: function(inv) { // Does key match an invitation?
+					//console.log('_checkKey');
+					var bool = !!(inv.invitee && inv.timestamp &&
+							inv['inviter-email'] && inv['inviter-uid']);
+					//console.log('bool', bool);
+					//console.log('inv', inv);
+					if(bool) {
+						this.showToast({
+							//text: 'Success. Thanks! Please login!',
+							text: 'Success',
+							type: 'success',
+						});
+						this.set( 'panel' , 'login' );
+						//console.log('panel', this.panel);
+						//console.log('item', this.item);
+					} else {
+						this.reset();
+						//console.log('We don’t know that key!');
+						this.showToast({
+							//text: 'We don’t know that key',
+							text: 'Unrecognized',
+							type: 'error',
+							//type: 'danger',
+						});
+						//console.log('bool', bool);
+						//console.log('inv', inv);
+						this.async(function() {
+							this.showToast({
+								//text: 'You can try using your email instead.',
+								text: 'Try email ?',
+								type: 'plain',
+								//type: 'info',
+							});
+						}, 3500);
+						/** /
+						this.async(function() {
+							//location.reload(); // http://jsbin.com/yamibibade/1/edit?html,console,output // Deprecated (bug fix)
+						}, 7000);
+						/**/
+					}
+				},
+				
+				/**/
+				_invitationChanged: function(inv) {
+					//console.log('_invitationChanged');
+					//var len = Object.keys(inv).length
+					//console.log('inv', inv);
+					//console.log('length' , len);
+					if(this.pageActivated) {
+						this._checkKey(inv); // Does key match an invitation? // Causes _checkKey() to run twice if previously incorrect key was tried
+						this._checkInit(inv); // Has user logged-in before?
+					}
+				},
+     		/**/
+				
+				/** /
+				transComplete: new Promise(function(resolve, reject) {
+					console.log('Transaction Complete!')
+					// how can I access "data" here?
+				}),
+				/**/
+				
+				_checkInit: function(ob) {
+					//console.log('ob', ob);
+					if(ob['user-initialized']) {
+						this.set('userInitialized', true);
+					}
+				},
+				
+				_fetchUser: function(e) { // ib.suparsa@yahoo.com
+					//console.log('_fetchUser');
+					//console.log('item.user', this.item.user);
+					this.set('pageActivated', true);
+					var d = e.detail;
+					if(d.type) {						
+						var type = d.type;
+					} else {
+						console.error('Action type not defined');
+						return;
+					}
+					if(d.payload) {						
+						var payload = d.payload;
+						var user = payload; //this.item.user; // a string
+						//console.log('user', user);
+					}
+					switch(type) {
+						case 'primary':
+							if( (!!!user) || (!!!user.length) ) {
+								this.showToast({
+									text: 'No email',
+									type: 'error',
+								});
+								return;
+							} else {
+								//console.log('user-bool', !!!user, 'length-bool', !!!user.length);
+								var doc = this.$['doc-user-email'];
+								var path = [ 'emails' , user ].join('/');
+								//doc.getStoredValue(path);
+								doc.path = path;
+							}
+							break;
+						case 'secondary':
+							/** /
+							console.log('user', user);
+							if(user) {
+								console.log('length', user.length);
+							}
+							/**/
+							this.reset();
+							break;
+						//default:
+							//default code block
+					}
+				},
+				
+				_userEmailChanged: function(email) {
+					if(this.pageActivated) {
+						this._checkEmail(email); // Has invitation been sent to user's email?
+						this._checkInit(email); // Has user logged-in before?
+					}
+				},
+				
+				_checkEmail: function(email) {
+					//console.log('_checkEmail');
+					//var bool = email.parent && email.timestamp && email.invitations;
+					//console.log('email', email);
+					var bool = email['added-by'];
+					if(bool) {
+						this.showToast({
+							//text: 'Success. Thanks! Who invited you?',
+							/** /
+							text: 'Success',
+							type: 'success',
+							/**/
+							text: 'Step 2 of 3',
+							type: 'info',
+							/**/
+						});
+						this.set( 'panel' , 'parent' );
+						//console.log('panel', this.panel);
+						//console.log('item', this.item);
+					} else {
+						//console.log('We don’t know that email');
+						//this.set('item.user', '');
+						//
+						//var item = {};
+						//this.set('item', item);
+						//
+						//this.set('item', {});
+						this.set('userEmailRaw', '');
+						//console.log('userEmailRaw', this.userEmailRaw);
+						//console.log('item', this.item);
+						this.showToast({
+							//text: 'We don’t know that email. Try again?',
+							text: 'Unrecognized',
+							type: 'error',
+							//type: 'warning',
+						});
+					}
+				},
+				
+				_fetchParent: function(e) { // ib.suparsa@yahoo.com | maria,c,le,4@gmail,com
+					this.set('pageActivated', true);
+					var d = e.detail;
+					if(d.type) {						
+						var type = d.type;
+					} else {
+						console.error('Action type not defined');
+						return;
+					}
+					if(d.payload) {						
+						var payload = d.payload;
+						var parent = payload; //this.item.parent; // a string
+					}
+					switch(type) {
+						case 'primary':
+							if(!parent || !parent.length) {
+								this.showToast({
+									//text: 'Please enter an email address.',
+									text: 'Nothing entered',
+									type: 'error',
+									//type: 'warning',
+								});
+								return;
+							}
+							/** /
+							console.log('parent', this.parent);
+							console.log('userEmail', this.userEmail);
+							console.log('test1', this.userEmail['added-by']);
+							console.log('test2', this.userEmail['added-by'][this.item.parent]);
+							/** /
+							// This rechecks the path. But now we just want to check the data object.
+							var doc = this.$['doc-parent'];
+							var path = [ 'emails' , this.item.user, 'added-by', parent ].join('/');
+							doc.path = path;
+							/**/
+							if(this.userEmail['added-by'][parent]) {//[this.item.parent]) {
+								//console.log('Got it! Please login!');
+								//this.showToast('Got it! Please log in.');
+								//this.set( 'panel' , 'login' );
+								//this.set('parent', this.item.parent);
+								this.showToast({
+									//text: 'Success. Got it! Please log in.',
+									text: 'Success',
+									type: 'success',
+								});
+								this.set( 'panel' , 'login' );
+							} else {
+								//console.log('Parent not found');
+								this.showToast({
+									//text: 'We do not recognize that email',
+									text: 'Not recognized',
+									type: 'error',
+									//type: 'danger',
+								});
+								/** /
+								this.async(function() {
+									//location.reload(); //http://jsbin.com/yamibibade/1/edit?html,console,output // Deprecated (bug fix)
+								}, 3500);
+								/**/
+							}
+							break;
+						case 'secondary':
+							this.reset();
+							break;
+						//default:
+							//default code block
+					}
+				},
+				
+				_parentChanged: function(parent) {
+					if(this.pageActivated) {				
+						var bool = !!parent && Object.keys(parent).length
+						           && parent.constructor === Object; // Reference: http://stackoverflow.com/q/679915/1640892
+						if(bool) {
+							//console.log('parent', parent);
+							this.showToast({
+								//text: 'Success. Got it! Please log in.',
+								text: 'Success',
+								type: 'success',
+							});
+							this.set( 'panel' , 'login' );
+							//console.log('panel', this.panel);
+							//console.log('item', this.item);
+						} else {
+							//console.log('We don’t know that email');
+							//this.set('item', {});
+							this.showToast({
+								//text: 'We don’t recognize that email. Try again?',
+								text: 'Not recognized',
+								type: 'error',
+								//type: 'warning',
+							});
+						}
+					}
+				},
+				
+				_userInitializedChanged: function(bool) {
+					if(bool) {
+						this.showToast({
+							//text: 'Welcome back. Please log in.',
+							text: 'Success',
+							type: 'success',
+						});
+						this.set( 'panel' , 'login' );
+					}
+				},
+				
+				/** /
+				_transCompKeyChanged: function() {
+					console.log('Hello world');
+				},
+				/**/
+				
+				_handleError: function() {
+					this.showToast({
+						//text: 'Failed. We dont know anything about that!',
+						text: 'Failed',
+						type: 'error',
+						//type: 'danger',
+					});
+				},
+				
+				/** /
+				_show: function() {
+					console.log('item', this.item);
+				},
+				/** /
+				
+				_clear: function() {
+					//console.log('item', this.item);
+					this.set('userEmailRaw', '');
+				},
+				/**/
+				
+      });
+    })();
+  </script>
+</dom-module>

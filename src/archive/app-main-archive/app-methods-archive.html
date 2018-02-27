@@ -1,0 +1,864 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+<link rel="import" href="/src/custom-behaviors/user-setter-behavior.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<link rel="import" href="/src/custom-behaviors/email-coding-behavior.html">
+
+<!--- ->
+Use databinding (from app-main.html) to save calls from iron-ajax
+<link rel="import" href="app-data.html">
+<!---->
+
+<dom-module id="app-methods">
+	<template>
+		<style></style>
+		<paper-toast id="toast"></paper-toast>
+		<!--- ->
+    <firebase-document id="document"
+											 app-name="app"
+											 xpath="[[editableItemId]]"
+											 data="{{editableItem}}"
+											 xlog
+											 >
+    </firebase-document>
+		<!--- ->
+		<firebase-query id="document"
+										app-name="app"
+										xpath="[[editableItemId]]"
+										data="{{editableItem}}"
+										xlog
+										>
+    </firebase-query>
+		<!---->
+		<firebase-document id="document"
+											 app-name="app"
+											 xpath="/emails/[[emailKey]]"
+											 xpath="/[[emailKey]]"
+											 xdata="{emailData}"
+											 xlog
+											 >
+		</firebase-document>
+		<!--- ->
+		<firebase-query id="query"
+										app-name="app"
+										path="/emails"
+										data="{{emails}}"
+										xlog
+										>
+		</firebase-query>	
+		<!---->
+		<iron-ajax id="ajax"
+							 xauto
+							 xverbose
+							 xurl="https://www.googleapis.com/youtube/v3/search"
+							 xurl="http://httpbin.org/get"
+							 xparams='{"part":"snippet", "q":"polymer", "key": "YOUTUBE_API_KEY", "type": "video"}'
+							 handle-as="json"
+							 on-response="handleAjaxResponse"
+							 debounce-duration="300"
+							 >
+		</iron-ajax>
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'app-methods',
+				
+				/**/
+				behaviors: [
+					ReduxBehavior,
+					AsyncActionsBehavior,
+					MyBehaviors.UserSetterBehavior,
+					MyBehaviors.EmailCodingBehavior,
+				],
+				/**/
+									
+				properties: {
+					appData: {
+						type: Object,
+						statePath: 'appData',
+					},
+					userRemote: {
+						type: Object,
+						statePath: 'userRemote',
+					},
+					editableItem: Object,
+					emailKey: {
+						type: String,
+						computed: '_computeEmailKey(userRemote)',
+					},
+					timestamp: Number,
+					newPostKey: String,
+					data: Object,
+					read: {
+						type: Object,
+						observer: '_readChanged',
+					}
+				},
+
+				/** /
+				listeners: {
+					//'item-update': '_itemUpdate',
+				},
+				/**/
+				
+				_resetVariables: function() {
+					this.set('timestamp', null);
+					this.set('newPostKey', null);
+					this.set('data', null);
+					this.set('read', null);
+				},
+				
+				itemsPath: function(e) {
+					//console.log('e', e);
+					var ref    = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					//console.log('entity', entity);
+					var data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					//console.log('data', data);
+					var appData = this.appData;
+					//console.log('appData', appData);
+					var entities = appData.entities;
+					//console.log('entities', entities);
+					var r = entities[entity];
+					//console.log('r', r);
+					var ob = JSON.parse(JSON.stringify(r)); // Clone to preserve original appData values
+					//console.log('ob', ob);
+					var out, newPostKey;
+					
+					//console.log('self-key', ob['self-key']);
+					// Key and explicated paths
+					if(!!ob.key) { // ob.key = 'deals'|'bids'|'users'
+						// Get a key for a new Post.
+						newPostKey = ref.child(ob.key).push().key; // var ref = this.$.document.db.ref('/');
+						//console.log('newPostKey', newPostKey);
+						this.set('newPostKey', newPostKey);
+						e.newPostKey = newPostKey;
+					}
+					if(!!ob.paths) {
+						out = this._itemPaths(e);
+						//console.log('out', out);
+					} //else if(!!ob['self-key']) {
+						// If no ob.key, data is array, and ob['self-key'] is present,
+						// make individual elements their own key under self-key node
+					  // Note: As of 3/5/2017, ob['self-key'] is not present in app-data-demo.json
+					//console.log('ob', ob);
+					// Initialize
+					if(!!ob.init) {
+						//out = this._selfPaths(e);
+						out = eval( 'this.' + ob.init );
+					  //console.log('out', out);
+					}
+					// Configure
+					if(!!ob.config) {
+						eval( 'this.' + ob.config );
+					}
+					//console.log('out', out);
+					return out;
+				},
+				
+				_initUser: function(type, e) {
+					//console.log('e', e);
+					this._resetVariables();
+					var ref        = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					if(typeof e.data == 'object') { // e.data {object}: entity data passed from save event; {new: 'data'}
+						var data = JSON.parse(JSON.stringify(e.data)); // Clone to preserve original appData values
+					} else {
+						var data = e.data;   
+					}
+					//console.log('data', data);
+					var out = {};
+					var uid = data.uid ? data.uid : this.userRemote.uid;
+					//console.log('uid', uid);
+					//console.log('userRemote', this.userRemote);
+					var timestamp = Date.now(); //new Date().getTime();
+					this.set('timestamp', timestamp);
+					data.timestamp = timestamp;
+					var keystub = [ 'users', uid, type, ].join('/');
+					var newPostKey;
+					switch (type) {
+						case 'remote':
+					    newPostKey = null; // Design decision: Do not write each login; only record latest; using timestamp;
+					    //newPostKey = ref.child(keystub).push().key; // var ref = this.$.document.db.ref('/');
+							break;
+						case 'local':
+					    newPostKey = ref.child(keystub).push().key; // var ref = this.$.document.db.ref('/');
+							break;
+						case 'balances':
+					    newPostKey = null;
+							break;
+						default:
+							//do something;
+					}
+					this.set('newPostKey', newPostKey);
+					var targetNode = [ keystub, newPostKey, ].join('/');
+					out[targetNode] = data;
+					//console.log('out', out);
+					return out;
+				},
+				
+				/** /
+				_initLeadsCount: function(e) {
+					//console.log('e', e);
+					var ref        = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					//var data       = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					var data = JSON.parse(JSON.stringify(e.data)); // Clone to preserve original appData values
+					//console.log('data', data);
+					var out = {};
+					//var uid = data.uid ? data.uid : this.userRemote.uid;
+					//var timestamp = Date.now(); //new Date().getTime();
+					//data.timestamp = timestamp;
+					var u = this.userLocal, state = u.state, county = u.county, category = u.category;
+					var keystub = [ 'leads-state-county-categoy-index', state, county, category ].join('/');
+					var newPostKey = null;
+					var targetNode = [ keystub, newPostKey, ].join('/');
+					out[targetNode] = data;
+					//console.log('out', out);
+					return out;
+				},
+				/**/
+				
+				_initNetwork: function(e) {
+					// 'self-paths' are used when the data value itself becomes the key of the new record in the db.
+					// Aka 'self-key' property in the app-data file // e.g., email addresses
+					// Alternative to 'standard-paths'
+					//var selfKey  = ob['self-key']; // e.g., 'emails'
+					// Note: Pivoted away from 'self-paths' toward 'init' property specifying custom function.
+					// 'config' property also specifies custom function to be run after init
+					var ref        = e.r;      // e.r: Firebase database reference;
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data       = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					//var ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
+					var out = {};
+					var a = data.reverse(); // e.g., [ 'email1@example,com', 'email2@example,com', ... ]
+					var i = a.length;
+					var uid = this.user.uid;
+					var timestamp = Date.now(); //new Date().getTime();
+					while(i--) {
+						var newPostKey = a[i]; // e.g., 'email2@example,com'
+						out[ [ 'emails', newPostKey, 'added-by', this.emailKey, timestamp, ].join('/') ] = {
+							'adder-uid': uid,
+						};
+						out[ [ 'user-emails', uid, newPostKey, timestamp, ].join('/') ] = {
+							exists: true, 
+						};
+					}
+					//console.log('out', out);
+					return out;
+				},
+				
+				_evalString4Token: function(s) {
+					// Replaces token with evaluated expression inside token template
+					var out = s;  // '~@foo@~'
+					var re = /~@(.*?)@~/;
+					var match = re.exec(s); // ['~@foo@~', 'foo']
+					//console.log('s', s);
+					if(!!match && !!match[0] && !!match[1]) {
+						out = s.replace(match[0], eval(match[1]));
+						//console.log('out', out);
+					}
+					return out;
+				},
+				
+				_array2string_path: function(a) {
+					var timestamp = this.timestamp ? this.timestamp : Date.now();
+					if (typeof a != 'object') return a;
+					var out = [];
+					var i = a.length;
+					while(i--) {
+						out[i] = this._evalString4Token(a[i]);
+					}
+					return out.join('/');
+				},
+
+				_initData: function(ob) {
+					//console.log('this.data', this.data);
+					var timestamp = this.timestamp ? this.timestamp : Date.now();
+					var out = {};
+					//console.log('ob', ob);
+					if (typeof ob != 'object') {
+						console.warn ('Not an object', ob)
+						return ob;
+					}
+					var keys = Object.keys(ob);
+					var i = keys.length;
+					while(i--) {
+						var key = this._evalString4Token(keys[i]); // eval key
+						var val = this._evalString4Token(ob[keys[i]]); // eval value
+            out[key] = val;
+					}
+					return out;
+				},
+				
+				_readFirebaseData: function(path) {
+					// Reference: https://firebase.google.com/docs/database/web/read-and-write
+					// Reference: http://stackoverflow.com/a/43240014/1640892
+					var _this = this;
+					//var userFirebase;
+				  firebase.app('app').database().ref(path).once('value', function(snapshot) {
+						_this.set('read', snapshot.val());
+						//console.log('read', snapshot.val());
+						//return snapshot.val();
+					});
+				},
+				
+				_readChanged: function(ob) {
+					console.log('ob', ob);
+					//this.method(e);
+				},
+
+				/**/
+				_itemPaths: function(e) {
+					var ref        = e.r;      // e.r: Firebase database reference; // var ref = this.$.document.db.ref('/');
+					var method     = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity     = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data       = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					var newPostKey = e.newPostKey; 
+					var ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
+					var out = {};
+					//var timestamp = Date.now();
+					
+					//console.log('ob', ob);
+					// Path // string interpolation
+					var a = ob.paths;
+					var i = a.reverse().length;//i=1;
+					//var re = /~@(.*?)@~/;
+					//console.log('e', e, 'ob', ob);
+					while(i--) {
+						var type, path, dat, key, read;
+						if(a[i].type && a[i].path) {
+							type = a[i].type;
+							path = a[i].path;
+						  key = this._array2string_path(path);
+							/**/
+							switch(type) {
+								case 'index':
+									//dat = true;
+									dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
+									break;
+								/**/
+								case 'create':
+									dat = data;
+									break;
+								case 'read':
+									//console.log('this-data', this.data); // same | data == this.data
+									//console.log('e-data'   , data)     ; // same | data == this.data
+									this._readFirebaseData(key);
+									break;
+								case 'update':
+									if(a[i].data) {
+										//console.log('typeof data', typeof a[i].data);
+										//console.log('data', a[i].data);
+										dat = this._initData(a[i].data);
+										//console.log('typeof dat', typeof dat);
+										//console.log('dat', dat);
+									} else {
+										console.warn('Attempted to update node with no "data" property');
+										continue;
+									}
+									break;
+								/**/
+								case 'delete':
+									dat = null;
+									break;
+								default:
+									//code block
+									continue;
+							}
+							/**/
+						} else {
+							continue;
+						}
+						//if(!(a[i].path || a[i]['path-index'])) continue; // Skips comments without 'path' property; else error for path.length 
+						/** /
+						var j = path.length;//j=1;
+						//var j = a[i].path.length;//j=1;
+						//var j = a[i][type].length;//j=1;
+					  //console.log('j', j);
+						while(j--) {
+					    console.log('path[' + j + ']', path[j]);
+					    //console.log('j', j);
+							// http://stackoverflow.com/a/40831614/1640892
+							//a[i].path[j] = a[i].path[j].replace(re, eval("$1"));
+							/**/
+						  //console.log('newPostKey', newPostKey);
+							//console.log('i', i, 'j', j, 're', re, 'str', a[i].path[j]);
+					    //console.log('a[' + i + '].path[' + j + ']', a[i].path[j]);
+							//var match = re.exec(path[j]);
+							//var match = re.exec(a[i].path[j]);
+							//var match = re.exec(a[i][type][j]);
+							//console.log('match', match);
+							//console.log('test', re.test(a[i].path[j]));
+							//if(!!match && !!match[0] && !!match[1]) {
+								//path[j] = path[j].replace(match[0], eval(match[1]));
+								//a[i].path[j] = a[i].path[j].replace(match[0], eval(match[1]));
+								//a[i][type][j] = a[i][type][j].replace(match[0], eval(match[1]));
+								//console.log('a[i].path[j]', a[i].path[j]);
+							//}
+							/** /
+							path[j] = this._evalString4Token(path[j]);
+						}
+						var key = path.join('/');
+						/**/
+						//var key = a[i].path.join('/');
+						//var key = a[i][type].join('/');
+					  //console.log('key', key);
+						//key = key.replace('this.user.uid', this.user.uid);
+						//key = key.replace('newPostKey', newPostKey);
+						//var dat = data; // or alternate if a[i].fields
+						out[key] = dat;
+					  //console.log('out', out);
+					}
+					//console.log('out', out);//x(y);
+					return out;
+				},
+				/**/
+								
+				/** /
+				itemsPath2: function(e) {
+					var ref    = e.r;      // e.r: Firebase database reference;
+					var method = e.method; // e.method {string}: method name; 'save'|'delete'
+					var entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					var ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
+					var out={}, newPostKey, newPostKeys; 
+					// Key
+					if(!!ob.key) { // ob.key = 'deals'|'bids'|'users'
+						// Get a key for a new Post.
+						newPostKey = ref.child(ob.key).push().key; // var ref = this.$.document.db.ref('/');
+						//console.log('newPostKey', newPostKey);
+					} else if(!!ob['self-key'] && typeof data == 'Array') {
+						// If no ob.key, data is array, and ob['self-key'] is present,
+						// make individual elements their own key under self-key node
+						
+					}
+					//console.log('ob', ob);
+					// Path // String Interpolation
+					var a = ob.paths;
+					var i = a.reverse().length;//i=1;
+					var re = /~@(.*?)@~/;
+					while(i--) {
+						var j = a[i].path.length;//j=1;
+						while(j--) {
+							// http://stackoverflow.com/a/40831614/1640892
+							//a[i].path[j] = a[i].path[j].replace(re, eval("$1"));
+							/**  /
+						  //console.log('newPostKey', newPostKey);
+							//console.log('i', i, 'j', j, 're', re, 'str', a[i].path[j]);
+							var match = re.exec(a[i].path[j]);
+							//console.log('match', match);
+							//console.log('test', re.test(a[i].path[j]));
+							if(!!match && !!match[0] && !!match[1]) {
+								a[i].path[j] = a[i].path[j].replace(match[0], eval(match[1]));
+								//console.log('a[i].path[j]', a[i].path[j]);
+							}
+							/**  /
+						}
+						var key = a[i].path.join('/');
+						//key = key.replace('this.user.uid', this.user.uid);
+						//key = key.replace('newPostKey', newPostKey);
+						var dat = data; // or alternate if a[i].fields
+						out[key] = dat;
+					  //console.log(out);
+					}
+					//console.log(out);
+					//x(y);
+					return out;
+				},
+				/**/
+				
+				/** /
+				itemsPath1: function(ref, entity, data) {
+					// ref: Firebase database reference;
+					// entity {string}: entity name;
+					// data {object}: entity data passed from save event
+					var out={}, newPostKey, ob=this.appData.entities[entity];
+					// Key
+					if(ob.key) { // ob.key = 'deals'|'bids'|'users'
+						// Get a key for a new Post.
+						newPostKey = ref.child(ob.key).push().key; // var ref = this.$.document.db.ref('/');
+					}
+					//console.log('ob', ob);
+					// Path
+					var a = ob.paths;
+					var i = a.length;
+					while(i--) {
+						let key = a[i].path.join('/');
+						key = key.replace('this.user.uid', this.user.uid);
+						key = key.replace('newPostKey', newPostKey);
+						let dat = data; // or alternate if a[i].fields
+						out[key] = dat;
+					}
+					return out;
+				},
+				/**/
+				
+				/** /
+				itemsPath_singlePath: function(s) {
+					var ob = this.appData.entities[s];
+					// ob.path
+					var a = ob.path;
+					var key, path = a.join('/');
+					path = path.replace('this.user.uid', this.user.uid);
+					var out = {path: path};
+					// ob.key
+					if(ob.key) {
+						out.key = ob.key;
+					}
+					//console.log('ob', ob, 'key', key);
+					return out;
+					//return [ 'users' , this.user.uid , 'items' ].join('/');
+					/** /
+					return {
+						deal    : [ 'users' , this.user.uid , 'deals'   ].join('/') ,
+						bid   : [ 'users' , this.user.uid , 'bids'  ].join('/') ,
+						network : [ 'users' , this.user.uid , 'network' ].join('/') ,
+					};
+					/** /
+				},
+				/** /
+
+				toEditableItem: function(e) {
+					// Eliminates keys with string characters unacceptable to Firebase
+					//console.log('e', e);
+					//e = { new: 'data' };
+					/** /
+					var editableItem = JSON.parse(JSON.stringify(e));
+					if(!!editableItem.$H) {
+						editableItem.H = editableItem.$H;
+						delete editableItem.$H;
+					}
+					if(!!editableItem.$key) {
+						editableItem._id = editableItem.$key;
+						delete editableItem.$key;
+					}
+					this.set('editableItem', editableItem);
+					this.set('editableItemId', editableItem._id/*_rev* / ? editableItem._id : null);
+					/** /
+					//this.set('editableItem', {new: 'data'});
+					//console.log('editableItem', this.editableItem);
+					//console.log('editableItemId', this.editableItemId);
+				},
+
+				/**/
+				toastSuccessful: function(method) {
+					var toast = this.$.toast;
+					toast.text = 'Item ' + method + 'd';
+					toast.show();
+				},
+				/**/
+				
+				_computeEmailKey: function(user) {
+					if(!!user) {
+						return this._emailEncode(user.email);
+					}
+				},
+								
+				/** /
+				save_demo: function(e) {
+					// http://stackoverflow.com/a/40728181/1640892
+					/** /
+					// Option 1: firebase-query
+					this.$.query.ref.child('email1@example,com').set({new: 'data'}); // success // var ref = this.$.document.db.ref('/');
+					/** /
+					// Option 2: Insert only; no query
+					this.$.document.db.ref('emails').child('email2@example,com').set({new: 'data'}); // success
+					/** /
+					// Option 3: firebase-document // success
+					this.emailKey = 'email3@example,com';
+					this.emailData = {new: 'data'};
+					/**c/
+					// Option 4: (extends option 3) firebase-document, mutiple paths
+					this.emailKey = 'emails';
+					this.emailData = {
+						'email14@example,com': true,
+						'email15@example,com': true,
+						'email16@example,com': true,
+					};
+					/** /
+					// Option 5: (extends option 2) firebase-document, data fanout // success
+					// https://firebase.google.com/docs/database/web/read-and-write#update_specific_fields
+					// Write the new post's data simultaneously in the posts list and the user's post list.
+					// A post entry.
+					var r = this.$.document.db.ref('/');
+					var username='username', uid='uid', body='body', title='title', picture='picture';
+					var postData = {
+						author: username,
+						uid: uid,
+						body: body,
+						title: title,
+						starCount: 0,
+						authorPic: picture,
+					};
+					// Get a key for a new Post.
+					var newPostKey = r.child('posts').push().key;
+					// Write the new post's data simultaneously in the posts list and the user's post list.
+					var updates = {};
+					updates['/posts/' + newPostKey] = postData;
+					updates['/user-posts/' + uid + '/' + newPostKey] = postData;
+          // Post to Firebase
+					return r.update(updates);
+				},
+				/**/
+				
+				/** /
+				save_singlePath: function(e) {
+					//var item = e.detail;
+					// Edit
+					var entity = e.entity; //'deal'|'bid'|'network'
+					var method = e.method; //'save'|'delete'
+					var item = e.data;
+					/** /
+					//console.log('item', item);
+					//console.log('user', this.user);
+					this.toEditableItem(item);
+					var doc = this.$.document;
+					var id = this.editableItemId;
+					var ob = this.itemsPath(entity);
+					var key, path = ob.path;
+					if(ob.key) {
+						key = ob.key;
+					} 
+					//console.log('path', path);
+					//console.log('path', path, 'key', key, 'id', id);
+					if(id) {
+						doc.save(path, id);
+					} else if(key) {
+						doc.save(path, key);
+					} else {
+						doc.save(path);
+					}
+					doc.reset();
+					this.toastSuccessful(method);
+					/**/
+					// endEdit
+					/** /
+					//this._db.save(item);
+					this.fire('item-update', {
+						reason: 'save',
+					});
+					/** /
+				},
+				/**/
+
+				/** /
+				save: function(e) {
+					//var item = e.detail;
+					// Edit
+					var entity = e.entity; //'deal'|'bid'|'network'
+					var method = e.method; //'save'|'delete'
+					var item = e.data;
+					/** /
+					//console.log('item', item);
+					//console.log('user', this.user);
+					this.toEditableItem(item);
+					var doc = this.$.document;
+					var id = this.editableItemId;
+					var r = this.$.document.db.ref('/');
+					var ob = this.itemsPath(r, entity, item);
+					//console.log('ob', ob);
+					return r.update(ob);
+
+					doc.reset();
+					this.toastSuccessful(method);
+					/**/
+					// endEdit
+					/** /
+					//this._db.save(item);
+					this.fire('item-update', {
+						reason: 'save',
+					});
+					/** /
+				},
+				/** /
+				
+				delete: function(e) {
+					//var item = e.detail;
+					// Edit
+					var entity = e.entity; //'deal'|'bid'|'network'
+					var method = e.method; //'save'|'delete'
+					var item = e.data;
+					/** /
+					//console.log('item', item);
+					//console.log('user', this.user);
+					//this.toEditableItem(item);
+					var doc = this.$.document;
+					//this.set('editableItemId', '-KQRZpTjrQg4MSTDYdPo');
+					doc.path = [ this.itemsPath(entity) , this.editableItemId ].join('/');
+					//console.log('doc.path', doc.path);
+					//console.dir(doc);
+					doc.destroy();
+					this.toastSuccessful(method);
+					/**/
+					// endEdit
+					//this._db.remove(item);
+					/** /
+					this.fire('item-update', {
+						reason: 'delete',
+					});
+					/** /
+				},
+
+				/** /
+				_itemUpdate: function(e) {
+					this.$.itemEditor.close();
+					if (e.detail.reason === 'deleted') {
+						this.$.saveNotification.text = 'Item was deleted';
+					} else {
+						this.$.saveNotification.text = 'Item was saved';
+					}
+					this.$.saveNotification.show();
+				},
+				_itemUpdate: function(e) {
+					//this.$.itemEditor.close();
+					this.fire('close-item-editor');
+					var toast = this.$.toast;
+					toast.text = [ 'Item was ' , e.detail.reason , 'd' ].join('');
+					toast.show();
+				},
+				/**/
+				
+				_execute: function(e) {
+					/** /   
+					var entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
+					var data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
+					/**/
+					var r      = e.r;      // e.r: Firebase database reference;
+					var paths  = e.ob;
+					var doc    = e.doc;
+					var method = e.method; // e.method {string}: method name; 'save'|'delete'
+					switch (method) {
+						case 'save':
+							//console.log('paths', paths);
+							return r.update(paths);
+							break;
+						case 'delete':
+							doc.destroy();
+							break;
+						default:
+							console.error('Method not defined');
+					}
+				},
+				
+				method: function(e) { // e = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+					//console.log('e', e);
+					//this._resetVariables();
+					var entity = e.entity; console.log('entity', entity); // 'deal'|'bid'|'network'
+					var method = e.method; console.log('method', method); // 'save'|'delete'
+					var data   = e.data  ; console.log('data'  , data  );
+					var read   = e.read  ; console.log('read'  , read  );
+					if(!!read && !this.read){
+						var path = this._array2string_path(read);
+						this._readFirebaseData(path);
+						return;
+					}
+					if(data) {
+					  //console.log('e', e);
+						this.set('data', data);
+					}
+					//this.toEditableItem(item); // this.toEditableItem(data);
+					var doc = this.$.document;
+					//e.id = this.editableItemId;
+					//console.log('e', e);
+					e.doc = doc;
+					e.r = doc.db.ref('/');
+					//console.log('e', e);
+					e.ob = this.itemsPath(e);
+					//console.log('e', e);
+					this._execute(e);
+					this.toastSuccessful(method);
+					this.fire('method-success', method);
+					doc.reset();
+				},
+		
+				_configInvitation: function(key, data) {
+					var appData = this.appData;
+					data.url = appData.firebase.authDomain;
+					data['invitation-key'] = key;
+					var ajax = this.$.ajax;
+					ajax.url = 'https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec';
+					//ajax.method = 'GET';
+					ajax.method = 'POST';
+					ajax.params = {
+						k: 'gviot90sqobjc16chfj7',
+						//m: key,
+						/** /
+						m: JSON.stringify({
+							// Must stringify parameter to pass JSON object
+							// https://datatables.net/forums/discussion/14501/post-with-parameters-and-content
+							// Can't yet extract POST body
+							// https://developers.google.com/apps-script/guides/content
+							'invitation-key': key,
+							'inviter-email': this.user.email,
+							'invitee-email': '',
+							'app-url': this.appData.firebase.databaseUrl,
+						}),
+						/**/
+						m: JSON.stringify(data),
+					};
+					/**/
+					ajax.generateRequest();
+				},
+				
+				_configInvitation1: function(key) {
+					//console.log('key', key);
+					var ajax = this.$.ajax;
+					/** /
+					// This is 'backwards'; I need to add the headers on the GAS server response; not the client request;
+					// http://stackoverflow.com/q/11481222/1640892
+					ajax.headers = {
+						// https://williambert.online/2013/06/allow-cors-with-localhost-in-chrome/
+						'Access-Control-Allow-Origin': '*',
+						'Access-Control-Allow-Headers': 'Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With',
+						'Access-Control-Allow-Headers': 'GET, PUT, POST',				
+					};
+					/** /
+					ajax.url = 'http://httpbin.org/get';
+					ajax.params = {//new: 'data'}; // Use .params property only with GET; for POST, use .body
+						k: 'gviot90sqobjc16chfj7',
+						m: 'Hello World',
+					};
+					/**/
+					//ajax.method = 'POST';
+					ajax.method = 'GET';
+					ajax.url = 
+						//'http://jsonp.jit.su/?url=' // http://stackoverflow.com/q/11481222/1640892
+						//+ // http://stackoverflow.com/a/22047086/1640892
+						'https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec';
+					ajax.params = {
+					//ajax.body = {
+						k: 'gviot90sqobjc16chfj7',
+						//k: 'nuif5m139vvfc7neixak',
+						//m: 'Hello World',
+						m: key,
+					};
+					/**/
+					ajax.generateRequest();
+				},
+				
+				handleAjaxResponse: function(e) {
+					//console.log('e', e);
+					var ajax = this.$.ajax;
+					var r = ajax.lastResponse;
+					//console.log('r', r);
+				},
+				
+      });
+		})();
+  </script>
+</dom-module>

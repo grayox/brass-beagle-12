@@ -1,0 +1,79 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<!---->
+<!---->
+
+<dom-module id="state-app-settings">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="app-settings" data="{{appSettings}}"></app-localstorage-document>
+		
+		<iron-ajax id="ajax"
+							 auto xverbose
+							 url="/src/app-data/app-settings.json"
+							 xurl="/src/app-data/app-views.json"
+							 handle-as="json"
+							 xon-response="_handleAjaxResponse"
+							 xdebounce-duration="300"
+							 last-response="{{appSettings}}"
+							 >
+		</iron-ajax>
+		
+  </template>
+
+  <script>
+    class StateAppSettings extends Polymer.Element {
+      static get is() { return 'state-app-settings'; }
+
+      static get properties() { return {
+				appSettings: {
+					type: Object,
+					notify: true,
+					// observer: '_appSettingsChanged',
+				},
+      }}
+      
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+			// _appViewsChanged(data) {
+			// 	console.log('data\n', data);
+			// 	//this._dispatchEvent('app-data-changed', data);
+			// }
+			
+			// _handleAjaxResponse(e) {
+			// 	//console.log('e\n', e);
+			// 	// how to get this.appData from event e? // use observer instead
+			// 	const appData = this.appData;
+			// 	console.log('appData\n', appData);
+			// 	//this._dispatchEvent('app-data-changed', appData);
+			// }
+			
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 	  //bubbles: true,
+			// 		//composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+			// }
+		
+	  }
+
+    window.customElements.define(StateAppSettings.is, StateAppSettings);
+  </script>
+</dom-module>

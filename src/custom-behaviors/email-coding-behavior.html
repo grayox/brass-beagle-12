@@ -1,0 +1,47 @@
+<!--- ->
+Using email addresses as keys in Firebase requires encoding.
+This is because Firebase does not allow keys to contain the dot (.) character.
+Best practice is to substitute all dots (.) with commas (,).
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<script>
+  //(function() {
+    //'use strict';
+			
+		// https://www.polymer-project.org/1.0/docs/tools/documentation
+		/**
+		 * Behavior that highlights stuff.
+		 *
+		 * @polymerBehavior
+		 */
+	
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.EmailCodingBehaviorImpl = {
+
+			_emailEncode: function(s) {
+				if(!!s) {
+					//console.log('s', s);
+					return s.replace(/\./gm, ',');
+				}
+			},
+
+			_emailDecode: function(s) {
+				if(!!s) {
+					//console.log('s', s);
+					return s.replace(/,/gm, '.');
+				}
+			},
+				
+		};
+		
+    MyBehaviors.EmailCodingBehavior = [
+      MyBehaviors.EmailCodingBehaviorImpl,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

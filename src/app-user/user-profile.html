@@ -1,0 +1,345 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/src/app-state/state-user.html">
+<link rel="import" href="/src/app-main/app-methods.html">
+
+<!-- ->
+<link rel="import" href="/src/app-state/my-redux-store.html">
+
+<link rel="import" href="/src/custom-behaviors/user-setter-behavior.html">
+
+<link rel="import" href="/src/custom-behaviors/dialog-behavior.html">
+<link rel="import" href="toolbar-dialog-behavior.html">
+<link rel="import" href="toolbar-dialog-styles.html">
+<link rel="import" href="/src/custom-styles/paper-listbox-styles.html">
+<link rel="import" href="/src/custom-styles/editor-styles.html">
+<!-- ->
+<link rel="import" href="/src/custom-elements/category-menu.html">
+<!--->
+<link rel="import" href="/src/custom-elements/form-input-zip.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<link rel="import" href="user-styles.html">
+<link rel="import" href="/src/custom-elements/form-save-buttons.html">
+
+<dom-module id="user-profile">
+  <template>
+		<style include="paper-material-styles user-styles"></style>
+		
+		<!-- state -->
+		<state-user id="user"
+								xuser="{{user}}"
+								xuser-local="{{userLocal}}"
+								user-local="{{item}}"
+								user-remote="{{userRemote}}"
+								xuser-uid="{{userUid}}"
+								xuser-photo-url="{{userPhotoUrl}}"
+								xuser-logged-in="{{userLoggedIn}}"
+								xuser-auth-provider="{{userAuthProvider}}"
+								>
+		</state-user>
+		
+		<app-methods id="methods"
+								 show-toast
+								 xdispatch-event
+								 >
+		</app-methods>
+		
+		<iron-form id="iron-form" on-down="_onFormTouched" >
+			<form id="form" xaction="/foo" xmethod="get">
+				<iron-a11y-keys keys="enter" on-keys-pressed="save"></iron-a11y-keys>
+				<div class="layout xvertical horizontal center xwide">
+					<!---->
+					<!-- leads wanted -->
+
+					<!-- zip code -->
+					<div class="field-label">My location</div>
+					<form-input-zip name="form-input-zip"
+													zip-valid="{{zipValid}}"
+													zip-code="{{item.zip}}"
+													zip-state="{{item.state}}"
+													zip-county="{{item.county}}"
+													zip-city="{{item.city}}"
+													>
+					</form-input-zip>
+
+					<!-- category -->
+					<div class="field-label">Send me the following type/s of leads</div>
+					<paper-toggle-button name="home"      checked="{{item.home}}"     >Home</paper-toggle-button>
+					<paper-toggle-button name="mortgage"  checked="{{item.mortgage}}" >Mortgage</paper-toggle-button>
+					<paper-toggle-button name="insurance" checked="{{item.insurance}}">Insurance</paper-toggle-button>
+					<paper-toggle-button name="financial" checked="{{item.financial}}">Financial</paper-toggle-button>
+
+					<!-- invite contact -->
+					<div class="field-label">Invite a contact or referral partner</div>
+					<!-- enter email address -->
+					<paper-input name="email" label="Email address" value="{{item.email}}" ></paper-input>		
+
+					<!--- ->
+					<paper-input id="create-zip"
+											 name="zip"
+											 xis="iron-input"
+											 xprevent-invalid-input
+											 xallowed-pattern="[0-9]"
+											 class="align-left xwide flex"
+											 label="Zip Code"
+											 value="{{item.zip}}"
+											 xtype="number"
+											 type="string"
+											 xmin="1000"
+											 xmax="99"
+											 step="1000"
+											 xlength="55"
+											 required
+											 xmaxlength="2"
+											 xtype="text"
+											 xpattern="\d*"
+											 disabled$="[[!isNew]]"
+											 >
+						<!--- ->
+						<div prefix>$</div>
+						<!--- ->
+						<div suffix>USD</div>
+						<!--- ->
+					</paper-input>
+					<!--- ->
+					<paper-dropdown-menu>
+					  <paper-listbox class="dropdown-content">
+					    <paper-item>Home</paper-item>
+					    <paper-item>Mortgage</paper-item>
+					    <paper-item>Insurance</paper-item>
+					    <paper-item>Financial</paper-item>
+					  </paper-listbox>
+					</paper-dropdown-menu>
+					<!--- ->
+					<category-menu class="wide"
+												 category="{{item.category}}"></category-menu>
+					<!--- ->
+					<paper-input id="create-zip"
+											 name="zip"
+											 xis="iron-input"
+											 xprevent-invalid-input
+											 xallowed-pattern="[0-9]"
+											 class="align-left wide"
+											 label="Zip Code"
+											 value="{{item.zip}}"
+											 xtype="number"
+											 type="string"
+											 xmin="1000"
+											 xmax="99"
+											 step="1000"
+											 xlength="55"
+											 required
+											 xmaxlength="2"
+											 xtype="text"
+											 xpattern="\d*"
+											 disabled$="[[!isNew]]"
+											 >
+						<!--- ->
+						<div prefix>$</div>
+						<!--- ->
+						<div suffix>USD</div>
+						<!--- ->
+					</paper-input>
+					<!---->
+				</div>
+				
+				<form-save-buttons active="[[active]]"
+													 on-form-save-buttons-tapped="_handleFormSaveButtonsTapped"
+													 >
+				</form-save-buttons>
+				
+				<!--- ->
+		    <button on-tap="_show">Show</button>
+	      <!---->
+
+			</form>
+		</iron-form>
+
+
+		
+		
+  </template>
+
+  <script>
+    class UserProfile extends Polymer.Element {
+      static get is() { return 'user-profile'; }
+
+      static get properties() {
+        /**/
+        return {
+					/** //
+					userLocal: {
+						type: Object,
+						notify: true,
+						//value: 0,
+						//observer: '_userLocalChanged',
+					},
+					/**/
+					itemReset: {
+						type: Object,
+						notify: true,
+						computed: '_computeItemReset(item)',
+					},
+					item: {
+						type: Object,
+						notify: true,
+						// computed: '_computeItem(userLocal)',
+						// value: () => ({
+						// 	mortgage: false,
+						// 	insurance: true,
+            // }),
+					},
+					active: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},
+				};
+				/**/
+      }
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        //window.addEventListener('iron-form-element-register', (e) => this._onIronFormElementRegister(e));
+				//this.set('active', false);
+			}
+			/**/
+			
+			connectedCallback() {
+				super.connectedCallback();
+				//console.log('connected!');
+				//this.set('active', false);
+		  }
+			/**/
+			
+			static get observers() {
+        return [
+          // Observer method name, followed by a list of dependencies, in parenthesis
+          '_itemChanged(item.*)',
+        ]
+      }
+			
+			/** /
+			_show() {
+				console.log('user\n', this.user);
+				console.log('user-local\n', this.userLocal);
+				console.log('user-remote\n', this.userRemote);
+				console.log('user-uid\n', this.userUid);
+				console.log('user-photo-url\n', this.userPhotoUrl);
+				console.log('user-logged-in\n', this.userLoggedIn);
+			}
+			/**/
+			
+			/** /
+			_computeItem(r) {
+				return r;
+			}
+			
+			_userLocalChanged(r) {
+				this.set('item', r);
+			}
+			/** /
+			
+			_onIronFormElementRegister(e) {
+				console.log("e\n", e);
+			}
+			/**/
+			_onFormTouched() {
+				// allow form buttons to activate after item changes by setting formTouched property to true
+				this.set('formTouched', true);
+			}
+			
+			_resetItem() {
+				// resets to default => null
+				//this.$['iron-form'].reset();
+				
+				// instead, reset to value stored at server
+				//const u = this.$.user;
+				//u.query();
+				this.set( 'active'    , false                 );
+				this.set( 'item'      , { ...this.itemReset } );
+				//this.set('itemReset' , { ...this.item      });
+				//console.log('active\n', this.active);
+			}
+			
+			_saveItem(r) {
+				// send data to server
+				//console.log("new-item\n", r);
+				const m = this.$.methods;
+        const method = 'save'; // 'save'|'delete'
+        const entity = 'user-local'; // 'user-local'|'deal'|'bid'|'network'
+        const data = r;
+        const d = {
+          method: method,
+          entity: entity,
+          data: data,
+        };
+        m.method(d);
+				
+				// reset properties
+				this.set('active', false);
+				//this.set('itemReset', { ...r });
+			}
+			
+			_computeItemReset(item) {
+				if(this.active) return;
+				return {...item};
+			}
+			
+			_itemChanged(newItem) {
+				//console.log('newItem\n', newItem);
+				if(this.formTouched) {
+					this.set('active', true);
+				}
+				//console.log('active\n', this.active);
+			}
+			
+			_handleFormSaveButtonsTapped(e) {
+				//console.log('e\n', e);
+				const detail = e.detail ? e.detail : null;
+				//console.log('detail\n', detail);
+				const action = detail.action ? detail.action : null;
+				//console.log('action\n', action);
+				const item = this.item;
+				//console.log('item\n', item);
+				switch(action) {
+          case 'reset':
+						//console.log('user-tapped: ', action);
+            this._resetItem();
+            break;
+          case 'save':
+						//console.log('user-tapped: ', action);
+            this._saveItem(item);
+				    //this.userLocalChanged; //this._initializeForm();
+				    break;
+          default:
+            //code block
+        }
+				this.set('active', false);
+			}
+			
+			/** /
+			_show() {
+				console.log('item\n', this.item);
+				console.log('itemReset\n', this.itemReset);
+				console.log('active\n', this.active);
+			}
+			/**/
+			
+    }
+
+    window.customElements.define(UserProfile.is, UserProfile);
+  </script>
+</dom-module>

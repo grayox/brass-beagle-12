@@ -1,0 +1,198 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="app-item.html">
+
+<dom-module id="app-menu">
+  <template>
+    <style include="paper-material-styles paper-item-styles"></style>
+  
+    <!--- ->
+    <paper-item class="subheader">
+      <paper-item-body xtwo-line>
+        <div>Lead type</div>
+      </paper-item-body>
+      <!--- /->
+      <paper-icon-button icon="star" alt="favourite this!">
+      </paper-icon-button>
+      <!--- ->
+      <div>[[selected]]</div>
+    </paper-item>
+    <!--- ->
+
+    <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
+      <paper-icon-item name="home">
+        <paper-ripple></paper-ripple>    
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="home" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Home</div>
+          <!--- ->
+          <div secondary>You are a real estate agent</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+        <!--- /->
+      </paper-icon-item>
+      <paper-icon-item name="mortgage">
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="account-balance" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Mortgage</div>
+          <!--- ->
+          <div secondary>You are a mortgage agent</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+        <!--- /->
+      </paper-icon-item>
+      <paper-icon-item name="insurance">
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:diploma" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Insurance</div>
+          <!--- ->
+          <div secondary>You are an insurance agent</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+        <!--- /->
+      </paper-icon-item>
+      <paper-icon-item name="financial">
+        <paper-ripple></paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="assessment" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Financial</div>
+          <!--- ->
+          <div secondary>You are a financial advisor</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+        <!--- /->
+      </paper-icon-item>
+    </iron-selector>
+    <!---->
+
+    <app-item type="subheader"
+              label="[[subheader]]"
+              xlabel="Lead type"
+              xicon="[[subheaderIcon]]"
+              data-string="[[selectedLabel]]"
+              xdata="[[selectedLabel]]"
+              >
+    </app-item>
+
+    <iron-selector role="listbox"
+                   selected="{{selected}}"
+                   attr-for-selected="name"
+                   selected-attribute="selected">
+      <template is="dom-repeat" items="[[items]]">
+        <app-item type="menu-item"
+                  name="[[item.name]]"
+                  icon="[[item.icon]]"
+                  label="[[item.label]]"
+                  on-tap="_onTap"
+                  >
+        </app-item>
+      </template>
+    </iron-selector>
+    		
+  </template>
+
+  <script>
+    class AppMenu extends Polymer.Element {
+      
+			static get is() { return 'app-menu'; }
+			
+      static get properties() { return {
+				
+				subheader: {
+					type: String,
+					notify: true,
+				},
+
+				// subheaderIcon: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+
+				selected: {
+					type: String,
+					notify: true,
+				},
+				
+				selectedLabel: {
+					type: String,
+					notify: true,
+          computed: '_computeSelectedLabel(items, selected)',
+				},
+				
+				items: {
+					type: Array,
+					notify: true,
+          // observer: '_itemsChanged',
+          // value: () => [
+          //   { name: 'home'      , label: 'Home'      , icon: 'home'            , },
+          //   { name: 'mortgage'  , label: 'Mortgage'  , icon: 'account-balance' , },
+          //   { name: 'insurance' , label: 'Insurance' , icon: 'vaadin:diploma'  , },
+          //   { name: 'financial' , label: 'Financial' , icon: 'assessment'      , },
+          // ],
+				},
+				
+			}}
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+		  }
+
+      _computeSelectedLabel(items, name) {
+        // console.log('items\n', items);
+        // console.log('name\n', name);
+        const out = items.reduce((c, v, i, a) => {
+          // console.log('v-', i, v);
+          //c = '';
+          if(v.name === name) {
+            // console.log('v-', i, v);
+            // console.log('c', c);
+            // console.log('label', v.label);
+            return v.label;
+          }
+          return c;
+        }, '');
+        //console.log('out\n', out);
+        return out;
+      }
+
+      // _itemsChanged(a) {
+      //   console.log('items\n', a);
+      // }
+
+      _onTap(e) {
+        console.log('e\n', e);
+      }
+			
+    }
+
+    window.customElements.define(AppMenu.is, AppMenu);
+  </script>
+
+</dom-module>

@@ -1,0 +1,44 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="avatar-hash.html">
+
+<dom-module id="avatar-input">
+  <template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+
+		<div class="layout horizontal xvertical">
+			<div class="column-left">
+				<avatar-hash message="[[input]]"></avatar-hash>
+			</div>
+			<div class="column-right">
+				<paper-input value="{{input}}"></paper-input>
+			</div>
+			<!---->
+		</div>
+	
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'avatar-input',
+				properties: {
+          input: {
+						type: String,
+						value: function() {
+							return ''; // Lorem ipsum // 3.1415926535 8979323846 2643383279 5028841971 6939937510 5820974944 5923078164 0628620899 8628034825 3421170679
+						},
+					},
+				},
+							
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,96 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="user-styles">
+  <template>
+    <style>
+			
+			/* trigger */
+	
+			/** /
+			:host {
+				--test-border-color: red;
+				--test-border: {
+					border: var(--test-border-color) solid 2px;			
+				}
+			}			
+			/** /
+			.xtest-border > * {
+			  @apply(--test-border);
+			}
+			/**/
+
+			#avatarandname {
+				display: block;
+				cursor: pointer;
+        /** /
+        margin-bottom: 12px;
+        /**/
+			}
+			
+			#avatarandname:hover #username {
+				opacity: 1.0;
+				color: var(--app-primary-color);
+				/** /
+				/**/
+			}
+
+      #avatar,
+			img,
+			iron-image {
+      	border-radius: 50%;
+			}
+			
+      #username {
+        text-align: center;
+				opacity: 0.5;
+				font-weight: 100;
+        /** /
+        color: white;
+				font-size: 16px;
+        font: 400 16px 'Open Sans', Verdana, sans-serif;
+				text-transform: uppercase;
+        letter-spacing: 2px;
+        /**/
+			}
+			
+			/* profile, preferences */
+			
+			.field-label {
+				opacity: 0.33;
+				/** /
+				font-size: smaller;
+				/**/
+			}
+			
+			.field-label:not(:first-child) {
+				margin-top: 24px;
+			}
+			
+			form-input-zip {
+				max-width: 100px;
+				margin-bottom: 8px;
+			}
+			
+			paper-toggle-button {
+				margin-top: 16px;
+				--paper-toggle-button-checked-bar-color: var(--app-primary-color);
+				--paper-toggle-button-checked-button-color: var(--app-primary-color);
+				--paper-toggle-button-checked-ink-color: var(--app-primary-color);
+				/** /
+				--paper-toggle-button-checked-bar-color: red;
+				--paper-toggle-button-checked-button-color: red;
+				--paper-toggle-button-checked-ink-color: red;
+				display: inline-block;
+				display: block;
+				/**/
+			}
+			
+			paper-toggle-button.inline {
+				display: inline-block;
+				margin-right: 24px;
+			}
+	
+		</style>
+
+  </template>
+</dom-module>

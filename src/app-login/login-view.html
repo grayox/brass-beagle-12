@@ -1,0 +1,196 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+
+<!-- Edit -->
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="/bower_components/polymerfire/firebase-auth.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="/src/custom-elements/custom-toast.html">
+<link rel="import" href="login-styles.html">
+<link rel="import" href="header-panel.html">
+<!--- ->
+Use with login-panel-plus.html
+<!--- ->
+<link rel="import" href="key-panel.html">
+<link rel="import" href="user-panel.html">
+<link rel="import" href="parent-panel.html">
+<!---->
+<link rel="import" href="login-panel.html">
+<link rel="import" href="footer-panel.html">
+
+<!--- ->
+<link rel="import" href="../redux-store/redux-store.html">
+<!---->
+<!-- endEdit -->
+
+<dom-module id="login-view">
+	
+  <template>
+    <style>
+    	.flex-center-justified {
+    		@apply(--layout-horizontal);
+    		@apply(--layout-center-justified);
+    	}
+    </style>
+    <style include="login-styles">
+    	#back-button {
+    		color: white;
+    		opacity: 0.2;
+    	}
+    </style>
+    <style>
+    	#login {
+    		margin-top: 2em;
+    	}
+    	paper-button {
+    		margin-top: 3em;
+    	}
+    </style>
+ 
+		
+		<!--- ->
+		<firebase-auth app-name="app"
+									 user="{{user}}"
+									 >
+		</firebase-auth>
+		<!--- ->
+		<firebase-query id="query"
+										app-name="app"
+										path="invitations"
+										data="{{invitations}}"
+										>
+		</firebase-query>    
+		<!--- ->
+		<firebase-document id="doc-key"
+										   app-name="app"
+											 data="{{invitation}}"
+											 xtransactions-complete="{transComplete}"
+											 xsequential-transactions
+											 xlog
+											 >
+		</firebase-document>
+		<firebase-document id="doc-user-email"
+										   app-name="app"
+											 data="{{userEmail}}"
+											 xlog
+										   >
+		</firebase-document>
+		<firebase-document id="doc-parent"
+										   app-name="app"
+											 data="{{parent}}"
+											 xlog
+										   >
+		</firebase-document>
+		<!---->
+		
+		<header-panel entry-animation="scale-up-animation"></header-panel>
+
+		<login-panel xhidden id="login"></login-panel>
+		
+		<footer-panel></footer-panel>
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'login-view',
+				behaviors: [
+					//ReduxBehavior,
+					//AsyncActionsBehavior,
+					Polymer.NeonAnimationBehavior,
+					Polymer.NeonAnimationRunnerBehavior,
+					//Polymer.IronResizableBehavior,
+				],
+				/** /
+        properties: {
+					/** /
+					userRemote: {
+            type: Object,
+						statePath: 'userRemote',
+						//observer: '_userRemoteChanged',
+          },
+					/** /
+					loggedIn: {
+						type: Boolean,
+						statePath: 'loggedIn'
+					},
+					/**/
+					/** /
+			  },
+				/**/
+				
+				// Redux
+				// https://github.com/Polymer/polycasts/blob/master/ep61-redux/friend-input.html
+				/** /
+	      actions: {
+		      add: function(name) {
+			      return {
+				      type: 'ADD_FRIEND',
+				      friend: name,
+			      };
+		      }
+	      },
+	      addFriend: function() {
+		      var input = this.$.field;
+		      if (input.value) {
+			      this.dispatch('add', input.value);
+			      input.value = '';
+			      input.focus();
+		      }
+	      },
+				/** /
+				actions: {
+		      updateTryKey: function(str) {
+			      return {
+				      type: 'TRY_KEY',
+				      payload: str,
+			      };
+		      },
+	      },
+	      // endRedux
+
+				/** /
+        _logIn: function() {
+          this.set('loggedIn', true); //this.loggedIn = true;
+        },
+				/** /
+				listeners: {
+					//login: 'reset',
+				},
+				/**/
+
+				attached: function() {
+					var DELAY = 3500;
+					this.async(function() {
+						this.reset();
+					}.bind(this), DELAY);
+				},
+				
+				detached: function() {
+					this.reset();
+				},
+				
+				// TODO: Consider making reset() method dispatch a LOGOUT event to redux store and update state
+				reset: function() {
+					this.set( 'item'  , {}    );
+					this.set( 'panel' , 'key' ); // For production (switch from 'login')
+					//this.set( 'panel' , 'login' ); // For development (switch from 'key', for convenience)
+					//console.log('panel', this.panel);
+				},
+				
+				
+      });
+    })();
+  </script>
+</dom-module>

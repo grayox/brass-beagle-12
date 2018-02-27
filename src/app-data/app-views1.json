@@ -1,0 +1,156 @@
+{							
+	"comment-1": "This file was archived and replaced by app-settings.json",
+  "comment-2": "Considering moving contents to app-data.json",
+  "comment-3": "Now reversing prior decision; returning to improved version of app-views.json",
+	"views": [
+		{ "label": "Dashboard" , "name": "view-dashboard" , "icon": "vaadin:dashboard"      } ,
+		{ "label": "Outbox"    , "name": "view-outbox"    , "icon": "vaadin:cloud-upload"   } ,
+		{ "label": "Inbox"     , "name": "view-inbox"     , "icon": "vaadin:cloud-download" } ,
+		{ "label": "Archive"   , "name": "view-archive"   , "icon": "vaadin:database"       } ,
+		{ "label": "Contacts"  , "name": "view-contacts"  , "icon": "social:person-add"     } ,
+		{ "label": "Settings"  , "name": "view-settings"  , "icon": "settings"              }
+  ],
+  "lists": {
+    "settings": [
+      {
+        "type": "subheader",
+        "name": "subhead-status",
+        "label": "Engagement status"
+      }, {
+        "type": "output",
+        "name": "req-info",
+        "icon": "vaadin:warning",
+        "label": "Required information",
+        "dataString" : "0/2"                       
+      }, {
+        "type": "subheader",
+        "name": "subhead-filters",
+        "label": "Lead filters"
+      }, {
+        "type": "output",
+        "name": "lead-type",
+        "icon": "track-changes",
+        "label": "Your type of services",
+        "dataString" : "1"                          
+      }, {
+        "type": "output",
+        "name": "counties-list",
+        "icon": "track-changes",
+        "label": "Counties in your territory",
+        "dataString" : "1"                          
+      }, {
+        "type": "subheader",
+        "name": "subhead-contact",
+        "label": "Location & contact details"
+      }, {
+        "type": "output",
+        "name": "state",
+        "icon": "vaadin:flag",
+        "label": "State",
+        "dataString" : "Mississippi",
+        "detail": [{
+          "type": "input-zip",
+          "name": "zip-detail",
+          "icon": "vaadin:pin",
+          "label": "pin",
+          "dataString" : "90210"
+        },{
+          "name": "buttons",
+          "type": "button-save"
+        }]
+      }, {
+        "type": "output",
+        "name": "county",
+        "icon": "vaadin:map-marker",
+        "label": "County",
+        "dataString" : "Biloxi",
+        "detail": [{
+          "type": "input-zip",
+          "name": "zip-detail",
+          "icon": "vaadin:pin",
+          "label": "pin",
+          "dataString" : "90210"
+        },{
+          "name": "buttons",
+          "type": "button-save"
+        }]
+      }, {
+        "type": "output",
+        "name": "zip",
+        "icon": "vaadin:pin",
+        "label": "Zip",
+        "dataString" : "12345",
+        "detail": [{
+          "type": "input-zip",
+          "name": "zip-detail",
+          "icon": "vaadin:pin",
+          "label": "pin",
+          "dataString" : "90210"
+        },{
+          "name": "buttons",
+          "type": "button-save"
+        }]                
+      }, {
+        "type": "output",
+        "name": "phone",
+        "icon": "vaadin:phone",
+        "label": "Phone",
+        "dataString" : "555-555-1212",
+        "detail": [{
+          "type": "input-text",
+          "name": "phone-detail",
+          "icon": "vaadin:phone",
+          "label": "Phone",
+          "dataString" : "555-555-1212"
+        },{
+          "name": "buttons",
+          "type": "button-save"
+        }]
+      }, {
+        "type": "output",
+        "name": "email",
+        "icon": "vaadin:envelope",
+        "label": "Email",
+        "dataString" : "myemailaddress@example.com",
+        "detail": [{
+          "type": "input-text",
+          "name": "",
+          "icon": "vaadin:envelope",
+          "label": "Email",
+          "dataString" : "myemailaddress@example.com"
+        },{
+          "name": "buttons",
+          "type": "button-save"
+        }]
+      }, {
+        "type": "subheader",
+        "name": "subhead-auto",
+        "label": "Auto actions for new incoming leads"
+      }, {
+        "type": "checkbox",
+        "name": "notify-you-text",
+        "icon": "communication:textsms",
+        "label": "Notify you via text",
+        "dataBoolean": true
+      }, {
+        "type": "checkbox",
+        "name": "notify-you-email",
+        "icon": "communication:email",
+        "label": "Notify you via email",
+        "dataBoolean": false
+      }, {
+        "type": "checkbox",
+        "name": "auto-text-leads",
+        "icon": "vaadin:bolt",
+        "label": "Auto text your new leads",
+        "dataBoolean": true
+      }, {
+        "type": "checkbox",
+        "name": "auto-email-leads",
+        "icon": "vaadin:magic",
+        "label": "Auto email your new leads",
+        "dataBoolean": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,380 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<!--- ->
+<link rel="import" href="app-list-mixin.html">
+
+<!--- ->
+Types of elements
+
+1. info only: boolean properties -> css style rules
+1.1. data field
+1.2. subheader
+1.3. urgent
+
+2. actions: primary then secondary -> event: 'tapped'
+2.1. action -> more action (e.g., send lead, receive lead, invite contact -> enter contact, add counties)
+2.2. check box -> dialogue -> info (e.g., text me -> text number)
+2.3. independent input -> dependent output (e.g., zip -> city, county, state)
+
+3. input only -> method: _save()
+3.1. enter a line of information (e.g., phone number, email)
+3.2. select items from a menu (check boxes) (e.g., lead type, counties list)
+3.3. paper-toggle-button
+<!---->
+
+<dom-module id="app-item">
+  <template>
+    <style include="paper-item-styles"></style>
+    
+    <!-- data -->
+    <!--- ->
+    <paper-icon-item>
+      <paper-ripple></paper-ripple>
+      <div class="avatar" slot="item-icon">
+        <paper-icon-button icon="vaadin:phone" alt="phone"></paper-icon-button>
+      </div>
+      <paper-item-body xtwo-line>
+        <div>Phone</div>
+        <!--- ->
+        <div secondary>Jan 17, 2014</div>
+        <!--- /->
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+      <!--- /->
+      <div>555-555-1234</div>
+    </paper-icon-item>
+    <!---->
+    
+    <!-- subheader -->
+    <!--- ->
+    <paper-item class="subheader">
+      <paper-item-body xtwo-line>
+        <div>Lead type</div>
+      </paper-item-body>
+      <!--- ->
+      <paper-icon-button icon="star" alt="favourite this!">
+      </paper-icon-button>
+      <!--- /->
+      <div>[[selected]]</div>
+    </paper-item>
+    <!---->
+    
+    <!-- data -->
+    <div hidden$="[[_computeIsSubheader(type)]]"
+         on-tap="_handleTap">
+      <paper-icon-item>
+        <paper-ripple recenters
+                      noink="[[_computeNoInk(type)]]"
+                      >
+        </paper-ripple>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="[[icon]]" alt="phone"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div hidden$="![[_computeHideInputText(type, inputType)]]">[[text]]</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+          <div hidden$="[[_computeHideInputText(type, inputType)]]">
+            <paper-input label="[[text]]" value="[[data]]"></paper-input>
+          </div>
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div hidden$="[[_computeHideData(type)]]">[[data]]</div>
+        <div hidden$="[[_computeHideInputCheckbox(type, inputType)]]">
+          <paper-checkbox></paper-checkbox>
+        </div>
+        <div hidden$="[[_computeHideInputToggle(type, inputType)]]">
+          <paper-toggle-button></paper-toggle-button>
+        </div>  
+      </paper-icon-item>
+    </div>
+
+    <!-- subheader -->
+    <div hidden$="[[!_computeIsSubheader(type)]]">
+      <paper-item class="subheader">
+        <paper-item-body xtwo-line>
+          <div>[[text]]</div>
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!">
+        </paper-icon-button>
+        <!---->
+        <div>[[data]]</div>
+      </paper-item>
+    </div>
+
+    <!-- buttons -->
+    <div hidden$="[[!_computeIsButtons(type)]]">
+      <paper-item class="buttons">
+        <!--- ->
+          <div class="avatar xblue" slot="item-icon">
+            <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+          </div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div>
+            <paper-button on-tap="_reset">Cancel</paper-button>
+            <paper-button on-tap="_save">Save</paper-button>
+          </div>
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>0/2</div>
+        <!---->
+      </paper-item>
+    </div>
+    
+  </template>
+
+  <script>
+    //class AppItem extends AppListMixin(Polymer.Element) {
+    class AppItem extends Polymer.Element {
+      static get is() { return 'app-item'; }
+
+      /**/
+			static get properties() { return {
+
+				entity: { // left edge
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				name: { // hidden
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				icon: { // left edge
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				text: { // left side
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				data: { // right side (or input.value)
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				urgent: { // make background red
+					type: Boolean,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+        
+        type: {
+          type: String, // default: 'output' | 'input' | 'menu-item' | 'subheader' | 'header' | 'buttons' | 'xurgent' | 'xaction'
+					notify: true,
+					//observer: '_typeChanged',
+          //value: () => 'vaadin:phone', //'star'
+        },
+
+				inputType: { // 'text', checkbox', 'toggle'
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+
+        // above replaces below
+
+        // dataField: { // no actions
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// subheader: { // make background grey
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// action: { // always dispatch event
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+        // end replace
+
+        detail: {
+          type: Object,
+          notify: true,
+          value: () => ({
+            entity: '',
+            name: '',
+            entity: '',
+            icon: '',
+            text: '',
+            data: '',
+            urgent: false,
+            type: '',
+            inputType: '',
+          }),
+        },
+
+      }}
+      /**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/**/
+
+      _computeNoInk(s) {
+        const TARGETS = [ 'input' , 'menu-item' , ]; // types we wish 'to ink'
+        let typeIsTarget = false; // default, hides ink
+        for (var target of TARGETS) { // 'for-of' loop
+          // console.log('target\n', target);
+          typeIsTarget = (s === target);
+          if (typeIsTarget) break;
+        }
+        let typeIsNotTarget = !typeIsTarget;
+        let out = typeIsNotTarget;
+        return out;
+      }
+
+      _computeHideInputTarget(target, type, inputType) {
+        let inputTypeIsTarget;
+        switch(type) {
+          case 'menu-item':
+            inputTypeIsTarget = (type === target);
+            break;
+          case 'output':
+            inputTypeIsTarget = (type === target);
+            break;
+          case 'input':
+            inputTypeIsTarget = (inputType === target);
+            // if(inputType === 'checkbox') {
+            //   console.log('Computing hide targets...');
+            //   console.log('out', out);
+            //   console.log('target', target);
+            //   console.log('type', type);
+            //   console.log('inputType', inputType);
+            //   console.log('inputTypeIsTarget', inputTypeIsTarget);
+            //   console.log('inputTypeIsNotTarget', inputTypeIsNotTarget);
+            // }
+            break;
+        }
+        const inputTypeIsNotTarget = !inputTypeIsTarget;
+        const out = inputTypeIsNotTarget;
+        // if(inputType === 'checkbox') {
+        //   console.log('Computing hide targets...');
+        //   console.log('out', out);
+        //   console.log('target', target);
+        //   console.log('type', type);
+        //   console.log('inputType', inputType);
+        //   console.log('inputTypeIsTarget', inputTypeIsTarget);
+        //   console.log('inputTypeIsNotTarget', inputTypeIsNotTarget);
+        // }
+        return out;
+      }
+
+      _computeHideData(type) {
+        const TARGET = 'output';
+        return this._computeHideInputTarget(TARGET, type);
+      }
+      _computeHideInputText(type, inputType) {
+        const TARGET = 'text';
+        return this._computeHideInputTarget(TARGET, type, inputType);
+      }
+
+      _computeHideInputCheckbox(type, inputType) {
+        const TARGET = 'checkbox';
+        return this._computeHideInputTarget(TARGET, type, inputType);
+      }
+
+      _computeHideInputToggle(type, inputType) {
+        const TARGET = 'toggle';
+        return this._computeHideInputTarget(TARGET, type, inputType);
+      }
+
+      // _computeIsHeader(s) {
+      //   return s === 'header';
+      // }
+
+      _computeIsSubheader(s) {
+        return s === 'subheader';
+      }
+
+      _computeIsButtons(s) {
+        return s === 'Buttons';
+      }
+
+      _handleTap(e) {
+        // console.log('I was tapped!');
+        // console.log('e\n', e);
+        return;
+
+        const detail = this.detail;
+        this._open(detail);
+
+        this.dispatch(event); // dispatch action event for all elements, regardless of type
+        const type = this.type;
+        if(type === 'input') this.save(data);
+        // Forego need to switch(type) by always dispatching event
+        // switch(type) {
+        //   case 'input':
+        //     this._save(data);
+        //     break;
+        //   case 'action': 
+        //     break;
+        //   default:
+        //     // code block
+        //     return;
+        // }
+      }
+
+      _open(detail) {
+        //this.dispatch('open', detail);
+      }
+
+    }
+
+    window.customElements.define(AppItem.is, AppItem);
+  </script>
+
+</dom-module>

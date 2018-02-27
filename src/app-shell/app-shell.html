@@ -1,0 +1,125 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../app-state/state-media.html">
+<!---->  
+<link rel="import" href="app-shell-mobile.html">
+<link rel="import" href="app-shell-tablet.html">
+<link rel="import" href="app-shell-desktop.html">
+
+<dom-module id="app-shell">
+  
+	<!--- ->
+  <template>
+		<style></style>
+		<media-query media-width="{{mediaWidth}}"></media-query>	
+		<template restamp is="dom-if" if="[[show1]]">
+		  <shell-1 user="[[user]]"
+							 media-width="[[mediaWidth]]"
+							 >
+			</shell-1>
+		</template>
+    <template restamp is="dom-if" if="[[show2]]">
+		  <shell-2 user="[[user]]"
+							 media-width="[[mediaWidth]]"
+							 >
+			</shell-2>
+		</template>
+    <template restamp is="dom-if" if="[[show3]]">
+		  <shell-3 user="[[user]]"
+							 media-width="[[mediaWidth]]"
+							 >
+			</shell-3>
+		</template> 
+  </template>
+	<!---->
+  <template>
+		<style></style>
+	  <!--- ->
+		<app-localstorage-document xlog xsession-only key="mediaWidth" data="{{mediaWidth}}"></app-localstorage-document>	
+	  <!---->
+	  <!-- state -->
+		<state-media media-width="{{mediaWidth}}"></state-media>
+	  <!---->
+		<template restamp is="dom-if" if="[[_showMobile]]" ><app-shell-mobile ></app-shell-mobile ></template>
+		<template restamp is="dom-if" if="[[_showTablet]]" ><app-shell-tablet ></app-shell-tablet ></template>
+		<template restamp is="dom-if" if="[[_showDesktop]]"><app-shell-desktop></app-shell-desktop></template>
+  </template>
+	<!---->
+
+  <script>
+
+    // performance logging
+    //window.performance && performance.mark && performance.mark('shop-app - before register');
+
+    class AppShell extends Polymer.Element {
+
+      static get is() { return 'app-shell'; }
+			
+			static get properties() { return {
+				/** /
+				user: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userChanged',
+        },
+				/**/
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					observer: '_mediaWidthChanged',
+				},
+				_showMobile: {
+					type: Boolean,
+					notify: true,
+				},
+				_showTablet: {
+					type: Boolean,
+					notify: true,
+				},
+				_showDesktop: {
+					type: Boolean,
+					notify: true,
+				},
+      }}
+
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+			
+			/** /
+			_userChanged(user) {
+				console.log('user', user);
+			}
+			/**/
+			
+			_mediaWidthChanged(n) {
+				//console.log('media-width', n);
+				this.set('_showMobile'  , n   < 2);
+				this.set('_showTablet'  , n === 2);
+				this.set('_showDesktop' , n === 3);
+				//console.log('showMobile'  , this._showMobile );				
+				//console.log('showTablet'  , this._showTablet );				
+				//console.log('showDesktop' , this._showDesktop);				
+			}
+		
+    }
+
+    customElements.define(AppShell.is, AppShell);
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,119 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-route.html">
+
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
+<link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
+<link rel="import" href="/src/app-views/view-inbox/view-inbox.html">
+<link rel="import" href="/src/app-views/view-archive/view-archive.html">
+<link rel="import" href="/src/app-views/view-contacts/view-contacts.html">
+<link rel="import" href="/src/app-views/view-settings/view-settings.html">
+<!--- ->
+<link rel="import" href="/src/app-views/view-feedback/view-feedback.html">
+<link rel="import" href="/src/app-views/view-help/view-help.html">
+<!--- ->
+<link rel="import" href="/src/app-views/view-account/view-account.html">
+<!---->
+
+<dom-module id="my-app">
+
+  <template>
+
+		<style></style>		
+		
+		<!-- state -->
+		<state-route route="{{route}}"></state-route>
+		
+		<!--- ->
+    Hello world
+		<!--- ->
+		<iron-pages selected="{{route}}">
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+    </iron-pages>
+		<!---->
+		
+		<iron-pages selected="{{route}}" xattr-for-selected="name">
+		  <!---->
+		  <view-dashboard name="view-dashboard"></view-dashboard>
+		  <!--- ->
+			<div>Outbox</div>
+		  <!---->
+		  <view-outbox    name="view-outbox"></view-outbox>
+		  <!--- ->
+			<div>Inbox</div>
+		  <!---->
+		  <view-inbox     name="view-inbox"></view-inbox>
+			<view-archive   name="view-archive"></view-archive>
+		  <view-contacts  name="view-contacts"></view-contacts>
+			<view-settings  name="view-settings"></view-settings>
+			<!--- ->
+		  <view-account   name="view-account"></view-account>
+			<!---->
+		  
+		  <!---->
+		  <view-feedback  name="view-feedback"></view-feedback>
+		  <view-help      name="view-help"></view-help>
+		  <view-logout    name="view-logout"></view-logout>
+		  <!---->
+    </iron-pages>
+		
+
+  </template>
+
+  <script>
+
+    class MyApp extends Polymer.Element {
+
+      static get is() { return 'my-app'; }
+
+			static get properties() { return {
+			  /** /
+				route: {
+					type: Number,
+					notify: true,
+					//observer: '_routeChanged',
+				},
+			  /**/
+      }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/** /
+			_routeChanged(route) {
+				console.log('route', route);
+			}
+			/**/
+			/**/
+			
+    }
+
+    customElements.define(MyApp.is, MyApp);
+
+  </script>
+
+</dom-module>

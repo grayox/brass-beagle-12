@@ -1,0 +1,496 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-app-settings.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+<link rel="import" href="/src/custom-elements/paper-item-zip.html">
+
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="app-menu.html">
+<!--- ->
+<link rel="import" href="app-list-mixin.html">
+
+<!--- ->
+Types of elements
+
+1. info only: boolean properties -> css style rules
+1.1. data field
+1.2. subheader
+1.3. urgent
+
+2. actions: primary then secondary -> event: 'tapped'
+2.1. action -> more action (e.g., send lead, receive lead, invite contact -> enter contact, add counties)
+2.2. check box -> dialogue -> info (e.g., text me -> text number)
+2.3. independent input -> dependent output (e.g., zip -> city, county, state)
+
+3. input only -> method: _save()
+3.1. enter a line of information (e.g., phone number, email)
+3.2. select items from a menu (check boxes) (e.g., lead type, counties list)
+3.3. paper-toggle-button
+<!---->
+
+<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+<!--- ->
+<state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+<!---->
+
+<dom-module id="app-item">
+  <template>
+    <style include="paper-item-styles"></style>
+    
+    <div on-tap="_onTap">
+
+      <!-- type: 'header' -->
+      <template is="dom-if" if="[[_computeTypeIsHeader(type)]]">
+        <div hidden$="[[!_computeTypeIsHeader(type)]]">
+          <paper-item class="header">
+            <!--- ->
+            <paper-ripple recenters></paper-ripple>
+            <!---->
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <div>[[dataString]]</div>
+          </paper-item>
+        </div>
+      </template>
+  
+      <!-- type: 'subheader' -->
+      <template is="dom-if" if="[[_computeTypeIsSubheader(type)]]">
+        <div hidden$="[[!_computeTypeIsSubheader(type)]]">
+          <paper-item class="subheader">
+            <!--- ->
+            <paper-ripple recenters></paper-ripple>
+            <!---->
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <div>[[dataString]]</div>
+          </paper-item>
+        </div>
+      </template>
+  
+      <!-- type: 'output' -->
+      <template is="dom-if" if="[[_computeTypeIsOutput(type)]]">
+        <div hidden$="[[!_computeTypeIsOutput(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <div>[[dataString]][[dataNumber]]</div>
+          </paper-icon-item>
+        </div>
+      </template>
+      
+      <!-- type: 'menu-item' -->
+      <template is="dom-if" if="[[_computeTypeIsMenuItem(type)]]">
+        <div hidden$="[[!_computeTypeIsMenuItem(type)]]">
+          <paper-icon-item xtoggles name="[[name]]">
+            <paper-ripple recenters></paper-ripple>    
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+              <!--- ->
+              <div secondary>You are a real estate agent</div>
+              <!---->
+            </paper-item-body>
+            <!--- ->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <!---->
+            <iron-icon class="menu-icon-selected"
+                       hidden$="{{!selected}}"
+                       icon="star"
+                       xicon="vaadin:check"
+                       >
+            </iron-icon>
+          </paper-icon-item>
+        </div>
+      </template>
+  
+      <!-- type: 'input-menu' -->
+      <template is="dom-if" if="[[_computeTypeIsInputMenu(type)]]">
+        <div hidden$="[[!_computeTypeIsInputMenu(type)]]">
+          <app-menu subheader="[[label]]"
+                    items="[[menuItems]]"
+                    >
+          </app-menu>
+        </div>
+      </template>
+
+      <!-- type: 'input-text' -->
+      <template is="dom-if" if="[[_computeTypeIsInputText(type)]]">
+        <div hidden$="[[!_computeTypeIsInputText(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <paper-input label="[[label]]" value="[[dataString]]"></paper-input>
+            </paper-item-body>
+            <!--- ->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <!---->
+          </paper-icon-item>
+        </div>
+      </template>      
+  
+      <!-- type: 'input-zip' -->
+      <template is="dom-if" if="[[_computeTypeIsInputZip(type)]]">
+        <div hidden$="[[!_computeTypeIsInputZip(type)]]">
+          <paper-item-zip xon-valid-zip="x_onValidZip"
+                          xzip-code-object="{{xdataZip}}"
+                          >
+          </paper-item-zip>
+        </div>
+      </template>
+      
+      <!-- type: 'checkbox' -->
+      <template is="dom-if" if="[[_computeTypeIsCheckbox(type)]]">
+        <div hidden$="[[!_computeTypeIsCheckbox(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <paper-checkbox checked="{{dataBoolean}}"></paper-checkbox>
+          </paper-icon-item>
+        </div>
+      </template>
+  
+      <!-- type: 'toggle-button' -->
+      <template is="dom-if" if="[[_computeTypeIsToggleButton(type)]]">
+        <div hidden$="[[!_computeTypeIsToggleButton(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <paper-toggle-button></paper-toggle-button>
+          </paper-icon-item>
+        </div>
+      </template>
+      
+      <!-- type: 'button-save' -->
+      <template is="dom-if" if="[[_computeTypeIsButtonSave(type)]]">
+        <div hidden$="[[!_computeTypeIsButtonSave(type)]]">
+          <paper-item class="buttons">
+            <xpaper-ripple recenters></xpaper-ripple>
+            <paper-item-body xtwo-line>
+              <div>
+                <paper-button class="button-cancel" on-tap="_reset">Cancel</paper-button>
+                <paper-button class="button-save" on-tap="_save">Save</paper-button>
+              </div>
+            </paper-item-body>
+          </paper-item>
+        </div>
+      </template>
+
+    </div>
+    
+  </template>
+
+  <script>
+    //class AppItem extends AppListMixin(Polymer.Element) {
+    class AppItem extends Polymer.Element {
+      static get is() { return 'app-item'; }
+
+      /**/
+			static get properties() { return {
+
+        appSettings: {
+          type: Object,
+          notify: true,
+        },
+
+        userSettings: {
+          type: Object,
+          notify: true,
+        },
+
+				view: { // hidden; for database save methods
+					type: String,
+					//notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				name: { // hidden; for database node paths
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+        
+        type: { // for markup
+          // default: 'header' | 'subheader' | 'output' | 'input-text' | 'menu-item'
+          // 'checkbox' | 'toggle-button' | 'button-save' | 'xurgent' | 'xaction'
+          type: String,
+          notify: true,
+					//observer: '_typeChanged',
+          //value: () => 'vaadin:phone', //'star'
+        },
+
+				icon: { // left edge
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+				label: { // left side
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+        menu: {
+          type: String,
+          // notify: true,
+        },
+
+        menuItems: {
+          type: Array,
+          notify: true,
+        },
+
+        selected: {
+          type: Boolean,
+          notify: true,
+          value: () => false,
+        },
+
+				data: { // right side
+					type: Object,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+          computed: '_computeData(appSettings, userSettings, view, name)',
+				},
+
+				dataString: { // right side (or input.value)
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+				
+        // dataNumber: { // right side (or input.value)
+				// 	type: Number,
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+        //   //value: () => 'vaadin:phone', //'star'
+				// },
+
+				// dataBoolean: { // right side (or input.value)
+				// 	type: Boolean,
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+        //   // value: () => true,
+				// },
+
+        // dataZip: { // right side (or input.value)
+				// 	type: Object,
+				// 	notify: true,
+				// 	observer: '_dataZipChanged',
+        //   //value: () => 'vaadin:phone', //'star'
+				// },
+
+				// urgent: { // make background red
+				// 	type: Boolean,
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// inputType: { // 'text', checkbox', 'toggle'
+				// 	type: String,
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+        // above replaces below
+
+        // dataField: { // no actions
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// subheader: { // make background grey
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// action: { // always dispatch event
+				// 	type: Boolean,
+				// 	//notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+        // end replace
+
+        // detail: {
+        //   type: Object,
+        //   notify: true,
+        //   value: () => [{
+        //     urgent: false,
+        //     type: 'input-text',
+        //     name: 'input',
+        //     entity: 'baz',
+        //     icon: 'star',
+        //     label: 'foobar',
+        //     dataString: 'lorem ipsum dolor',
+        //   }],
+        // },
+
+      }}
+      
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+     
+      _computeTypeIsTarget(type, target) {
+        const typeIsTarget = (type === target);
+        // const typeIsNotTarget = !typeIsTarget;
+        const out = typeIsTarget;
+        return out;
+      }
+
+      _computeTypeIsHeader       (s) { return this._computeTypeIsTarget ( s, 'header'        ) }
+      _computeTypeIsSubheader    (s) { return this._computeTypeIsTarget ( s, 'subheader'     ) }
+      _computeTypeIsOutput       (s) { return this._computeTypeIsTarget ( s, 'output'        ) }
+      _computeTypeIsMenuItem     (s) { return this._computeTypeIsTarget ( s, 'menu-item'     ) }
+      _computeTypeIsInputText    (s) { return this._computeTypeIsTarget ( s, 'input-text'    ) }
+      _computeTypeIsInputMenu    (s) { return this._computeTypeIsTarget ( s, 'input-menu'    ) }
+      _computeTypeIsInputZip     (s) { return this._computeTypeIsTarget ( s, 'input-zip'     ) }
+      _computeTypeIsCheckbox     (s) { return this._computeTypeIsTarget ( s, 'checkbox'      ) }
+      _computeTypeIsToggleButton (s) { return this._computeTypeIsTarget ( s, 'toggle-button' ) }
+      _computeTypeIsButtonSave   (s) { return this._computeTypeIsTarget ( s, 'button-save'   ) }
+
+      // _handleTap(e) {
+      //   // console.log('I was tapped!');
+      //   // console.log('e\n', e);
+      //   return;
+
+      //   const detail = this.detail;
+      //   //this._open(detail);
+
+      //   this.dispatch(event); // dispatch action event for all elements, regardless of type
+      //   const type = this.type;
+      //   if(type === 'input') this.save(data);
+      //   // Forego need to switch(type) by always dispatching event
+      //   // switch(type) {
+      //   //   case 'input':
+      //   //     this._save(data);
+      //   //     break;
+      //   //   case 'action': 
+      //   //     break;
+      //   //   default:
+      //   //     // code block
+      //   //     return;
+      //   // }
+      // }
+      
+      // _dataZipChanged(o) {
+      //   console.log('data-zip\n', o);
+      // }
+
+      // _onValidZip(e) {
+      //   console.log('data-zip\n', e);
+      //   const d = e.detail;
+      //   this.set('dataZip', d);
+      // }
+
+      _open() {
+        // const detail = this.detail;
+        const detail = {
+          detail: this.detail,
+          menu: this.menu,
+        };
+        // console.log('detail', detail);
+			  this._dispatchEvent('tapped-app-item', detail);
+      }
+
+      _onTap() {
+        this._open();
+      }
+
+			_dispatchEvent(name, detail) {
+				//this.fire('name', detail);
+				// const n = 'save-app-item';
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: detail,
+				};
+				const d = new CustomEvent(name, o);
+        this.dispatchEvent(d);
+			}
+
+      _save(e) {
+        //console.log('e\n', e);
+        // this._dispatchEvent('save-app-item');
+        const d = this.dataString;
+        console.log('d\n', d);
+        this._dispatchEvent('detail-save-button', 'd');
+      }
+
+      _reset(e) {
+        // console.log('e\n', e);
+      }
+
+      _computeData(app, user, view, name) {
+        if(user && user[view] && user[view][name] && user[view][name]['data']) {
+          const out = user[view][name]['data'];
+        } else if(app && app[view] && app[view][name] && app[view][name]['data']) {
+          const out = app[view][name]['data'];
+        } else {
+          return;
+        }
+        console.log('out\n', out);
+        return out;
+      }
+
+    }
+
+    window.customElements.define(AppItem.is, AppItem);
+  </script>
+
+</dom-module>

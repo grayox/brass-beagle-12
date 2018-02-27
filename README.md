@@ -24,25 +24,69 @@ polymer lint --verbose
 ```
 "lint": { "rules": ["polymer-1", polymer-2", polymer-2-hybrid", ] }
 
-
 #### Cloning a github repo
 https://github.com/Polymer/shop
-```
 # Using CLI
+```
 mkdir shop
 cd shop
 polymer init shop
+```
 
 # Or cloning direct from GitHub
+```
 git clone https://github.com/Polymer/shop.git
 cd shop
 bower install
 ```
 
+#### Code References
+
+[Polymer Shop Demo](https://github.com/Polymer/shop.git)
+[Vaadin Velo Theme](https://demo.vaadin.com/valo-theme/#!comboboxes)
+[Vaadin CheapTickets Demo](https://demo.vaadin.com/dashboard/#!schedule)
+[CSS Grid Demo: Source Code](https://github.com/drewharvey/css-grid-example)
+[CSS Grid Demo: Article](https://vaadin.com/blog/-/blogs/responsive-design-made-easy-with-css-grid-and-web-components)
+[CSS Grid Demo: Supplemental Reading](https://css-tricks.com/snippets/css/complete-guide-grid/)
+
+[v2.0 Element Definition](https://raw.githubusercontent.com/Polymer/polymer/master/img/migration.png)
+[v2.0 Cheat Sheet](https://meowni.ca/posts/polymer-2-cheatsheet/)
+
 ## Version History
 
+### v09
+1. Implemented standardized <app-view> element to complement standard <app-item>.
+2. Made all views consistently styled.
+3. Created second app meta data file (first was /src/app-data/app-data.json) called /src/app-data-app-views.json.
+4. TODO:
+   a. Refactor to solve the following problems.
+   b. It's "messy" getting a solid 'items' object to populate the <app-view> elements.
+   c. Maybe create another element that does the heavy computing. Then access results via databindings.
+   d. app-views.json is redundantly processed by every call of <app-view> (one per view, totalling 8).
+   e. Refactor by centralizing fetching settings, processing app-views.json and computing <app-view> items.
+
+### v08
+1. Solved for standardized content styling by creating custom <app-item> element.
+2. Implemented <app-item> throught the app to hold content, display information on both the list and detail views.
+3. Implemented split-screen style viewing of list items on left and detail of selected item on right side of view.
+4. TODO:
+   a. Automate data retieval to fetch then push data from database to display and internal <app-item> elements.
+   b. Consider adding internal references to data node location by adding, say, a "name" property to the <app-list> or <app-view> elements. Then passing that "name" value to the <app-items>.
+
+### v07
+1. Implemented shell.
+2. Implemented <settings>.
+3. Implemented data architechture and data flow to Firebase.
+4. Implemented Material Design specs and professional app themes (e.g., Velo from Vaadin).
+5. Implemented extensive use of <paper-item> and lists to give 'mobile' look-feel.
+6. Extend mobile look-feel to tablet and desktop.
+7. Implemented and templated use of Cloud Functions for Firebase to automate server tasks.
+8. TODO: Refactor UI/UX to:
+   a. more closely resemble standard Android apps (e.g., Settings, Gmail, Youtube, etc.).
+   b. navigate with maximum use of 'lists within lists' nesting concept seen in standard Android apps.
+
 ### v06
-1. Clone Shop app.
+1. Clone Shop app. https://github.com/Polymer/shop
 2. Begin integration.
 3. Create app shell: `app-shell.html`
 4. TODO: Complete shell and integration.

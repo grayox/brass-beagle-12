@@ -1,0 +1,182 @@
+{
+  "subhead-status": {
+    "seq": 0,
+    "name": "subhead-status",
+    "type": "subheader",
+    "label": "Engagement status"
+  },
+  "req-info": {
+    "seq": 1,
+    "name": "req-info",
+    "type": "output",
+    "icon": "vaadin:warning",
+    "label": "Required information",
+    "dataString": "0/2"
+  },
+  "subhead-filters": {
+    "seq": 2,
+    "name": "subhead-filters",
+    "type": "subheader",
+    "label": "Lead filters"
+  },
+  "lead-type": {
+    "seq": 3,
+    "name": "lead-type",
+    "type": "output",
+    "icon": "track-changes",
+    "label": "Your type of services",
+    "dataNumber": 1
+  },
+  "counties-list": {
+    "seq": 4,
+    "name": "counties-list",
+    "type": "output",
+    "icon": "track-changes",
+    "label": "Counties in your territory",
+    "dataNumber": 1
+  },
+  "subhead-contact": {
+    "seq": 5,
+    "name": "subhead-contact",
+    "type": "subheader",
+    "label": "Location & contact details"
+  },
+  "state": {
+    "seq": 6,
+    "name": "state",
+    "type": "output",
+    "icon": "vaadin:flag",
+    "label": "State",
+    "dataString": "Mississippi",
+    "detail": {
+      "zip-detail": {
+        "seq": 0,
+        "name": "zip-detail",
+        "type": "input-zip",
+        "icon": "vaadin:pin",
+        "label": "pin",
+        "dataString": "90210"
+      }
+    }
+  },
+  "county": {
+    "seq": 7,
+    "name": "county",
+    "type": "output",
+    "icon": "vaadin:map-marker",
+    "label": "County",
+    "dataString": "Biloxi",
+    "detail": {
+      "county-detail": {
+        "seq": 0,
+        "name": "county-detail",
+        "type": "input-zip",
+        "icon": "vaadin:pin",
+        "label": "pin",
+        "dataString": "90210"
+      }
+    }
+  },
+  "zip": {
+    "seq": 8,
+    "name": "zip",
+    "type": "output",
+    "icon": "vaadin:pin",
+    "label": "Zip",
+    "dataString": "12345",
+    "detail": {
+      "zip-detail": {
+        "seq": 0,
+        "name": "zip-detail",
+        "type": "input-zip",
+        "icon": "vaadin:pin",
+        "label": "pin",
+        "dataString": "90210"
+      }
+    }
+  },
+  "phone": {
+    "seq": 9,
+    "name": "phone",
+    "type": "output",
+    "icon": "vaadin:phone",
+    "label": "Phone",
+    "dataString": "555-555-1212",
+    "detail": {
+      "phone-detail": {
+        "seq": 0,
+        "name": "phone-detail",
+        "type": "input-text",
+        "icon": "vaadin:phone",
+        "label": "Phone",
+        "dataString": "555-555-1212"
+      },
+      "buttons": {
+        "seq": 1,
+        "name": "buttons",
+        "type": "button-save"
+      }
+    }
+  },
+  "email": {
+    "seq": 10,
+    "name": "email",
+    "type": "output",
+    "icon": "vaadin:envelope",
+    "label": "Email",
+    "dataString": "myemailaddress@example.com",
+    "detail": {
+      "email-detail": {
+        "seq": 0,
+        "name": "email-detail",
+        "type": "input-text",
+        "icon": "vaadin:envelope",
+        "label": "Email",
+        "dataString": "myemailaddress@example.com"
+      },
+      "buttons": {
+        "seq": 1,
+        "name": "buttons",
+        "type": "button-save"
+      }
+    }
+  },
+  "subhead-auto": {
+    "seq": 11,
+    "name": "subhead-auto",
+    "type": "subheader",
+    "label": "Auto actions for new incoming leads"
+  },
+  "notify-you-text": {
+    "seq": 12,
+    "name": "notify-you-text",
+    "type": "checkbox",
+    "icon": "communication:textsms",
+    "label": "Notify you via text",
+    "dataBoolean": true
+  },
+  "notify-you-email": {
+    "seq": 13,
+    "name": "notify-you-email",
+    "type": "checkbox",
+    "icon": "communication:email",
+    "label": "Notify you via email",
+    "dataBoolean": false
+  },
+  "auto-text-leads": {
+    "seq": 14,
+    "name": "auto-text-leads",
+    "type": "checkbox",
+    "icon": "vaadin:bolt",
+    "label": "Auto text your new leads",
+    "dataBoolean": true
+  },
+  "auto-email-leads": {
+    "seq": 15,
+    "name": "auto-email-leads",
+    "type": "checkbox",
+    "icon": "vaadin:magic",
+    "label": "Auto email your new leads",
+    "dataBoolean": false
+  }
+}

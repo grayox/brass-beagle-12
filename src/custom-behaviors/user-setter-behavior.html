@@ -1,0 +1,125 @@
+<!--- ->
+Using email addresses as keys in Firebase requires encoding.
+This is because Firebase does not allow keys to contain the dot (.) character.
+Best practice is to substitute all dots (.) with commas (,).
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+<script>
+  //(function() {
+    //'use strict';
+	
+		// https://www.polymer-project.org/1.0/docs/tools/documentation
+		/**
+		 * Behavior that highlights stuff.
+		 *
+		 * @polymerBehavior
+		 */
+	
+		var MyBehaviors = MyBehaviors || {};
+		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
+		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
+		MyBehaviors.UserSetterBehaviorImpl = {
+
+			properties: {
+				userRemote: {
+					type: Object,
+					//computed: '_computeUserRemote(user)',
+					//observer: '_userRemoteChanged',
+					//notify: true,
+					statePath: 'userRemote',
+				},
+				/**/
+  			userLocal: {
+					type: Object,
+					//computed: '_computeUserLocal(user)',
+					//observer: '_userLocalChanged',
+					//notify: true,
+					statePath: 'userLocal',
+				},
+				/**/
+   			userBalances: { // .net, .up, .down
+					type: Object,
+					statePath: 'userBalances',
+				},
+				/**/
+				// App specific properties
+				userAvailableLeadsKeys: {
+					type: Object,
+					statePath: 'userAvailableLeadsKeys',
+				},
+				userAvailableLeadsCount: {
+					type: Number,
+					statePath: 'userAvailableLeadsCount',
+				},
+				/**/
+      },
+			
+			/** /
+			attached: function() {
+			},
+			/** /
+			_userLocalChanged: function(userLocal) {
+				console.log('userLocal', userLocal);
+			},
+			/**/
+			writeUser2Firebase: function(type, newData) {
+				// type: 'local' | 'remote'
+				//if (form.validate()) {
+					//this.item.total = parseFloat(this.item.total);
+					//console.log('item', this.item);
+					//this.fire('item-save', this.item);
+					//this.fire('item-save', {
+				//var d = new Date();
+				var n = Date.now(); //d.getTime(); // 1488748236496
+				var t = { timestamp: n };
+				//console.log('userLocal', this.userLocal);
+				var userLocal = this.userLocal ? this.userLocal : {} ;
+				var entity = ['user', type].join('-'); // 'user-local'
+				var data = Object.assign(userLocal, newData, t);
+				//console.log('userLocal', userLocal);
+				//console.log('data', data);//return;
+				//delete data.user;
+				//delete data.data;
+				/**/
+				this.fire('item-method', {
+					method: 'save',
+					entity: entity, //'user-local',
+					//data: this.item,
+					data: data,
+				});
+			},
+			/**/
+			updateUser: function(type, data) {
+				switch (type) {
+					case 'local':
+						this.dispatch('updateUserRemote', data);
+						break;
+					case 'remote':
+						this.dispatch('updateUserRemote', data);
+						break;
+					default:
+						console.error('Unrecognized action type', type);
+						//return initialState;
+				}
+			},
+			/**/
+		};
+		
+    MyBehaviors.UserSetterBehavior = [
+			ReduxBehavior,
+			AsyncActionsBehavior,
+      MyBehaviors.UserSetterBehaviorImpl,
+    //MyBehaviors.AppStorageBehavior,
+    //MyBehaviors.FirebaseCommonBehavior,
+    ];
+  //})();
+</script>

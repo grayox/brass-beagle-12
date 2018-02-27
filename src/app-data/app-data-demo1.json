@@ -1,0 +1,141 @@
+{							
+	"comment-breakpoints": "alternate: 575 700 840 900 1125",
+	"breakpoints": "500 800 1100",
+	"comments": [
+		"emailServerUrl is link to Google Apps Script Web App",
+		"Following comments refer to 'type' property",
+		"create : Writes new data object to Firebase; 'key' property generates unique Firebase key via .push() method",
+		"index : Writes created key and timestamp to target node; minimizes byte count over-the-wire and saves key-only index by reducing data value to timestamp",
+		"update : Writes data to existing target node",
+		"data : data object of update action",
+		"delete : Removes object from target node"
+	],
+	"emailServerUrl": "https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec",
+	"firebase": {
+		"authDomain": "green-comet.firebaseapp.com",
+		"databaseUrl": "https://green-comet.firebaseio.com/",
+		"apiKey": "AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+	},
+	"comment-views": "Reminder: After editing pages, manually edit my-app.html (previously loggedin-view.html) to match pages order sequence",
+	"views": [
+		{ "label": "Dashboard" , "name": "view-dashboard" , "icon": "vaadin:dashboard"      } ,
+		{ "label": "Inbox"     , "name": "view-inbox"     , "icon": "vaadin:cloud-download" } ,
+		{ "label": "Outbox"    , "name": "view-outbox"    , "icon": "vaadin:cloud-upload"   } ,
+		{ "label": "Account"   , "name": "view-account"   , "icon": "vaadin:user"           }
+	],
+	"entities": {
+		"user-remote": {
+			"init": "_initUser('remote', e)", "comment": "Needs 'init' property if no 'key' property",
+			"paths": [
+				{
+					"comments": [
+						"Remote | Record user remote",
+						"Path also set at item.methods._initUser()"
+					],
+					"type": "create",
+					"path": ["users", "~@this.userRemote.uid@~", "remote"]
+				}, {
+					"comments": [
+						"----------Entities above this line have been implemented----------",
+						"Lineage | Memorialize and record network ancestry (descent from root node) of current user"
+					],
+					"xpath-1": ["users", "~@this.userRemote.uid@~", "remote", "~@this.newPostKey@~"],
+					"xpath-2": ["users", "~@this.userRemote.uid@~", "lineage", "~@parent.user.uid.lineage.push(inviter)@~"]
+				}, {
+					"comment": "Children | Add current user to list of child nodes of the parent",
+					"xpath": ["users-children", "~@parent.user.uid@~", "~@this.userRemote.uid@~"]
+				}, {
+					"comments": [
+						"Add flag to initial data (inviter/invitee combo) if user has already been 'initialized'",
+						"Need to check flag upon login and initialize user iff no flag"
+					],
+					"xpath": ["emails", "~@this.userRemote.uid@~", "user-initialized"]
+				}, {
+					"comment": "Add flag to initial data (invitation key) if user has already been 'initialized'",
+					"xpath": ["invitations", "~@this.key@~", "user-initialized"]
+				}, {
+					"comment": "----------Paths above this line have been thought through----------"
+				}, {
+					"xpath": ["user-email-keys", "~@this.userRemote.uid@~", "~@newPostKey@~"]
+				}
+			]
+		},
+		"user-local": {
+			"init": "_initUser('local', e)", "comment-1": "Needs 'init' property if no 'key' property",
+			"page": "user-data", "comment-2": "page property corresponds to 'id' (or 'name') in loggedin-view.html; for closing dialog",
+			"xkey": "user-local",
+			"paths": [
+				{
+					"type": "create",
+					"path": ["users", "~@this.userRemote.uid@~", "local", "~@this.newPostKey@~"]
+				}
+			]
+		},
+		"user-balances": {
+			"initValues": {
+				"net": 0,
+				"up": 0,
+				"down": 0
+			},
+			"init": "_initUser('balances', e)", "comment-1": "Needs 'init' property if no 'key' property",
+			"page": "user-data", "comment-2": "page property corresponds to 'id' (or 'name') in loggedin-view.html; for closing dialog",
+			"xkey": "user-balances",
+			"paths": [
+				{
+					"type": "create",
+					"path": ["users", "~@this.userRemote.uid@~", "balances"]
+				}
+			]
+		},
+		"lead-sent": {
+			"page": "view-outbox", "comment": "page property corresponds to id in loggedin-view.html; for closing dialog",
+			"key": "leads",
+			"paths": [
+				{
+					"type": "create",
+					"path": ["leads", "~@this.newPostKey@~"]
+				}, {
+					"type": "create",
+					"path": ["user-leads-sent", "~@this.userRemote.uid@~", "~@this.newPostKey@~"]
+				}, {
+					"type": "index",
+					"path": ["leads-state-county-category-index", "~@this.data.state@~", "~@this.data.county@~", "~@this.data.category@~", "~@this.newPostKey@~"]
+				}, {
+					"type": "index",
+					"path": ["leads-emails", "~@this.emailKey@~", "~@this.newPostKey@~"]
+				}, {
+					"comment": "----------Paths above this line have been implemented----------",
+					"xpath": ["leads-state-county", "~@data.state@~", "~@data.county@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"comment": "----------Paths above this line have been thought through----------"
+				}, {
+					"xpath": ["leads-zip", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"xpath": ["leads-state-county-zip", "~@data.state@~", "~@data.county@~", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}, {
+					"xpath": ["leads-state-county-city-zip", "~@data.state@~", "~@data.county@~", "~@data.city@~", "~@data.zip@~", "~@data.category@~", "~@newPostKey@~"]
+				}
+			]
+		},
+		"lead-received": {
+			"read": ["leads", "~@this.data.key@~"],
+			"page": "view-inbox", "comment": "page property corresponds to id in loggedin-view.html; for closing dialog",
+			"paths": [
+				{
+					"type": "update",
+					"path": ["leads", "~@this.data.key@~", "received"],
+					"data": {
+						"user": "~@this.userRemote.uid@~",
+						"timestamp": "~@this.timestamp@~"
+					}
+				}, {
+					"type": "create",
+					"path": ["user-leads-received", "~@this.userRemote.uid@~", "~@this.data.key@~"]
+				}, {
+					"type": "delete",
+					"path": ["leads-state-county-category-index", "~@this.readData.state@~", "~@this.readData.county@~", "~@this.readData.category@~", "~@this.data.key@~"]
+				}
+			]
+		}
+	}
+}

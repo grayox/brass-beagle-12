@@ -1,0 +1,209 @@
+<!---->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../redux-store/redux-store.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+
+<!-- Edit -->
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<!-- endEdit -->
+
+<dom-module id="toolbar-panel-buttons">
+	<style>
+    :host {
+    }
+		/* button * /
+		/* http://www.w3schools.com/css/css3_animations.asp * /
+		@-webkit-keyframes slide-right { /* Chrome, Safari, Opera * /
+			  0% { right: 200px; opacity: 0; -webkit-transform: rotateY( 90deg); }
+			100% { right:   0  ; opacity: 1; -webkit-transform: rotateY(  0deg); }
+		}
+		@keyframes slide-right { /* Standard syntax * /
+			  0% { right: 200px; opacity: 0;         transform: rotateY( 90deg); }
+			100% { right:   0  ; opacity: 1;         transform: rotateY(  0deg); }
+		}
+		/** /
+		#b01 { animation-delay: 1.24s; }
+		#b02 { animation-delay: 1.20s; }
+		#b03 { animation-delay: 1.12s; }
+		#b04 { animation-delay: 0.96s; }
+		#b05 { animation-delay: 0.64s; }
+		/**/
+		.light {
+			opacity: 0.6;
+			font-weight: 100;
+		}
+		paper-icon-button {
+			/** /
+			color: var(--icon-color, --paper-orange-500); Removed default because icons might handle change of background
+			/**/
+			color: var(--icon-color, white);
+			cursor: pointer;
+			border-radius: 50%;
+			/** /
+			padding: 1em;
+			height: 4em;
+			width: 4em;
+			/* animations * /
+			position: relative;
+			animation-delay: 1s;
+			animation-name: slide-right;
+			-webkit-animation-name: slide-right; /* Chrome, Safari, Opera * /
+			animation-duration: .8s;
+			-webkit-animation-duration: .8s; /* Chrome, Safari, Opera * /
+			animation-timing-function: ease-in; /* none linear ease ease-in ease-out ease-in-out * /
+			animation-fill-mode: both;
+			/* transitions */
+			-moz-transition:    .5s;
+			-webkit-transition: .5s;
+			-o-transition:      .5s;
+			transition:         .5s;
+		}
+		paper-icon-button[selected=true] { /*Don't use :hover because :hover condition remains true after clicking followed by page reload*/
+			/** /
+			color: var(--icon-color-hover, --paper-grey-500);
+			/**/
+			opacity: 0.67;
+			/** /
+			background-color: rgba(0,0,0,0.3);
+			/**/
+			background-color: rgba(255, 255, 255, 0.3);
+			/**/
+		}
+	</style>
+	<template>
+		<div xclass="layout horizontal row wrap center-justified flex-center-align">
+			<template is="dom-repeat" items="[[buttons]]">
+			  <span>
+					<paper-icon-button id$="[[item.id]]"
+														 icon="[[item.icon]]"
+														 on-tap="action"
+														 on-mouseover="_handleIn"
+														 on-mouseout="_handleOut"
+														 hidden$="[[_computeHidden(mediaWidth, item.showpoint)]]"
+														 >
+					</paper-icon-button>
+					<paper-tooltip position="left">[[item.name]]</paper-tooltip>
+			  </span>
+			</template>
+			<span on-tap="show">
+			  <span class="light"
+							hidden$="[[!_computeShow(mediaWidth)]]"
+							>[[user.displayName]]</span>
+			  <span class="light"
+							hidden$="[[_computeShow(mediaWidth)]]"
+							>[[trunc]]</span>
+				<paper-tooltip position="left">[[user.email]]</paper-tooltip>
+			</span>
+		</div>
+	</template>
+	
+				<!-- Edit - ->
+				<span>
+        	<paper-icon-button icon="power-settings-new" on-tap="_logout"></paper-icon-button>
+					<paper-tooltip position="left">logout</paper-tooltip>
+				</span>
+				<span>
+				  <paper-icon-button icon="info-outline" on-tap="_openInfoWindow"></paper-icon-button>
+					<paper-tooltip position="left">info</paper-tooltip>
+				</span>
+				<span>
+				  <paper-icon-button icon="settings" on-tap="_openInfoWindow"></paper-icon-button>
+					<paper-tooltip position="left">settings</paper-tooltip>
+				</span>
+				<span>
+        	<paper-icon-button icon="account-circle" on-tap="_openInfoWindow"></paper-icon-button>
+					<paper-tooltip position="left">account</paper-tooltip>
+				</span>
+				<!-- endEdit -->
+
+  <script>
+    (function() {
+      //'use strict';
+      Polymer({
+				
+        is: 'toolbar-panel-buttons',
+				behaviors: [
+					ReduxBehavior,
+				],				
+				//
+				properties: {
+					trunc: String,
+					mediaWidth: {
+						type: Number,
+						//notify: true,
+						statePath: 'mediaWidth',
+					},
+					mediaWidthString: {
+						type: String,
+						notify: true,
+					},
+					user: {
+            type: Object,
+            notify: true,
+          },
+					buttons: {
+						type: Array,
+            notify: true,
+						value: function() {
+							return [
+								{ showpoint: 0 , id: 'b0', name: 'logout'   , icon: 'power-settings-new' , } ,
+								{ showpoint: 1 , id: 'b1', name: 'info'     , icon: 'info-outline'       , } ,
+								{ showpoint: 2 , id: 'b2', name: 'settings' , icon: 'settings'           , } ,
+								{ showpoint: 3 , id: 'b3', name: 'account'  , icon: 'account-circle'     , } ,
+							];
+						},
+					},
+				},
+				attached: function() {
+					this.async(function() {
+						if(this.user && this.user.displayName) {
+							this.set('trunc', this.user.displayName.slice(0, 2) + '...');
+						} else {
+							this.set('trunc', '');
+						}
+          }/*.bind(this)*/, 100);
+				},
+				_computeHidden: function(mediaWidth, showpoint) {
+					return mediaWidth < showpoint;
+				},
+				_computeShow: function(n) {
+					return !!n;
+				},
+				_handleIn: function(e) {
+					var r = e.model.item;
+				  var s = this.$$('#' + r.id);
+					s.setAttribute('selected', true);
+				},
+				/**/
+				_handleOut: function(e) {
+					var r = e.model.item;
+				  var s = this.$$('#' + r.id);
+					s.setAttribute('selected', false);
+				},
+				/**/
+				action: function(e) {
+					//Polymer.dom(e).rootTarget.getAttribute('data-provider');
+					var r = e.model.item;
+					//console.log('r', r);
+					this.fire(r.name, r);
+					//console.log('user', this.user);
+				},
+				/**/
+				show: function() {
+					console.log('user', this.user);
+				},
+				/**/
+      });
+    })();
+  </script>
+</dom-module>

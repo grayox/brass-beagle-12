@@ -1,0 +1,73 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<dom-module id="state-user-remote">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="user-photo-url" data="{{userPhotoUrl}}" ></app-localstorage-document>	
+  </template>
+
+  <script>
+    class StateUserRemote extends Polymer.Element {
+      static get is() { return 'state-user-remote'; }
+
+      static get properties() { return {
+				userRemote: {
+					// initial value fetched by app-main.html > firebase-auth.user > path.
+					type: Object,
+					notify: true,
+					//observer: '_userRemoteChanged',
+				},
+				userPhotoUrl: {
+					type: String,
+					notify: true,
+					computed: '_computeUserPhotoUrl(userRemote)',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+			
+			/** /
+			_userRemoteChanged(userRemote) {
+				//console.log('userRemote', userRemote);
+				//this.set('userPhotoUrl', this._computeUserPhotoUrl(userRemote));
+				//console.log('userPhotoUrl', this.userPhotoUrl);
+			}
+			/**/
+			_computeUserPhotoUrl(userRemote) {
+				//console.log('user-remote', userRemote);
+				//console.log('userPhotoUrl', user.providerData);
+				//console.log('userPhotoUrl', user.providerData[0].photoUrl); // does not work
+				//console.log('userPhotoUrl', this.get(['userRemote.providerData', 0])); // works
+				//console.log('userPhotoUrl', userRemote.providerData.0); // does not work
+				//console.log('userPhotoUrl', 'userRemote.providerData.0'); // does not work
+				//console.log('userPhotoUrl', this.get(['userRemote', 'providerData', 0])); // works
+				//console.log('user-remote', userRemote);
+				var out;
+				try{
+					out = (userRemote && userRemote.userPhotoURL) ? userRemote.userPhotoURL : this.get(['userRemote', 'providerData', 0, 'photoURL',]);
+				}catch(e){
+					out = '/images/user.jpg';
+				}
+				//console.log('photoUrl', out);
+				return out;
+			}
+
+			
+    }
+
+    window.customElements.define(StateUserRemote.is, StateUserRemote);
+  </script>
+</dom-module>

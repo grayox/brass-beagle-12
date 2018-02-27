@@ -1,0 +1,201 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<!---->
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+
+<link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
+<!---->
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
+
+<!---->
+
+<dom-module id="app-list">
+
+  <template>
+
+    <style include="paper-item-styles"></style>
+    
+    <!---->
+
+    <firebase-query id="query"
+										app-name="app"
+									  path="[[path]]"
+									  data="{{queryData}}"
+										>
+    </firebase-query>
+
+    <!--- /->
+    <div role="listbox">
+      <paper-icon-item class="urgent">
+        <paper-ripple></paper-ripple>
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!--- /->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Enter zip code...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!--- /->
+      </paper-icon-item>
+      <paper-icon-item class="urgent">
+        <paper-ripple></paper-ripple>
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!--- /->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Select lead type...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!--- /->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!--- /->
+      </paper-icon-item>
+    </div>
+    <!---->
+
+    <!-- view-type="settings" => dom-repeat -->
+    <xtemplate xis="dom-if" xif="[[!_computeShowDatalist(viewType)]]">
+      <div role="listbox">
+        <template is="dom-repeat" items="[[items]]">
+          <app-item type="[[item.type]]"
+                    view="[[viewName]]"
+                    name="[[item.name]]"
+                    icon="[[item.icon]]"
+                    label="[[item.label]]"
+                    data="[[item.data]]"
+                    detail="[[item.detail]]"
+                    menu-items="[[item.menuItems]]"
+                    xdata-string="[[item.dataString]]"
+                    xdata-boolean="[[item.dataBoolean]]"
+                    >
+          </app-item>
+        </template>
+      </div>
+    </xtemplate>
+    
+    <!-- view-type="datalist" => iron-list - ->
+    <template is="dom-if" if="[[_computeShowDatalist(viewType)]]">
+      <div role="listbox">
+        <iron-list items="[[items]]">
+          <template>
+            <div class="item">Item [[index]]</div>
+          </template>
+        </iron-list>
+      </div>
+    </template>
+    <!---->
+    
+  </template>
+
+  <script>
+
+    class AppList extends Polymer.Element {
+
+      static get is() { return 'app-list'; }
+
+      /**/
+			static get properties() { return {
+
+				// mediaWidth: {
+				// 	type: Number, // 0, 1, 2, 3
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				viewName: {
+					type: String,
+					notify: true,
+				},
+
+				viewType: {
+					type: String, // 'settings' | 'datalist'
+					//notify: true,
+				},
+		
+				items: {
+					type: Array,
+					notify: true,
+          // observer: '_itemsChanged',
+          // value: () => [
+          //   { type: 'output'   , name: '', icon: 'vaadin:warning'        , label: 'Required information'    , dataString: '0/2'                        , } ,
+          //   { type: 'output'   , name: '', icon: 'vaadin:flag'           , label: 'State'                   , dataString: 'Mississippi'                , } ,
+          //   { type: 'output'   , name: '', icon: 'vaadin:map-marker'     , label: 'County'                  , dataString: 'Biloxi'                     , } ,
+          //   { type: 'output'   , name: '', icon: 'vaadin:pin'            , label: 'Zip'                     , dataString: '90210'                      , } ,
+          //   { type: 'output'   , name: '', icon: 'vaadin:phone'          , label: 'Phone'                   , dataString: '555-555-1212'               , } ,
+          //   { type: 'output'   , name: '', icon: 'vaadin:envelope'       , label: 'Email'                   , dataString: 'myemailaddress@example.com' , } ,
+          //   { type: 'output'   , name: '', icon: 'track-changes'         , label: 'Add counties...'         , dataString: ''                           , } ,
+          //   { type: 'checkbox' , name: '', icon: 'communication:textsms' , label: 'Notify me with text'     , dataBoolean: true                        , } ,
+          //   { type: 'checkbox' , name: '', icon: 'communication:email'   , label: 'Notify me with email'    , dataBoolean: false                       , } ,
+          //   { type: 'checkbox' , name: '', icon: 'vaadin:bolt'           , label: 'Auto text to new leads'  , dataBoolean: true                        , } ,
+          //   { type: 'checkbox' , name: '', icon: 'vaadin:magic'          , label: 'Auto email to new leads' , dataBoolean: false                       , } ,
+          // ],
+				},
+
+      }}
+      /**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+
+      // _computeShowDatalist(s) {
+      //   const out = !!(s === 'datalist');
+      //   return out;
+      // }
+
+      // _itemsChanged(a) {
+      //   console.log('items\n', a);
+      // }
+		
+    }
+
+    customElements.define(AppList.is, AppList);
+
+  </script>
+
+</dom-module>

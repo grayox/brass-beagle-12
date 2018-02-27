@@ -1,0 +1,246 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/effects/waterfall.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/helpers/helpers.html">
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="shop-app/shop-category-data.html">
+<!-- Since 'home' is the default route, eagerly load it. - ->
+<link rel="import" href="shop-app/shop-home.html">
+<link rel="import" href="shop-app/shop-app.html">
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-route.html">
+<link rel="import" href="/src/app-state/state-app-data.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html"><!-- caused css error; replaced with classes; e.g., .paper-item, .paper-item-body -->
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+
+<link rel="import" href="shell-styles.html">
+<!--- ->
+<link rel="import" href="/bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<!--- ->
+Demos
+http://jsbin.com/degifisici/1/edit?html,console,output
+https://stackoverflow.com/a/45498792/1640892
+<!---->
+
+<dom-module id="nav-menu-tablet">
+
+  <template>
+
+		<style include="shell-styles iron-flex iron-flex-alignment">
+			
+			:host {
+				--height: 81px;
+				--font-size: 12px;
+				--vertical-spacing: 8px;
+				--bleed-spacing: {
+					margin: 0;
+					padding: 0;
+				};
+			}
+			
+			a,
+      paper-item,
+      .paper-item {
+				@apply --layout-horizontal;
+				@apply --layout-center-justified;
+				@apply --bleed-spacing;
+				width: 100%;
+				/** /
+				margin: 0;
+			  padding: .5em;
+				border: 1px white solid;
+				/**/
+			}
+			
+			paper-item-body,
+      .paper-item-body {
+				height: var(--height);
+				--paper-item-min-height: var(--height);
+				--paper-item: {
+					height: var(--height);
+				  display: flex;
+				}
+				
+				margin-top: var(--vertical-spacing);
+				font-size: var(--font-size); /*12px; /*smaller;*/
+				/**/
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			
+			.ellipsis {
+				@xapply --bleed-spacing;
+				text-overflow: ellipsis;
+				margin-bottom: var(--vertical-spacing);
+			}
+	
+		</style>
+		
+		<!-- state -->
+		<state-media    media-width="{{mediaWidth}}" ></state-media>
+		<state-route    route="{{route}}"            ></state-route>
+		<state-app-data app-data="{{appData}}"       ></state-app-data>
+		
+		<!--- ->
+		<paper-item>Inbox</paper-item>
+		<paper-item>Starred</paper-item>
+		<paper-item>Sent mail</paper-item>
+		<paper-item>Drafts</paper-item>
+		<!---->
+		
+		<!--- ->
+		<iron-selector selected="{{route}}"
+									 xselected="{{page}}"
+									 xattr-for-selected="name"
+									 xclass="drawer-list"
+									 xrole="navigation"
+									 xon-selected-changed="_onSelectedChanged" 
+									 >
+		  <a name="view-dashboard" href="#/view-outbox" xname="sales-dashboard" xhref="#/sales-dashboard">
+				<paper-item>
+          <paper-item-body two-line>
+            <paper-icon-button icon="vaadin:dashboard"></paper-icon-button>
+	          <div class="ellipsis">Dashboard</div>
+          </paper-item-body>
+        </paper-item>
+		  </a>
+	    <a name="view-inbox" href="#/view-outbox" xname="sales-dashboard" xhref="#/sales-dashboard">
+        <paper-item>
+          <paper-item-body two-line>
+            <paper-icon-button icon="vaadin:cloud-download"></paper-icon-button><!--vaadin:download, vaadin:outbox- ->
+	    		  <div class="ellipsis">Inbox</div>
+          </paper-item-body>
+        </paper-item>
+		  </a>
+	    <a name="view-outbox" href="#/view-outbox" xname="sales-dashboard" xhref="#/sales-dashboard">
+        <paper-item>
+          <paper-item-body two-line>
+            <paper-icon-button icon="vaadin:cloud-upload"></paper-icon-button><!--vaadin:upload, vaadin:outbox- ->
+	    		  <div class="ellipsis">Outbox</div>
+          </paper-item-body>
+        </paper-item>
+		  </a>
+		</iron-selector>
+		<!---->
+		
+		<!---->
+		<iron-selector selected="{{route}}"
+									 xselected="{{page}}"
+									 xattr-for-selected="name"
+									 xclass="drawer-list"
+									 xrole="navigation"
+									 xon-selected-changed="_onSelectedChanged" 
+									 >
+			<template is="dom-repeat" items="[[appData.nav-menu]]">
+        <a name="[[item.name]]" href="#/[[item.name]]">
+          
+          <!--- ->
+			    <paper-item>
+            <paper-item-body two-line>
+              <paper-icon-button icon="[[item.icon]]"></paper-icon-button>
+							<div class="ellipsis">[[item.label]]</div>
+            </paper-item-body>
+          </paper-item>
+          <!---->
+
+			    <div class="paper-item">
+            <div class="paper-item-body">
+              <paper-icon-button icon="[[item.icon]]"></paper-icon-button>
+              <div class="ellipsis">[[item.label]]</div>
+            </div>
+          </div>
+
+					<paper-ripple></paper-ripple>
+			  </a>
+			</template>
+		</iron-selector>
+		<!---->
+
+  </template>
+
+  <script>
+
+    // performance logging
+    //window.performance && performance.mark && performance.mark('shop-app - before register');
+
+    class NavMenuTablet extends Polymer.Element {
+
+      static get is() { return 'nav-menu-tablet'; }
+
+			static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+				route: {
+					type: Number,
+					notify: true,
+					//observer: '_routeChanged',
+				},
+      }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+			
+			/** /
+			_routeChanged(route) {
+				console.log('route', route);
+			}
+			/** /
+      _onSelectedChanged(e){
+        console.log('route', e.detail.value);
+				const n = 'app-drawer-selected-changed';
+				const d = new CustomEvent(n);
+				this.dispatchEvent(d);
+		  }
+			/**/
+			
+			
+    }
+
+    customElements.define(NavMenuTablet.is, NavMenuTablet);
+
+  </script>
+</dom-module>

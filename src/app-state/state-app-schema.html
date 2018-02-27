@@ -1,0 +1,63 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<!---->
+<!---->
+
+<dom-module id="state-app-schema">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="app-schema" data="{{appSchema}}"></app-localstorage-document>
+		
+		<iron-ajax id="ajax"
+							 auto
+							 url="/src/app-data/app-schema.json"
+							 handle-as="json"
+							 xon-response="_handleAjaxResponse"
+							 xdebounce-duration="300"
+							 last-response="{{appSchema}}"
+							 >
+		</iron-ajax>
+		
+  </template>
+
+  <script>
+    class StateAppSchema extends Polymer.Element {
+      static get is() { return 'state-app-schema'; }
+
+      static get properties() { return {
+				appSchema: {
+					type: Object,
+					notify: true,
+					//observer: '_appSchemaChanged',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+			
+			/** /
+			_appSchemaChanged(data) {
+				console.log('data', data);
+			}
+			
+			_handleAjaxResponse: function() {
+				console.log('appData', this.appData);
+			},
+			/**/			
+    }
+
+    window.customElements.define(StateAppSchema.is, StateAppSchema);
+  </script>
+</dom-module>

@@ -1,0 +1,325 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/polymer-redux/polymer-redux.html">
+<link rel="import" href="redux-js.html">
+
+<!--- ->
+Youtube tutorial | https://www.youtube.com/watch?v=PahsgJn0sgU
+Source code      | https://github.com/Polymer/polycasts/blob/master/ep61-redux/redux-store.html
+Redux
+Docoumentation   | http://redux.js.org | https://tur-nr.github.io/polymer-redux/docs
+Tutorial         | https://egghead.io/courses/getting-started-with-redux
+                 | https://egghead.io/lessons/javascript-redux-store-methods-getstate-dispatch-and-subscribe
+Plunker          | https://plnkr.co/edit/fLjnqVaZmI8h1r7t954y?p=preview
+<!---->
+
+<script>
+  const initialState = {
+		/** /
+    login: {
+			hasKey: false,
+			hasUserEmail: false,
+			hasUserInit: false,
+			hasParentEmail: false,
+			showPanelKey: false,
+			showPanelUserEmail: false,
+			showPanelParentEmail: false,
+			showPanelLogin: false,
+			loggedIn: false,
+		},
+		deals: {},
+		network: {},
+		settle: {},
+		trade: {},
+		/** /
+		/**/
+		appData: null, // app-data.json // loggedin-view.pages = appData.pages
+		loggedIn: false, // app-main.firebase-auth 
+		mediaWidth: null,
+		viewState: 'grid', // 'table' // also set viewGrid
+		viewGrid: true, // false // also set viewState
+		userRemote: null, // Remote // app.main.firebase-auth._userRemoteChanged() | <strike>loggedin-view._userLocalChanged()</strike> moved to app.main._fetchUserLocal()
+		userLocal: null, // Local // Settings, account, etc.
+		userBalances: null, // Balances
+		userAvailableLeadsCount: null, // Balances by location and category
+		//userAvailableLeadsKeys: {}, // Leads by location and category
+		
+		// unimplemented
+		//userInitialized: null, // login-view._checkInit()
+		// end unimplemented		
+  };
+  const reducer = (state, action) => {
+		// handle exceptions
+    if ( !state          ) { /*console.error( 'No state'   );*/ return initialState; }
+    if ( !action         ) { /*console.error( 'No action'  );*/ return initialState; }
+    if ( !action.type    ) { /*console.error( 'No type'    );*/ return initialState; }
+    if ( !action.payload ) { /*console.error( 'No payload' );*/ return initialState; }
+		const payload = action.payload;
+		const type    = action.type;
+		// handle action types
+    switch (type) {
+			case 'APP_DATA':
+				return Object.assign({}, state, {
+					appData : payload.appData ,
+				});
+				break;
+			case 'LOGIN':
+				return initialState;
+				break;
+			case 'LOGOUT':
+				return initialState;
+				break;
+			case 'MEDIA_WIDTH':
+				return Object.assign({}, state, {
+					mediaWidth : payload.mediaWidth ,
+				});
+				break;
+			case 'LOGGED_IN':
+				return Object.assign({}, state, {
+					loggedIn : payload.loggedIn ,
+				});
+				break;
+			case 'VIEWSTATE':
+				return Object.assign({}, state, {
+					viewState : payload.viewState ,
+					viewGrid  : payload.viewGrid  ,
+				});
+				break;
+			case 'USER_REMOTE': // Remotely from firebase-auth
+				return Object.assign({}, state, {
+					userRemote : payload.userRemote ,
+				});
+				break;
+			case 'USER_LOCAL': // Locally from settings, account, etc.
+				return Object.assign({}, state, {
+					userLocal : payload.userLocal ,
+				});
+				break;
+			case 'USER_BALANCES': // Locally from settings, account, etc.
+				return Object.assign({}, state, {
+					userBalances : payload.userBalances ,
+				});
+				break;
+			case 'USER_AVAILABLE_LEADS_COUNT':
+				return Object.assign({}, state, {
+					userAvailableLeadsCount : payload.userAvailableLeadsCount ,
+				});
+				break;
+			/** /
+			case 'USER_AVAILABLE_LEADS_KEYS':
+				return Object.assign({}, state, {
+					userAvailableLeadsKeys : payload.userAvailableLeadsKeys ,
+				});
+				break;
+			/** /
+			case 'VIEW_GRID':
+				var viewState = 'grid' ;
+				var viewGrid  = true   ;
+        return Object.assign({}, state, {
+					viewState : viewState ,
+					viewGrid  : viewGrid  ,
+				});
+				break;
+			case 'VIEW_TABLE':
+				var viewState = 'table' ;
+				var viewGrid  = false   ;
+        return Object.assign({}, state, {
+					viewState : viewState ,
+					viewGrid  : viewGrid  ,
+				});
+				break;
+			/** /
+			// login view
+			case 'TRY_KEY':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			case 'TRY_EMAIL_USER':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			case 'TRY_EMAIL_PARENT':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			case 'GET_PANEL_KEY':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			case 'GET_PANEL_EMAIL_USER':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			case 'GET_PANEL_EMAIL_PARENT':
+			  const friends = state.friends.slice(0);
+        friends.push(action.friend);
+        return Object.assign({}, state,
+					{ friends: friends }
+				);
+				break;
+			// end login view
+			/**/
+			default:
+				console.error('Unrecognized action type', type);
+				//return initialState;
+    }
+  }
+  const store = Redux.createStore(
+    reducer,
+    Redux.applyMiddleware(ReduxThunk.default)
+  );
+  
+	
+	//const ReduxBehavior = PolymerRedux(store);
+	// https://github.com/Polymer/polymer-cli/issues/556
+  /** /
+  Redux behavior
+  @polymerBehavior
+  /**/
+  const ReduxBehavior = Object.assign({}, PolymerRedux(store));
+	
+	const AsyncActionsBehavior = {
+    actions: {
+			/** /
+			// https://www.youtube.com/watch?v=y2FxAT1u8pU&list=PLNYkxOF6rcIDdS7HWIC_BYRunV6MHs5xo&index=1
+      signUpWithTimeout: function(username) {
+				// --- In subscriber element ---
+			  // this.dispatch('signUpWithTimeout', username);
+				// --- end In subscriber element ---
+        return function(dispatch) {
+          dispatch({ type: 'SIGN_UP_STARTED' });
+          // Do async task
+          setTimeout(function() {
+            dispatch({
+              type: 'SIGN_UP_COMPLETE',
+              username: username
+            });
+          }, 3000);
+        }
+      }
+			// Delete
+			/** /
+		  updateTryKey: function(str) {
+			  return {
+		      type: 'TRY_KEY',
+		      payload: str,
+			  };
+		  },
+			/**/
+			// end Delete
+		  updateAppData: function(data) {
+				const type = 'APP_DATA';
+				const property = 'appData';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+		  },
+		  updateMediaWidth: function(data) {
+				const type = 'MEDIA_WIDTH';
+				const property = 'mediaWidth';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+			updateLoggedIn: function(data) {
+				const type = 'LOGGED_IN';
+				const property = 'loggedIn';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+		  updateUserRemote: function(data) {
+				const type = 'USER_REMOTE'; // Remotely from firebase-auth
+				const property = 'userRemote';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+		  updateUserLocal: function(data) {
+				const type = 'USER_LOCAL'; // Locally from settings, account, etc.
+				const property = 'userLocal';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+			updateUserBalances: function(data) {
+				const type = 'USER_BALANCES';
+				const property = 'userBalances';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+			updateUserAvailableLeadsCount: function(data) {
+				const type = 'USER_AVAILABLE_LEADS_COUNT';
+				const property = 'userAvailableLeadsCount';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+			/** /
+			updateUserAvailableLeadsKeys: function(data) {
+				const type = 'USER_AVAILABLE_LEADS_KEYS';
+				const property = 'userAvailableLeadsKeys';
+				var payload = {};
+				payload[property] = data;
+				return {
+					type: type,
+					payload: payload,
+				};
+			},
+			/**/
+			// Multiple Related-Property Template
+		  updateViewstate: function(data) {
+				const type = 'VIEWSTATE';
+				const property  = [ 'viewState' ,  'viewGrid'         ];
+				const dataArray = [  data       , ( data === 'grid' ) ];
+				var payload = {};
+				//payload.viewState = data;
+				//payload.viewGrid = (data === 'grid');
+				var i = property.length;
+				while(i--){
+				  payload[property[i]] = dataArray[i];
+				}
+			  return {
+					type: type,
+					payload: payload,
+				};
+			},
+		},
+  };
+</script>

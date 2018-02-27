@@ -1,0 +1,110 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!--- ->
+A web component wrapper for the shields.io badge-as-a-service API
+[Github Repository](https://github.com/badges/shields)
+[Server](http://shields.io)
+
+#### Quick Guide
+Template: `https://img.shields.io/badge/<SUBJECT>-<STATUS>-<COLOR>.svg`
+Example: `https://img.shields.io/badge/left-right-f39f37.svg`
+<!---->
+
+
+<dom-module id="shields-io">
+
+  <template>
+
+		<style></style>
+
+		<img src="[[url]]" />
+		   
+  </template>
+
+  <script>
+
+    class ShieldsIo extends Polymer.Element {
+
+      static get is() { return 'shields-io'; }
+			
+			static get properties() { return {
+				/** /
+				Dashes --       → - Dash
+        Underscores __  → _ Underscore 
+        _ or Space      →   Space
+				/**/
+				left: {
+					type: String,
+					//notify: true,
+				},
+				right: {
+					type: String,
+					//notify: true,
+				},
+				/** /
+        All colors are in HEX or strings. The following strings are allowed:
+        brightgreen green yellowgreen yellow orange red lightgrey blue ff69b4
+				/**/
+				color: {
+					type: String,
+					//notify: true,
+				},
+				/** /
+        The following styles are available (flat is the default as of Feb 1st 2015):
+        https://img.shields.io/badge/style-plastic-green.svg?style=plastic
+        https://img.shields.io/badge/style-flat-green.svg?style=flat
+        https://img.shields.io/badge/style-flat--squared-green.svg?style=flat-square
+        https://img.shields.io/badge/style-social-green.svg?style=social
+				/**/
+				style: {
+					type: String,
+					//notify: true,
+				},
+        /** /
+        Template: `https://img.shields.io/badge/<SUBJECT>-<STATUS>-<COLOR>.svg`
+        Example:  `https://img.shields.io/badge/left-right-f39f37.svg`
+        /**/
+				url: {
+					type: String,
+					notify: true,
+					computed: '_computeUrl(left, right, color, style)',
+				},
+      }}
+
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+			
+			_computeUrl(l, r, c, s) {
+				const BASE = 'https://img.shields.io/badge';
+				const SUFFIX = 'svg';
+				const s1 = [l, r, c].join('-');
+				const s2 = [BASE, s1].join('/');
+				let out = [s2, SUFFIX].join('.');
+				out = s ? [out, s].join('?style=') : out;
+				//console.log('out', out);
+				return out;
+			}
+		
+    }
+
+    customElements.define(ShieldsIo.is, ShieldsIo);
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,130 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-menu/paper-submenu.html">
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!---->
+
+<!--- ->
+<!---->
+<link rel="import" href="settings-separator.html">
+<link rel="import" href="settings-item.html">
+
+<link rel="import" href="settings-menu.html">
+<link rel="import" href="settings-items-switches.html">
+
+<dom-module id="settings-group-a">
+  <template>
+    <style></style>
+    
+    <!-- state - ->
+    <state-user-settings user-settings="{{settings}}"
+                         user-settings-zip="{{settingsZip}}"
+                         user-settings-switch="{{settingsSwitch}}"
+                         user-settings-input="{{settingsInput}}"
+                         >
+    </state-user-settings>
+    <!---->
+		
+		<settings-separator label="Your location"></settings-separator>
+
+		<settings-item type="zip"
+									 label="Zip code"
+									 xicon="communication:location-on"
+									 xname="form-input-zip"
+									 xzip-valid="{{settingsZip.zipValid}}"
+									 xzip-code="{{settingsZip.zipCode}}"
+									 xzip-state="{{settingsZip.zipState}}"
+									 xzip-county="{{settingsZip.zipCounty}}"
+									 xzip-city="{{settingsZip.zipCity}}"
+									 >
+		  <notification-shield id="notification-shield-zip"
+													 text="Required"
+													 show="[[settingsZip.zipValid]]"
+													 slot="zip"
+													 >
+			</notification-shield>
+		</settings-item>
+
+		<settings-separator label="Type of leads">
+		  <notification-shield id="notification-shield-lead-type"
+													 text="Required"
+													 xhide="[[_hideLeadsNotice(leadHome, leadMortgage, leadInsurance, leadFinancial)]]"
+													 show="[[_showLeadsNotice(settingsSwitch.home, settingsSwitch.mortgage, settingsSwitch.insurance, settingsSwitch.financial)]]"
+													 >
+      </notification-shield>
+    </settings-separator>    
+    <!---->
+    <settings-menu></settings-menu>
+    <!--- ->
+    <settings-items-switches></settings-items-switches>
+    <!--- ->
+      <settings-item type="switch"
+									 label="Home"
+									 icon="home"
+									 xchecked="{{leadHome}}"
+									 xchecked="[[settingsSwitch.home]]"
+									 xchecked="{{settingsSwitch.home}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Mortgage"
+									 icon="account-balance"
+									 xchecked="{{leadMortgage}}"
+									 xchecked="[[settingsSwitch.mortgage]]"
+									 xchecked="{{settingsSwitch.mortgage}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Insurance"
+									 xicon="description"
+									 icon="vaadin:diploma"
+									 xchecked="{{leadInsurance}}"
+									 xchecked="[[settingsSwitch.insurance]]"
+									 xchecked="{{settingsSwitch.insurance}}"
+									 >
+		</settings-item>
+
+		<settings-item type="switch"
+									 label="Financial"
+									 icon="assessment"
+									 xchecked="{{leadFinancial}}"
+									 xchecked="[[settingsSwitch.financial]]"
+									 xchecked="{{settingsSwitch.financial}}"
+									 >
+    </settings-item>
+    <!---->
+		
+  </template>
+
+  <script>
+    class SettingsGroupA extends Polymer.Element {
+      static get is() { return 'settings-group-a'; }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+			
+			_showLeadsNotice(b1, b2, b3, b4) {
+				const completed = (b1 || b2 || b3 || b4);
+				const show = !completed;
+				return show;
+			}
+			
+    }
+
+    window.customElements.define(SettingsGroupA.is, SettingsGroupA);
+  </script>
+
+</dom-module>

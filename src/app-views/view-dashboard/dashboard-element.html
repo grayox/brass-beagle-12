@@ -1,0 +1,84 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<dom-module id="dashboard-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+				cursor: pointer;
+        margin-left: 0;
+        margin-right: 0;
+				/** /
+        font: 400 13px "Open Sans", Verdana, sans-serif;
+				/**/
+        font: 400 13px;
+        text-align: center;
+      }
+      /*This extra div is needed because of IE11 bug
+       https://github.com/philipwalton/flexbugs/issues/3
+      */
+      .border { /* Borders circular number (not element area) */
+        background-color: transparent;
+				/** /
+        background-color: var(--dashboard-element);
+        background-color: #D3DCE0;
+        border: 3px solid white;
+				/**/
+      }
+			/** /
+			.border:hover {
+				background-color: #C3CFD5;
+        background-color: var(--dashboard-element-hover);
+			}
+			/**/
+			.border:hover > .label {
+				opacity: 1.0; /* <app-drawer-layout> solves stacking caused by opacity < 1 | https://stackoverflow.com/a/45745347/1640892 */
+			}
+			.value {
+        background-color: white;
+        color: #9BA7A7;
+				/** /
+				color: black;
+				opacity: 0.5;
+				/**/
+        font-size: 32px;
+        border-radius: 50%;
+        width: 96px;
+        height: 96px;
+        line-height: 96px;
+        margin: 16px auto 8px;
+      }
+      .label {
+        margin-bottom: 16px;
+        font-size: 12px;
+				opacity: 0.75; /* <app-drawer-layout> solves stacking caused by opacity < 1 | https://stackoverflow.com/a/45745347/1640892 */
+				font-weight: 200;
+				text-transform: uppercase;
+		  }
+    </style>
+    <div class="border">
+      <div class="value">[[itemValue]]</div>
+      <div class="label">[[itemLabel]]</div>
+    </div>
+  </template>
+
+  <script>
+    class DashboardElement extends Polymer.Element {
+      static get is() {
+        return 'dashboard-element';
+      }
+
+      static get properties() {
+        return {
+          itemValue: {
+            type: String,
+          },
+          itemLabel: {
+            type: String,
+          }
+        }
+      }
+
+    }
+    customElements.define(DashboardElement.is, DashboardElement);
+  </script>
+</dom-module>

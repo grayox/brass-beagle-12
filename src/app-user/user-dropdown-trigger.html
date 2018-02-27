@@ -1,0 +1,88 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/app-state/state-media.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="user-droptrig-mobile.html">
+<link rel="import" href="user-droptrig-desktop.html">
+
+<dom-module id="user-dropdown-trigger">
+  <template>
+    <style include="iron-flex iron-flex-reverse iron-flex-alignment iron-flex-factors iron-positioning">
+			:host {
+				display: inline-block;
+			}
+			/** /
+			.test-border {
+				border: yellow solid 2px;
+			}
+			/**/
+		</style>
+
+		<state-media media-width="{{mediaWidth}}"></state-media>
+		<!---->
+		<template restamp is="dom-if" if="[[show1]]"><user-droptrig-mobile class="layout horizontal center xtest-border"
+																														           ></user-droptrig-mobile></template>
+		<template restamp is="dom-if" if="[[show2]]"><user-droptrig-desktop xclass="xtest-border"
+																																			  ></user-droptrig-desktop></template>
+		<!---->
+
+  </template>
+
+  <script>
+    class UserDropdownTrigger extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'user-dropdown-trigger'; }
+
+			/**/
+      static get properties() { return {
+				/** /
+				user: {
+				  type: Object,
+				  notify: true,
+          //observer: '_userChanged',
+        },
+				/** /
+				photoUrl: {
+					type: String,
+					notify: true,
+				},
+				/**/
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					observer: '_mediaWidthChanged',
+				},
+			  /**/
+				show1: {
+					type: Boolean,
+					notify: true,
+				},
+				show2: {
+					type: Boolean,
+					notify: true,
+				},
+			  /**/
+			}}
+			/**/
+			
+			constructor() {
+				super();
+			}
+			
+			_mediaWidthChanged(n) {
+				//console.log('media-width', n);
+				this.set('show1', n < 2);
+				this.set('show2', n > 1);
+				//this.set('show3', n === 3);
+				//console.log('show1', this.show1);				
+				//console.log('show2', this.show2);				
+				//console.log('show3', this.show3);				
+			}
+			
+		}
+
+    window.customElements.define(UserDropdownTrigger.is, UserDropdownTrigger);
+  </script>
+</dom-module>

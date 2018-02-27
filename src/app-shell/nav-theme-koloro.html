@@ -1,0 +1,59 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<dom-module id="nav-theme-koloro">
+
+  <template>
+
+		<style>
+			
+			:host {
+				--transition-period: 0.5s;
+				--web-transition-periods: {
+					transition         : var(--transition-period) ;
+					-o-transition      : var(--transition-period) ;
+					-ms-transition     : var(--transition-period) ;
+					-moz-transition    : var(--transition-period) ;
+					-webkit-transition : var(--transition-period) ;
+				}
+			}
+			
+			/* viewmenu items hovering and selected behavior */
+			
+			paper-item {
+				opacity: 0.5;
+				@apply --web-transition-periods;
+			}
+			
+			paper-item:hover {
+				opacity: 1.0;
+				background-color: var(--app-primary-color);
+			}
+			
+			paper-item.iron-selected {
+				opacity: 1.0;
+				/** /
+				background-color: blue;
+				/**/
+				background-color: var(--app-primary-color);
+			}
+			
+			paper-item.iron-selected iron-icon {
+			  /** /
+				--iron-icon-fill-color: red;
+				--iron-icon-fill-color: var(--app-primary-color);
+				/**/
+				--iron-icon-fill-color: var(--app-highlight-color);
+			}
+			
+		</style>
+
+  </template>
+
+</dom-module>

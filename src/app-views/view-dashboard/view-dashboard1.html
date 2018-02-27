@@ -1,0 +1,98 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../shared-styles.html">
+<link rel="import" href="dashboard-element.html">
+<link rel="import" href="../../common/demo-plus-sources-area.html">
+<link rel="import" href="/bower_components/vaadin-board/vaadin-board.html">
+
+<dom-module id="view-dashboard">
+  <template>
+    <style include="shared-styles">
+      :host {
+        height: 100%;
+			}
+			.heading {
+				opacity: 0.1;
+				font-weight: 100;
+				text-transform: uppercase;
+				
+        display: block;
+        margin-left: 0;
+        margin-right: 0;
+        font-weight: bold;
+        border-style: solid;
+        border-width: 3px;
+        border-color: #fff;
+        text-align: center;
+        background-color: #cacaca;
+        height: 200px;
+				
+			}
+			/* Edit */
+			dashboard-element:hover {
+				border: 4px solid black;
+			}
+      /* endEdit */
+    </style>
+    <div class="card">
+			<!---->
+      <demo-plus-sources-area header="Row types" java-source="[[javaSource]]">
+			<!---->
+        <vaadin-board>
+          <vaadin-board-row>
+						<div class="heading">Metrics</div>
+					</vaadin-board-row>
+          <vaadin-board-row>
+            <dashboard-element item-number="31"  xboard-cols="2" item-size="Available Leads"></dashboard-element>
+            <dashboard-element item-number="31"  xboard-cols="2" item-size="Leads Balance"></dashboard-element>
+          </vaadin-board-row>
+          <vaadin-board-row>
+            <dashboard-element item-number="213" xboard-cols="2" item-size="Leads Sent"></dashboard-element>
+            <dashboard-element item-number="12"  xboard-cols="2" item-size="Leads Received"></dashboard-element>
+          </vaadin-board-row>
+					<vaadin-board-row>
+						<div class="heading">Settings</div>
+					</vaadin-board-row>
+          <vaadin-board-row>
+						<!--- ->
+            http://emojipedia.org/
+            ✓ ✅ 👍 ❓ ☑️ ✗ 🖐️ ✋ ❎ ✖️ ❌ 🖋️ ✍️ ✏️ ⚙️
+            &#10003; &#x2713; &#10004; &#x2714;
+						<!---->
+            <dashboard-element item-number="✏️" xboard-cols="2" item-size="Ready"></dashboard-element>
+            <dashboard-element item-number="&#x2714;" xboard-cols="2" item-size="Zip Code"></dashboard-element>
+            <dashboard-element item-number="❌" xboard-cols="2" item-size="Category"></dashboard-element>
+            <dashboard-element item-number="⚙️" xboard-cols="2" item-size="Update Methods"></dashboard-element>
+          </vaadin-board-row>
+        </vaadin-board>
+			<!---->
+      </demo-plus-sources-area>
+			<!---->
+    </div>
+  </template>
+
+  <script>
+    class ViewDashboard extends Polymer.Element {
+      static get is() { return 'view-dashboard'; }
+      static get properties() {
+        return {
+          javaSource: {
+            value: "No Java source",
+            type: String,
+          }
+        }
+      }
+    }
+
+    window.customElements.define(ViewDashboard.is, ViewDashboard);
+  </script>
+</dom-module>

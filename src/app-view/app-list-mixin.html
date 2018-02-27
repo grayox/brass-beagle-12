@@ -1,0 +1,467 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<!--- ->
+<link rel="import" href="settings-item-styles.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="app-list-mixin">
+  <template>
+		<style xinclude="settings-item-styles"></style>
+		
+		<!-- v.1 | slots - ->
+		
+		<div class="wrapper" on-tap="_toggle">
+			<paper-ripple xrecenters></paper-ripple>
+			<div class="start">
+				<div class="primary">
+					<slot name="primary"></slot>
+				</div>
+				<div class="secondary">
+					<slot name="secondary"></slot>
+				</div>
+			</div>
+			<div class="end">
+				<paper-toggle-button id="switch"
+														 name="notification-email"
+														 checked="{{item.notification-email}}"
+														 on-tap="_toggle"
+														 ></paper-toggle-button>		
+			</div>
+		</div>
+		
+		<!-- usage -->
+    <!--- ->
+		<settings-item>
+			<span slot="primary">Home</span>
+			<span slot="secondary">Off</span>
+		</settings-item>
+		<!---->
+		
+		<!-- v.2 | properties - ->
+		
+		<div class="wrapper" on-tap="_toggle">
+			<paper-ripple xrecenters></paper-ripple>
+			<iron-icon icon="[[icon]]" class="icon"></iron-icon>
+			<div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!--- ->
+					[[label]]
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					<!--- ->
+					[[_output]]
+				</div>
+			</div>
+			<div class="end">
+				<paper-toggle-button id="switch"
+														 name="notification-email"
+														 checked="{{checkedState}}"
+														 on-tap="_toggle"
+														 ></paper-toggle-button>		
+			</div>
+		</div>
+		<!---->
+
+		<!-- v.3 | add more type options to toggle switch -->
+
+    <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<!---->
+		<app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
+    <!---->
+    <!---->
+		
+
+		<div class="wrapper" xon-tap="x_toggle">
+			<paper-ripple xrecenters></paper-ripple>
+			<iron-icon icon="[[icon]]" class="icon"></iron-icon>
+			<div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!---->
+					[[label]]
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					[[_computeOutput()]]
+					[[_computeOutput(checkedState)]]
+          [[value]]
+          <!---->
+					[[_output]]
+				</div>
+			</div>
+			<div class="end">
+				<paper-toggle-button id="switch"
+														 name="notification-email"
+                             checked="{{checkedState}}"
+                             xvalue="{{value}}"
+                             xdisabled
+														 xon-tap="_toggle"
+														 xon-tap="_save"
+														 on-checked-changed="_save"
+														 ></paper-toggle-button>		
+			</div>
+		</div>
+    
+  </template>
+
+  <script>
+    // Define Mixin
+    // Reference: https://www.polymer-project.org/2.0/docs/devguide/custom-elements#defining-mixins
+    AppListMixinixin = ( superClass ) => class extends superClass {
+    // class SettingsItemSwitch extends Polymer.Element {
+      static get is() { return 'app-list-mixin'; }
+
+      static get properties() {
+        return {
+          
+          // global state
+
+          userSettings: {
+            type: Object,
+            notify: true,
+            observer: '_userSettingsChanged',
+          },
+          
+          // newSettings: {
+          //   type: Object,
+          //   notify: true,
+          //   //observer: '_userSettingsChanged',
+          //   //computed: '_computeNewSettings(userSettings, _labelMod, checkedState)',
+          // },
+					
+					// local settings
+
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+          // computed dependencies
+					
+					_labelMod: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+            //observer: '_selectedChanged',
+            computed: '_computeLabelMod(label)',
+					},
+					
+					_output: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+						computed: '_computeOutput(checkedState)',
+					},
+					
+					// internal state
+					
+					checkedState: {
+						type: Boolean,
+						notify: true,
+						//observer: '_selectedChanged',
+						//computed: '_initCheckedState(userSettings, _labelMod)',
+						//value: () => false,
+						//value: () => this._initCheckedState(this.userSettings, this._labelMod),
+					},
+
+          // initCheckedState: {
+          //   type: Boolean,
+					// 	notify: true,
+					// 	//value: () => false,
+					// 	//observer: '_selectedChanged',
+					// 	// computed: '_initCheckedState(userSettings, _labelMod)',
+          // },
+          
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+		  }
+
+      // connectedCallback() {
+      //   super.connectedCallback();
+      //   console.log('connected...');
+      //   console.log('userSettings', this.userSettings); // undefined
+      //   console.log('labelMod', this._labelMod);
+      //   this.set( 'checkedState', this._initCheckedState(this.userSettings, this._labelMod) );
+      // }
+						
+      // attributeChangedCallback() {
+      //   super.attributeChangedCallback();
+      //   this.set( 'checkedState', this._initCheckedState(this.userSettings, this._labelMod) );
+      // }
+						
+			// _toggle() {
+				// must add to "on-tap" event of switch to paper-toggle-button
+				// to "double toggle" switch because item's .wrapper "on-tap" event
+				// also toggles switch (in reverse direction)
+
+        //  console.log('oldUserSettings', this.userSettings);
+
+				//const s = this.$.switch;
+				//s.checked = !s.checked;
+				// s.checked = new Promise( (resolve, reject) => {
+        //   resolve(!s.checked);
+        // }).then(this._save());
+
+        // const checkedState = !this.checkedState;
+				// this.set('checkedState', checkedState);
+        // console.log('checkedState\n', checkedState);
+
+        // console.log('checked-state-before\n', this.checkedState);
+        // this.set('xcheckedState', !this.checkedState);
+        // console.log('checked-state-after\n', this.checkedState);
+        // return;
+        
+        // this._save(checkedState);
+        
+        // const checkedState = this.checkedState;
+        // const newcheckedState = new Promise( (resolve, reject) => {
+        //   resolve(!checkedState)
+        //   .then( () => {
+        //     this.set('checkedState', newcheckedState);
+        //   })
+        //   .then( () => {
+        //     console.log('checkedState\n', checkedState);
+        //     this._save();
+        //   })
+        // });
+        
+				// toggle() must do two things:
+				//   1. send record to archive
+				//   2. send event to <view-settings> to save settings snapshot
+				//this._save();
+			// }
+			
+			_computeOutput(b) {
+        // console.log('checked-state at _computeOutput\n', b);
+        //b = b || this.checkedState;
+        const out = !!b ? 'On' : 'Off';
+        // console.log('out\n', out);
+				return out;
+			}
+
+      _initCheckedState(r, s) {
+        // Only call this method once, after user-settings loads
+        // appears to occur after connectedCallback() and attributeChangedCallback() lifecycle events occur
+        // const init = this.initCheckedState;
+        // if(init) {
+        //   console.log('output\n', this._output);
+        //   return this.checkedState;
+        // }
+
+        r = r || this.userSettings;
+        // console.log('r\n', r);
+        s = s || this._labelMod;
+        // console.log('s\n', s);
+
+        let out = false;
+        if(r) {
+          // console.log('r\n', r);
+          if(r.switch) {
+            // console.log('r.switch\n', r.switch);
+            if(r.switch[s]) {
+              // console.log('r.switch[s]\n', r.switch[s]);
+              out = true;
+            }
+            // if(r.switch[s] != undefined) {
+            //   this.set('initCheckedState', true);
+            //   console.log('initCheckedState\n', this.initCheckedState);
+            // }
+          }
+        }
+        // console.log('out\n', out);
+        return out;
+      }
+			
+			//_save(checkedState) {
+			_save(e) {
+        // console.log('e\n', e);
+
+        // const newSettings = this.newSettings;
+        // const data = newSettings;
+
+        // const checkedState = this.checkedState;
+        const checkedState = e.detail.value;
+        // console.log('checkedState\n', checkedState);
+        // if(!checkedState) return; // logic bug
+        if(checkedState === undefined || checkedState === null) {
+          console.error('checkedState is ', checkedState, '\nData not saved');
+          return;
+        }
+
+        const settings = this.userSettings;
+        // console.log('settings\n', settings);
+        if(!settings) {
+          // console.error('settings is ', settings, '\nData not saved');
+          return;
+        }
+
+        const labelMod = this._labelMod;
+        // console.log('labelMod\n', _labelMod);
+        if(!labelMod) {
+          console.error('labelMod is ', labelMod, '\nData not saved');
+          return;
+        }
+
+        const data = this._computeNewSettings(settings, labelMod, checkedState);
+        // console.log('data\n', data); //return;
+
+				// const timestamp = new Date().getTime();
+				
+				// Save to two locations:
+				//   1. /user/archive for search/retrieve
+				//   2. local.settings-main for fetch/local use
+				
+				// const XFIX = 'user-switch';
+				// const data = { 
+				// 	timestamp: timestamp,
+				// 	//value: this.checkedState, // true|false
+				// 	value: this.newSettings,
+				// };
+				// const label = this.label.toLowerCase().split(' ').pop(); // 'mortgage'
+				// const label = this._labelMod; // 'mortgage'
+				const entity = 'user-settings';
+				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
+				//const name = ['update', entity].join('-');
+				
+				// 1. save record to archive
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
+				
+				// 2. dispatch event to mediator element to save entire 'settings'
+				
+				// //const name = ['update', entity].join('-');
+				// //console.log('name\n', name);
+				// //console.log('data\n', data);
+				// const name = [ 'update', XFIX, ].join('-'); // 'update-user-switch'
+				// const eventData = {
+				// 	data: data.value, // true
+				// 	label: label, // 'mortagage'
+				// };
+				// this._dispatchEvent(name, eventData);
+			}
+
+			// _dispatchEvent(name, data) {
+			// 	/** /
+			// 	const m = this.$.methods;
+			// 	m.fireEvent(name, data);
+			// 	/**/
+				
+			// 	const n = name;
+			// 	const o = {
+			// 		bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);
+			// }
+		      
+      // _userSettingsChanged(o) {
+      //   //console.log('userSettingsChanged\n', o);
+      //   const s = this._labelMod;
+      //   if (o && o.switch && o.switch[s]) {
+      //     this.set('checkedState', o.switch[s]);
+      //   } else {
+      //     this.set('checkedState', null);
+      //   }
+      // }
+
+      _userSettingsChanged(newData, oldData) {
+        // console.log('userSettingsChanged\n', newData);
+        // console.log('connected...');
+        // console.log('user-settings', newData); // undefined
+        // console.log('label-mod', this._labelMod);
+        this.set( 'checkedState', this._initCheckedState(newData, this._labelMod) );
+      }
+
+      _computeLabelMod(s) {
+        const out = s.toLowerCase().split(' ').pop(); // 'mortgage'
+				return out;
+      }
+
+      _computeNewSettings(o, s, b) {
+        // o = o || this.userSettings;
+        // console.log('oldSettings\n', o);
+        // s = s || this._labelMod;
+        // console.log('labelMod\n', s);
+        // b = b || this.checkedState;
+        // console.log('checkedState\n', b);
+        
+        const timestamp = new Date().getTime();
+        const out = o ? { ...o } : {};
+        // if(o) {
+        //   out = { ...o };
+        // }
+        out.timestamp = timestamp;
+        if(!out.switch) {
+          out.switch = {};
+        }
+        out.switch.timestamp = timestamp; // updated on load
+        out.switch[s] = b;
+        // console.log('newSettings\n', out);
+        return out;
+      }
+
+    }
+
+    //window.customElements.define(AppListMixin.is, AppListMixin);
+  </script>
+
+</dom-module>

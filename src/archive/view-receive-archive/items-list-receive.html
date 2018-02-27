@@ -1,0 +1,327 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<!--- ->
+Replaced <vaadin-grid> (https://github.com/vaadin/vaadin-grid)
+with <iron-data-table> (https://github.com/Saulis/iron-data-table)
+<link rel="import" href="/bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="/bower_components/iron-data-table/iron-data-table.html">
+<link rel="import" href="/bower_components/iron-data-table/default-styles.html">
+<!---->
+<link rel="import" href="/bower_components/iron-resizable-behavior/iron-resizable-behavior.html">	
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../custom-elements/row-detail.html">
+
+<!-- Edit -->
+<link rel="import" href="../../custom-styles/iron-list-grid-styles.html">
+<link rel="import" href="../../custom-styles/iron-data-table-styles.html">
+<link rel="import" href="../../custom-libraries/numeral-js.html">
+<link rel="import" href="../../custom-libraries/moment-js.html">
+<!-- endEdit -->
+
+<!--- ->
+Examples: http://jsbin.com/xxxxxxxxxx/1/edit?html,output
+          torizajafe ... Hello world
+          yexokijavo ... CSS import
+          fanotababa ... Row details
+          boxiyafoya ... Edit row details
+          sevafikolu ... Edit row details using sub-element
+          zukahavoto ... Reset selection 01
+          ducayiwake ... Reset selection 02
+          xucemijada ... Reset selection 03 http://stackoverflow.com/q/38707525/1640892
+          dubuyoy    ... Reset selection 04 http://stackoverflow.com/a/38712926/1640892
+          fewihuxozu ... Select row, prevent deselection | Clone for documentation purposes
+<!---->
+
+<dom-module id="items-list-receive">
+  <template>
+		<style>
+      :host {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+			}
+
+      #add-button {
+        position: absolute;
+        right: 32px;
+        bottom: 32px;
+        z-index: 1;
+      }
+
+      @media (max-width: 1124px) {
+        #add-button {
+          bottom: -28px;
+        }
+      }
+
+      @media (min-width: 1125px) {
+        #add-button {
+          bottom: auto;
+          top: -29px;
+        }
+      }
+
+      @media (max-width: 900px) {
+        #add-button {
+          bottom: 32px;
+        }
+      }
+
+      #items {
+        flex: 1;
+        color: var(--primary-text-color);
+      }
+
+      @media (max-width: 1124px) {
+        #items {
+          font-size: 15px;
+        }
+      }
+    </style>
+    <style>
+			/** /
+			iron-data-table {
+				--iron-data-table-header: {
+					box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+					background-color: white;
+					/** /
+					background-color: var(--paper-grey-100);
+					/**/
+				}
+			}
+			iron-data-table data-table-row-detail {
+        height: 150px;
+      }
+      iron-data-table data-table-row-detail .detail {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border: 2px solid #aaa;
+      }
+		</style>
+
+		<iron-data-table xid="grid"
+										 id="grid-no-style"
+										 items="[[items]]"
+										 xdetails-enabled
+										 selection-enabled
+										 selected-item="{{selectedItem}}"
+										 on-deselecting-item="_deselecting"
+										 xdata-source="[dataSource]"
+										 >
+			<!--- ->
+			<template is="row-detail">
+				<div class="detail">
+					<row-detail item="{{item}}"
+											tabindex="0"
+											>
+					</row-detail><!-- tabindex="0" is required workaround per http://stackoverflow.com/a/38693110/1640892 - ->
+				</div>
+			</template>
+			<!---->
+			
+			<data-table-column name="First"
+												 filter-by="nameFirst"
+												 sort-by="nameFirst"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<!--- ->
+				<template>[[item.nameFirst]]</template>
+				<!---->
+				<template>[[item.nameFirst]]</template>
+			</data-table-column>
+			<data-table-column name="Last"
+												 filter-by="nameLast"
+												 sort-by="nameLast"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<!--- ->
+				<template>[[item.nameLast]]</template>
+				<!---->
+				<template>[[item.nameLast]]</template>
+			</data-table-column>
+			<data-table-column name="Email"
+												 filter-by="email"
+												 sort-by="email"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<template>[[item.email]]</template>
+			</data-table-column>
+			<data-table-column name="Phone"
+												 filter-by="phone"
+												 sort-by="phone"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<template>[[item.phone]]</template>
+			</data-table-column>
+			<!--- ->
+			<data-table-column name="Address"
+												 filter-by="address"
+												 sort-by="address"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<template>[[item.address]]</template>
+			</data-table-column>
+			<!---->
+			<data-table-column name="Zip"
+												 filter-by="zip"
+												 sort-by="zip"
+												 width="10em"
+												 xflex="0"
+												 xalign-right
+												 >
+				<template>[[item.zip]]</template>
+			</data-table-column>
+		</iron-data-table>
+		<!---->
+    <paper-fab icon="add"
+							 id="add-button"
+							 on-tap="_showItemEditor"
+							 xon-tap="show">
+		</paper-fab>
+		<!---->
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'items-list-receive',
+				behaviors: [
+					//ReduxBehavior,
+					Polymer.IronResizableBehavior,
+				],
+				properties: {
+          items: Array,
+					/** /
+					dataSource: Function,
+          filters: {
+						type: Object,
+						notify: true,
+					},
+					/**/
+					selectedItem: {
+						type: Object,
+						notify: true,
+					},
+          sortColumn: String,
+          sortDirection: String,
+					// Edit
+					/** /
+					mediaWidth: { // xsmall, small, medium, large
+						type: String,
+						notify: true,
+					},
+					/**/
+					// endEdit
+				},
+				
+				/**/
+				observers: [
+          '_selectedItemChanged(selectedItem)'   ,
+					//'_computeDataSource(items, filters.*)' , 
+				],
+				/**/
+				
+				/** /
+				_computeDataSource: function(items, filters) {
+					//var _this = this;
+					//console.log('filters', filters);
+					this.dataSource = function(params, callback) {
+						//this.push('items', 'foo');
+					  //console.log( 'items' , items );
+					  console.log( 'typeof' , typeof items );
+					  //console.log( 'items' , items );
+					  //console.log( 'length' , items.length );
+					  //var a = this.get('this.items');//items;//
+						//var a = [1,2,3,4,5,6];
+					  //console.log('a', a );
+					  //console.log( 'length' , a.length );
+					  //console.log('typeof items', typeof items );
+					  //console.log('typeof a', typeof a );
+            //var filteredItems = a.filter(function(item) {
+						//var filteredItems = this.get('items').filter(function(item) {
+						//var filteredItems = _this.ar.filter(function(item) {
+						/** /
+            var array = _this.items;
+						_this.items = [];
+						_this.items = array;
+						/** /
+						//var filteredItems = _this.items.filter(function(item) {
+						var filteredItems = items.filter(function(item) {
+					    console.log( 'item' , item );
+							return item.amount > 1000000;
+							//return item > 3;
+            });
+						console.log('filteredItems' , filteredItems);
+            callback(filteredItems, filteredItems.length);
+          };
+        },
+				/**/
+				
+        _deselecting: function(e) {
+          e.preventDefault();
+					this._selectedItemChanged(e.detail.item);
+        },
+
+				_selectedItemChanged: function(ob) {
+					//console.log('selectedItem', ob);
+					this.fire('item-edit', ob);
+				},
+
+				_showItemEditor: function() {
+          this.fire('item-edit', {}/*this.selectedItem*/);
+        },
+				
+				reset: function() {
+					this.set('selectedItem', null);
+				},
+
+				_computeSelectedStr: function(ob) {
+				  return JSON.stringify(ob);
+        },
+
+				show: function() {
+					console.log('selectedItem', this.selectedItem);
+				},
+				
+				_formatRate: function(n) {
+					if(n) {
+						n = n / 100;
+					}
+					return n ? numeral(n).format('0,0.0%') : '';
+				},
+				
+				_formatLtv: function(n) {
+					return n ? numeral(n).format('0,0.0%') : '';
+				},
+				
+				_formatAmount: function(n) {
+					return n ? numeral(n).format('$0,0') : '';
+					//return n ? '$' + n.toLocaleString() : '';
+				},
+				
+				_formatTenor: function(n) {
+					return n ? moment.duration(n, 'days').humanize() : '';
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

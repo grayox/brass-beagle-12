@@ -1,0 +1,73 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+
+<!-- Edit -->
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="login-styles.html">
+<!-- endEdit -->
+
+<dom-module id="key-panel">
+	<style include="login-styles"></style>
+
+  <template>
+		
+    <iron-a11y-keys xkeys="pageup pagedown left right down up shift+a alt+a home end space enter tab"
+										keys="enter tab" on-keys-pressed="_primary"></iron-a11y-keys>
+		
+		<div class="login">
+      <paper-input id="key"
+									 label="Invitation key"
+									 value={{key}}
+									 name="key"
+									 >
+			</paper-input>
+      <span class="error-message">[[errorMessage]]</span>
+      <paper-button class="primary" on-tap="_primary"    raised>Next</paper-button>
+      <paper-button                 on-tap="_secondary" xraised>Use email instead</paper-button>
+    </div>
+		
+		<!--- ->
+    <div class="login">
+      <paper-input value={{username}} label="Username" name="username"></paper-input>
+      <paper-input value="{{password}}" label="Password" name="password" type="password"></paper-input>
+      <span class="error-message">[[errorMessage]]</span>
+      <paper-button id="login-button" on-tap="_logIn" raised>Login</paper-button>
+    </div>
+		<!---->
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'key-panel',
+				properties: {
+					errorMessage: String,
+					key: {
+						type: String,
+						notify: true,
+					}
+				},
+				_primary: function(e) {
+					var s = this.key;
+					this.fire('fetch-key', {
+						type: 'primary',
+						payload: s,
+					});
+					this._clear();
+				},
+				_secondary: function(e) {
+					this.fire('fetch-key', {type: 'secondary'});
+					this._clear();
+				},
+				_clear: function() {
+					this.set('key', '');
+				},
+      });
+    })();
+  </script>
+</dom-module>

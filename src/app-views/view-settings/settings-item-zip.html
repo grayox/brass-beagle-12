@@ -1,0 +1,462 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+
+<link rel="import" href="/src/custom-styles/icon-imports.html">
+<!--- ->
+<link rel="import" href="/src/custom-elements/form-save-buttons.html">
+<!---->
+<link rel="import" href="settings-item-styles.html">
+
+<link rel="import" href="notification-shield.html">
+
+<!--- ->
+demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
+<!---->
+
+<dom-module id="settings-item-zip">
+  <template>
+		<style include="settings-item-styles">
+			.wrapper {
+				cursor: auto;
+			}
+			.wrapper > .collapse {
+				padding-bottom: 16px;
+			}
+			form-input-zip {
+				text-align: left;
+			}
+			paper-button.save {
+				background-color: var(--app-primary-color);
+				color: white;
+				opacity: 1.0;
+			}
+			.buttons {
+				margin-top: 12px;
+			}
+			.shield {
+				display: inline-block;
+				font-size: smaller;
+				opacity: 1.0;
+			}
+			paper-button[disabled] {
+				color: var(--paper-grey-600);
+				background-color: var(--paper-grey-300);
+			}
+		</style>
+		
+    <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<!---->
+		<app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
+		<!---->
+		<paper-toast id="toast" text="Zip code saved"></paper-toast>
+		<iron-a11y-keys id="a11y"
+                    xtarget="[[target]]"
+                    keys="enter"
+                    xon-keys-pressed="onEnter"
+                    on-keys-pressed="_save"
+                    >
+    </iron-a11y-keys>
+    <!---->
+		
+		<div class="wrapper">
+      <!--- ->
+			<iron-icon xicon="[[icon]]"
+								 xicon="communication:location-on"
+								 icon="maps:place"
+								 class="icon"></iron-icon>
+      <!---->
+      <div class="start">
+				<div class="primary">
+					<!--- ->
+					<slot name="primary"></slot>
+					<!---->
+					[[label]]
+					<!--- ->
+					Zip code
+					<!---->
+          <slot></slot>
+					<!--- ->
+          <paper-badge label="Required"></paper-badge>
+					<!---->
+				</div>
+				<div class="secondary">
+					<!--- ->
+					<slot name="secondary"></slot>
+					<!--- ->
+					[[_output]]
+					[[userSettings.zip.zipCode]]
+					<!---->
+					[[zipCode]]
+				</div>
+			</div>
+			<div class="end">
+			  <paper-ripple xrecenters></paper-ripple>
+				<!--- ->
+				<paper-icon-button icon="create"
+													 on-tap="_toggleCollapse"
+													 xhidden$="{{opened}}"
+													 >
+				</paper-icon-button>	
+				<!---->
+				<paper-icon-button icon="expand-more"
+													 on-tap="_toggleCollapse"
+													 hidden$="{{opened}}"
+													 >
+				</paper-icon-button>	
+				<paper-icon-button icon="expand-less"
+													 on-tap="_toggleCollapse"
+													 hidden$="{{!opened}}"
+													 >
+				</paper-icon-button>
+			</div>
+
+			<iron-collapse id="collapse" class="collapse" opened="{{opened}}">
+				<div class="collapse-content">
+					<form-input-zip zip-valid="{{zipValid}}"
+													zip-code="{{zipCode}}"
+													xzip-code="{{userSettings.zip.zipCode}}"
+													zip-state="{{zipState}}"
+													zip-county="{{zipCounty}}"
+													zip-city="{{zipCity}}"
+													zip-state-county="{{zipStateCounty}}"
+													zip-city-state-county="{{zipCityStateCounty}}"
+													>
+					</form-input-zip>
+					
+					<!-- temp / test -->
+					<div class="buttons">
+						<!--- ->
+						<paper-button class="cancel">Cancel</paper-button>
+						<!---->
+						<paper-button class="reset" on-tap="_reset">Clear</paper-button>
+						<paper-button class="save" on-tap="_save" disabled="{{!zipValid}}">Save</paper-button>
+					</div>
+					<!---->
+					
+					<!--- ->
+					<form-save-buttons></form-save-buttons>
+					<!---->
+					
+				</div>
+			</iron-collapse>
+						
+		</div>
+    
+  </template>
+
+  <script>
+    class SettingsItemZip extends Polymer.Element {
+      static get is() { return 'settings-item-zip'; }
+
+      static get properties() {
+        return {
+				            
+          // state
+
+          userSettings: {
+            type: Object,
+            notify: true,
+            observer: '_userSettingsChanged',
+          },
+
+          newSettings: {
+            type: Object,
+            notify: true,
+            //observer: '_userSettingsChanged',
+            computed: '_computeNewSettings(userSettings, zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty)',
+          },
+
+          // common properties
+
+					/** /
+					opened: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+					},
+					/**/
+					
+					label: {
+						type: String,
+						notify: true,
+						//value: () => 'Home',
+						//observer: '_selectedChanged',
+					},
+					
+					/** /
+					icon: {
+						type: String,
+						notify: true,
+						//value: () => 'home',
+						//observer: '_selectedChanged',
+					},
+					
+					/** /
+					_output: {
+						type: String,
+						notify: true,
+						//value: () => false,
+						//observer: '_selectedChanged',
+						computed: '_computeOutput(checked)',
+					},
+					
+					/** /
+					checked: {
+						type: Boolean,
+						notify: true,
+						value: () => false,
+						//observer: '_selectedChanged',
+					},
+					/**/
+					
+					// unique properties
+					
+					
+					zipValid: {
+						type: Boolean,
+						notify: true,
+						//computed: '_computeZipValid(zipCity, zipState, zipCounty)',
+					},
+					zipCode: {
+						type: String,
+						notify: true,
+						// observer: '_zipCodeChanged',
+						// value: () => null,
+					},
+					zipCity: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipCity(zipCode, zipCodeData)',
+					},
+					zipState: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipState(zipCode, zipCodeData)',
+					},
+					zipCounty: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipCounty(zipCode, zipCodeData)',
+					},
+					
+					zipStateCounty: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipStateCounty(zipState, zipCounty)',
+					},
+					zipCityStateCounty: {
+						type: String,
+						notify: true,
+						//computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
+					},
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			/**/
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', e => this.onUserActionSelect(e));
+		  }
+			
+			/** /
+			_toggle() {
+				// must add to "on-tap" event of switch to "double toggle"
+				// switch because item's "on-tap" event also toggles switch
+				// in reverse direction when switch is tapped
+				const s = this.$.switch;
+				s.checked = !s.checked;
+			}
+			
+			/** /
+			_computeOutput(b) {
+				return !!b ? 'On' : 'Off';
+			}
+			/**/
+			
+			_toggleCollapse() {
+				const r = this.$.collapse;
+				r.toggle();
+				//r.opened = !r.opened;
+			}
+
+			_reset() {
+				this.set('zipCode', '');
+			}			
+			
+			/** /
+			_itemMethod(e) {
+				//console.log('e', e);
+				var detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				var entity = detail.entity; // 'deal'|'bid'|'network'
+				/** /
+				var method = detail.method; // 'save'|'delete'
+				//this.$['app-methods'][method](detail);
+				/** //
+				//console.log('detail', detail);
+				//console.log('entity', entity);
+				this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+				this._closeEditor(entity);
+			}
+			/**/
+			
+			/** /
+			_save() {
+				// This method saves user-zip entity. We will deprecate it because we want to save a user-settings entity instead.
+        // In order to save user-settings, we will dispatch event to upstream compontent view-settings to mediate
+        // Update: We are reversing the above decision. We will write to DB locally to this element and not use a mediator.
+        // Changes will be reflected in the other version of this method in this file.
+				
+				const methods = this.$.methods;
+				
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				const entity = 'user-zip'; // 'zip'|'deal'|'bid'|'network'
+				const data = { // {new: 'data'}
+					zipValid: this.zipValid,
+					zipCode: this.zipCode,
+					zipCity: this.zipCity,
+					zipState: this.zipState,
+					zipCounty: this.zipCounty,
+					zipStateCounty: this.zipStateCounty,
+					zipCityStateCounty: this.zipCityStateCounty,
+				};
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				
+				methods.method(detail);
+			}
+			/**/
+			
+			_save() {
+
+        //  console.log('oldUserSettings', this.userSettings);
+
+				// save to two locations: 1. archive for search/retrieve 2. settings main for fetch/local use
+        
+        const newSettings = this.newSettings;
+        const data = newSettings;
+        // console.log('data\n', data);
+        
+        // const timestamp = new Date().getTime();
+				// const data = { // {new: 'data'}
+				// 	timestamp: timestamp,
+				// 	zipValid: this.zipValid,
+				// 	zipCode: this.zipCode,
+				// 	zipCity: this.zipCity,
+				// 	zipState: this.zipState,
+				// 	zipCounty: this.zipCounty,
+				// 	zipStateCounty: this.zipStateCounty,
+        //  zipCityStateCounty: this.zipCityStateCounty,
+				// };
+        
+        // Comment out below 'save record to archive' because we will not archive individual zip records;
+        // Instead, we will update the entire settings object and archive accordingly
+				// save record to archive
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-zip'; // 'zip'|'deal'|'bid'|'network'
+				const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
+				
+				// dispatch event to mediator element to save entire 'settings'
+				// this._dispatchEvent('update-user-zip', data);
+				
+				// cleanup
+				this.$.toast.open();
+				this.set('opened', false);
+			}
+
+			// _dispatchEvent(name, data) {
+			// 	/** /
+			// 	const m = this.$.methods;
+			// 	m.fireEvent(name, data);
+			// 	/**/
+				
+			// 	const n = name;
+			// 	const o = {
+			// 		bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);
+      // }
+      
+      _userSettingsChanged(newData, oldData) {
+        // console.log('oldSettings\n', oldData);
+        // console.log('newSettings\n', newData);
+        if (newData && newData.zip && newData.zip.zipCode) {
+          this.set('zipCode', newData.zip.zipCode);
+        } else {
+          this.set('zipCode', null);
+        }
+      }
+
+      _computeNewSettings(o, zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
+        // console.log('oldSettings\n', o);
+        const timestamp = new Date().getTime();
+        const out = o ? { ...o } : {};
+        // if(o) {
+        //   out = { ...o };
+        // }
+        out.timestamp = timestamp;
+        // if(!out.zip) {
+        //   out.zip = {};
+        // }
+        out.zip = {
+          timestamp: timestamp,
+          zipValid: zipValid,
+          zipCode: zipCode,
+          zipCity: zipCity,
+          zipState: zipState,
+          zipCounty: zipCounty,
+          zipStateCounty: zipStateCounty,
+          zipCityStateCount: zipCityStateCounty,
+        }
+        // console.log('newSettings\n', out);
+        return out;
+      }
+  						
+    }
+
+    window.customElements.define(SettingsItemZip.is, SettingsItemZip);
+  </script>
+
+</dom-module>

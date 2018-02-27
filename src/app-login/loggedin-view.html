@@ -1,0 +1,47 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/app-shell/app-shell.html">
+
+<dom-module id="loggedin-view">
+	<template>
+
+		<style></style>
+
+    <app-shell></app-shell>
+		
+	</template>
+
+ <script>
+	 
+    class LoggedinView extends Polymer.Element {
+
+      static get is() { return 'loggedin-view'; }
+			
+			/** /
+			static get properties() { return {
+			  /** /
+				user: {
+			    type: Object,
+			    notify: true,
+          //observer: '_userChanged',
+        },
+			  /** /
+      }}
+			/**/
+
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+				//window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+			}
+		
+    }
+
+    customElements.define(LoggedinView.is, LoggedinView);
+
+  </script>
+</dom-module>
