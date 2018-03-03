@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 
-<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="app-item.html">
 
 <!---->
 
@@ -45,7 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <style include="paper-item-styles"></style>
     
-    <!---->
+    <!--- ->
 
     <firebase-query id="query"
 										app-name="app"
@@ -155,7 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				items: {
 					type: Array,
 					notify: true,
-          // observer: '_itemsChanged',
+          observer: '_itemsChanged',
           // value: () => [
           //   { type: 'output'   , name: '', icon: 'vaadin:warning'        , label: 'Required information'    , dataString: '0/2'                        , } ,
           //   { type: 'output'   , name: '', icon: 'vaadin:flag'           , label: 'State'                   , dataString: 'Mississippi'                , } ,
@@ -188,9 +188,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   return out;
       // }
 
-      // _itemsChanged(a) {
-      //   console.log('items\n', a);
-      // }
+      _itemsChanged(newData, oldData) {
+        console.log('old-data\n', oldData);
+        console.log('new-data\n', newData);
+      }
 		
     }
 

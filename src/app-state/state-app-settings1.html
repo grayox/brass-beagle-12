@@ -7,32 +7,33 @@
 <!---->
 <!---->
 
-<dom-module id="state-app-views">
+<dom-module id="state-app-settings">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="app-views" data="[[appViews]]"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="app-settings" data="{{appSettings}}"></app-localstorage-document>
 		
 		<iron-ajax id="ajax"
 							 auto xverbose
-							 url="/src/app-data/app-views.json"
+							 url="/src/app-data/app-settings.json"
+							 xurl="/src/app-data/app-views.json"
 							 handle-as="json"
 							 xon-response="_handleAjaxResponse"
 							 xdebounce-duration="300"
-							 last-response="{{appViews}}"
+							 last-response="{{appSettings}}"
 							 >
 		</iron-ajax>
 		
   </template>
 
   <script>
-    class StateAppViews extends Polymer.Element {
-      static get is() { return 'state-app-views'; }
+    class StateAppSettings extends Polymer.Element {
+      static get is() { return 'state-app-settings'; }
 
       static get properties() { return {
-				appViews: {
+				appSettings: {
 					type: Object,
 					notify: true,
-					observer: '_appViewsChanged',
+					// observer: '_appSettingsChanged',
 				},
       }}
       
@@ -44,17 +45,7 @@
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
 		  }
-
-      _appViewsChanged(newData, oldData) {
-        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
-        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-        if(!newData && oldData) {
-          // console.log('newData\n', newData);
-          // console.log('oldData\n', oldData);
-          this.set('appViews', oldData);
-        }
-      }
-
+			
 			// _appViewsChanged(data) {
 			// 	console.log('data\n', data);
 			// 	//this._dispatchEvent('app-data-changed', data);
@@ -83,6 +74,6 @@
 		
 	  }
 
-    window.customElements.define(StateAppViews.is, StateAppViews);
+    window.customElements.define(StateAppSettings.is, StateAppSettings);
   </script>
 </dom-module>

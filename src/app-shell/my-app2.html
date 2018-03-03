@@ -12,14 +12,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
-<!--- ->
-<link rel="import" href="/src/app-main/app-methods.html">
-
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
-<link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-app-views.html">
-<link rel="import" href="/src/app-state/state-app-settings.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
 
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 
@@ -41,21 +37,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
 
 		<style></style>		
-    
-    <!---->
-    <app-methods id="methods" xshow-toast xdispatch-event></app-methods>
-    
+		
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>		
-    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+		<state-app-views app-views="{{appViews}}"></state-app-views>		
+		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>		
 		
-		<iron-pages selected="{{route}}" xattr-for-selected="name">
-		  <template is="dom-repeat" items="[[appSettings]]">
-        <app-view items="[[item.items]]"></app-view>
-      </template>
-    </iron-pages>
-    
-    <!--- ->
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="{{appViews.views}}">
         <app-view name="[[item.name]]"
@@ -65,7 +52,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-view>
       </template>
     </iron-pages>
-    <!---->
 		
 
   </template>
@@ -78,20 +64,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 			static get properties() { return {
         
-        // appViews: Object,
+        appViews: Object,
 			  
-        route: {
-					type: Number,
-					notify: true,
-					//observer: '_routeChanged',
-				},
+        // route: {
+				// 	type: Number,
+				// 	notify: true,
+				// 	//observer: '_routeChanged',
+				// },
 			  
-        appSettings: {
-          type: Array,
-          notify: true,
-          // computed: _computeItems(appViews),
-          // observer: '_appSettingsChanged',
-        },
+        // items: {
+        //   type: Array,
+        //   computed: _computeItems(appViews),
+        // }
         
       }}
 			
@@ -108,47 +92,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			// 	console.log('route', route);
 			// }
 
-      _onValidZip(e) {
-        // console.log('data-zip\n', e);
-        const d = e.detail;
-        //console.log('d', d);
-        // this._saveAppSettings(d);
-        this.set('appSettings.zip.dataString', d.zipCode);
-        const appSettings = this.appSettings;
-        // console.log('app-settings\n', appSettings);
-        // console.log('user-settings\n', this.userSettings);
-        this._saveAppSettings(appSettings);
-      }
-
-      _onDetailSaveButton(e) {
-        this._saveAppSettings(e.detail);
-      }
-
-      _saveAppSettings(data) {
-        // console.log('data\n',data);
-      
-        // common code below this line
-
-				const entity = 'user-settings';
-				
-				const methods = this.$.methods;
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
-				const detail = {
-					method: method,
-					entity: entity,
-					data: data,
-				};
-				// console.log('detail\n', detail);
-				methods.method(detail);
-      }
-
-      // _appSettingsChanged(newData, oldData) {
-      //   console.log('old-data\n', oldData);
-      //   console.log('new-data\n', newData);
+      // _computeItems(o) {
+      //   const views = o.views;
+      //   const out = views.reduce...
+      //   return out;
       // }
-
 			
     }
 

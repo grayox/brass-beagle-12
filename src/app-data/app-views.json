@@ -39,7 +39,8 @@
       "type": "output",
       "icon": "vaadin:warning",
       "label": "Required information",
-      "data": "0/2"
+      "data": "settings",
+      "value": "0/2"
     },
     "subhead-filters": {
       "type": "subheader",
@@ -49,7 +50,8 @@
       "type": "output",
       "icon": "track-changes",
       "label": "Your type of services",
-      "data": "Mortgage",
+      "data": "settings",
+      "value": "Select",
       "detail": [ "lead-type-detail" ]
     },
     "lead-type-detail": {
@@ -61,7 +63,8 @@
       "type": "output",
       "icon": "track-changes",
       "label": "Counties in your territory",
-      "dataNumber": 1,
+      "data": "settings",
+      "value": "Select",
       "detail": [ "counties-by-zip" ]
     },
     "counties-by-zip": {
@@ -81,28 +84,32 @@
       "type": "output",
       "icon": "vaadin:flag",
       "label": "State",
-      "data": "Mississippi",
+      "data": "Settings",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "county": {
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "County",
-      "data": "Biloxi",
+      "data": "Settings",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "city": {
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "City",
-      "data": "Jackson",
+      "data": "Settings",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "zip": {
       "type": "output",
       "icon": "vaadin:pin",
       "label": "Zip",
-      "data": "12345",
+      "data": "Settings",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "subhead-zip-detail": {
@@ -118,26 +125,29 @@
       "label": "Your mobile text number"
     },
     "zip-detail": {
-      "type": "input-zip"
+      "type": "input-zip",
+      "data": "zip"
     },
     "phone": {
       "type": "output",
       "icon": "vaadin:phone",
       "label": "Phone",
-      "data": "555-555-1212",
+      "data": "settings",
+      "value": "add",
       "detail": [ "subhead-phone-detail", "phone-detail", "buttons" ]
     },
     "phone-detail": {
       "type": "input-text",
       "icon": "vaadin:phone",
       "label": "Phone",
-      "data": "555-555-1212"
+      "data": "phone"
     },
     "email": {
       "type": "output",
       "icon": "vaadin:envelope",
       "label": "Email",
-      "data": "myemailaddress@example.com",
+      "data": "settings",
+      "value": "Enter",
       "detail": [ "subhead-email-detail", "email-detail", "buttons" ]
     },
     "email-detail": {
@@ -154,25 +164,29 @@
       "type": "checkbox",
       "icon": "communication:textsms",
       "label": "Notify you via text",
-      "data": true
+      "data": "settings",
+      "value": false
     },
     "notify-you-email": {
       "type": "checkbox",
       "icon": "communication:email",
       "label": "Notify you via email",
-      "data": false
+      "data": "settings",
+      "value": false
     },
     "auto-text-leads": {
       "type": "checkbox",
       "icon": "vaadin:bolt",
       "label": "Auto text to your new leads",
-      "data": true
+      "data": "settings",
+      "value": false
     },
     "auto-email-leads": {
       "type": "checkbox",
       "icon": "vaadin:magic",
       "label": "Auto email to your new leads",
-      "data": false
+      "data": "settings",
+      "value": false
     }
   },
 
