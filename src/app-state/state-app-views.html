@@ -32,7 +32,7 @@
 				appViews: {
 					type: Object,
 					notify: true,
-					observer: '_appViewsChanged',
+					// observer: '_appViewsChanged',
 				},
       }}
       
@@ -45,15 +45,15 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
 		  }
 
-      _appViewsChanged(newData, oldData) {
-        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
-        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-        if(!newData && oldData) {
-          // console.log('newData\n', newData);
-          // console.log('oldData\n', oldData);
-          this.set('appViews', oldData);
-        }
-      }
+      // _appViewsChanged(newData, oldData) {
+      //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+      //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+      //   if(!newData && oldData) {
+      //     // console.log('oldData\n', oldData);
+      //     // console.log('newData\n', newData);
+      //     this.set('appViews', oldData);
+      //   }
+      // }
 
 			// _appViewsChanged(data) {
 			// 	console.log('data\n', data);

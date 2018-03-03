@@ -1,0 +1,57 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="app-item-data">
+  <template>
+    <style>
+      .dim {
+        opacity: var(--opacity-dim);
+      }
+    </style>
+    
+    <paper-icon-button icon="chevron-right" class="dim"></paper-icon-button>
+     
+  </template>
+
+  <script>
+    //class AppItem extends AppListMixin(Polymer.Element) {
+    class AppItemData extends Polymer.Element {
+      static get is() { return 'app-item-data'; }
+
+      /**/
+			static get properties() { return {
+
+				data: { // right side
+					type: Object,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+          computed: '_computeData(appSettings, userSettings, view, name)',
+				},
+
+				dataString: { // right side (or input.value)
+					type: String,
+					notify: true,
+					//observer: '_mediaWidthChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
+
+      }}
+      
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+
+    }
+
+    window.customElements.define(AppItemData.is, AppItemData);
+  </script>
+
+</dom-module>

@@ -25,6 +25,7 @@
 <link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 
 <link rel="import" href="app-menu.html">
+<link rel="import" href="app-item-data.html">
 <!--- ->
 <link rel="import" href="app-list-mixin.html">
 
@@ -68,7 +69,11 @@ Types of elements
             <paper-item-body xtwo-line>
               <div>[[label]]</div>
             </paper-item-body>
+            <!---->
             <div>[[dataString]]</div>
+            <!--- ->
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
           </paper-item>
         </div>
       </template>
@@ -84,6 +89,9 @@ Types of elements
               <div>[[label]]</div>
             </paper-item-body>
             <div>[[dataString]]</div>
+            <!--- ->
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
           </paper-item>
         </div>
       </template>
@@ -99,7 +107,11 @@ Types of elements
             <paper-item-body xtwo-line>
               <div>[[label]]</div>
             </paper-item-body>
+            <!--- ->
             <div>[[dataString]][[dataNumber]]</div>
+            <!---->
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
           </paper-icon-item>
         </div>
       </template>
@@ -154,7 +166,10 @@ Types of elements
             </paper-item-body>
             <!--- ->
             <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <div>[[dataString]]</div>
+            <app-item-data data="[[data]]"></app-item-data>
             <!---->
+            <!---->            
           </paper-icon-item>
         </div>
       </template>      
