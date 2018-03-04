@@ -184,7 +184,14 @@
           // console.log('v\n', v);
           let viewItemsKeys = v.items ? v.items : []; // array
           // console.log('viewItemsKeys\n', viewItemsKeys);
-          let viewItems = viewItemsKeys.reduce((c, v, i, a) => [ ...c, items[v] ], []); // assemble items from keys contained by view
+          // assemble items from keys contained by view
+          let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
+            let item = items[v];
+            if (item.data === 'settings') {
+              // substitute value from settings object
+            }
+            return [ ...c, item ];
+          }, []);
           v.items = viewItems;
           return [ ...c, v ];
         }, []);

@@ -84,7 +84,7 @@
       "type": "output",
       "icon": "vaadin:flag",
       "label": "State",
-      "data": "Settings",
+      "data": "settings",
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -92,7 +92,7 @@
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "County",
-      "data": "Settings",
+      "data": "settings",
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -100,7 +100,7 @@
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "City",
-      "data": "Settings",
+      "data": "settings",
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -108,7 +108,7 @@
       "type": "output",
       "icon": "vaadin:pin",
       "label": "Zip",
-      "data": "Settings",
+      "data": "settings",
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },

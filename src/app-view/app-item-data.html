@@ -11,7 +11,17 @@
       }
     </style>
     
-    <paper-icon-button icon="chevron-right" class="dim"></paper-icon-button>
+    <!---->
+    <paper-icon-button class="dim"
+                       icon="chevron-right"
+                       hidden$="[[_computeDataExists(data)]]"
+                       >
+    </paper-icon-button>
+
+    <div hidden$="[[!_computeDataExists(data)]]">[[data]]</div>
+    <!--- ->
+    <div>[[dataString]]</div>
+    <!---->
      
   </template>
 
@@ -28,7 +38,7 @@
 					notify: true,
 					//observer: '_mediaWidthChanged',
           //value: () => 'vaadin:phone', //'star'
-          computed: '_computeData(appSettings, userSettings, view, name)',
+          //computed: '_computeData(appSettings, userSettings, view, name)',
 				},
 
 				dataString: { // right side (or input.value)
@@ -48,6 +58,10 @@
         super.ready();
 				//console.log('Component Ready');
 			}
+
+      _computeDataExists(data) {
+        return (!!data || date===0); // TODO: handle zero as special case
+      }
 
     }
 
