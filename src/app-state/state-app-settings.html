@@ -20,7 +20,7 @@
     <state-media media-type="{{mediaType}}"></state-media>
     <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
-    <state-user-remote user-settings="{{userSettings}}"></state-user-settings>
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
 		
   </template>
@@ -36,6 +36,13 @@
 					// observer: '_appSettingsChanged',
           computed: '_computeAppSettings(appViews, userSettings)'
 				},
+
+				// userSettings: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	observer: '_userSettingsChanged',
+        //   // computed: '_computeAppSettings(appViews, userSettings)'
+				// },
       }}
       
 			constructor() {
@@ -67,116 +74,16 @@
 			// 	methods.method(detail);
 			// }
 			
-			// _computeSettings(sZip, sSwitch, sInput) {
-			// 	const out = {};
-				
-			// 	if(sZip    === undefined) { sZip    = {} }
-			// 	if(sSwitch === undefined) { sSwitch = {} }
-			// 	if(sInput  === undefined) { sInput  = {} }
-				
-			// 	out.zip = sZip;
-			// 	out.switch = sSwitch;
-			// 	out.input = sInput;
-			// 	console.log('settings\n', out);
-			// 	return out;
-			// }
-			
-			// _onUpdateUserZip(e) {
-			// 	console.log('on-update-user-zip\n', e);
-			// 	const data = e.detail;
-			// 	this.set('settingsZip', data);
-			// 	console.log('settings-zip\n', this.settingsZip);
-				
-			// 	const settings = this.settings;
-			// 	console.log('settings\n', settings);
-			// 	this.save(settings);
-			// }
-			
-			// _onUpdateUserSwitch(e) {
-			// 	//console.log('on-update-user-switch\n', e); // {detail: {data: true, label: 'home'|'mortgage'|...}}
-			// 	const data = e.detail;
-			// 	if(!this.settingsSwitch) {
-			// 		this.set('settingsSwitch', {});
-			// 	}
-			// 	this.set(['settingsSwitch', data.label], data.data);
-			// 	console.log('settings-switch\n', this.settingsSwitch); // {data: true, label: 'home'|'mortgage'|...}
-				
-			// 	//const settings = this.settings;
-			// 	const settings = this._computeSettings(this.settingsZip, this.settingsSwitch, this.settingsInput);
-			// 	console.log('settings\n', settings);
-			// 	this.save(settings);
-			// }
-			
-			// _onUpdateUserInput(e) {
-			// 	//console.log('on-update-user-input\n', e); // {detail: {data: 'somestring', label: 'text'|'email'}}
-			// 	const data = e.detail;
-			// 	if(!this.settingsInput) {
-			// 		this.set('settingsInput', {});
-			// 	}
-			// 	this.set(['settingsInput', data.label1], data.data);
-			// 	//console.log('settings-input\n', this.settingsInput); // {data: 'somestring', label: 'text'|'email'}
-				
-			// 	const settings = this.settings;
-			// 	console.log('settings\n', settings);
-			// 	this.save(settings);
-			// }
-			
-			// _onUpdateUserInvite(e) { // no need to save prior invitations to settings
-			// 	//console.log('on-update-user-invite\n', e); // {detail: {data: 'somestring', label: 'contact'}}
-			// 	const data = e.detail;
-			// 	this.set('settingsInvite', {});
-			// 	this.set('settingsInvite[label]', data);
-			// 	console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
-			// }
-
-      // _show() {
-      //   console.log('appViews\n', this.appViews);
-      // }
-
-      // _handleTappedAppItem(e) {
-           // when this.detail is provided
-      //   //console.log('tapped\n', e);
-      //   const detail = e.detail;
-      //   //console.log('detail\n', detail);
-      //   this.set('detail', detail);
-      // }
-
-      // _computeItems(appSettings, userRemote) {
-      // // _computeItems(appViews, userRemote) {
-      //   //const out = appViews.lists.settings;
-      //   // console.log('computing items...')
-      //   // console.log('app-settings\n', appSettings);
-      //   const out = this.itemsObject2array(appSettings);
-      //   // const out = userRemote ? userRemote : appViews.lists.settings;
-      //   // console.log('out\n', out);
-      //   return out;
-      // }
-
-      // _fetchViewItemKeys(appViews, viewName) {
-      //   // fetch item keys that match view
-      //   const keys = appViews.views.reduce((c, v, i, a) => {
-      //       // console.log('i', i);
-      //       // .reduce() reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-      //       if(v.name === viewName) {
-      //         // console.log('v\n', v);
-      //         // console.log('items\n', v.items);
-      //         // return c.concat(v.items); // works
-      //         return [...c, ...v.items]; // works
-      //       }
-      //       else {
-      //         return c;
-      //       }
-      //       // console.log('c\n', c);
-      //     }, []);
-      //   //console.log('keys\n', keys); // [ "subhead-status", "req-info", "subhead-filters", "lead-type", "counties-list", ...]
-      //   const out = keys;
-      //   return out;
-      // }
+      _userSettingsChanged(newData, oldData) {
+        console.log('user-settings-old', oldData);
+        console.log('user-settings-new', newData);
+      }
 
       _computeAppSettings(appViews, userSettings) {
         // console.log('app-views\n', appViews);
-        // const ready = appViews;// && userSettings;
-        // if(!ready) return;
+        // console.log('user-settings\n', userSettings);
+        const ready = appViews && userSettings;
+        if(!ready) return;
         
         const views = appViews.views;
         const items = appViews.items;
@@ -187,8 +94,10 @@
           // assemble items from keys contained by view
           let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
             let item = items[v];
-            if (item.data === 'settings') {
+            let userSetting = userSettings[v];
+            if ( item.data === 'settings' ) {
               // substitute value from settings object
+              item.data = userSetting ? userSetting : (item.value ? item.value : null);
             }
             return [ ...c, item ];
           }, []);
@@ -200,123 +109,6 @@
         return out;
       }
       
-      // _computeItems(itemKeys, appViews, userRemote) {
-      // //_constructItemsArray(appViews, itemKeys) {
-        
-      //   const ready = itemKeys && itemKeys.length && appViews && userRemote;
-      //   //const ready = appViews && userSettings;
-      //   if(!ready) return;
-        
-      //   // console.log('view-name', this.name);
-      //   // console.log('itemKeys', itemKeys);
-      //   // console.log('appViews', appViews);
-      //   // console.log('userRemote', userRemote);
-
-      //   // build up array of items from the keys and master object definition
-      //   const views = appViews.views;
-      //   //const items = appViews.items;
-      //   const out = views.reduce((c, v, i, a) => [ ...c, itemKeys[v] ], []);
-      //   // deprecated below: now we create detail items dynamically via this._handleTappedAppList()
-      //   // {
-      //   // // iterate for detail
-      //   //   let r = items[v];
-      //   //   console.log('v\n', v);
-      //   //   if(v === 'detail') {
-      //   //     //r.detail = this._constructItemsArray(appViews, r.detail);
-      //   //     console.log('detail\n', r.detail);
-      //   //     r.detail = r.detail.reduce((c, v, i, a) => [...c, appViews[r], [] );
-      //   //   }
-      //   //   return [ ...c, r ];
-      //   // }, []);
-      //   // console.log('out\n', out);
-      //   return out;
-      // }
-
-      // _computeItems(viewName1, appViews, userRemote) {
-      // // _computeItems(appViews) {
-      //   const viewName = 'view-archive';
-      //   // console.log('hai!');
-      //   // console.log('viewName\n', viewName);
-      //   // console.log('appViews\n', appViews);
-      //   // console.log('userRemote\n', userRemote);
-      //   // const ready = viewName && appViews; // && userRemote;
-      //   // if(!ready) return;
-        
-      //   // fetch item keys that match view
-      //   const keys = this._fetchViewItemKeys(appViews, viewName);
-      //   // build up array of items from the keys and master object definition
-      //   const out = this._constructItemsArray(appViews, keys);
-      //   //console.log('out\n', out);
-      //   return out;
-      // }
-
-      // itemsObject2array(o) {
-      //   // o = {
-      //   //   name1: {
-      //   //     type: 'output',
-      //   //     name: 'name1',
-      //   //     icon: 'vaadin:warning',
-      //   //     label: 'Required information',
-      //   //     dataString: '0/2',
-      //   //     detail: {...},
-      //   //   },
-      //   //   ...
-      //   // }
-      //   const out = [];
-      //   const keys = Object.keys(o);
-      //   let i = keys.length;
-      //   while(i--) {
-      //     let m = o[keys[i]]; // each member of the object
-      //     let seq = m.seq; // the pre-recorded element's sequence in the original array
-      //     if ( typeof(seq) !== 'number' ) continue; // bypass timestamp
-
-      //     if(m.detail) {
-      //       let detail = m.detail;
-      //       let detailArray = this.itemsObject2array(detail);
-      //       m.detail = detailArray;
-      //     }
-
-      //     out[seq] = m; // re/storing the array element to/in its original/designated location
-      //   }
-      //   return out;
-      // }
-
-      // itemsArray2object(a) { // derive an object from the array
-      //   // object: for storage
-      //   // array: for display: via <template is="dom-if"...
-      //   // a = [ {
-      //   //         "type": "subheader",
-      //   //         "label": "Engagement status"
-      //   //       }, {
-      //   //         "type": "output",
-      //   //         "name": "",
-      //   //         "icon": "vaadin:warning",
-      //   //         "label": "Required information",
-      //   //         "dataString" : "0/2"                       
-      //   //       }, {...}
-      //   //     ]
-      //   const timestamp = Date.now(); //new Date().getTime();
-      //   const out = { timestamp: timestamp };
-      //   let i = a.length;
-      //   // console.log('array-length\n', i);
-      //   while(i--) {
-      //     let el = a[i];
-      //     let detail = el.detail ? this.itemsArray2object(el.detail) : null;       
-      //     let key = el.name;
-      //     // console.log('key\n', key);
-      //     // out[key] = a[i]; // an object corresponding to the ith element of the array
-      //     // out[key]['seq'] = i;
-      //     out[key] = {
-      //       ...el, // an object corresponding to the ith element of the array
-      //       seq: i, // a sequence notation for reconstructing the original array from its derived object
-      //       detail: detail, // iterative
-      //     };
-      //   }
-      //   // console.log('items-object\n', out);
-      //   // const ar = this.itemsObject2array(out);
-      //   // console.log('items-array\n', ar);
-      //   return out;
-      // }
 		
 	  }
 

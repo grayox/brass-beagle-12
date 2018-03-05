@@ -69,8 +69,8 @@ Types of elements
             <paper-item-body xtwo-line>
               <div>[[label]]</div>
             </paper-item-body>
-            <!---->
-            <div>[[dataString]]</div>
+            <!--- ->
+            <div>[[data]]</div>
             <!--- ->
             <app-item-data data="[[data]]"></app-item-data>
             <!---->
@@ -307,7 +307,7 @@ Types of elements
         },
 
 				data: { // right side
-					type: String, // Object
+					type: Object,//String, // 
 					notify: true,
 					//observer: '_mediaWidthChanged',
           //value: () => 'vaadin:phone', //'star'

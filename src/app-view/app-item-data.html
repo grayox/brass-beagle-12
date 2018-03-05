@@ -30,8 +30,7 @@
     class AppItemData extends Polymer.Element {
       static get is() { return 'app-item-data'; }
 
-      /**/
-			static get properties() { return {
+      static get properties() { return {
 
 				data: { // right side
 					type: Object,
@@ -41,12 +40,12 @@
           //computed: '_computeData(appSettings, userSettings, view, name)',
 				},
 
-				dataString: { // right side (or input.value)
-					type: String,
-					notify: true,
-					//observer: '_mediaWidthChanged',
-          //value: () => 'vaadin:phone', //'star'
-				},
+				// dataString: { // right side (or input.value)
+				// 	type: String,
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+        //   //value: () => 'vaadin:phone', //'star'
+				// },
 
       }}
       
@@ -60,7 +59,8 @@
 			}
 
       _computeDataExists(data) {
-        return (!!data || date===0); // TODO: handle zero as special case
+        // console.log('data\n', data);
+        return (!!data || data===0);
       }
 
     }

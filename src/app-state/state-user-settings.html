@@ -73,62 +73,60 @@
 					notify: true,
 					// observer: '_userSettingsChanged',
 				},
-				/** /
-				userSettingsHome: {
-					type: Boolean,
-					notify: true,
-				},
-				userSettingsMortgage: {
-					type: Boolean,
-					notify: true,
-				},
-				userSettingsInsurance: {
-					type: Boolean,
-					notify: true,
-				},
-				userSettingsFinancial: {
-					type: Boolean,
-					notify: true,
-				},
-				userSettingsText: {
-					type: String,
-					notify: true,
-				},
-				userSettingsEmail: {
-					type: String,
-					notify: true,
-				},
-				userSettingsZip: {
-					type: String,
-					notify: true,
-				},
-				/** /
-				userSettingsZip: {
-          type: Object,
-					notify: true,
-				},
-				userSettingsSwitch: {
-          type: Object,
-					notify: true,
-				},
-				userSettingsInput: {
-          type: Object,
-					notify: true,
-				},
-        /**/
+				
+        // userSettingsHome: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsMortgage: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsInsurance: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsFinancial: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsText: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				// userSettingsEmail: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				// userSettingsZip: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				
+        // userSettingsZip: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+				// userSettingsSwitch: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+				// userSettingsInput: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+        
 			}}
 			
 			constructor() {
 				super();
 			}
 			
-			/**/
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
         this.$.storage.destroy();
       }
-      /**/
       
       // _userSettingsChanged(newData, oldData) {
       //   // console.log('uid\n', this.userRemote.uid);
