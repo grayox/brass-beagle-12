@@ -110,7 +110,7 @@ Types of elements
             <!--- ->
             <div>[[dataString]][[dataNumber]]</div>
             <!---->
-            <app-item-data data="[[data]]"></app-item-data>
+            <app-item-data data="{{data}}"></app-item-data>
             <!---->
           </paper-icon-item>
         </div>
@@ -162,7 +162,7 @@ Types of elements
               <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
             </div>
             <paper-item-body xtwo-line>
-              <paper-input label="[[label]]" value="[[dataString]]"></paper-input>
+              <paper-input label="[[label]]" value="{{data}}"></paper-input>
             </paper-item-body>
             <!--- ->
             <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
@@ -309,16 +309,16 @@ Types of elements
 				data: { // right side
 					type: Object,//String, // 
 					notify: true,
-					//observer: '_mediaWidthChanged',
-          //value: () => 'vaadin:phone', //'star'
-          //computed: '_computeData(appSettings, userSettings, view, name)',
+					// observer: '_dataChanged',
+          // value: () => 'vaadin:phone', //'star'
+          // computed: '_computeData(appSettings, userSettings, view, name)',
 				},
 
 				dataString: { // right side (or input.value)
 					type: String,
 					notify: true,
-					//observer: '_mediaWidthChanged',
-          //value: () => 'vaadin:phone', //'star'
+					// observer: '_mediaWidthChanged',
+          // value: () => 'vaadin:phone', //'star'
 				},
 				
         // dataNumber: { // right side (or input.value)
@@ -453,6 +453,10 @@ Types of elements
       //   this.set('dataZip', d);
       // }
 
+      // _dataChanged(d) {
+      //   console.log('data\n', d);
+      // }
+
       _open() {
         // const detail = this.detail;
         const detail = {
@@ -480,28 +484,29 @@ Types of elements
 			}
 
       _save(e) {
-        //console.log('e\n', e);
+        // console.log('e\n', e);
         // this._dispatchEvent('save-app-item');
-        const d = this.dataString;
-        console.log('d\n', d);
-        this._dispatchEvent('detail-save-button', 'd');
+        // const data = this.dataString;
+        const data = this.data;
+        console.log('data\n', data);
+        this._dispatchEvent('detail-save-button', data);
       }
 
       _reset(e) {
         // console.log('e\n', e);
       }
 
-      _computeData(app, user, view, name) {
-        if(user && user[view] && user[view][name] && user[view][name]['data']) {
-          const out = user[view][name]['data'];
-        } else if(app && app[view] && app[view][name] && app[view][name]['data']) {
-          const out = app[view][name]['data'];
-        } else {
-          return;
-        }
-        console.log('out\n', out);
-        return out;
-      }
+      // _computeData(app, user, view, name) {
+      //   if(user && user[view] && user[view][name] && user[view][name]['data']) {
+      //     const out = user[view][name]['data'];
+      //   } else if(app && app[view] && app[view][name] && app[view][name]['data']) {
+      //     const out = app[view][name]['data'];
+      //   } else {
+      //     return;
+      //   }
+      //   console.log('out\n', out);
+      //   return out;
+      // }
 
     }
 

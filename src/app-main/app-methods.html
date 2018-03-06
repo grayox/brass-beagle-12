@@ -284,21 +284,19 @@ Example usage (v1):
         this.dispatchEvent(d);
 			}
 			
-			/** /
-			fireEvent(name, data) {
-				const n = name;
-				const o = {
-					bubbles: true,
-					composed: true,
-					detail: data,
-				};
-				//console.log('o\n', o);
-				const d = new CustomEvent(n, o);
-				//console.log('d\n', d);
-				this.dispatchEvent(d);			
-			}
-			/**/
-		
+			// fireEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 		bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);			
+			// }
+			
 			// end utilities
 
 			// configurations and initializations
@@ -610,21 +608,19 @@ Example usage (v1):
 			method(e) { // e = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
 
 				// example
-					 /** /
-					 _itemMethod: function(e) {
-						 //console.log('e', e);
-						 const detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-						 const entity = detail.entity; // 'deal'|'bid'|'network'
-						 /** /
-						 const method = detail.method; // 'save'|'delete'
-						 //this.$['app-methods'][method](detail);
-						 /** /
-						 //console.log('detail', detail);
-						 //console.log('entity', entity);
-						 this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
-						 this._closeEditor(entity);
-					 },
-					 /**/
+
+        // _itemMethod: function(e) {
+        //   //console.log('e', e);
+        //   const detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+        //   const entity = detail.entity; // 'deal'|'bid'|'network'
+        //   const method = detail.method; // 'save'|'delete'
+        //   //this.$['app-methods'][method](detail);
+        //   //console.log('detail', detail);
+        //   //console.log('entity', entity);
+        //   this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+        //   this._closeEditor(entity);
+        // },
+
 				// end example
 
 				e = (!!e) ? e : this.methodArg; // _itemsPath() sets methodArg before calling _readFirebaseData()

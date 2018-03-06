@@ -4,11 +4,15 @@
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
-<!-- state -->
+
+<link rel="import" href="/src/app-main/app-methods.html">
+
+<!-- state - ->
 <link rel="import" href="/src/app-state/state-media.html">
+<!---->
+<link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-user-settings.html">
-<link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-counties-by-state.html">
 
 <dom-module id="state-app-settings">
@@ -16,12 +20,15 @@
 		<style></style>
 		<app-localstorage-document xlog xsession-only key="app-settings" data="{{appSettings}}"></app-localstorage-document>
 
-	  <!-- state -->
+	  <!-- state - ->
     <state-media media-type="{{mediaType}}"></state-media>
+    <!---->
     <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
+
+    <app-methods id="methods" show-toast dispatch-event></app-methods>
 		
   </template>
 
@@ -34,7 +41,7 @@
 					type: Object,
 					notify: true,
 					// observer: '_appSettingsChanged',
-          computed: '_computeAppSettings(appViews, userSettings)'
+          computed: '_computeAppSettings(appViews, userSettings)',
 				},
 
 				// userSettings: {
@@ -74,10 +81,10 @@
 			// 	methods.method(detail);
 			// }
 			
-      _userSettingsChanged(newData, oldData) {
-        console.log('user-settings-old', oldData);
-        console.log('user-settings-new', newData);
-      }
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old', oldData);
+      //   console.log('user-settings-new', newData);
+      // }
 
       _computeAppSettings(appViews, userSettings) {
         // console.log('app-views\n', appViews);
@@ -95,7 +102,7 @@
           let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
             let item = items[v];
             let userSetting = userSettings[v];
-            if ( item.data === 'settings' ) {
+            if ( item.data === 'settings' || item.data === 'Settings' ) {
               // substitute value from settings object
               item.data = userSetting ? userSetting : (item.value ? item.value : null);
             }
@@ -108,8 +115,36 @@
         // console.log('out\n', out);
         return out;
       }
+
+      saveAppSettings(data) {
+        console.log('data\n',data);
+        // console.log('user-remote\n', this.userRemote);
+        console.log('user-settings\n', this.userSettings);
+        console.log('app-settings\n', this.appSettings);
+        return;
       
-		
+        // common code below this line
+
+				const entity = 'user-settings';
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
+      }
+
+      // _appSettingsChanged(newData, oldData) {
+      //   console.log('old-data\n', oldData);
+      //   console.log('new-data\n', newData);
+      // }
+      
 	  }
 
     window.customElements.define(StateAppSettings.is, StateAppSettings);

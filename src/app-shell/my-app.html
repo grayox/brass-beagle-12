@@ -47,7 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>		
-    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+    <state-app-settings id="settings" app-settings="{{appSettings}}"></state-app-settings>
 		
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="[[appSettings]]">
@@ -102,6 +102,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			ready() {
         super.ready();
 				//console.log('Component Ready');
+        window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
+        window.addEventListener('valid-zip', e => this._onValidZip(e));
 			}
       
 			// _routeChanged(route) {
@@ -117,38 +119,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         const appSettings = this.appSettings;
         // console.log('app-settings\n', appSettings);
         // console.log('user-settings\n', this.userSettings);
-        this._saveAppSettings(appSettings);
+        // this._saveAppSettings(appSettings);
+        const settings = this.$.settings;
+        settings._saveAppSettings(appSettings);
       }
 
       _onDetailSaveButton(e) {
-        this._saveAppSettings(e.detail);
+        const settings = this.$.settings;
+        settings.saveAppSettings(e.detail);
       }
-
-      _saveAppSettings(data) {
-        // console.log('data\n',data);
-      
-        // common code below this line
-
-				const entity = 'user-settings';
-				
-				const methods = this.$.methods;
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
-				const detail = {
-					method: method,
-					entity: entity,
-					data: data,
-				};
-				// console.log('detail\n', detail);
-				methods.method(detail);
-      }
-
-      // _appSettingsChanged(newData, oldData) {
-      //   console.log('old-data\n', oldData);
-      //   console.log('new-data\n', newData);
-      // }
-
 			
     }
 

@@ -210,8 +210,8 @@
 			/**/
 			ready() {
         super.ready();
-        window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
-        window.addEventListener('valid-zip', e => this._onValidZip(e));
+        // window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
+        // window.addEventListener('valid-zip', e => this._onValidZip(e));
         // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , e => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
@@ -261,7 +261,7 @@
             let viewItem = items[v];
 
             // menu // case: type: input-menu
-            if( (viewItem.type === 'input-menu') && viewItem.menu) {
+            if((viewItem.type === 'input-menu') && viewItem.menu) {
               //console.log('menus\n', menus);
               let menuName = viewItem.menu;
               let menuDetail = menus[menuName];
@@ -274,7 +274,7 @@
 
               // menu.counties
               else if(menuName === 'counties-by-zip') {
-                console.log('counties-by-state\n', this.countiesByState);
+                // console.log('counties-by-state\n', this.countiesByState);
               }
 
               // menu.path

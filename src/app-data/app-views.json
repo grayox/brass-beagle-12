@@ -194,6 +194,7 @@
   "comment-2": "Which property will inform the 'app-views' and 'app-list' properties what type of data list items to display",
   "comment-3": "'path' property will yield a homgeneous element set displayed as a list - e.g., a list of 'contacts'",
   "comment-4": "'items' property will yield a heterogenous element set representing a form of state - e.g., user 'settings'",
+  "comment-5": "<state-app-settings> manipulates this data to create a useful data object for retrieving and setting the apps settings",
   "views": [
     { 
       "label": "Dashboard",

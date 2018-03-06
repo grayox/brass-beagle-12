@@ -35,9 +35,9 @@
 				data: { // right side
 					type: Object,
 					notify: true,
-					//observer: '_mediaWidthChanged',
-          //value: () => 'vaadin:phone', //'star'
-          //computed: '_computeData(appSettings, userSettings, view, name)',
+					// observer: '_dataChanged',
+          // value: () => 'vaadin:phone', //'star'
+          // computed: '_computeData(appSettings, userSettings, view, name)',
 				},
 
 				// dataString: { // right side (or input.value)
@@ -60,8 +60,12 @@
 
       _computeDataExists(data) {
         // console.log('data\n', data);
-        return (!!data || data===0);
+        return (!!data || data===0 || data===false);
       }
+
+      // _dataChanged(d) {
+      //   console.log('data\n', d);
+      // }
 
     }
 
