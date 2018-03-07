@@ -19,7 +19,7 @@
 					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
-					//observer: '_userRemoteChanged',
+					observer: '_userRemoteChanged',
 				},
 				userPhotoUrl: {
 					type: String,
@@ -32,21 +32,31 @@
 				super();
 			}
 			
-			/**/
-			ready() {
+			
+      ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
-			/**/
 			
-			/** /
-			_userRemoteChanged(userRemote) {
-				//console.log('userRemote', userRemote);
-				//this.set('userPhotoUrl', this._computeUserPhotoUrl(userRemote));
-				//console.log('userPhotoUrl', this.userPhotoUrl);
-			}
-			/**/
-			_computeUserPhotoUrl(userRemote) {
+      // _userRemoteChanged(userRemote) {
+			// 	//console.log('userRemote', userRemote);
+			// 	//this.set('userPhotoUrl', this._computeUserPhotoUrl(userRemote));
+			// 	//console.log('userPhotoUrl', this.userPhotoUrl);
+			// }
+			
+      _userRemoteChanged(newData, oldData) {
+        // console.log('user-old-data\n', oldData);
+        // console.log('user-new-data\n', newData);
+        const userLoggedIn = this.userLoggedIn;
+        if(oldData && !newData && userLoggedIn) {
+          console.log('user-old-data\n', oldData);
+          console.log('user-new-data\n', newData);
+          this.set('userRemote', oldData);
+        }
+      }
+
+      _computeUserPhotoUrl(userRemote) {
+        const DEFAULT = '/images/user.jpg';
 				//console.log('user-remote', userRemote);
 				//console.log('userPhotoUrl', user.providerData);
 				//console.log('userPhotoUrl', user.providerData[0].photoUrl); // does not work
@@ -55,16 +65,18 @@
 				//console.log('userPhotoUrl', 'userRemote.providerData.0'); // does not work
 				//console.log('userPhotoUrl', this.get(['userRemote', 'providerData', 0])); // works
 				//console.log('user-remote', userRemote);
-				var out;
+				let out;
+
 				try{
-					out = (userRemote && userRemote.userPhotoURL) ? userRemote.userPhotoURL : this.get(['userRemote', 'providerData', 0, 'photoURL',]);
+					out = (userRemote && userRemote.photoURL) ? userRemote.photoURL : this.get(['userRemote', 'providerData', 0, 'photoURL',]);
 				}catch(e){
-					out = '/images/user.jpg';
+					out = DEFAULT;
 				}
-				//console.log('photoUrl', out);
+
+        out = out ? out : DEFAULT;
+				//console.log('photo-url\n', out);
 				return out;
 			}
-
 			
     }
 

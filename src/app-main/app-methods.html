@@ -44,6 +44,18 @@ Example usage (v2):
     }
     m.method(d);
   }
+  ...
+  _save(r) {
+    const method = 'save'; // 'save'|'delete'
+    const entity = 'user'; // 'user-local'|'deal'|'bid'|'network'
+    const methods = this.$.methods;
+    const data = {
+      method: method,
+      entity: entity,
+      data: r,
+    }
+    methods.method(data);
+  }
 <!--- ->
 Example usage (v1):
   this.fire('item-method', {
@@ -310,7 +322,8 @@ Example usage (v1):
 				let data;
 				if(typeof e.data == 'object') { // e.data {object}: entity data passed from save event; {new: 'data'}
 					//data = JSON.parse(JSON.stringify(e.data)); // Clone to preserve original appData values
-					data = {...e.data}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+					//data = { ...e.data }; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+					data = Object.assign({}, e.data ); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
 				} else {
 					data = e.data;   
 				}
@@ -439,7 +452,8 @@ Example usage (v1):
 				const newPostKey = e.newPostKey;
 				// console.log('newPostKey\n', newPostKey);
 				//const ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
-				const ob = {...this.appData.entities[entity]}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+				//const ob = {...this.appData.entities[entity]}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+				const ob = Object.assign( {}, this.appData.entities[entity] ); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
 				const out = {};
 				//const timestamp = Date.now();
 
@@ -515,7 +529,8 @@ Example usage (v1):
 				const r = entities[entity];
 				//console.log('r\n', r);
 				//const ob = JSON.parse(JSON.stringify(r)); // Clone to preserve original appData values
-				const ob = {...r}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+				//const ob = {...r}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
+				const ob = Object.assign({}, r); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
 				//console.log('ob\n', ob);
 				let out, newPostKey;
 

@@ -1,5 +1,12 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-app-settings.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
+
 <link rel="import" href="app-item.html">
 
 <dom-module id="app-menu">
@@ -87,12 +94,19 @@
     </iron-selector>
     <!---->
 
+    <!-- state -->
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+    <!---->
+    <!---->
+
     <app-item type="subheader"
               label="[[subheader]]"
               xlabel="Lead type"
               xicon="[[subheaderIcon]]"
-              data-string="[[selectedLabel]]"
-              xdata="[[selectedLabel]]"
+              xdata-string="[[selectedLabel]]"
+              data="[[selectedLabel]]"
               >
     </app-item>
 
@@ -159,7 +173,6 @@
 				super();
 			}
 
-			/**/
 			ready() {
         super.ready();
 		  }
@@ -188,6 +201,10 @@
 
       _onTap(e) {
         // console.log('e\n', e);
+        console.log('e-model-item\n', e.model.item);
+        console.log('user-settings\n', this.userSettings);
+        console.log('user-remote\n', this.userRemote);
+        console.log('app-settings\n', this.appSettings);
       }
 			
     }
