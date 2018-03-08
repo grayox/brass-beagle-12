@@ -10,7 +10,7 @@
 <dom-module id="state-app-data">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="app-data" data="{{appData}}"></app-localstorage-document>
+		<app-localstorage-document xlog session-only key="app-data" data="{{appData}}"></app-localstorage-document>
 		
 		<iron-ajax id="ajax"
 							 auto xverbose
@@ -32,7 +32,7 @@
 				appData: {
 					type: Object,
 					notify: true,
-					//observer: '_appDataChanged',
+					observer: '_appDataChanged',
 				},
       }}
       
@@ -44,7 +44,18 @@
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
 		  }
-			
+
+      _appDataChanged(newData, oldData) {
+        // console.log('app-data-old\n', oldData);
+        // console.log('app-data-new\n', newData);
+        if(oldData && !newData) {
+          // console.log('app-data-old\n', oldData);
+          // console.log('app-data-new\n', newData);
+          this.set('appData', oldData);
+        }
+        return;
+      }
+
 			// _appDataChanged(data) {
 			// 	console.log('data', data);
 			// 	this._dispatchEvent('app-data-changed', data);

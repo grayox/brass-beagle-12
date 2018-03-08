@@ -11,14 +11,15 @@
 <link rel="import" href="state-user-local.html">
 <!---->
 <link rel="import" href="/src/app-main/app-methods.html">
+<link rel="import" href="/src/app-state/state-app-data.html">
 
 <dom-module id="state-user-auth">
   <template>
 		<style></style>
 		<!---->
-		<app-localstorage-document xlog xsession-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
-		<app-localstorage-document xlog xsession-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
-		<app-localstorage-document xlog xsession-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
+		<app-localstorage-document xlog session-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
+		<app-localstorage-document xlog session-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
+		<app-localstorage-document xlog session-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
 		
     <!--- ->
     <!-- Do not include firebase-app here to avoid multiple instances - ->
@@ -39,6 +40,7 @@
 									 >
     </firebase-auth>
     <app-methods id="methods"></app-methods>
+    <state-app-data app-data="{{appData}}"></state-app-data>
 		<!---->
 		
   </template>
@@ -68,6 +70,12 @@
 					observer: '_userRemoteChanged',
 				},
 
+				appData: {
+					type: Object,
+					notify: true,
+					observer: '_appDataChanged',
+				},
+
 			}}
 			
 			constructor() {
@@ -92,7 +100,7 @@
 				auth.signInWithPopup(authProvider)
 					.then(response => {
 					
-						console.log('response\n', response);
+						//console.log('response\n', response);
 						//console.log('userLoggedIn\n', auth.signedIn);
 						//this.set('userLoggedIn', auth.signedIn);
 						//console.log('userLoggedIn\n', this.userLoggedIn); // true|false
@@ -102,14 +110,17 @@
 			
 			      // Upon login, user must do the following:
 			      // 1. Save user-remote object to database (=> use app.method: save entity)
-            this._save(response);
-			      // 1. Obtain current user state
-			      // 2. Archive snapshot of current user state
-			      // 3. Make current user state available to other web components (=> use state element)
+            // this._save(response.user)
+            //   .then(r => {
+            //     console.log('r\n', r);
+            //   });
+			      // 2. Obtain current user state
+			      // 3. Archive snapshot of current user state
+			      // 4. Make current user state available to other web components (=> use state element)
 						
-				}).catch(error => {
-					//console.log('error\n', error);
-					console.error(error.code, error.message);
+				  }).catch(error => {
+				    //console.log('error\n', error);
+				    console.error(error.code, error.message);
 				});
       }
       
@@ -134,27 +145,44 @@
 			}
 			
 			_handleError(e) {
-				console.log('error message:\n', e);
+				// console.log('error message:\n', e);
+      }
+
+      _appDataChanged(newData, oldData) {
+        // console.log('app-data-old\n', oldData);
+        // console.log('app-data-new\n', newData);
+
+        if(newData && this.userRemote) this._userRemoteChanged(this.userRemote);
       }
       
       _userRemoteChanged(newData, oldData) {
-        // console.log('user-old-data\n', oldData);
-        // console.log('user-new-data\n', newData);
+        // console.log('user-data-old\n', oldData);
+        // console.log('user-data-new\n', newData);
+
+        if(!this.appData) return;
+
         const userLoggedIn = this.userLoggedIn;
         if(oldData && !newData && userLoggedIn) {
           this.set('userRemote', oldData);
+        } else if(!oldData && newData && userLoggedIn) {
+          this._save(newData);
         }
+        return;
       }
 
       _save(r) {
-        const method = 'save'; // 'save'|'delete'
-        const entity = 'user-local'; // 'user-local'|'deal'|'bid'|'network'
+        //console.log('save-data\n', r);
+        const methody = 'save'; // 'save'|'delete'
+        const entity = 'user-remote'; // 'user-remote', 'xuser-local'|'deal'|'bid'|'network'
         const methods = this.$.methods;
         const data = {
-          method: method,
+          method: methody,
           entity: entity,
           data: r,
         }
+        // delete data.doc;
+        // delete data.r;
+        // console.log('saving-data\n', data);
         methods.method(data);
       }
      

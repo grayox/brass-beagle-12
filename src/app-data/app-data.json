@@ -138,7 +138,7 @@
 			]
 		},
 		"xuser-local": {
-			"comment": "Do not use 'user-local' entity; Instead, use 'user-settings' and 'user-balances', etc.",
+			"comment": "Deprecated. Do not use 'user-local' entity; Instead, use 'user-settings' and 'user-balances', etc.",
 			"init": "_initUser('local', e)", "comment-init": "Needs 'init' property if no 'key' property",
 			"page": "user-data", "comment-page": "page property corresponds to 'id' (or 'name') in loggedin-view.html; for closing dialog",
 			"key": "user-local", "comment-key": "every entity needs either 'key' or 'init' property",
