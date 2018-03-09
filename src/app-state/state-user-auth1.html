@@ -90,12 +90,6 @@
         window.addEventListener('logout' , e => this.logout(e) );
       }
 
-      static get observers() {
-        return [
-          '_updateDatabase(userRemote, appData)',
-        ]
-      }
-
 			login(e) {
 				//console.log('e\n', e);
 				const authProvider = e.detail;
@@ -153,41 +147,24 @@
 				// console.log('error message:\n', e);
       }
 
-      _updateDatabase(userRemote, appData) {
-        // abort if all variables not present
-        const ready = appData && userRemote;
-        if(!ready) return;
-        
-        // abort if any property of userRemote is a function
-        const o = Object.assign(userRemote, {});
-        let keys = Object.keys(o);
-        const abort = keys.reduce((c, v, i, a) => {
-          if(typeof o[v] === 'function') {
-            a.splice(1);
-            console.error('Aborted save because user-remote contains funtion');
-            return true;
-          }
-          return false;
-        }, false);
-
-        // save to database is not aborted
-        if(!abort) this._save(userRemote);
-      }
-
       _appDataChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'appData');
+        // console.log('app-data-old\n', oldData);
+        // console.log('app-data-new\n', newData);
+
+        if(newData && this.userRemote) this._userRemoteChanged(this.userRemote);
       }
       
       _userRemoteChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'userRemote');
-      }
+        // console.log('user-data-old\n', oldData);
+        // console.log('user-data-new\n', newData);
 
-      _resetOldData(newData, oldData, propertyName) {
-        // console.log(propertyName, 'data-old\n', oldData);
-        // console.log(propertyName, 'data-new\n', newData);
+        if(!this.appData) return;
+
         const userLoggedIn = this.userLoggedIn;
         if(oldData && !newData && userLoggedIn) {
-          this.set(propertyName, oldData);
+          this.set('userRemote', oldData);
+        } else if(!oldData && newData && userLoggedIn) {
+          this._save(newData);
         }
         return;
       }
