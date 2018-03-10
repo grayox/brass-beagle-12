@@ -7,11 +7,11 @@
 
 <!-- state -->
 <!--- ->
-<link rel="import" href="state-user-remote.html">
 <link rel="import" href="state-user-local.html">
 <!---->
+<link rel="import" href="state-app-data.html">
+<link rel="import" href="state-user-remote.html">
 <link rel="import" href="/src/app-main/app-methods.html">
-<link rel="import" href="/src/app-state/state-app-data.html">
 
 <dom-module id="state-user-auth">
   <template>
@@ -20,6 +20,11 @@
 		<app-localstorage-document xlog session-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
 		<app-localstorage-document xlog session-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
 		<app-localstorage-document xlog session-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
+    
+    <!-- state -->
+    <app-methods id="methods"></app-methods>
+    <state-app-data app-data="{{appData}}"></state-app-data>
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
 		
     <!--- ->
     <!-- Do not include firebase-app here to avoid multiple instances - ->
@@ -39,9 +44,7 @@
 									 on-error="_handleError"
 									 >
     </firebase-auth>
-    <app-methods id="methods"></app-methods>
-    <state-app-data app-data="{{appData}}"></state-app-data>
-		<!---->
+    <!---->
 		
   </template>
 
@@ -72,7 +75,7 @@
 
 				appData: {
 					type: Object,
-					notify: true,
+					// notify: true,
 					observer: '_appDataChanged',
 				},
 
@@ -163,8 +166,8 @@
         let keys = Object.keys(o);
         const abort = keys.reduce((c, v, i, a) => {
           if(typeof o[v] === 'function') {
-            a.splice(1);
-            console.error('Aborted save because user-remote contains funtion');
+            a.splice(1);  // break; // https://stackoverflow.com/a/47441371/1640892
+            // console.log('Aborted save because user-remote contains funtion');
             return true;
           }
           return false;

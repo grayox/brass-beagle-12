@@ -4,44 +4,43 @@ This is because Firebase does not allow keys to contain the dot (.) character.
 Best practice is to substitute all dots (.) with commas (,).
 <!---->
 
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
 
-<script>
-  //(function() {
-    //'use strict';
+<dom-module id="email-coding-behavior">
+  <template></template>
+
+  <script>
+    class EmailCodingBehavior extends Polymer.Element {
+      
+			static get is() { return 'email-coding-behavior'; }
 			
-		// https://www.polymer-project.org/1.0/docs/tools/documentation
-		/**
-		 * Behavior that highlights stuff.
-		 *
-		 * @polymerBehavior
-		 */
-	
-		var MyBehaviors = MyBehaviors || {};
-		// Polycast : https://youtu.be/YrlmieL3Z0k?t=3m28s
-		// Guide    : https://www.polymer-project.org/1.0/docs/devguide/behaviors
-		MyBehaviors.EmailCodingBehaviorImpl = {
+      static get properties() { return { }}
+			
+			constructor() {
+				super();
+			}
 
-			_emailEncode: function(s) {
+			ready() {
+        super.ready();
+		  }
+
+			emailEncode(s) {
 				if(!!s) {
 					//console.log('s', s);
 					return s.replace(/\./gm, ',');
 				}
-			},
+			}
 
-			_emailDecode: function(s) {
+			emailDecode(s) {
 				if(!!s) {
 					//console.log('s', s);
 					return s.replace(/,/gm, '.');
 				}
-			},
-				
-		};
-		
-    MyBehaviors.EmailCodingBehavior = [
-      MyBehaviors.EmailCodingBehaviorImpl,
-    //MyBehaviors.AppStorageBehavior,
-    //MyBehaviors.FirebaseCommonBehavior,
-    ];
-  //})();
-</script>
+			}
+			
+    }
+
+    window.customElements.define(EmailCodingBehavior.is, EmailCodingBehavior);
+  </script>
+
+</dom-module>

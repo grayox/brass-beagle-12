@@ -2,7 +2,10 @@
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
 <!-- state -->
+<link rel="import" href="state-app-data.html">
+<link rel="import" href="state-app-settings.html">
 <link rel="import" href="state-user-remote.html">
+<link rel="import" href="/src/app-main/app-methods.html">
 <!---->
 
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
@@ -13,12 +16,17 @@
 <dom-module id="state-user-settings">
   <template>
     <style></style>
+    <app-methods id="methods"></app-methods>
+    <state-app-data app-data="{{appData}}"></state-app-data>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <!--- ->
+    <state-app-settings xapp-settings="{{appSettings}}"></state-app-settings>
+    <!---->
 
     <!---->
     <app-localstorage-document id="storage"
                                xlog
-                               xsession-only
+                               session-only
                                key="user-settings"
                                data="{{userSettings}}"
                                >
@@ -71,7 +79,25 @@
 					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
-					// observer: '_userSettingsChanged',
+					observer: '_userSettingsChanged',
+        },
+        
+				userRemote: {
+					type: Object,
+					// notify: true,
+					observer: '_userRemoteChanged',
+				},
+
+				appData: {
+					type: Object,
+					// notify: true,
+					observer: '_appDataChanged',
+				},
+
+				appSettings: {
+					type: Object,
+					// notify: true,
+					// observer: '_appSettingsChanged',
 				},
 				
         // userSettingsHome: {
@@ -127,13 +153,77 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
         this.$.storage.destroy();
       }
+
+      static get observers() {
+        return [
+          //'_updateDatabase(userRemote, appData, appSettings)',
+        ]
+      }
+
+      _appDataChanged(newData, oldData) {
+        this._resetOldData(newData, oldData, 'appData');
+      }
+
+      _appSettingsChanged(newData, oldData) {
+        this._resetOldData(newData, oldData, 'appSettings');
+      }
       
+      _userRemoteChanged(newData, oldData) {
+        this._resetOldData(newData, oldData, 'userRemote');
+      }
+
+      _updateDatabase(userRemote, appData, appSettings) {
+        // abort if all variables not present
+        const ready = appData && userRemote;
+        if(!ready) return;
+        
+        console.log('app-data\n', appData);
+        console.log('app-settings\n', appSettings);
+        // // abort if any property of userRemote is a function
+        // const o = Object.assign(userRemote, {});
+        // let keys = Object.keys(o);
+        // const abort = keys.reduce((c, v, i, a) => {
+        //   if(typeof o[v] === 'function') {
+        //     a.splice(1);  // break; // https://stackoverflow.com/a/47441371/1640892
+        //     // console.log('Aborted save because user-remote contains funtion');
+        //     return true;
+        //   }
+        //   return false;
+        // }, false);
+
+      }
+
       // _userSettingsChanged(newData, oldData) {
       //   // console.log('uid\n', this.userRemote.uid);
       //   //console.log('userSettings\n', r);
       //   console.log('oldData\n', oldData);
       //   console.log('newData\n', newData);
       // }
+
+      _userSettingsChanged(newData, oldData) {
+        this._resetOldData(newData, oldData, 'userSettings');
+        this._handleNullValue(newData);
+      }
+
+      _resetOldData(newData, oldData, propertyName) {
+        // console.log(propertyName, 'data-old\n', oldData);
+        // console.log(propertyName, 'data-new\n', newData);
+        // const userLoggedIn = this.userLoggedIn;
+        // if(oldData && !newData && userLoggedIn) {
+        if(oldData && !newData) {
+          this.set(propertyName, oldData);
+        }
+        return;
+      }
+
+      _handleNullValue(o) {
+        if(o !== {}) return;
+        this._initializeSettings();
+      }
+
+      _initializeSettings() {
+
+      }
 			
     }
 

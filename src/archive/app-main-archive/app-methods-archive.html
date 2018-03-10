@@ -565,7 +565,7 @@ Use databinding (from app-main.html) to save calls from iron-ajax
 				
 				_computeEmailKey: function(user) {
 					if(!!user) {
-						return this._emailEncode(user.email);
+						return this.emailEncode(user.email);
 					}
 				},
 								

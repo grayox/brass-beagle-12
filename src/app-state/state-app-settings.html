@@ -102,7 +102,7 @@
           let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
             let item = items[v];
             let userSetting = userSettings[v];
-            if ( item.data === 'settings' || item.data === 'Settings' ) {
+            if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
               // substitute value from settings object
               item.data = userSetting ? userSetting : (item.value ? item.value : null);
             }
