@@ -47,8 +47,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>		
-    <state-app-settings id="settings" app-settings="{{appSettings}}"></state-app-settings>
-		
+    <state-app-settings id="settings"
+                        app-settings="{{appSettings}}"
+                        >
+    </state-app-settings>
+
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="[[appSettings]]">
         <app-view items="[[item.items]]"></app-view>
@@ -102,7 +105,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			ready() {
         super.ready();
 				//console.log('Component Ready');
-        window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
+				window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
         window.addEventListener('valid-zip', e => this._onValidZip(e));
 			}
       

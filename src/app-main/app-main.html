@@ -22,7 +22,11 @@
 		</firebase-app>
 		<!---->
 
-		<state-user-auth user-logged-in="{{userLoggedIn}}"></state-user-auth>
+    <state-user-auth id="auth"
+                     user-logged-in="{{userLoggedIn}}"
+                     on-logout="logout"
+                     >
+    </state-user-auth>
 		
 		<login-view hidden$="{{userLoggedIn}}"></login-view>
 		<template restamp is="dom-if" if="[[userLoggedIn]]">
@@ -41,8 +45,16 @@
 			
 			ready() {
         super.ready();
-				//window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-      }				
+				//window.addEventListener('logout', (e) => this.logout(e));
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+
+      // logout(e) {
+			// 	console.log('logout\n', e);
+      //   const auth = this.$.auth;
+      //   auth.signOut();
+      // }
+
 		}
 
     window.customElements.define(AppMain.is, AppMain);

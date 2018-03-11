@@ -83,7 +83,7 @@
                    app-name="app"
                    >
     </firebase-auth>
-    <!---->
+    <!--- ->
     <state-user-auth id="auth"></state-user-auth>
     <!---->
 
@@ -186,11 +186,11 @@
 				var s = e.detail.item//.getAttribute(a); // 'profile', 'preferences', 'logout'
 				/**/
 				// For selecting numbers...
-				var l = this.$.listbox;
-				var s = l.selected; // 0, 1, 2 ...
+				const l = this.$.listbox;
+				const s = l.selected; // 0, 1, 2 ...
 				/**/
 				//console.log('s', s);
-				var d = new CustomEvent(
+				const d = new CustomEvent(
 					'user-action-select', {
 						bubbles: true,
 					  composed: true,
@@ -210,9 +210,23 @@
 				l.focusedItem = null;
       }
       
+      // _logout() {
+      //   const auth = this.$.auth;
+      //   auth.signOut();
+      // }
+
       _logout() {
-        const auth = this.$.auth;
-        auth.signOut();
+				const d = new CustomEvent(
+					'logout', {
+						bubbles: true,
+					  composed: true,
+					  // detail: {
+						// 	// selected: s,
+						// },
+					}
+				);
+				this.dispatchEvent(d);
+				// console.log('d', d);        
       }
 			
     }

@@ -16,10 +16,11 @@
 <dom-module id="state-user-auth">
   <template>
 		<style></style>
+		<!--- ->
+    <app-localstorage-document xlog session-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
+    <app-localstorage-document xlog session-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
+    <app-localstorage-document xlog session-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
 		<!---->
-		<app-localstorage-document xlog session-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
-		<app-localstorage-document xlog session-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
-		<app-localstorage-document xlog session-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
     
     <!-- state -->
     <app-methods id="methods"></app-methods>

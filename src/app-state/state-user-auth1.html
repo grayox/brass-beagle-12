@@ -13,13 +13,13 @@
 <link rel="import" href="/src/app-main/app-methods.html">
 <link rel="import" href="/src/app-state/state-app-data.html">
 
-<dom-module id="state-user-auth">
+<dom-module id="state-user-auth1">
   <template>
 		<style></style>
 		<!---->
-		<app-localstorage-document xlog session-only key="user-logged-in" data="{{userLoggedIn}}" ></app-localstorage-document>
-		<app-localstorage-document xlog session-only key="user-remote"    data="{{userRemote}}"   ></app-localstorage-document>
-		<app-localstorage-document xlog session-only key="auth-provider"  data="{{authProvider}}" ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only xkey="user-logged-in" xdata="{{userLoggedIn}}" ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only xkey="user-remote"    xdata="{{userRemote}}"   ></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only xkey="auth-provider"  xdata="{{authProvider}}" ></app-localstorage-document>
 		
     <!--- ->
     <!-- Do not include firebase-app here to avoid multiple instances - ->
@@ -46,8 +46,8 @@
   </template>
 
   <script>
-    class StateUserAuth extends Polymer.Element {
-      static get is() { return 'state-user-auth'; }
+    class StateUserAuth1 extends Polymer.Element {
+      static get is() { return 'state-user-auth1'; }
 
       static get properties() { return {
 				
@@ -187,6 +187,6 @@
      
 		}
 
-    window.customElements.define(StateUserAuth.is, StateUserAuth);
+    window.customElements.define(StateUserAuth1.is, StateUserAuth1);
   </script>
 </dom-module>
