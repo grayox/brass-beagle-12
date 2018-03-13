@@ -11,6 +11,7 @@
 <!---->
 <link rel="import" href="state-app-data.html">
 <link rel="import" href="state-user-remote.html">
+<link rel="import" href="state-user-settings.html">
 <link rel="import" href="/src/app-main/app-methods.html">
 
 <dom-module id="state-user-auth">
@@ -26,6 +27,8 @@
     <app-methods id="methods"></app-methods>
     <state-app-data app-data="{{appData}}"></state-app-data>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <state-user-settings></state-user-settings>
+    <!--- ->
 		
     <!--- ->
     <!-- Do not include firebase-app here to avoid multiple instances - ->

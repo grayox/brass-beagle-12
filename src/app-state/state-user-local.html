@@ -1,8 +1,9 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-<!--- ->
+<!---->
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<!--- ->
 <link rel="import" href="/src/custom-libraries/lodash-js.html">
 <!---->
 
@@ -12,21 +13,29 @@
 <!---->
 
 <dom-module id="state-user-local">
-  <!--- ->
+  <!---->
   <template>
 		<style></style>
+		<!--- ->
 		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
 		<!--- ->
 		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
 		<app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
-		<!--- ->
+    <!---->
+    <app-localstorage-document id="storage"
+                               xlog
+                               session-only
+                               key="user-settings"
+                               data="{{userSettings}}"
+                               >
+    </app-localstorage-document>
+    <!---->
   </template>
   <!---->
 
   <script>
     // state-user-settings fetches settings data from database (getter)
-    // state-user-local distributes local user data throughout app (setter)
-    
+    // state-user-local distributes local user data throughout app (setter)    
     class StateUserLocal extends Polymer.Element {
       static get is() { return 'state-user-local'; }
 
@@ -46,7 +55,7 @@
 					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
-					//observer: '_userSettingsChanged',
+					observer: '_userSettingsChanged',
 				},
 			}}
 			
@@ -64,6 +73,11 @@
 			// _userLocalChanged(userLocal) {
 			// 	//console.log('userLocal', userLocal);
 			// }
+
+      _userSettingsChanged(newData, oldData) {
+        console.log('user-settings-old\n', oldData);
+        console.log('user-settings-new\n', newData);
+      }
 			
 			_computeUserLocal(a) {
 				//console.log('user-local-extended', a);

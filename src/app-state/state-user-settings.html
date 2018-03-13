@@ -1,11 +1,16 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+
 <!-- state -->
 <link rel="import" href="state-app-data.html">
-<link rel="import" href="state-app-settings.html">
+<link rel="import" href="state-app-views.html">
 <link rel="import" href="state-user-remote.html">
 <link rel="import" href="/src/app-main/app-methods.html">
+<!--- ->
+<link rel="import" href="state-app-settings.html">
+<link rel="import" href="state-user-local.html">
 <!---->
 
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
@@ -18,9 +23,11 @@
     <style></style>
     <app-methods id="methods"></app-methods>
     <state-app-data app-data="{{appData}}"></state-app-data>
+    <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <!--- ->
-    <state-app-settings xapp-settings="{{appSettings}}"></state-app-settings>
+    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+    <state-user-local user-settings="{{userSettings}}"></state-user-local>
     <!---->
 
     <!---->
@@ -28,7 +35,7 @@
                                xlog
                                session-only
                                key="user-settings"
-                               data="{{userSettings}}"
+                               data="[[userSettings]]"
                                >
     </app-localstorage-document>
 		<!--- ->
@@ -73,15 +80,24 @@
   <script>
     // state-user-settings fetches settings data from database (getter)
     // state-user-local distributes local user data throughout app (setter)
+    // user-settings is the data source for user-local
+    // user-local distributes the necessary data to the other elements
+    // we avoid calling user-settings other elements to minimize calls to the database
+    // so use local-app-storage to transmit userSettings to user-local, to minimize database calls
     class StateUserSettings extends Polymer.Element {
       static get is() { return 'state-user-settings'; }
 
       static get properties() { return {
 				userSettings: {
-					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
 					observer: '_userSettingsChanged',
+        },
+				
+        userSettingsOld: {
+					type: Object,
+				//	notify: true,
+				//	observer: '_userSettingsChanged',
         },
         
 				userRemote: {
@@ -96,11 +112,17 @@
 					observer: '_appDataChanged',
 				},
 
-				appSettings: {
+				appViews: {
 					type: Object,
-					// notify: true,
-					// observer: '_appSettingsChanged',
+					notify: true,
+					// observer: '_appViewsChanged',
 				},
+
+				// appSettings: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appSettingsChanged',
+				// },
 				
         // userSettingsHome: {
 				// 	type: Boolean,
@@ -158,8 +180,54 @@
 
       static get observers() {
         return [
-          //'_updateDatabase(userRemote, appData, appSettings)',
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
         ]
+      }
+
+      _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
+        const req1 = userSettings && _.isEmpty(userSettings);
+        if(!req1) return;
+        
+        const req2 = userSettingsOld && _.isEmpty(userSettingsOld);
+        if(!req2) return;
+        
+        const req3 = userRemote && appData && appViews;
+        if(!req3) return;
+
+        console.log('user-remote\n', userRemote);
+        console.log('app-data\n', appData);
+        console.log('app-views\n', appViews);
+        // console.log('app-settings\n', appSettings);
+        console.log('user-settings\n', userSettings);
+        console.log('user-settings-old\n', userSettingsOld);
+
+        // if(databaseHasBeenInitialized) return;
+
+        const init = this._calculateInitialSettings(appViews);
+        this.saveUserSettings(init);
+      }
+
+      _calculateInitialSettings(appViews) {
+        return {j:5, o:'N', new: 'data'};
+      }
+
+      saveUserSettings(data) {
+        console.log('data\n',data);
+        
+				const entity = 'user-settings';
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
       }
 
       _appDataChanged(newData, oldData) {
@@ -203,8 +271,20 @@
       // }
 
       _userSettingsChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'userSettings');
-        this._handleNullValue(newData);
+        // console.log('user-settings-old\n', oldData);
+        // console.log('user-settings-new\n', newData);
+
+        this.set('userSettingsOld', oldData);
+
+        // const req1 = (typeof newData === 'object') && _.isEmpty(newData);
+        // const req2 = (typeof oldData === 'object') && _.isEmpty(oldData);
+        // if( req1 && req2 ){
+        //   console.log('hai');
+        //   console.log('app-data\n', this.appData);
+        //   // console.log('app-settings\n', this.appSettings);
+        // }
+        // this._resetOldData(newData, oldData, 'userSettings');
+        // this._handleNullValue(newData);
       }
 
       _resetOldData(newData, oldData, propertyName) {

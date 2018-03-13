@@ -18,11 +18,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
-<link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-app-settings.html">
+<link rel="import" href="/src/app-view/app-view.html">
 
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 
+<!--- ->
 <link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
 <link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
 <link rel="import" href="/src/app-views/view-inbox/view-inbox.html">
@@ -131,6 +132,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         const settings = this.$.settings;
         settings.saveAppSettings(e.detail);
       }
+
+      // _appSettingsChanged(newData, oldData) {
+      //   console.log('old-data\n', oldData);
+      //   console.log('new-data\n', newData);
+      // }
 			
     }
 

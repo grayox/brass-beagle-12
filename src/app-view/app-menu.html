@@ -4,8 +4,9 @@
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-app-settings.html">
-<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
 
 <link rel="import" href="app-item.html">
 
@@ -95,8 +96,9 @@
     <!---->
 
     <!-- state -->
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
-    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
     <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
     <!---->
     <!---->
@@ -204,6 +206,7 @@
         console.log('e-model-item\n', e.model.item);
         console.log('user-settings\n', this.userSettings);
         console.log('user-remote\n', this.userRemote);
+        console.log('user-local\n', this.userLocal);
         console.log('app-settings\n', this.appSettings);
       }
 			

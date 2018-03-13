@@ -12,7 +12,7 @@
 <!---->
 <link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
-<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/app-state/state-counties-by-state.html">
 
 <dom-module id="state-app-settings">
@@ -25,7 +25,7 @@
     <!---->
     <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
-    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
 
     <app-methods id="methods" show-toast dispatch-event></app-methods>
@@ -41,15 +41,15 @@
 					type: Object,
 					notify: true,
 					// observer: '_appSettingsChanged',
-          computed: '_computeAppSettings(appViews, userSettings)',
+          computed: '_computeAppSettings(appViews, userLocal)',
 				},
 
-				// userSettings: {
-				// 	type: Object,
-				// 	notify: true,
-				// 	observer: '_userSettingsChanged',
-        //   // computed: '_computeAppSettings(appViews, userSettings)'
-				// },
+				userLocal: {
+					type: Object,
+					notify: true,
+					observer: '_userLocalChanged',
+          // computed: '_computeAppLocal(appViews, userLocal)'
+				},
       }}
       
 			constructor() {
@@ -81,30 +81,30 @@
 			// 	methods.method(detail);
 			// }
 			
-      // _userSettingsChanged(newData, oldData) {
-      //   console.log('user-settings-old', oldData);
-      //   console.log('user-settings-new', newData);
+      // _userLocalChanged(newData, oldData) {
+      //   console.log('user-local-old', oldData);
+      //   console.log('user-local-new', newData);
       // }
 
-      _computeAppSettings(appViews, userSettings) {
-        // console.log('app-views\n', appViews);
-        // console.log('user-settings\n', userSettings);
-        const ready = appViews && userSettings;
+      _computeAppSettings(appViews, userLocal) {
+        console.log('app-views\n', appViews);
+        console.log('user-local\n', userLocal);
+        const ready = appViews && userLocal;
         if(!ready) return;
         
         const views = appViews.views;
         const items = appViews.items;
         const out = views.reduce((c, v, i, a) => {
-          // console.log('v\n', v);
+          console.log('v\n', v);
           let viewItemsKeys = v.items ? v.items : []; // array
-          // console.log('viewItemsKeys\n', viewItemsKeys);
+          console.log('viewItemsKeys\n', viewItemsKeys);
           // assemble items from keys contained by view
           let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
             let item = items[v];
-            let userSetting = userSettings[v];
+            let userLocalSetting = userLocal[v];
             if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
               // substitute value from settings object
-              item.data = userSetting ? userSetting : (item.value ? item.value : null);
+              item.data = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
             }
             return [ ...c, item ];
           }, []);
@@ -119,7 +119,7 @@
       saveAppSettings(data) {
         console.log('data\n',data);
         // console.log('user-remote\n', this.userRemote);
-        console.log('user-settings\n', this.userSettings);
+        console.log('user-local\n', this.userLocal);
         console.log('app-settings\n', this.appSettings);
         return;
       
