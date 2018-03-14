@@ -100,23 +100,23 @@
 				  // observer: '_userSettingsChanged',
         },
         
-				userRemote: {
-					type: Object,
-					// notify: true,
-					// observer: '_userRemoteChanged',
-				},
+				// userRemote: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_userRemoteChanged',
+				// },
 
-				appData: {
-					type: Object,
-					// notify: true,
-					// observer: '_appDataChanged',
-				},
+				// appData: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appDataChanged',
+				// },
 
-				appViews: {
-					type: Object,
-					notify: true,
-					// observer: '_appViewsChanged',
-				},
+				// appViews: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appViewsChanged',
+				// },
 
 				// appSettings: {
 				// 	type: Object,
@@ -187,6 +187,8 @@
 
       _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
         
+        // these three req variables prevent this method from firing more than once
+
         const req1 = (typeof userSettings === 'object') && _.isEmpty(userSettings);
         if(!req1) return;
         
@@ -194,27 +196,48 @@
         const req2 = (typeof userSettingsOld === 'undefined');
         if(!req2) return;
         
-        const req3 = typeof userRemote === 'object' &&
-                     typeof appData    === 'object' &&
-                     typeof appViews   === 'object';
+        const req3 = ( typeof userRemote === 'object' ) &&
+                     ( typeof appData    === 'object' ) &&
+                     ( typeof appViews   === 'object' )  ;
         if(!req3) return;
 
-        console.log('user-remote\n', userRemote);
-        console.log('app-data\n', appData);
+        // console.log('user-remote\n', userRemote);
+        // console.log('app-data\n', appData);
         console.log('app-views\n', appViews);
-        // console.log('app-settings\n', appSettings);
-        console.log('user-settings\n', userSettings);
-        console.log('user-settings-old\n', userSettingsOld);
+        // // console.log('app-settings\n', appSettings);
+        // console.log('user-settings\n', userSettings);
+        // console.log('user-settings-old\n', userSettingsOld);
 
         // if(databaseHasBeenInitialized) return;
 
-        const init = this._calculateInitialSettings(appViews);
+        const init = this._computeInitialUserSettings(appViews);
         this.saveUserSettings(init);
       }
 
-      _calculateInitialSettings(appViews) {
+      _computeInitialUserSettings(appViews) {
         console.log('app-views\n', appViews);
-        return {j:5, o:'N', new: 'data'};
+        // return {j:5, o:'N', new: 'data'};
+
+        if(!appViews) return;
+
+        // logic:
+        //   1. loop thru app-views.items
+        //   2. if item.data = 'settings', set setting.item = item.value;
+
+        const out = {};
+        const items = appViews.items;
+        const keys = Object.keys(items);
+        let i = keys.length;
+        while(i--) {
+          let key = keys[i];
+          let item = items[key];
+          let data = item.data;
+          if(data === 'settings' || data === 'Settings') {
+            out[key] = item.value;
+          }
+        }
+        console.log('out\n', out);
+        return out;
       }
 
       saveUserSettings(data) {

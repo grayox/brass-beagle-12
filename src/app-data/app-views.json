@@ -51,7 +51,7 @@
       "icon": "track-changes",
       "label": "Your type of services",
       "data": "settings",
-      "xvalue": "Select",
+      "value": "Select",
       "detail": [ "lead-type-detail" ]
     },
     "lead-type-detail": {
@@ -64,7 +64,7 @@
       "icon": "track-changes",
       "label": "Counties in your territory",
       "data": "settings",
-      "xvalue": "Select",
+      "value": "Select",
       "detail": [ "counties-by-zip" ]
     },
     "counties-by-zip": {
@@ -74,7 +74,7 @@
     },
     "subhead-location": {
       "type": "subheader",
-      "label": "Location (found by zip code)"
+      "label": "Location (by zip)"
     },
     "subhead-contact": {
       "type": "subheader",
@@ -85,7 +85,7 @@
       "icon": "vaadin:flag",
       "label": "State",
       "data": "settings",
-      "xvalue": "Enter zip",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "county": {
@@ -93,7 +93,7 @@
       "icon": "vaadin:map-marker",
       "label": "County",
       "data": "settings",
-      "xvalue": "Enter zip",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "city": {
@@ -101,7 +101,7 @@
       "icon": "vaadin:map-marker",
       "label": "City",
       "data": "settings",
-      "xvalue": "Enter zip",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "zip": {
@@ -109,7 +109,7 @@
       "icon": "vaadin:pin",
       "label": "Zip",
       "data": "settings",
-      "xvalue": "Enter zip",
+      "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
     "subhead-zip-detail": {
@@ -133,7 +133,7 @@
       "icon": "vaadin:phone",
       "label": "Phone",
       "data": "settings",
-      "xvalue": "add",
+      "value": "Add",
       "detail": [ "subhead-phone-detail", "phone-detail", "buttons" ]
     },
     "phone-detail": {
@@ -147,7 +147,7 @@
       "icon": "vaadin:envelope",
       "label": "Email",
       "data": "settings",
-      "xvalue": "Enter",
+      "value": "Enter",
       "detail": [ "subhead-email-detail", "email-detail", "buttons" ]
     },
     "email-detail": {
