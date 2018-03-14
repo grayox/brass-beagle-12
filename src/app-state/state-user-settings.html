@@ -91,25 +91,25 @@
 				userSettings: {
 					type: Object,
 					notify: true,
-					observer: '_userSettingsChanged',
+					// observer: '_userSettingsChanged',
         },
 				
         userSettingsOld: {
 					type: Object,
-				//	notify: true,
-				//	observer: '_userSettingsChanged',
+				  // notify: true,
+				  // observer: '_userSettingsChanged',
         },
         
 				userRemote: {
 					type: Object,
 					// notify: true,
-					observer: '_userRemoteChanged',
+					// observer: '_userRemoteChanged',
 				},
 
 				appData: {
 					type: Object,
 					// notify: true,
-					observer: '_appDataChanged',
+					// observer: '_appDataChanged',
 				},
 
 				appViews: {
@@ -186,13 +186,17 @@
       }
 
       _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
-        const req1 = userSettings && _.isEmpty(userSettings);
+        
+        const req1 = (typeof userSettings === 'object') && _.isEmpty(userSettings);
         if(!req1) return;
         
-        const req2 = userSettingsOld && _.isEmpty(userSettingsOld);
+        // const req2 = (typeof userSettingsOld === 'object') && _.isEmpty(userSettingsOld);
+        const req2 = (typeof userSettingsOld === 'undefined');
         if(!req2) return;
         
-        const req3 = userRemote && appData && appViews;
+        const req3 = typeof userRemote === 'object' &&
+                     typeof appData    === 'object' &&
+                     typeof appViews   === 'object';
         if(!req3) return;
 
         console.log('user-remote\n', userRemote);
@@ -209,11 +213,12 @@
       }
 
       _calculateInitialSettings(appViews) {
+        console.log('app-views\n', appViews);
         return {j:5, o:'N', new: 'data'};
       }
 
       saveUserSettings(data) {
-        console.log('data\n',data);
+        // console.log('data\n',data);
         
 				const entity = 'user-settings';
 				
@@ -230,38 +235,37 @@
 				methods.method(detail);
       }
 
-      _appDataChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'appData');
-      }
+      // _appDataChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'appData');
+      // }
 
-      _appSettingsChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'appSettings');
-      }
+      // _appSettingsChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'appSettings');
+      // }
       
-      _userRemoteChanged(newData, oldData) {
-        this._resetOldData(newData, oldData, 'userRemote');
-      }
+      // _userRemoteChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'userRemote');
+      // }
 
-      _updateDatabase(userRemote, appData, appSettings) {
-        // abort if all variables not present
-        const ready = appData && userRemote;
-        if(!ready) return;
+      // _updateDatabase(userRemote, appData, appSettings) {
+      //   // abort if all variables not present
+      //   const ready = appData && userRemote;
+      //   if(!ready) return;
         
-        console.log('app-data\n', appData);
-        console.log('app-settings\n', appSettings);
-        // // abort if any property of userRemote is a function
-        // const o = Object.assign(userRemote, {});
-        // let keys = Object.keys(o);
-        // const abort = keys.reduce((c, v, i, a) => {
-        //   if(typeof o[v] === 'function') {
-        //     a.splice(1);  // break; // https://stackoverflow.com/a/47441371/1640892
-        //     // console.log('Aborted save because user-remote contains funtion');
-        //     return true;
-        //   }
-        //   return false;
-        // }, false);
-
-      }
+      //   console.log('app-data\n', appData);
+      //   console.log('app-settings\n', appSettings);
+      //   // // abort if any property of userRemote is a function
+      //   // const o = Object.assign(userRemote, {});
+      //   // let keys = Object.keys(o);
+      //   // const abort = keys.reduce((c, v, i, a) => {
+      //   //   if(typeof o[v] === 'function') {
+      //   //     a.splice(1);  // break; // https://stackoverflow.com/a/47441371/1640892
+      //   //     // console.log('Aborted save because user-remote contains funtion');
+      //   //     return true;
+      //   //   }
+      //   //   return false;
+      //   // }, false);
+      // }
 
       // _userSettingsChanged(newData, oldData) {
       //   // console.log('uid\n', this.userRemote.uid);
@@ -287,25 +291,25 @@
         // this._handleNullValue(newData);
       }
 
-      _resetOldData(newData, oldData, propertyName) {
-        // console.log(propertyName, 'data-old\n', oldData);
-        // console.log(propertyName, 'data-new\n', newData);
-        // const userLoggedIn = this.userLoggedIn;
-        // if(oldData && !newData && userLoggedIn) {
-        if(oldData && !newData) {
-          this.set(propertyName, oldData);
-        }
-        return;
-      }
+      // _resetOldData(newData, oldData, propertyName) {
+      //   // console.log(propertyName, 'data-old\n', oldData);
+      //   // console.log(propertyName, 'data-new\n', newData);
+      //   // const userLoggedIn = this.userLoggedIn;
+      //   // if(oldData && !newData && userLoggedIn) {
+      //   if(oldData && !newData) {
+      //     this.set(propertyName, oldData);
+      //   }
+      //   return;
+      // }
 
-      _handleNullValue(o) {
-        if(o !== {}) return;
-        this._initializeSettings();
-      }
+      // _handleNullValue(o) {
+      //   if(o !== {}) return;
+      //   this._initializeSettings();
+      // }
 
-      _initializeSettings() {
+      // _initializeSettings() {
 
-      }
+      // }
 			
     }
 
