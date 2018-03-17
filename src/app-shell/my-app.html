@@ -94,7 +94,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Array,
           notify: true,
           // computed: _computeItems(appViews),
-          // observer: '_appSettingsChanged',
+          observer: '_appSettingsChanged',
         },
         
       }}
@@ -133,10 +133,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         settings.saveAppSettings(e.detail);
       }
 
-      // _appSettingsChanged(newData, oldData) {
-      //   console.log('old-data\n', oldData);
-      //   console.log('new-data\n', newData);
-      // }
+      _appSettingsChanged(newData, oldData) {
+        console.log('app-settings-old\n', oldData);
+        console.log('app-settings-new\n', newData);
+      }
 			
     }
 

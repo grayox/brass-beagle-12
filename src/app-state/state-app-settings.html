@@ -33,6 +33,12 @@
   </template>
 
   <script>
+
+    // The purpose of this element is to process app-views coming in as a json file
+    // and fill out and return the entire app-settings object needed and used
+    // by the page views to generate all the page elements.
+    // TLDR: app-views.json => state-app-views => state-app-settings => my-app => dom-repeat(app-views)
+
     class StateAppSettings extends Polymer.Element {
       static get is() { return 'state-app-settings'; }
 

@@ -8,16 +8,11 @@
 <!---->
 
 <!-- state -->
-<!--- ->
-<link rel="import" href="state-user-settings.html">
-<!---->
 
 <dom-module id="state-user-local">
   <!---->
   <template>
 		<style></style>
-		<!--- ->
-		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
 		<!--- ->
 		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
 		<app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
