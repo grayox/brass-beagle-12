@@ -73,8 +73,9 @@
                        path="/users/[[userRemote.uid]]/settings"
                        data="{{userSettings}}"
                        sequential-transactions
-                       xtransactions-complete="_handleTransactionsComplete"
                        zero-value="_handleZeroValue"
+                       xtransactions-complete="_handleTransactionsComplete"
+                       is-new='_handleIsNew'
 										   >
     </firebase-document>
 	
@@ -94,7 +95,7 @@
 				userSettings: {
 					type: Object,
 					notify: true,
-					observer: '_userSettingsChanged',
+					//observer: '_userSettingsChanged',
         },
 				
         userSettingsOld: {
@@ -184,7 +185,7 @@
       static get observers() {
         return [
           // '_updateDatabase(userRemote, appData, appSettings)',
-          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
         ]
       }
 
@@ -204,26 +205,35 @@
                      ( typeof appViews   === 'object' )  ;
         if(!req3) return;
 
-        console.log('user-remote\n', userRemote);
-        console.log('app-data\n', appData);
-        console.log('app-views\n', appViews);
-        // console.log('app-settings\n', appSettings);
-        console.log('user-settings\n', userSettings);
-        console.log('user-settings-old\n', userSettingsOld);
+        // console.log('user-remote\n', userRemote);
+        // console.log('app-data\n', appData);
+        // console.log('app-views\n', appViews);
+        // // console.log('app-settings\n', appSettings);
+        // console.log('user-settings\n', userSettings);
+        // console.log('user-settings-old\n', userSettingsOld);
 
+        //console.log('ready to initialize user settings');
+        //console.log('transactions-complete\n', this.$.doc.transactionsComplete().then());
+        this.$.doc.transactionsComplete()
+                  .then(response => console.log('transactions-complete\n', response));
+            
         // if(databaseHasBeenInitialized) return;
 
-        const init = this._computeInitialUserSettings(appViews);
-        this.saveUserSettings(init);
+        // const init = this._computeInitialUserSettings(appViews);
+        // this.saveUserSettings(init);
       }
 
-      _handleTransactionsComplete(e) {
-        console.log('transactions-complete\n', e);
+      // _handleTransactionsComplete(e) {
+      //   console.log('transactions-complete\n', e);
+      // }
+
+      _handleIsNew(e) {
+        console.log('is-new\n', e);
       }
 
-      _handleZeroValue(e) {
-        console.log('handle-zero-value\n', e);
-      }
+      // _handleZeroValue(e) {
+      //   console.log('handle-zero-value\n', e);
+      // }
 
       _computeInitialUserSettings(appViews) {
         console.log('app-views\n', appViews);
@@ -312,30 +322,30 @@
       //   return { new: 'data', j: 5, o: 'N' };
       // }
 
-      _userSettingsChanged(newData, oldData) {
-        console.log('user-settings-old\n', oldData);
-        console.log('user-settings-new\n', newData);
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old\n', oldData);
+      //   console.log('user-settings-new\n', newData);
 
-        const doc = this.$.doc;
-        // following throws error: doc.transactionsComplete() is not a function
-        // const trans = doc.transactionsComplete().then((resolve, reject) => {
-        //   console.log('resolve\n', resolve);
-        // });
-        // following returns true when node is not empty
-        // if(doc.valueIsEmpty()) console.log('empty');
+      //   const doc = this.$.doc;
+      //   // following throws error: doc.transactionsComplete() is not a function
+      //   // const trans = doc.transactionsComplete().then((resolve, reject) => {
+      //   //   console.log('resolve\n', resolve);
+      //   // });
+      //   // following returns true when node is not empty
+      //   // if(doc.valueIsEmpty()) console.log('empty');
         
-        //this.set('userSettingsOld', oldData);
+      //   //this.set('userSettingsOld', oldData);
 
-        const req1 = (typeof newData === 'object') && _.isEmpty(newData);
-        const req2 = (typeof oldData === 'object') && _.isEmpty(oldData);
-        if( req1 && req2 ){
-          // console.log('hai');
-          // console.log('app-data\n', this.appData);
-          // console.log('app-settings\n', this.appSettings);
-        }
-        // this._resetOldData(newData, oldData, 'userSettings');
-        this._handleNullValue(newData);
-      }
+      //   const req1 = (typeof newData === 'object') && _.isEmpty(newData);
+      //   const req2 = (typeof oldData === 'object') && _.isEmpty(oldData);
+      //   if( req1 && req2 ){
+      //     // console.log('hai');
+      //     // console.log('app-data\n', this.appData);
+      //     // console.log('app-settings\n', this.appSettings);
+      //   }
+      //   // this._resetOldData(newData, oldData, 'userSettings');
+      //   this._handleNullValue(newData);
+      // }
 
       // _resetOldData(newData, oldData, propertyName) {
       //   // console.log(propertyName, 'data-old\n', oldData);
@@ -348,12 +358,12 @@
       //   return;
       // }
 
-      _handleNullValue(o) {
-        //if(o !== {}) return;
-        //const init = { new: 'data', j: 5, o: 'N' };
-        const init = this._computeInitialUserSettings(this.appViews);
-        this.saveUserSettings(init);
-      }
+      // _handleNullValue(o) {
+      //   //if(o !== {}) return;
+      //   //const init = { new: 'data', j: 5, o: 'N' };
+      //   const init = this._computeInitialUserSettings(this.appViews);
+      //   this.saveUserSettings(init);
+      // }
 			
     }
 
