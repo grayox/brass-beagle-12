@@ -103,7 +103,7 @@
         const items = appViews.items;
         const out = views.reduce((c, v, i, a) => {
           console.log('v\n', v);
-          let viewItemsKeys = v.items ? v.items : []; // array
+          let viewItemsKeys = v['items-keys'] ? v['items-keys'] : []; // array
           // console.log('view-items-keys\n', viewItemsKeys);
           // assemble items from keys contained by view
           let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {

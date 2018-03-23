@@ -200,7 +200,7 @@
       "label": "Dashboard",
       "name": "view-dashboard",
       "icon": "vaadin:dashboard",
-      "items": [
+      "items-keys": [
       ]
     }, {
       "label": "Outbox",
@@ -226,7 +226,7 @@
       "label": "Settings",
       "name": "view-settings",
       "icon": "settings",
-      "items": [
+      "items-keys": [
         "subhead-status",
         "req-info",
         "subhead-filters",
