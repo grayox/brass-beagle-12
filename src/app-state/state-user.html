@@ -123,27 +123,27 @@
 				super();
 			}
 			
-			/**/
+			
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
 			
-			/** /
-			static get observers() {
-        return [
-          // Observer method name, followed by a list of dependencies, in parenthesis
-          '_userLocalChanged(userLocal.*)',
-        ]
-      }
 			
-			/** /
-			_userRemoteChanged(userRemote) {
-				//console.log('userRemote', userRemote);
-				//this.set('photoUrl', this._computePhotoUrl(userRemote));
-				//console.log('photoUrl', this.photoUrl);
-			}
-			/**/
+			// static get observers() {
+      //   return [
+      //     // Observer method name, followed by a list of dependencies, in parenthesis
+      //     '_userLocalChanged(userLocal.*)',
+      //   ]
+      // }
+			
+			
+			// _userRemoteChanged(userRemote) {
+			// 	//console.log('userRemote', userRemote);
+			// 	//this.set('photoUrl', this._computePhotoUrl(userRemote));
+			// 	//console.log('photoUrl', this.photoUrl);
+			// }
+			
 			
 			query() {
 				const q = this.$.query;
@@ -171,47 +171,40 @@
 				};
 			}
 			
-			/** /	
-			_computeUser(uLocal, uRemote) {
-			  try {
-          const keys = Object.keys(ob);
-          const x = _.maxBy(keys, (e) => {
-						return ob[e].lottery.jackpotAmount;
-				  }, ob);
+			// _computeUser(uLocal, uRemote) {
+			//   try {
+      //     const keys = Object.keys(ob);
+      //     const x = _.maxBy(keys, (e) => {
+			// 			return ob[e].lottery.jackpotAmount;
+			// 	  }, ob);
 					
-			    return {
-				    //userLocal: uLocal['-KindZZyx8ZaXa7E-aCz'],
-				    userLocal: u,
-		        userRemote: uRemote,
-				  };
-				} catch(e) {
-					console.log(e.message);
-					return null;
-				}
-			}
+			//     return {
+			// 	    //userLocal: uLocal['-KindZZyx8ZaXa7E-aCz'],
+			// 	    userLocal: u,
+		  //       userRemote: uRemote,
+			// 	  };
+			// 	} catch(e) {
+			// 		console.log(e.message);
+			// 		return null;
+			// 	}
+			// }
 			
-			/** /
-			_computeUserLocal(s) {}
-			/**/
+			// _computeUserLocal(s) {}
 			
-			/** /
-			_userLocalChanged(newOb, oldOb) {
-				//console.log('userLocal-old', oldOb);
-				//console.log('userLocal-new', newOb);
-				//console.log('userLocal-new-this', this.userLocal);
-			}
-			/**/
+			// _userLocalChanged(newOb, oldOb) {
+			// 	//console.log('userLocal-old', oldOb);
+			// 	//console.log('userLocal-new', newOb);
+			// 	//console.log('userLocal-new-this', this.userLocal);
+			// }
 			
-			/** /
-			_show() {
-				console.log('user', this.user);
-				console.log('user-local', this.userLocal);
-				console.log('user-remote', this.userRemote);
-				console.log('user-uid', this.userUid);
-				console.log('user-photo-url', this.userPhotoUrl);
-				console.log('user-logged-in', this.userLoggedIn);
-			}
-			/**/
+			// _show() {
+			// 	console.log('user', this.user);
+			// 	console.log('user-local', this.userLocal);
+			// 	console.log('user-remote', this.userRemote);
+			// 	console.log('user-uid', this.userUid);
+			// 	console.log('user-photo-url', this.userPhotoUrl);
+			// 	console.log('user-logged-in', this.userLoggedIn);
+			// }
 			
     }
 

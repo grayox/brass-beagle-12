@@ -53,7 +53,7 @@
 				userLocal: {
 					type: Object,
 					// notify: true,
-					observer: '_userLocalChanged',
+					//observer: '_userLocalChanged',
           // computed: '_computeAppLocal(appViews, userLocal)'
 				},
       }}
@@ -93,8 +93,9 @@
       // }
 
       _computeAppSettings(appViews, userLocal) {
-        console.log('app-views\n', appViews);
-        console.log('user-local\n', userLocal);
+        // console.log('compute-app-settings');
+        // console.log('app-views\n', appViews);
+        // console.log('user-local\n', userLocal);
         const ready = appViews && userLocal;
         if(!ready) return;
         
@@ -103,30 +104,31 @@
         const out = views.reduce((c, v, i, a) => {
           console.log('v\n', v);
           let viewItemsKeys = v.items ? v.items : []; // array
-          console.log('viewItemsKeys\n', viewItemsKeys);
+          // console.log('view-items-keys\n', viewItemsKeys);
           // assemble items from keys contained by view
-          let viewItems = viewItemsKeys.reduce((c, v, i, a) => {
-            let item = items[v];
-            let userLocalSetting = userLocal[v];
+          let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {
+            let item = items[vi];
+            console.log('item\n', item);
+            let userLocalSetting = userLocal[vi];
             if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
               // substitute value from settings object
               item.data = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
             }
-            return [ ...c, item ];
+            return [ ...ci, item ];
           }, []);
           v.items = viewItems;
           return [ ...c, v ];
         }, []);
 
-        // console.log('out\n', out);
+        console.log('app-settings\n', out);
         return out;
       }
 
       saveAppSettings(data) {
-        console.log('data\n',data);
-        // console.log('user-remote\n', this.userRemote);
-        console.log('user-local\n', this.userLocal);
-        console.log('app-settings\n', this.appSettings);
+        // console.log('data\n',data);
+        // // console.log('user-remote\n', this.userRemote);
+        // console.log('user-local\n', this.userLocal);
+        // console.log('app-settings\n', this.appSettings);
         return;
       
         // common code below this line

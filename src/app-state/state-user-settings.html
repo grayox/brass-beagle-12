@@ -66,18 +66,19 @@
                     xorder-by-value="timestamp"
                     >
     </firebase-query>
-    <!---->
+    <!--- ->
     <firebase-document id="doc"
-										   app-name="app"
-										   name="app"
+                       app-name="app"
+                       name="app"
                        path="/users/[[userRemote.uid]]/settings"
                        data="{{userSettings}}"
                        sequential-transactions
                        zero-value="_handleZeroValue"
                        xtransactions-complete="_handleTransactionsComplete"
                        is-new='_handleIsNew'
-										   >
+                       >
     </firebase-document>
+    <!---->
 	
 	</template>
 
@@ -96,6 +97,25 @@
 					type: Object,
 					notify: true,
 					//observer: '_userSettingsChanged',
+          value: () => {
+            const out = {
+              'auto-email-leads': false,
+              'auto-text-leads': false,
+              city: "Enter zip",
+              'counties-list': "Select",
+              county: "Enter zip",
+              email: "Enter",
+              'lead-type': "Select",
+              'notify-you-email': false,
+              'notify-you-text': true,
+              phone: "Add",
+              'req-info': '0/2',
+              state: 'Enter zip',
+              zip: 'Enter zip',
+            }
+            // console.log('out\n', out);
+            return out;
+          },
         },
 				
         userSettingsOld: {
@@ -205,6 +225,11 @@
                      ( typeof appViews   === 'object' )  ;
         if(!req3) return;
 
+        // the following code block is temp solution until we can get a single returned value from database
+        // const testData = this.testData();
+        // // console.log('test-data\n', testData);
+        // return testData;
+
         // console.log('user-remote\n', userRemote);
         // console.log('app-data\n', appData);
         // console.log('app-views\n', appViews);
@@ -214,8 +239,8 @@
 
         //console.log('ready to initialize user settings');
         //console.log('transactions-complete\n', this.$.doc.transactionsComplete().then());
-        this.$.doc.transactionsComplete()
-                  .then(response => console.log('transactions-complete\n', response));
+        // this.$.doc.transactionsComplete()
+        //           .then(response => console.log('transactions-complete\n', response));
             
         // if(databaseHasBeenInitialized) return;
 
@@ -363,6 +388,26 @@
       //   //const init = { new: 'data', j: 5, o: 'N' };
       //   const init = this._computeInitialUserSettings(this.appViews);
       //   this.saveUserSettings(init);
+      // }
+
+      // testData() {
+      //   const out = {
+      //     'auto-email-leads': false,
+      //     'auto-text-leads': false,
+      //     city: "Enter zip",
+      //     'counties-list': "Select",
+      //     county: "Enter zip",
+      //     email: "Enter",
+      //     'lead-type': "Select",
+      //     'notify-you-email': false,
+      //     'notify-you-text': true,
+      //     phone: "Add",
+      //     'req-info': '0/2',
+      //     state: 'Enter zip',
+      //     zip: 'Enter zip',
+      //   }
+      //   // console.log('out\n', out);
+      //   return out;
       // }
 			
     }

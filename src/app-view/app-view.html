@@ -174,7 +174,7 @@
 			  items: {
 			  	type: Array,
 			  	notify: true,
-          observer: '_itemsChanged',
+          // observer: '_itemsChanged',
           // computed: _computeItems(appViews),
           // computed: '_computeItems(itemKeys, appViews, userRemote)',
           // computed: '_computeItems(name, appViews, userRemote)',
@@ -234,38 +234,56 @@
 				return s !== 'mobile';
 			}
 
-      _itemsChanged(newData, oldData) {
-        // console.log('old-data\n', oldData);
-        console.log('new-data\n', newData);
-      }
+      // _itemsChanged(newData, oldData) {
+      //   console.log('old-data\n', oldData);
+      //   console.log('new-data\n', newData);
+      // }
 
       _handleTappedAppItem(e) {
         // console.log('e\n', e);
         const item = e.detail; // { detail: @array(strings), menu: @string }
+        // console.log('item\n', item);
         const itemKeys = item.detail;
+        // console.log('item-keys\n', itemKeys);
         const views = this.appViews;
         const menus = views.menus;
         // console.log('menus\n', menus);
         const items = views.items;
-        
-        const detail = ( (typeof itemKeys === 'object') && itemKeys.length ) ?
+        //return;
+
+        const itemKeysIsObject = (typeof itemKeys === 'object');
+        // console.log('item-keys-is-object\n', itemKeysIsObject);
+        const itemKeysLength = itemKeys.length;
+        // console.log('item-keys-length\n', itemKeysLength);
+
+        const detail = ( itemKeysIsObject && itemKeysLength ) ?
           itemKeys.reduce((c, v, i, a) => {
-            //console.log('v\n', v);
+            // console.log('v\n', v);
             let viewItem = items[v];
+            // console.log('view-item\n', viewItem);
 
             // menu // case: type: input-menu
             if((viewItem.type === 'input-menu') && viewItem.menu) {
               //console.log('menus\n', menus);
               let menuName = viewItem.menu;
+              // console.log('menu-name\n', menuName); // "lead-type"
               let menuDetail = menus[menuName];
-              let menuDetailItems = menuDetail.items;
+              // console.log('menu-detail\n', menuDetail);
+              let menuDetailIsObject = (typeof menuDetail === 'object');
+              let menuDetailItems = menuDetailIsObject ? menuDetail.items : false;
+              let menuDetailItemsIsObject = (typeof menuDetailItems === 'object');
+              // console.log('menu-detail-items\n', menuDetailItems);
 
               // menu.items
-              if(menuDetail && menuDetailItems && menuDetailItems.length && (typeof menuDetailItems === 'object')) {
-                // return [ ...c, { ...viewItem, menuItems: menuDetailItems } ];
-                const ob = Object.assign(viewItem, { menuItems: menuDetailItems } );
-                c.push(ob);
-                return c;
+              let menuDetailItemsLength = menuDetailItemsIsObject ? menuDetailItems.length : false;
+              if(menuDetail && menuDetailItems && menuDetailItemsLength && menuDetailItemsIsObject) {
+                // console.log('menu-detail-items-length\n', menuDetailItemsLength);
+                let out = [ ...c, { ...viewItem, menuItems: menuDetailItems } ];
+                // console.log('out\n', out);
+                return out;
+                // const ob = Object.assign(viewItem, { menuItems: menuDetailItems } );
+                // c.push(ob);
+                // return c;
               }
 
               // menu.counties
@@ -274,13 +292,14 @@
               }
 
               // menu.path
-
-            } 
-            // !menu // case: type: all others
-            else {
-              return [ ...c, items[v] ];
+             
+              // !menu // case: type: all others
+              else {
+                // console.log('hai');
+                return [ ...c, items[v] ];
+              }
             }
-          }, []) : [];
+          }, []) : [];//true;//false//() => {return};//[];
         // console.log('detail\n', detail);
         this.set('detail', detail);
       }

@@ -8,15 +8,16 @@
 <!---->
 
 <!-- state -->
+<link rel="import" href="state-user-settings.html">
 
 <dom-module id="state-user-local">
   <!---->
   <template>
 		<style></style>
+    <app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
 		<!--- ->
 		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
-		<app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
-    <!---->
+    <!--- ->
     <app-localstorage-document id="storage"
                                xlog
                                session-only
@@ -25,6 +26,7 @@
                                >
     </app-localstorage-document>
     <!---->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
   </template>
   <!---->
 
@@ -35,22 +37,23 @@
       static get is() { return 'state-user-local'; }
 
       static get properties() { return {
-				userLocalExtended: {
-					type: Object,
-					notify: true,
-					//observer: '_userLocalExtendedChanged',
-				},
+				// userLocalExtended: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	//observer: '_userLocalExtendedChanged',
+				// },
 				userLocal: {
 					type: Object,
 					notify: true,
 					//observer: '_userLocalChanged',
-					computed: '_computeUserLocal(userLocalExtended)',
+					//computed: '_computeUserLocal(userLocalExtended)',
+					computed: '_computeUserLocal(userSettings)',
 				},
 				userSettings: {
 					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
-					observer: '_userSettingsChanged',
+					// observer: '_userSettingsChanged',
 				},
 			}}
 			
@@ -69,14 +72,16 @@
 			// 	//console.log('userLocal', userLocal);
 			// }
 
-      _userSettingsChanged(newData, oldData) {
-        console.log('user-settings-old\n', oldData);
-        console.log('user-settings-new\n', newData);
-      }
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old\n', oldData);
+      //   console.log('user-settings-new\n', newData);
+      // }
 			
 			_computeUserLocal(a) {
 				//console.log('user-local-extended', a);
-				const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
+				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
+        if(!a) return;
+				const out = a;
 				//console.log('out', out);
 				return out;
 			}

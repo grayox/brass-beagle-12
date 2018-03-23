@@ -231,31 +231,31 @@
         ]
       }
 			
-			/** /
-			_show() {
-				console.log('user\n', this.user);
-				console.log('user-local\n', this.userLocal);
-				console.log('user-remote\n', this.userRemote);
-				console.log('user-uid\n', this.userUid);
-				console.log('user-photo-url\n', this.userPhotoUrl);
-				console.log('user-logged-in\n', this.userLoggedIn);
-			}
-			/**/
 			
-			/** /
-			_computeItem(r) {
-				return r;
-			}
+			// _show() {
+			// 	console.log('user\n', this.user);
+			// 	console.log('user-local\n', this.userLocal);
+			// 	console.log('user-remote\n', this.userRemote);
+			// 	console.log('user-uid\n', this.userUid);
+			// 	console.log('user-photo-url\n', this.userPhotoUrl);
+			// 	console.log('user-logged-in\n', this.userLoggedIn);
+			// }
 			
-			_userLocalChanged(r) {
-				this.set('item', r);
-			}
-			/** /
 			
-			_onIronFormElementRegister(e) {
-				console.log("e\n", e);
-			}
-			/**/
+			
+			// _computeItem(r) {
+			// 	return r;
+			// }
+			
+			// _userLocalChanged(r) {
+			// 	this.set('item', r);
+			// }
+			
+			
+			// _onIronFormElementRegister(e) {
+			// 	console.log("e\n", e);
+			// }
+			
 			_onFormTouched() {
 				// allow form buttons to activate after item changes by setting formTouched property to true
 				this.set('formTouched', true);
