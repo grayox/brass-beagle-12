@@ -183,8 +183,8 @@ Types of elements
       <!-- type: 'input-zip' -->
       <template is="dom-if" if="[[_computeTypeIsInputZip(type)]]">
         <div hidden$="[[!_computeTypeIsInputZip(type)]]">
-          <paper-item-zip xon-valid-zip="x_onValidZip"
-                          xzip-code-object="{{xdataZip}}"
+          <paper-item-zip on-valid-zip="_onValidZip"
+                          zip-object="{{dataZip}}"
                           >
           </paper-item-zip>
         </div>
@@ -465,11 +465,11 @@ Types of elements
       //   console.log('data-zip\n', o);
       // }
 
-      // _onValidZip(e) {
-      //   console.log('data-zip\n', e);
-      //   const d = e.detail;
-      //   this.set('dataZip', d);
-      // }
+      _onValidZip(e) {
+        console.log('data-zip\n', e);
+        const d = e.detail;
+        this.set('dataZip', d);
+      }
 
       // _dataChanged(d) {
       //   console.log('data\n', d);

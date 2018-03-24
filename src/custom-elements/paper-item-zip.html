@@ -139,28 +139,28 @@
               type="output"
               icon="vaadin:flag"
               label="State"
-              data-string="[[zipState]]"
+              data="[[zipState]]"
               >
     </app-item>
     <app-item hidden$="[[!zipCounty]]"
               type="output"
               icon="vaadin:bullseye"
               label="County"
-              data-string="[[zipCounty]]"
+              data="[[zipCounty]]"
               >
     </app-item>
     <app-item hidden$="[[!zipCity]]"
               type="output"
               icon="vaadin:pin"
               label="City"
-              data-string="[[zipCity]]"
+              data="[[zipCity]]"
               >
     </app-item>
     <app-item hidden$="[[!zipValid]]"
               type="output"
               icon="vaadin:map-marker"
               label="Zip"
-              data-string="[[zipCode]]"
+              data="[[zipCode]]"
               >
     </app-item>
 
@@ -171,16 +171,14 @@
       static get is() { return 'paper-item-zip'; }
 
       static get properties() {
-        /**/
+        
         return {
-					/** /
-					zipCodeDataAjaxPath: {
-						type: String,
-						value: function() {
-							return 'src/custom-libraries/zip-code-data.json';
-						},
-					},
-					/**/
+					// zipCodeDataAjaxPath: {
+					// 	type: String,
+					// 	value: function() {
+					// 		return 'src/custom-libraries/zip-code-data.json';
+					// 	},
+					// },
 					zipCodeData: {
 						type: Object,
 						notify: true,

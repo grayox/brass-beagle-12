@@ -33,7 +33,7 @@
     },
     "subhead-status": {
       "type": "subheader",
-      "label": "Engagement status"
+      "label": "Status"
     },
     "req-info": {
       "type": "output",
@@ -177,14 +177,14 @@
     "auto-text-leads": {
       "type": "checkbox",
       "icon": "vaadin:bolt",
-      "label": "Auto text to your new leads",
+      "label": "Text your new leads",
       "data": "settings",
       "value": false
     },
     "auto-email-leads": {
       "type": "checkbox",
       "icon": "vaadin:magic",
-      "label": "Auto email to your new leads",
+      "label": "Email your new leads",
       "data": "settings",
       "value": false
     }

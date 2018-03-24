@@ -253,7 +253,7 @@
 
         const itemKeysIsObject = (typeof itemKeys === 'object');
         // console.log('item-keys-is-object\n', itemKeysIsObject);
-        const itemKeysLength = itemKeys.length;
+        const itemKeysLength = itemKeysIsObject ? itemKeys.length : false;
         // console.log('item-keys-length\n', itemKeysLength);
 
         const detail = ( itemKeysIsObject && itemKeysLength ) ?
