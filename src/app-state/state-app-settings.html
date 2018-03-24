@@ -102,13 +102,13 @@
         const views = appViews.views;
         const items = appViews.items;
         const out = views.reduce((c, v, i, a) => {
-          console.log('v\n', v);
+          // console.log('v\n', v);
           let viewItemsKeys = v['items-keys'] ? v['items-keys'] : []; // array
           // console.log('view-items-keys\n', viewItemsKeys);
           // assemble items from keys contained by view
           let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {
             let item = items[vi];
-            console.log('item\n', item);
+            // console.log('item\n', item);
             let userLocalSetting = userLocal[vi];
             if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
               // substitute value from settings object
@@ -120,7 +120,7 @@
           return [ ...c, v ];
         }, []);
 
-        console.log('app-settings\n', out);
+        // console.log('app-settings\n', out);
         return out;
       }
 

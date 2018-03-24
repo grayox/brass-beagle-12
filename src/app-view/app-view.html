@@ -248,7 +248,7 @@
         const views = this.appViews;
         const menus = views.menus;
         // console.log('menus\n', menus);
-        const items = views.items;
+        const items = views.items; //views['items-keys']; //
         //return;
 
         const itemKeysIsObject = (typeof itemKeys === 'object');
@@ -262,7 +262,7 @@
             let viewItem = items[v];
             // console.log('view-item\n', viewItem);
 
-            // menu // case: type: input-menu
+            // menus: case: type: 'input-menu'
             if((viewItem.type === 'input-menu') && viewItem.menu) {
               //console.log('menus\n', menus);
               let menuName = viewItem.menu;
@@ -292,13 +292,18 @@
               }
 
               // menu.path
-             
-              // !menu // case: type: all others
-              else {
-                // console.log('hai');
-                return [ ...c, items[v] ];
-              }
             }
+
+            // !menu // case: type: all others
+            else {
+              // console.log('hai');
+              // return [ ...c, items[v] ];
+              // console.log('view-item', viewItem);
+              let out = [ ...c, viewItem ];
+              // console.log('out', out);
+              return out;
+            }
+            
           }, []) : [];//true;//false//() => {return};//[];
         // console.log('detail\n', detail);
         this.set('detail', detail);
