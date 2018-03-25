@@ -14,7 +14,7 @@
   <!---->
   <template>
 		<style></style>
-    <app-localstorage-document xlog xsession-only key="user-local" data="[[userLocal]]"></app-localstorage-document>
+    <app-localstorage-document xlog xsession-only key="user-local" data="{{userLocal}}"></app-localstorage-document>
 		<!--- ->
 		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
     <!--- ->
@@ -37,24 +37,34 @@
       static get is() { return 'state-user-local'; }
 
       static get properties() { return {
+
 				// userLocalExtended: {
 				// 	type: Object,
 				// 	notify: true,
 				// 	//observer: '_userLocalExtendedChanged',
 				// },
+
 				userLocal: {
 					type: Object,
 					notify: true,
 					//observer: '_userLocalChanged',
 					//computed: '_computeUserLocal(userLocalExtended)',
-					computed: '_computeUserLocal(userSettings)',
+					computed: '_computeUserLocal(userSettings, userLocaction)',
 				},
+
 				userSettings: {
 					// initial value fetched by app-main.html > firebase-auth.user > path.
 					type: Object,
 					notify: true,
 					// observer: '_userSettingsChanged',
 				},
+
+        userLocation: {
+					type: Object,
+					notify: true,
+					// observer: '_userSettingsChanged',
+        }
+
 			}}
 			
 			constructor() {
@@ -77,12 +87,14 @@
       //   console.log('user-settings-new\n', newData);
       // }
 			
-			_computeUserLocal(a) {
+			_computeUserLocal(userSettings, userLocaction) {
 				//console.log('user-local-extended', a);
 				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
-        if(!a) return;
-				const out = a;
-				//console.log('out', out);
+        const ready = (userSettings || userLocaction);
+        if(!ready) return;
+
+				const out = { ...userSettings , ...userLocaction };
+				console.log('user-local', out);
 				return out;
 			}
 			

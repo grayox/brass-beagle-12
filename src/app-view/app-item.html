@@ -178,7 +178,7 @@ Types of elements
             <!---->            
           </paper-icon-item>
         </div>
-      </template>      
+      </template>     
   
       <!-- type: 'input-zip' -->
       <template is="dom-if" if="[[_computeTypeIsInputZip(type)]]">
@@ -466,7 +466,7 @@ Types of elements
       // }
 
       _onValidZip(e) {
-        console.log('data-zip\n', e);
+        // console.log('data-zip\n', e);
         const d = e.detail;
         this.set('dataZip', d);
       }

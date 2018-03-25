@@ -29,11 +29,26 @@
       static get is() { return 'state-counties-by-state'; }
 
       static get properties() { return {
+
 				countiesByState: {
 					type: Object,
 					notify: true,
-					observer: '_dataChanged',
+					//observer: '_countiesByStateChanged',
 				},
+
+				state: {
+					type: String,
+					notify: true,
+					//observer: '_dataChanged',
+				},
+
+				counties: {
+					type: Array,
+					notify: true,
+					//observer: '_dataChanged',
+          computed: '_computeCounties(state, countiesByState)',
+				},
+
 			}}
 			
 			constructor() {
@@ -45,15 +60,23 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
 
-      _dataChanged(newData, oldData) {
-        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
-        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-        if(!newData && oldData) {
-          // console.log('newData\n', newData);
-          // console.log('oldData\n', oldData);
-          this.set('countiesByState', oldData);
-        }
+      _computeCounties(state, countiesByState) {
+        const ready = state && countiesByState;
+        if(!ready) return;
+
+        const out = countiesByState[state];
+        return out;
       }
+
+      // _dataChanged(newData, oldData) {
+      //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+      //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+      //   if(!newData && oldData) {
+      //     // console.log('newData\n', newData);
+      //     // console.log('oldData\n', oldData);
+      //     this.set('countiesByState', oldData);
+      //   }
+      // }
 			
       // _appDataChanged(data) {
 			// 	console.log('data', data);

@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/app-state/state-app-settings.html">
 <link rel="import" href="/src/app-view/app-view.html">
 
@@ -52,6 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         app-settings="{{appSettings}}"
                         >
     </state-app-settings>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
 
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="[[appSettings]]">
@@ -96,6 +98,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // computed: _computeItems(appViews),
           observer: '_appSettingsChanged',
         },
+
+        userLocal: {
+          type: Object,
+          notify: true,
+        }
         
       }}
 			
@@ -116,21 +123,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _onValidZip(e) {
         // console.log('data-zip\n', e);
-        const d = e.detail;
-        //console.log('d', d);
+        const newLocation = e.detail;
+        console.log('new-location', newLocation);
+        const userLocal = this.userLocal;
+        const userLocalNew = Object.assign(userLocal, newLocation);
+        console.log('user-local-new', userLocalNew);
+        this.set('userLocal', userLocalNew);
         // this._saveAppSettings(d);
-        this.set('appSettings.zip.dataString', d.zipCode);
-        const appSettings = this.appSettings;
+        // this.set('appSettings.zip.dataString', d.zipCode);
+        // const appSettings = this.appSettings;
         // console.log('app-settings\n', appSettings);
         // console.log('user-settings\n', this.userSettings);
         // this._saveAppSettings(appSettings);
-        const settings = this.$.settings;
-        settings._saveAppSettings(appSettings);
+        // const settings = this.$.settings;
+        // settings.saveAppSettings(appSettings);
       }
 
       _onDetailSaveButton(e) {
         const settings = this.$.settings;
-        settings.saveAppSettings(e.detail);
+        //settings.saveAppSettings(e.detail);
       }
 
       _appSettingsChanged(newData, oldData) {
