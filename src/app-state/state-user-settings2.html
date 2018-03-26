@@ -66,16 +66,16 @@
                     xorder-by-value="timestamp"
                     >
     </firebase-query>
-    <!---->
+    <!--- ->
     <firebase-document id="doc"
                        app-name="app"
                        name="app"
                        path="/users/[[userRemote.uid]]/settings"
-                       data="{{userSettingsStored}}"
+                       data="{{userSettings}}"
                        sequential-transactions
-                       xzero-value="_handleZeroValue"
+                       zero-value="_handleZeroValue"
                        xtransactions-complete="_handleTransactionsComplete"
-                       xis-new='_handleIsNew'
+                       is-new='_handleIsNew'
                        >
     </firebase-document>
     <!---->
@@ -116,12 +116,6 @@
             // console.log('out\n', out);
             return out;
           },
-        },
-				
-        userSettingsStored: {
-					type: Object,
-				  notify: true,
-				  observer: '_userSettingsChanged',
         },
 				
         userSettingsOld: {
@@ -258,9 +252,9 @@
       //   console.log('transactions-complete\n', e);
       // }
 
-      // _handleIsNew(e) {
-      //   console.log('is-new\n', e);
-      // }
+      _handleIsNew(e) {
+        console.log('is-new\n', e);
+      }
 
       // _handleZeroValue(e) {
       //   console.log('handle-zero-value\n', e);

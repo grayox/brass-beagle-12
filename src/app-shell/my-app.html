@@ -136,7 +136,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         newLocation['zip-valid'] = newLocationRaw.zipValid;
 
         const userLocalNew = Object.assign(userLocal, newLocation);
-        console.log('user-local-new', userLocalNew);
+        // console.log('user-local-new', userLocalNew);
         this.set('userLocal', userLocalNew);
         this._saveUserSettings(userLocalNew);
         // this._saveAppSettings(d);
