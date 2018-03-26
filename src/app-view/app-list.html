@@ -133,8 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get is() { return 'app-list'; }
 
-      /**/
-			static get properties() { return {
+      static get properties() { return {
 
 				// mediaWidth: {
 				// 	type: Number, // 0, 1, 2, 3
@@ -155,7 +154,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				items: {
 					type: Array,
 					notify: true,
-          observer: '_itemsChanged',
+          // observer: '_itemsChanged',
           // value: () => [
           //   { type: 'output'   , name: '', icon: 'vaadin:warning'        , label: 'Required information'    , dataString: '0/2'                        , } ,
           //   { type: 'output'   , name: '', icon: 'vaadin:flag'           , label: 'State'                   , dataString: 'Mississippi'                , } ,
@@ -172,8 +171,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				},
 
       }}
-      /**/
-			
+      
+
       constructor() {
         super();
       }
@@ -188,10 +187,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   return out;
       // }
 
-      _itemsChanged(newData, oldData) {
-        // console.log('old-data\n', oldData);
-        // console.log('new-data\n', newData);
-      }
+      // _itemsChanged(newData, oldData) {
+      //   // console.log('old-data\n', oldData);
+      //   // console.log('new-data\n', newData);
+      // }
 		
     }
 

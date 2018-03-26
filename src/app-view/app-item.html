@@ -114,7 +114,7 @@ Types of elements
             <!--- ->
             <div>[[dataString]][[dataNumber]]</div>
             <!---->
-            <app-item-data data="{{data}}"></app-item-data>
+            <app-item-data data="[[data]]"></app-item-data>
             <!---->
           </paper-icon-item>
         </div>
@@ -183,7 +183,7 @@ Types of elements
       <!-- type: 'input-zip' -->
       <template is="dom-if" if="[[_computeTypeIsInputZip(type)]]">
         <div hidden$="[[!_computeTypeIsInputZip(type)]]">
-          <paper-item-zip on-valid-zip="_onValidZip"
+          <paper-item-zip on-zip-valid="_onZipValid"
                           zip-object="{{dataZip}}"
                           >
           </paper-item-zip>
@@ -465,7 +465,7 @@ Types of elements
       //   console.log('data-zip\n', o);
       // }
 
-      _onValidZip(e) {
+      _onZipValid(e) {
         // console.log('data-zip\n', e);
         const d = e.detail;
         this.set('dataZip', d);

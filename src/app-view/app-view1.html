@@ -54,7 +54,7 @@
                   xitems="[[appViews.lists.settings]]"
                   on-tapped-app-item="_handleTappedAppItem"
                   xdetail-save-button="_onSaveAppSettings"
-                  xon-valid-zip="_onValidZip"
+                  xon-zip-valid="_onZipValid"
                   >
         </app-list>
         <app-list items="[[detail]]"></app-list>
@@ -196,7 +196,7 @@
 			ready() {
         super.ready();
         // window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
-        // window.addEventListener('valid-zip', e => this._onValidZip(e));
+        // window.addEventListener('zip-valid', e => this._onZipValid(e));
         // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , e => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
@@ -364,7 +364,7 @@
       }
 
 
-      _onValidZip(e) {
+      _onZipValid(e) {
         console.log('data-zip\n', e);
         const d = e.detail;
         //console.log('d', d);

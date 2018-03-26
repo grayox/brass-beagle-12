@@ -12,7 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
-<!--- ->
+<!---->
 <link rel="import" href="/src/app-main/app-methods.html">
 
 <!-- state -->
@@ -45,7 +45,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<style></style>		
     
     <!---->
-    <app-methods id="methods" xshow-toast xdispatch-event></app-methods>
+    <app-methods id="methods" show-toast xdispatch-event></app-methods>
     
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>		
@@ -114,21 +114,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
 				//console.log('Component Ready');
 				window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
-        window.addEventListener('valid-zip', e => this._onValidZip(e));
+        window.addEventListener('zip-valid', e => this._onZipValid(e));
 			}
       
 			// _routeChanged(route) {
 			// 	console.log('route', route);
 			// }
 
-      _onValidZip(e) {
+      _onZipValid(e) {
         // console.log('data-zip\n', e);
-        const newLocation = e.detail;
-        console.log('new-location', newLocation);
+        const newLocationRaw = e.detail;
+        // console.log('new-location', newLocation);
         const userLocal = this.userLocal;
+
+        // recast and map properties of newLocationRaw -> newLocation
+        const newLocation = {};
+        newLocation.city = newLocationRaw.zipCity;
+        newLocation.zip = newLocationRaw.zipCode;
+        newLocation.county = newLocationRaw.zipCounty;
+        newLocation.state = newLocationRaw.zipState;
+        newLocation['zip-valid'] = newLocationRaw.zipValid;
+
         const userLocalNew = Object.assign(userLocal, newLocation);
         console.log('user-local-new', userLocalNew);
         this.set('userLocal', userLocalNew);
+        this._saveUserSettings(userLocalNew);
         // this._saveAppSettings(d);
         // this.set('appSettings.zip.dataString', d.zipCode);
         // const appSettings = this.appSettings;
@@ -148,6 +158,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // console.log('app-settings-changed');
         // console.log('app-settings-old\n', oldData);
         // console.log('app-settings-new\n', newData);
+      }
+
+      _saveUserSettings(data) {
+        // console.log('data\n',data);
+      
+        // common code below this line
+
+				const entity = 'user-settings';
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+				// console.log('detail\n', detail);
+				methods.method(detail);
       }
 			
     }

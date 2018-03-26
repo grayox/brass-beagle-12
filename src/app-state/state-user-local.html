@@ -49,7 +49,7 @@
 					notify: true,
 					//observer: '_userLocalChanged',
 					//computed: '_computeUserLocal(userLocalExtended)',
-					computed: '_computeUserLocal(userSettings, userLocaction)',
+					computed: '_computeUserLocal(userSettings)',
 				},
 
 				userSettings: {
@@ -58,12 +58,6 @@
 					notify: true,
 					// observer: '_userSettingsChanged',
 				},
-
-        userLocation: {
-					type: Object,
-					notify: true,
-					// observer: '_userSettingsChanged',
-        }
 
 			}}
 			
@@ -87,14 +81,14 @@
       //   console.log('user-settings-new\n', newData);
       // }
 			
-			_computeUserLocal(userSettings, userLocaction) {
+			_computeUserLocal(userSettings) {
 				//console.log('user-local-extended', a);
 				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
-        const ready = (userSettings || userLocaction);
+        const ready = (userSettings);
         if(!ready) return;
 
-				const out = { ...userSettings , ...userLocaction };
-				console.log('user-local', out);
+				const out = userSettings;
+				//console.log('user-local', out);
 				return out;
 			}
 			
