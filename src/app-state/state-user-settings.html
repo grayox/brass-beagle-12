@@ -121,7 +121,7 @@
         userSettingsStored: {
 					type: Object,
 				  notify: true,
-				  observer: '_userSettingsChanged',
+				  observer: '_userSettingsStoredChanged',
         },
 				
         userSettingsOld: {
@@ -208,51 +208,60 @@
         this.$.storage.destroy();
       }
 
-      static get observers() {
-        return [
-          // '_updateDatabase(userRemote, appData, appSettings)',
-          '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
-        ]
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //   ]
+      // }
+
+      _userSettingsStoredChanged(d) {
+        // console.log('user-settings-stored', d);
+        const notReady = _.isEmpty(d);
+        if(notReady) return;
+
+        //console.log('user-settings-stored', d);
+        this.set('userSettings', d);
       }
 
-      _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
+      // _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
         
-        // these three req variables prevent this method from firing more than once
+      //   // these three req variables prevent this method from firing more than once
 
-        const req1 = (typeof userSettings === 'object') && _.isEmpty(userSettings);
-        if(!req1) return;
+      //   const req1 = (typeof userSettings === 'object') && _.isEmpty(userSettings);
+      //   if(!req1) return;
         
-        // const req2 = (typeof userSettingsOld === 'object') && _.isEmpty(userSettingsOld);
-        const req2 = (typeof userSettingsOld === 'undefined');
-        if(!req2) return;
+      //   // const req2 = (typeof userSettingsOld === 'object') && _.isEmpty(userSettingsOld);
+      //   const req2 = (typeof userSettingsOld === 'undefined');
+      //   if(!req2) return;
         
-        const req3 = ( typeof userRemote === 'object' ) &&
-                     ( typeof appData    === 'object' ) &&
-                     ( typeof appViews   === 'object' )  ;
-        if(!req3) return;
+      //   const req3 = ( typeof userRemote === 'object' ) &&
+      //                ( typeof appData    === 'object' ) &&
+      //                ( typeof appViews   === 'object' )  ;
+      //   if(!req3) return;
 
-        // the following code block is temp solution until we can get a single returned value from database
-        // const testData = this.testData();
-        // // console.log('test-data\n', testData);
-        // return testData;
+      //   // the following code block is temp solution until we can get a single returned value from database
+      //   // const testData = this.testData();
+      //   // // console.log('test-data\n', testData);
+      //   // return testData;
 
-        // console.log('user-remote\n', userRemote);
-        // console.log('app-data\n', appData);
-        // console.log('app-views\n', appViews);
-        // // console.log('app-settings\n', appSettings);
-        // console.log('user-settings\n', userSettings);
-        // console.log('user-settings-old\n', userSettingsOld);
+      //   // console.log('user-remote\n', userRemote);
+      //   // console.log('app-data\n', appData);
+      //   // console.log('app-views\n', appViews);
+      //   // // console.log('app-settings\n', appSettings);
+      //   // console.log('user-settings\n', userSettings);
+      //   // console.log('user-settings-old\n', userSettingsOld);
 
-        //console.log('ready to initialize user settings');
-        //console.log('transactions-complete\n', this.$.doc.transactionsComplete().then());
-        // this.$.doc.transactionsComplete()
-        //           .then(response => console.log('transactions-complete\n', response));
+      //   //console.log('ready to initialize user settings');
+      //   //console.log('transactions-complete\n', this.$.doc.transactionsComplete().then());
+      //   // this.$.doc.transactionsComplete()
+      //   //           .then(response => console.log('transactions-complete\n', response));
             
-        // if(databaseHasBeenInitialized) return;
+      //   // if(databaseHasBeenInitialized) return;
 
-        // const init = this._computeInitialUserSettings(appViews);
-        // this.saveUserSettings(init);
-      }
+      //   // const init = this._computeInitialUserSettings(appViews);
+      //   // this.saveUserSettings(init);
+      // }
 
       // _handleTransactionsComplete(e) {
       //   console.log('transactions-complete\n', e);
@@ -266,49 +275,49 @@
       //   console.log('handle-zero-value\n', e);
       // }
 
-      _computeInitialUserSettings(appViews) {
-        console.log('app-views\n', appViews);
-        // return {j:5, o:'N', new: 'data'};
+      // _computeInitialUserSettings(appViews) {
+      //   console.log('app-views\n', appViews);
+      //   // return {j:5, o:'N', new: 'data'};
 
-        if(!appViews) return;
+      //   if(!appViews) return;
 
-        // logic:
-        //   1. loop thru app-views.items
-        //   2. if item.data = 'settings', set setting.item = item.value;
+      //   // logic:
+      //   //   1. loop thru app-views.items
+      //   //   2. if item.data = 'settings', set setting.item = item.value;
 
-        const out = {};
-        const items = appViews.items;
-        const keys = Object.keys(items);
-        let i = keys.length;
-        while(i--) {
-          let key = keys[i];
-          let item = items[key];
-          let data = item.data;
-          if(data === 'settings' || data === 'Settings') {
-            out[key] = item.value;
-          }
-        }
-        console.log('out\n', out);
-        return out;
-      }
+      //   const out = {};
+      //   const items = appViews.items;
+      //   const keys = Object.keys(items);
+      //   let i = keys.length;
+      //   while(i--) {
+      //     let key = keys[i];
+      //     let item = items[key];
+      //     let data = item.data;
+      //     if(data === 'settings' || data === 'Settings') {
+      //       out[key] = item.value;
+      //     }
+      //   }
+      //   console.log('out\n', out);
+      //   return out;
+      // }
 
-      saveUserSettings(data) {
-        // console.log('data\n',data);
+      // saveUserSettings(data) {
+      //   // console.log('data\n',data);
         
-				const entity = 'user-settings';
+			// 	const entity = 'user-settings';
 				
-				const methods = this.$.methods;
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
-				const detail = {
-					method: method,
-					entity: entity,
-					data: data,
-				};
-				// console.log('detail\n', detail);
-				methods.method(detail);
-      }
+			// 	const methods = this.$.methods;
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 	};
+			// 	// console.log('detail\n', detail);
+			// 	methods.method(detail);
+      // }
 
       // _appDataChanged(newData, oldData) {
       //   this._resetOldData(newData, oldData, 'appData');
