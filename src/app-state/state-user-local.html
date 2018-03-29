@@ -50,7 +50,7 @@
 				userLocal: {
 					type: Object,
 					notify: true,
-					//observer: '_userLocalChanged',
+					observer: '_userLocalChanged',
 					//computed: '_computeUserLocal(userLocalExtended)',
 					computed: '_computeUserLocal(userSettings)',
 				},
@@ -75,9 +75,9 @@
         // this.$.doc.destroy();
       }
 			
-			// _userLocalChanged(userLocal) {
-			// 	//console.log('userLocal', userLocal);
-			// }
+			_userLocalChanged(userLocal) {
+				//console.log('userLocal', userLocal);
+			}
 
       // _userSettingsChanged(newData, oldData) {
       //   console.log('user-settings-old\n', oldData);
@@ -91,7 +91,7 @@
         if(!ready) return;
 
 				const out = userSettings;
-				//console.log('user-local', out);
+				console.log('user-local', out);
 				return out;
 			}
 			

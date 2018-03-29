@@ -35,7 +35,7 @@
                                xlog
                                session-only
                                key="user-settings"
-                               data="[[userSettings]]"
+                               data="{{userSettings}}"
                                >
     </app-localstorage-document>
 		<!--- ->
@@ -71,8 +71,10 @@
                        app-name="app"
                        name="app"
                        path="/users/[[userRemote.uid]]/settings"
-                       data="{{userSettingsStored}}"
-                       sequential-transactions
+                       data="{{userSettings}}"
+                       xdata="{{userSettingsStored}}"
+                       on-data-changed="_handleDataChanged"
+                       xsequential-transactions
                        xzero-value="_handleZeroValue"
                        xtransactions-complete="_handleTransactionsComplete"
                        xis-new='_handleIsNew'
@@ -118,17 +120,17 @@
           },
         },
 				
-        userSettingsStored: {
-					type: Object,
-				  notify: true,
-				  observer: '_userSettingsStoredChanged',
-        },
+        // userSettingsStored: {
+				// 	type: Object,
+				//   notify: true,
+				//   observer: '_userSettingsStoredChanged',
+        // },
 				
-        userSettingsOld: {
-					type: Object,
-				  // notify: true,
-				  // observer: '_userSettingsChanged',
-        },
+        // userSettingsOld: {
+				// 	type: Object,
+				//   // notify: true,
+				//   // observer: '_userSettingsChanged',
+        // },
         
 				// userRemote: {
 				// 	type: Object,
@@ -204,7 +206,7 @@
 			
 			ready() {
         super.ready();
-        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        // window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
         this.$.storage.destroy();
       }
 
@@ -212,17 +214,23 @@
       //   return [
       //     // '_updateDatabase(userRemote, appData, appSettings)',
       //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     // '_userSettingsStoredChanged(userSettingsStored.*)',
       //   ]
       // }
 
-      _userSettingsStoredChanged(d) {
-        // console.log('user-settings-stored', d);
-        const notReady = _.isEmpty(d);
-        if(notReady) return;
-
-        //console.log('user-settings-stored', d);
-        this.set('userSettings', d);
+      _handleDataChanged(e) {
+        // console.log('data-changed', e);
+        // dispatchEvent('user-settings-data-changed', e.detail);
       }
+
+      // _userSettingsStoredChanged(d) {
+      //   console.log('user-settings-stored', d);
+      //   const notReady = _.isEmpty(d);
+      //   if(notReady) return;
+
+      //   //console.log('user-settings-stored', d);
+      //   this.set('userSettings', d);
+      // }
 
       // _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
         

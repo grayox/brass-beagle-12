@@ -120,33 +120,33 @@
           return [ ...c, v ];
         }, []);
 
-        // console.log('app-settings\n', out);
+        console.log('app-settings\n', out);
         return out;
       }
 
-      saveAppSettings(data) {
-        // console.log('data\n',data);
-        // // console.log('user-remote\n', this.userRemote);
-        // console.log('user-local\n', this.userLocal);
-        // console.log('app-settings\n', this.appSettings);
-        return;
+      // saveAppSettings(data) {
+      //   // console.log('data\n',data);
+      //   // // console.log('user-remote\n', this.userRemote);
+      //   // console.log('user-local\n', this.userLocal);
+      //   // console.log('app-settings\n', this.appSettings);
+      //   return;
       
-        // common code below this line
+      //   // common code below this line
 
-				const entity = 'user-settings';
+			// 	const entity = 'user-settings';
 				
-				const methods = this.$.methods;
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
-				const detail = {
-					method: method,
-					entity: entity,
-					data: data,
-				};
-				// console.log('detail\n', detail);
-				methods.method(detail);
-      }
+			// 	const methods = this.$.methods;
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 	};
+			// 	// console.log('detail\n', detail);
+			// 	methods.method(detail);
+      // }
 
       // _appSettingsChanged(newData, oldData) {
       //   console.log('old-data\n', oldData);

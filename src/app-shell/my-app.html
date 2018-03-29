@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
 <link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/app-state/state-app-settings.html">
 <link rel="import" href="/src/app-view/app-view.html">
@@ -49,11 +50,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>		
-    <state-app-settings id="settings"
-                        app-settings="{{appSettings}}"
-                        >
-    </state-app-settings>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <state-app-settings id="settings" app-settings="{{appSettings}}"></state-app-settings>
 
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="[[appSettings]]">
@@ -99,10 +98,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           observer: '_appSettingsChanged',
         },
 
+        userSettings: {
+          type: Object,
+          notify: true,
+        },
+
         userLocal: {
           type: Object,
           notify: true,
-        }
+        },
         
       }}
 			
@@ -126,7 +130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         const newLocationRaw = e.detail;
         // console.log('new-location', newLocation);
         const userLocal = this.userLocal;
-
+        
         // recast and map properties of newLocationRaw -> newLocation
         const newLocation = {};
         newLocation.city = newLocationRaw.zipCity;
