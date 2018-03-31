@@ -50,9 +50,9 @@
 				userLocal: {
 					type: Object,
 					notify: true,
-					observer: '_userLocalChanged',
+					//observer: '_userLocalChanged',
 					//computed: '_computeUserLocal(userLocalExtended)',
-					computed: '_computeUserLocal(userSettings)',
+					computed: '_computeUserLocal(userSettings, userLocalDefault)',
 				},
 
 				userSettings: {
@@ -60,7 +60,33 @@
 					type: Object,
 					notify: true,
 					// observer: '_userSettingsChanged',
-				},
+        },
+        
+        userLocalDefault: {
+					type: Object,
+					notify: true,
+					// observer: '_userSettingsChanged', // doesn't recognize sub-property changes; listen for event: on-data-changed
+          value: () => {
+            // to user-local
+            const out = {
+              'auto-email-leads': false,
+              'auto-text-leads': false,
+              city: "Enter zip",
+              'counties-list': "Select",
+              county: "Enter zip",
+              email: "Enter",
+              'lead-type': "Select",
+              'notify-you-email': false,
+              'notify-you-text': true,
+              phone: "Add",
+              'req-info': '0/2',
+              state: 'Enter zip',
+              zip: 'Enter zip',
+            }
+            // console.log('out\n', out);
+            return out;
+          },
+        },
 
 			}}
 			
@@ -75,22 +101,23 @@
         // this.$.doc.destroy();
       }
 			
-			_userLocalChanged(userLocal) {
-				console.log('user-local', userLocal);
-			}
+			// _userLocalChanged(userLocal) {
+			// 	// console.log('user-local', userLocal);
+			// }
 
       // _userSettingsChanged(newData, oldData) {
       //   console.log('user-settings-old\n', oldData);
       //   console.log('user-settings-new\n', newData);
       // }
 			
-			_computeUserLocal(userSettings) {
+			_computeUserLocal(userSettings, userLocalDefault) {
 				//console.log('user-local-extended', a);
 				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
-        const ready = (userSettings);
+        const ready = (userSettings && userLocalDefault);
         if(!ready) return;
 
-				const out = userSettings;
+				// const out = userSettings;
+				const out = Object.assign(userLocalDefault, userSettings);
 				console.log('user-local', out);
 				return out;
 			}

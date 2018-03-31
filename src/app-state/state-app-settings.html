@@ -112,9 +112,11 @@
             let item = items[vi];
             // console.log('item\n', item);
             let userLocalSetting = userLocal[vi];
-            if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
+            if ( item && item.setting ) {
               // substitute value from settings object
-              item.data = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
+              let d = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
+              item.data = d; // words (shown when both item.value and item.data are set)
+              item.value = d; // chevrons
             }
             return [ ...ci, item ];
           }, []);
@@ -125,6 +127,38 @@
         console.log('app-settings\n', out);
         return out;
       }
+
+      // _computeAppSettings(appViews, userLocal) {
+      //   // console.log('compute-app-settings');
+      //   // console.log('app-views\n', appViews);
+      //   // console.log('user-local\n', userLocal);
+      //   const ready = appViews && userLocal;
+      //   if(!ready) return;
+        
+      //   const views = appViews.views;
+      //   const items = appViews.items;
+      //   const out = views.reduce((c, v, i, a) => {
+      //     // console.log('v\n', v);
+      //     let viewItemsKeys = v['items-keys'] ? v['items-keys'] : []; // array
+      //     // console.log('view-items-keys\n', viewItemsKeys);
+      //     // assemble items from keys contained by view
+      //     let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {
+      //       let item = items[vi];
+      //       // console.log('item\n', item);
+      //       let userLocalSetting = userLocal[vi];
+      //       if ( item && (item.data === 'settings' || item.data === 'Settings') ) {
+      //         // substitute value from settings object
+      //         item.data = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
+      //       }
+      //       return [ ...ci, item ];
+      //     }, []);
+      //     v.items = viewItems;
+      //     return [ ...c, v ];
+      //   }, []);
+
+      //   console.log('app-settings\n', out);
+      //   return out;
+      // }
 
       // saveAppSettings(data) {
       //   // console.log('data\n',data);

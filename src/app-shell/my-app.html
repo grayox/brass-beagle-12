@@ -50,6 +50,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <state-route route="{{route}}"></state-route>		
     
 		<!-- state -->
+    <!--- ->
+    datastore -> user-settings -> user-local -> app-settings
 		<!---->
     <state-user-settings user-settings="{{userSettings}}"
                          xon-user-settings-data-changed="_handleUserSettingsDataChanged"
@@ -121,7 +123,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         userSettings: {
           type: Object,
           notify: true,
-          observer: '_userSettingsChanged'
+          // observer: '_userSettingsChanged'
         },
 
         userLocal: {
@@ -146,9 +148,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			// 	console.log('route', route);
       // }
       
-      _userSettingsChanged(e) {
-        console.log('user-settings', e);
-      }
+      // _userSettingsChanged(e) {
+      //   // console.log('user-settings', e);
+      // }
 
       _onZipValid(e) {
         // console.log('data-zip\n', e);

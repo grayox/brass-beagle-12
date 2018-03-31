@@ -39,7 +39,7 @@
       "type": "output",
       "icon": "vaadin:warning",
       "label": "Required information",
-      "data": "settings",
+      "setting": true,
       "value": "0/2"
     },
     "subhead-filters": {
@@ -50,7 +50,7 @@
       "type": "output",
       "icon": "track-changes",
       "label": "Your type of services",
-      "data": "settings",
+      "setting": true,
       "value": "Select",
       "detail": [ "lead-type-detail" ]
     },
@@ -63,7 +63,7 @@
       "type": "output",
       "icon": "track-changes",
       "label": "Counties in your territory",
-      "data": "settings",
+      "setting": true,
       "value": "Select",
       "detail": [ "counties-by-zip" ]
     },
@@ -84,7 +84,7 @@
       "type": "output",
       "icon": "vaadin:flag",
       "label": "State",
-      "data": "settings",
+      "setting": true,
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -92,7 +92,7 @@
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "County",
-      "data": "settings",
+      "setting": true,
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -100,7 +100,7 @@
       "type": "output",
       "icon": "vaadin:map-marker",
       "label": "City",
-      "data": "settings",
+      "setting": true,
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -108,7 +108,7 @@
       "type": "output",
       "icon": "vaadin:pin",
       "label": "Zip",
-      "data": "settings",
+      "setting": true,
       "value": "Enter zip",
       "detail": [ "subhead-zip-detail", "zip-detail" ]
     },
@@ -132,7 +132,7 @@
       "type": "output",
       "icon": "vaadin:phone",
       "label": "Phone",
-      "data": "settings",
+      "setting": true,
       "value": "Add",
       "detail": [ "subhead-phone-detail", "phone-detail", "buttons" ]
     },
@@ -146,7 +146,7 @@
       "type": "output",
       "icon": "vaadin:envelope",
       "label": "Email",
-      "data": "settings",
+      "setting": true,
       "value": "Enter",
       "detail": [ "subhead-email-detail", "email-detail", "buttons" ]
     },
@@ -154,7 +154,8 @@
       "type": "input-text",
       "icon": "vaadin:envelope",
       "label": "Email",
-      "data": "myemailaddress@example.com"
+      "data": "myemaildata@example.com",
+      "value": "myemailvalue@example.com"
     },
     "subhead-auto": {
       "type": "subheader",
@@ -164,28 +165,28 @@
       "type": "checkbox",
       "icon": "communication:textsms",
       "label": "Notify you via text",
-      "data": "settings",
+      "setting": true,
       "value": true
     },
     "notify-you-email": {
       "type": "checkbox",
       "icon": "communication:email",
       "label": "Notify you via email",
-      "data": "settings",
+      "setting": true,
       "value": false
     },
     "auto-text-leads": {
       "type": "checkbox",
       "icon": "vaadin:bolt",
       "label": "Text your new leads",
-      "data": "settings",
+      "setting": true,
       "value": false
     },
     "auto-email-leads": {
       "type": "checkbox",
       "icon": "vaadin:magic",
       "label": "Email your new leads",
-      "data": "settings",
+      "setting": true,
       "value": false
     }
   },
