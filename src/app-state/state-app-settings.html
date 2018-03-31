@@ -98,23 +98,29 @@
         // console.log('compute-app-settings');
         // console.log('app-views\n', appViews);
         // console.log('user-local\n', userLocal);
-        const ready = appViews && userLocal;
+        const ready = (appViews && userLocal);
         if(!ready) return;
         
         const views = appViews.views;
         const items = appViews.items;
+        // console.log('items\n', items);
         const out = views.reduce((c, v, i, a) => {
           // console.log('v\n', v);
           let viewItemsKeys = v['items-keys'] ? v['items-keys'] : []; // array
           // console.log('view-items-keys\n', viewItemsKeys);
           // assemble items from keys contained by view
           let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {
+            // console.log('vi\n', vi);
             let item = items[vi];
             // console.log('item\n', item);
             let userLocalSetting = userLocal[vi];
+            // console.log('user-local\n', userLocal);
+            // console.log('user-local[', vi, ']\n', userLocal[vi]);
+            // console.log('user-local-setting\n', userLocalSetting);
             if ( item && item.setting ) {
               // substitute value from settings object
               let d = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
+              // console.log('d', d);
               item.data = d; // words (shown when both item.value and item.data are set)
               item.value = d; // chevrons
             }
@@ -124,7 +130,7 @@
           return [ ...c, v ];
         }, []);
 
-        console.log('app-settings\n', out);
+        // console.log('app-settings\n', out);
         return out;
       }
 
