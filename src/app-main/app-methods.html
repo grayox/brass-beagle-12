@@ -70,18 +70,20 @@ Example usage (v1):
 
 <dom-module id="app-methods">
 	<template>
-		<style>
-		
-		  paper-toast {
+    <!--- ->
+		<style>		
+		  /** /
+      paper-toast {
 				/**/
-				--paper-toast-color: #00FF00;
 				/** /
+				--paper-toast-color: #00FF00;
 				--paper-toast-color: var(--paper-green-A400);
-				/**/
 				z-index: 99999;
+				/** /
 			}
-		
-		</style>
+			/**/	
+    </style>
+    <!---->
 		
 		<!-- state -->
 		<!--- ->
@@ -279,7 +281,6 @@ Example usage (v1):
 				return out.join('/');
 			}
 
-			/**/
 			_showToast(s) {
 				if(!this.showToast) return;
 				
@@ -288,8 +289,7 @@ Example usage (v1):
 				t.text = 'Item ' + s + 'd';
 				t.show(); //t.open();
 			}
-			/**/
-
+			
 			_dispatchEvent(method) {
 				if(!this.eventDispatch) return;
 				

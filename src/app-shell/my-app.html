@@ -47,13 +47,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     <!---->
     <app-methods id="methods" show-toast xdispatch-event></app-methods>
+    <state-route route="{{route}}"></state-route>		
     
 		<!-- state -->
-		<state-route route="{{route}}"></state-route>		
-    <state-user-local user-local="{{userLocal}}"></state-user-local>
-    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
-    <state-app-settings id="settings" app-settings="{{appSettings}}"></state-app-settings>
+		<!---->
+    <state-user-settings user-settings="{{userSettings}}"
+                         xon-user-settings-data-changed="_handleUserSettingsDataChanged"
+                         >
+    </state-user-settings>
+    <state-user-local user-settings="[[userSettings]]"
+                      user-local="{{userLocal}}"
+                      >
+    </state-user-local>
+		<!---->
+    <state-app-settings id="settings"
+                        user-local="[[userLocal]]"
+                        app-settings="{{appSettings}}"
+                        >
+    </state-app-settings>
 
+    <!--- ->
+    <button on-tap="_show">Show</button>
+    <!---->
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
 		  <template is="dom-repeat" items="[[appSettings]]">
         <app-view items="[[item.items]]"></app-view>
@@ -76,6 +91,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+
+    // set user-local here
+    // get fed from user-settings
+    // never call user-settings from any other element to eliminate redundant calls
+    // user-settings -> my-app -> user-local + app-views -> app-settings
 
     class MyApp extends Polymer.Element {
 
@@ -101,6 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         userSettings: {
           type: Object,
           notify: true,
+          observer: '_userSettingsChanged'
         },
 
         userLocal: {
@@ -123,7 +144,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
 			// _routeChanged(route) {
 			// 	console.log('route', route);
-			// }
+      // }
+      
+      _userSettingsChanged(e) {
+        console.log('user-settings', e);
+      }
 
       _onZipValid(e) {
         // console.log('data-zip\n', e);
@@ -152,6 +177,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // const settings = this.$.settings;
         // settings.saveAppSettings(appSettings);
       }
+
+      // _handleUserSettingsDataChanged(e) {
+      //   // console.log('on-user-settings-data-changed', e)
+      //   const data = e.detail;
+      //   console.log('data', data);
+      //   console.log('user-settings', this.userSettings);
+      // }
 
       _onDetailSaveButton(e) {
         const settings = this.$.settings;
@@ -183,6 +215,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				// console.log('detail\n', detail);
 				methods.method(detail);
       }
+
+      // _show() {
+      //   console.log(this.userSettings);
+      // }
 			
     }
 

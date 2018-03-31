@@ -24,9 +24,11 @@
     <state-media media-type="{{mediaType}}"></state-media>
     <!---->
     <state-app-views app-views="{{appViews}}"></state-app-views>
-    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
-    <state-user-local user-local="{{userLocal}}"></state-user-local>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
+    <!--- ->
+      <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <!---->
 
     <app-methods id="methods" show-toast dispatch-event></app-methods>
 		
@@ -52,7 +54,7 @@
 
 				userLocal: {
 					type: Object,
-					// notify: true,
+					notify: true,
 					//observer: '_userLocalChanged',
           // computed: '_computeAppLocal(appViews, userLocal)'
 				},

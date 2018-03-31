@@ -5,12 +5,12 @@
 
 <!-- state -->
 <link rel="import" href="state-app-data.html">
-<link rel="import" href="state-app-views.html">
 <link rel="import" href="state-user-remote.html">
-<link rel="import" href="/src/app-main/app-methods.html">
 <!--- ->
-<link rel="import" href="state-app-settings.html">
+<link rel="import" href="state-app-views.html">
 <link rel="import" href="state-user-local.html">
+<link rel="import" href="state-app-settings.html">
+<link rel="import" href="/src/app-main/app-methods.html">
 <!---->
 
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
@@ -21,21 +21,21 @@
 <dom-module id="state-user-settings">
   <template>
     <style></style>
-    <app-methods id="methods"></app-methods>
     <state-app-data app-data="{{appData}}"></state-app-data>
-    <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <!--- ->
-    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+    <app-methods id="methods"></app-methods>
+    <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-local user-settings="{{userSettings}}"></state-user-local>
+    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
     <!---->
 
-    <!---->
+    <!--- /->
     <app-localstorage-document id="storage"
                                xlog
                                session-only
                                key="user-settings"
-                               data="{{userSettings}}"
+                               data="[[userSettings]]"
                                >
     </app-localstorage-document>
 		<!--- ->
@@ -72,9 +72,9 @@
                        name="app"
                        path="/users/[[userRemote.uid]]/settings"
                        data="{{userSettings}}"
+                       sequential-transactions
                        xdata="{{userSettingsStored}}"
-                       on-data-changed="_handleDataChanged"
-                       xsequential-transactions
+                       xon-data-changed="_handleDataChanged"
                        xzero-value="_handleZeroValue"
                        xtransactions-complete="_handleTransactionsComplete"
                        xis-new='_handleIsNew'
@@ -98,38 +98,39 @@
 				userSettings: {
 					type: Object,
 					notify: true,
-					//observer: '_userSettingsChanged',
-          value: () => {
-            const out = {
-              'auto-email-leads': false,
-              'auto-text-leads': false,
-              city: "Enter zip",
-              'counties-list': "Select",
-              county: "Enter zip",
-              email: "Enter",
-              'lead-type': "Select",
-              'notify-you-email': false,
-              'notify-you-text': true,
-              phone: "Add",
-              'req-info': '0/2',
-              state: 'Enter zip',
-              zip: 'Enter zip',
-            }
-            // console.log('out\n', out);
-            return out;
-          },
+					// observer: '_userSettingsChanged', // doesn't recognize sub-property changes; listen for event: on-data-changed
+          // value: () => {
+          //   // to user-local
+          //   const out = {
+          //     'auto-email-leads': false,
+          //     'auto-text-leads': false,
+          //     city: "Enter zip",
+          //     'counties-list': "Select",
+          //     county: "Enter zip",
+          //     email: "Enter",
+          //     'lead-type': "Select",
+          //     'notify-you-email': false,
+          //     'notify-you-text': true,
+          //     phone: "Add",
+          //     'req-info': '0/2',
+          //     state: 'Enter zip',
+          //     zip: 'Enter zip',
+          //   }
+          //   // console.log('out\n', out);
+          //   return out;
+          // },
         },
-				
-        // userSettingsStored: {
-				// 	type: Object,
-				//   notify: true,
-				//   observer: '_userSettingsStoredChanged',
-        // },
 				
         // userSettingsOld: {
 				// 	type: Object,
 				//   // notify: true,
 				//   // observer: '_userSettingsChanged',
+        // },
+
+        // userSettingsStored: {
+				// 	type: Object,
+				//   notify: true,
+				//   observer: '_userSettingsStoredChanged',
         // },
         
 				// userRemote: {
@@ -207,7 +208,7 @@
 			ready() {
         super.ready();
         // window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-        this.$.storage.destroy();
+        // this.$.storage.destroy();
       }
 
       // static get observers() {
@@ -218,15 +219,96 @@
       //   ]
       // }
 
-      _handleDataChanged(e) {
-        // console.log('data-changed', e);
-        // dispatchEvent('user-settings-data-changed', e.detail);
-      }
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   // console.log('uid\n', this.userRemote.uid);
+      //   // console.log('userSettings\n', r);
+      //   // console.log('data-old\n', dataOld);
+      //   // console.log('data-new\n', dataNew);
+
+      //   // conditionals
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const nogo1 =          !dataNew          ; // console.log('nogo-1', nogo1);
+      //   const nogo2 = _.isEmpty(dataNew)         ; // console.log('nogo-2', nogo2);
+      //   const nogo3 = _.isEqual(dataNew, dataOld); // console.log('nogo-3', nogo3);
+      //   const nogo  = nogo1 || nogo2 || nogo3;
+      //   if(nogo) {
+      //     // this.set('userSettings', dataOld);
+      //     return;
+      //   }
+        
+      //   // Object.assign(dataOld, dataNew);
+      //   this._handleDataChanged(dataNew, dataOld);
+      // }
+
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 	  bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+      // }
+      
+      // _handleDataChanged(dataNew, dataOld) {
+      //   // databinding observer-based
+        
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const nogo1 =          !dataNew          ; /*console.log('nogo-1', nogo1);*/ if(nogo1) return;
+      //   const nogo2 = _.isEmpty(dataNew)         ; /*console.log('nogo-2', nogo2);*/ if(nogo2) return;
+      //   const nogo3 = _.isEqual(dataNew, dataOld); /*console.log('nogo-3', nogo3);*/ if(nogo3) return;
+      //   const nogo = nogo1 || nogo2 || nogo3;
+      //   // console.log('nogo', nogo);
+      //   if(nogo) return;
+
+      //   console.log('data-new', dataNew);
+      //   console.log('user-settings', this.userSettings);
+
+      //   // dispatch event
+      //   const data = dataNew;
+      //   // console.log('data', data);
+      //   this._dispatchEvent('user-settings-data-changed', data);
+      // }
+
+      // _handleDataChanged(e) {
+      //   // event-based
+      
+      //   console.log('data-changed', e);
+      //   // const dataNew = this.userSettings;
+      //   // console.log('data-new', dataNew);
+        
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const detail = e.detail;
+      //   const value = detail.value;
+      //   // delete value.base;
+      //   const dataNew = value;
+      //   const dataOld = this.userSettingsOld;
+        
+      //   const check1 = _.isEmpty(dataNew);
+      //   // console.log('check1', check1);
+      //   const check2 = _.isEqual(dataNew, dataOld);
+      //   // console.log('check2', check2);
+      //   const nogo = check1 || check2;
+      //   // console.log('nogo', nogo);
+      //   if(nogo) return;
+
+      //   // update old value
+      //   this.set('userSettingsOld', dataNew);
+
+      //   // dispatch event
+      //   // const data = e.detail;
+      //   const data = dataNew;
+      //   // console.log('data', data);
+      //   this._dispatchEvent('user-settings-data-changed', data);
+      // }
 
       // _userSettingsStoredChanged(d) {
       //   console.log('user-settings-stored', d);
-      //   const notReady = _.isEmpty(d);
-      //   if(notReady) return;
+      //   const nogo = _.isEmpty(d);
+      //   if(nogo) return;
 
       //   //console.log('user-settings-stored', d);
       //   this.set('userSettings', d);
@@ -357,13 +439,6 @@
       //   //   }
       //   //   return false;
       //   // }, false);
-      // }
-
-      // _userSettingsChanged(newData, oldData) {
-      //   // console.log('uid\n', this.userRemote.uid);
-      //   //console.log('userSettings\n', r);
-      //   console.log('oldData\n', oldData);
-      //   console.log('newData\n', newData);
       // }
 
       // get zeroValue() {
