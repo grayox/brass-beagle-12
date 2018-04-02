@@ -122,7 +122,7 @@
               let d = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
               // console.log('d', d);
               item.data = d; // words (shown when both item.value and item.data are set)
-              item.value = d; // chevrons
+              item.value = d; // chevrons // data does not update
             }
             return [ ...ci, item ];
           }, []);
@@ -131,7 +131,40 @@
         }, []);
 
         // console.log('app-settings\n', out);
+        
+        // // Force data system to pick up array mutations
+        // // https://www.polymer-project.org/1.0/docs/devguide/model-data#array-mutation
+        // // const array = this.myArray;
+        // // this.myArray = [];
+        // // this.myArray = array;
+        // const array = out;
+        // out = [];
+        // out = array;
+        
+        // this.notifySplices(out);
+        // this.notifySplices('out');
+        // this.notifyPath('out');
+
+        // console.log('app-settings\n', out);
+        // this.set('appSettings', out);
+
+        const data = out;
+        this._dispatchEvent('app-settings-changed', data);
+
         return out;
+      }
+
+		  _dispatchEvent(name, data) {
+				const n = name;
+				const o = {
+				  bubbles: true,
+					composed: true,
+					detail: data,
+				};
+				//console.log('o\n', o);
+				const d = new CustomEvent(n, o);
+				//console.log('d\n', d);
+				this.dispatchEvent(d);				
       }
 
       // _computeAppSettings(appViews, userLocal) {
@@ -193,6 +226,7 @@
       // _appSettingsChanged(newData, oldData) {
       //   console.log('old-data\n', oldData);
       //   console.log('new-data\n', newData);
+      //   // this.set('app-settings', newData);
       // }
       
 	  }

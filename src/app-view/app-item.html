@@ -50,7 +50,7 @@ Types of elements
 3.3. paper-toggle-button
 <!---->
 
-<!-- state -->
+<!-- state - ->
 <state-user-local user-local="{{userLocal}}"></state-user-local>
 <!--- ->
 <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
@@ -63,7 +63,7 @@ Types of elements
     <div on-tap="_onTap">
 
       <!-- type: 'header' -->
-      <template is="dom-if" if="[[_computeTypeIsHeader(type)]]">
+      <template restamp is="dom-if" if="[[_computeTypeIsHeader(type)]]">
         <div hidden$="[[!_computeTypeIsHeader(type)]]">
           <paper-item class="header">
             <!--- ->
@@ -82,7 +82,7 @@ Types of elements
       </template>
   
       <!-- type: 'subheader' -->
-      <template is="dom-if" if="[[_computeTypeIsSubheader(type)]]">
+      <template restamp is="dom-if" if="[[_computeTypeIsSubheader(type)]]">
         <div hidden$="[[!_computeTypeIsSubheader(type)]]">
           <paper-item class="subheader">
             <!--- ->
@@ -101,7 +101,7 @@ Types of elements
       </template>
   
       <!-- type: 'output' -->
-      <template is="dom-if" if="[[_computeTypeIsOutput(type)]]">
+      <template restamp is="dom-if" if="[[_computeTypeIsOutput(type)]]">
         <div hidden$="[[!_computeTypeIsOutput(type)]]">
           <paper-icon-item>
             <xpaper-ripple recenters></xpaper-ripple>
@@ -121,7 +121,7 @@ Types of elements
       </template>
       
       <!-- type: 'menu-item' -->
-      <template is="dom-if" if="[[_computeTypeIsMenuItem(type)]]">
+      <template restamp is="dom-if" if="[[_computeTypeIsMenuItem(type)]]">
         <div hidden$="[[!_computeTypeIsMenuItem(type)]]">
           <paper-icon-item xtoggles name="[[name]]">
             <paper-ripple recenters></paper-ripple>    
@@ -148,7 +148,7 @@ Types of elements
       </template>
   
       <!-- type: 'input-menu' -->
-      <template is="dom-if" if="[[_computeTypeIsInputMenu(type)]]">
+      <template restamp is="dom-if" if="[[_computeTypeIsInputMenu(type)]]">
         <div hidden$="[[!_computeTypeIsInputMenu(type)]]">
           <app-menu subheader="[[label]]"
                     items="[[menuItems]]"
@@ -249,15 +249,15 @@ Types of elements
       /**/
 			static get properties() { return {
 
-        appSettings: {
-          type: Object,
-          notify: true,
-        },
+        // appSettings: {
+        //   type: Object,
+        //   notify: true,
+        // },
 
-        userSettings: {
-          type: Object,
-          notify: true,
-        },
+        // userSettings: {
+        //   type: Object,
+        //   notify: true,
+        // },
 
 				view: { // hidden; for database save methods
 					type: String,
@@ -327,7 +327,7 @@ Types of elements
 				data: { // right side
 					type: Object,//String, // 
 					notify: true,
-					// observer: '_dataChanged',
+					observer: '_dataChanged',
           // value: () => 'vaadin:phone', //'star'
           // computed: '_computeData(appSettings, userSettings, view, name)',
 				},
@@ -471,9 +471,9 @@ Types of elements
         this.set('dataZip', d);
       }
 
-      // _dataChanged(d) {
-      //   console.log('data\n', d);
-      // }
+      _dataChanged(d) {
+        console.log('data\n', d);
+      }
 
       _open() {
         // const detail = this.detail;
@@ -486,6 +486,11 @@ Types of elements
       }
 
       _onTap() {
+        console.log('data', this.data);
+        console.log('data-string', this.dataString);
+        console.log('value', this.value);
+        console.log('name', this.name);
+        console.log('view', this.view);
         this._open();
       }
 

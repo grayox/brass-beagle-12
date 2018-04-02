@@ -65,14 +65,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <state-app-settings id="settings"
                         user-local="[[userLocal]]"
                         app-settings="{{appSettings}}"
+                        on-app-settings-changed="_handleAppSettingsChanged"
                         >
     </state-app-settings>
 
-    <!--- ->
+    <!---->
     <button on-tap="_show">Show</button>
     <!---->
+		<iron-pages id="pages" selected="{{route}}" xattr-for-selected="name">
+		  <template mutable-data restamp id="repeat" is="dom-repeat" items="[[items]]">
+        <app-view items="[[item]]"></app-view>
+      </template>
+    </iron-pages>
+    
+    <!--- ->
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
-		  <template is="dom-repeat" items="[[appSettings]]">
+		  <template mutable-data restamp is="dom-repeat" items="[[appSettings]]">
         <app-view items="[[item.items]]"></app-view>
       </template>
     </iron-pages>
@@ -99,7 +107,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // never call user-settings from any other element to eliminate redundant calls
     // user-settings -> my-app -> user-local + app-views -> app-settings
 
-    class MyApp extends Polymer.Element {
+    // https://www.polymer-project.org/2.0/docs/devguide/data-system#optional-mutable-data
+    // class MyMutableElement extends Polymer.MutableData(Polymer.Element)
+
+    // class MyApp extends Polymer.Element {
+    class MyApp extends Polymer.MutableData(Polymer.Element) {
 
       static get is() { return 'my-app'; }
 
@@ -113,11 +125,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					//observer: '_routeChanged',
 				},
 			  
+        items: {
+          type: Array,
+          notify: true,
+          computed: '_computeItems(appSettings)',
+          // observer: '_appSettingsChanged',
+        },
+
         appSettings: {
           type: Array,
           notify: true,
-          // computed: _computeItems(appViews),
-          observer: '_appSettingsChanged',
+          // computed: '_computeItems(appViews)',
+          // observer: '_appSettingsChanged',
         },
 
         userSettings: {
@@ -173,7 +192,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // this._saveAppSettings(d);
         // this.set('appSettings.zip.dataString', d.zipCode);
         // const appSettings = this.appSettings;
-        // console.log('app-settings\n', appSettings);
+        console.log('app-settings\n', this.appSettings);
         // console.log('user-settings\n', this.userSettings);
         // this._saveAppSettings(appSettings);
         // const settings = this.$.settings;
@@ -187,16 +206,77 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   console.log('user-settings', this.userSettings);
       // }
 
+      _handleAppSettingsChanged(e) {
+        // console.log('e', e);
+        
+        const ready1 = e && e.detail;
+        if(!ready1) return;
+        const detail = e.detail;
+        // console.log('detail', detail);
+
+        const ready2 = detail.value;
+        if(!ready2) return;
+        const data = detail.value;
+
+        // const data = this.get('e.detail.value');
+        // const data = detail.value; // error // not defined
+        // console.log('data', data);
+
+        // force dom-repeat template to update
+        // https://www.polymer-project.org/2.0/docs/devguide/templates#update-data
+        // optional mutable data for reusable elements
+        // https://www.polymer-project.org/2.0/docs/devguide/data-system#optional-mutable-data
+
+        // this.set('items', data);
+        // this.notifyPath('items');
+        // this.notifyPath('appSettings');
+
+        // this.appSettings = this.appSettings.splice(0);
+        // data = data.splice(0);
+        
+        this.set('appSettings', data);
+      }
+
       _onDetailSaveButton(e) {
         const settings = this.$.settings;
         //settings.saveAppSettings(e.detail);
       }
 
-      _appSettingsChanged(newData, oldData) {
-        // console.log('app-settings-changed');
-        // console.log('app-settings-old\n', oldData);
-        // console.log('app-settings-new\n', newData);
+      _computeItems(a) {
+        const ready = a && a.length && (typeof a === 'object');
+        if(!ready) return;
+
+        const out = a.reduce((c, v, i, r) => {
+          // console.log('v\n', v);
+          return [ ...c, v.items ];
+        }, []);
+
+        // console.log('items\n', out);
+        return out;
       }
+
+      // _appSettingsChanged(newData, oldData) {
+      //   // console.log('app-settings-changed');
+      //   // console.log('app-settings-old\n', oldData);
+      //   // console.log('app-settings-new\n', newData);
+        
+      //   // https://stackoverflow.com/a/24814343/1640892
+      //   // http://jsbin.com/vuvikare/12/edit?html,output
+      //   // this.$.repeat.iterator_.updateIteratedValue();
+      //   // this.$.pages.getElementsByTagName('template')[0].iterator_.updateIteratedValue();
+
+      //   // const ready = newData && newData.length && (typeof newData === 'object');
+      //   // if(!ready) return;
+
+      //   // let i = newData.length;
+      //   // while(i--) {
+      //   //   let d = this.get(['appSettings', i, 'items', 7, 'value']);
+      //   //   console.log('d', d);
+      //   //   // this.notifyPath(['appSettings', i, 'items', 7, 'value']);
+      //   //   this.set(['appSettings', i, 'items', 7, 'value'], 'North');
+      //   // }
+      //   // this.notifyPath('items');
+      // }
 
       _saveUserSettings(data) {
         // console.log('data\n',data);
@@ -218,9 +298,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				methods.method(detail);
       }
 
-      // _show() {
-      //   console.log(this.userSettings);
-      // }
+      _show() {
+        console.log('app-settings\n', this.appSettings);
+        // console.log('user-settings\n', this.userSettings);
+      }
 			
     }
 
