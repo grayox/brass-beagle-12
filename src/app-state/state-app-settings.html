@@ -94,8 +94,13 @@
       //   console.log('user-local-new', newData);
       // }
 
+      handleUserLocalChanged(newValue) {
+        this.set('userLocal', null);
+        this.set('userLocal', newValue);
+      }
+
       _computeAppSettings(appViews, userLocal) {
-        // console.log('compute-app-settings');
+        // console.log('computing app-settings...');
         // console.log('app-views\n', appViews);
         // console.log('user-local\n', userLocal);
         const ready = (appViews && userLocal);

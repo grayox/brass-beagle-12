@@ -50,8 +50,8 @@
 				userLocal: {
 					type: Object,
 					notify: true,
-					//observer: '_userLocalChanged',
-					//computed: '_computeUserLocal(userLocalExtended)',
+					// observer: '_userLocalChanged',
+					// computed: '_computeUserLocal(userLocalExtended)',
 					computed: '_computeUserLocal(userSettings, userLocalDefault)',
 				},
 
@@ -102,7 +102,7 @@
       }
 			
 			// _userLocalChanged(userLocal) {
-			// 	// console.log('user-local', userLocal);
+			// 	console.log('user-local', userLocal);
 			// }
 
       // _userSettingsChanged(newData, oldData) {
@@ -111,7 +111,7 @@
       // }
 			
 			_computeUserLocal(userSettings, userLocalDefault) {
-				//console.log('user-local-extended', a);
+				// console.log('computing user-local...');
 				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
         const ready = (userSettings && userLocalDefault);
         if(!ready) return;

@@ -110,8 +110,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // https://www.polymer-project.org/2.0/docs/devguide/data-system#optional-mutable-data
     // class MyMutableElement extends Polymer.MutableData(Polymer.Element)
 
-    // class MyApp extends Polymer.Element {
-    class MyApp extends Polymer.MutableData(Polymer.Element) {
+    // class MyApp extends Polymer.MutableData(Polymer.Element) {
+    class MyApp extends Polymer.Element {
 
       static get is() { return 'my-app'; }
 
@@ -148,6 +148,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         userLocal: {
           type: Object,
           notify: true,
+          observer: '_userLocalChanged',
         },
         
       }}
@@ -187,12 +188,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         const userLocalNew = Object.assign(userLocal, newLocation);
         // console.log('user-local-new', userLocalNew);
+        this.set('userLocal', null);
         this.set('userLocal', userLocalNew);
         this._saveUserSettings(userLocalNew);
         // this._saveAppSettings(d);
         // this.set('appSettings.zip.dataString', d.zipCode);
         // const appSettings = this.appSettings;
-        console.log('app-settings\n', this.appSettings);
+        // console.log('app-settings\n', this.appSettings);
         // console.log('user-settings\n', this.userSettings);
         // this._saveAppSettings(appSettings);
         // const settings = this.$.settings;
@@ -206,7 +208,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   console.log('user-settings', this.userSettings);
       // }
 
+      _userLocalChanged(dataNew, dataOld) {
+        // console.log('user-local-data-new', dataNew);
+        // console.log('user-local-data-old', dataOld);
+        const appSettings = this.$.settings;
+        appSettings.handleUserLocalChanged(dataNew);
+      }
+
       _handleAppSettingsChanged(e) {
+        // console.log('handling app-settings-changed...');
         // console.log('e', e);
         
         const ready1 = e && e.detail;
@@ -299,8 +309,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _show() {
+        console.log('user-settings\n', this.userSettings);
+        console.log('user-local\n', this.userLocal);
         console.log('app-settings\n', this.appSettings);
-        // console.log('user-settings\n', this.userSettings);
       }
 			
     }
