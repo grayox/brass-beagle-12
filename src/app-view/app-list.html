@@ -97,7 +97,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <xtemplate xis="dom-if" xif="[[!_computeShowDatalist(viewType)]]">
       <div role="listbox">
         <template mutable-data is="dom-repeat" items="[[items]]">
+          <!--- ->
+          'key' property for menus is set at app-view._handleTappedAppItem()
+          <!--- ->
           [[item.view]] | [[item.key]]
+          <!---->
           <app-item type="[[item.type]]"
                     xview="[[viewName]]"
                     view="[[item.view]]"
