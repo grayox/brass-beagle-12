@@ -176,7 +176,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _onMenuSelectedPropertyChanged(e) {
         // console.log('menu-selected-changed\n', e);
         const detail = e.detail;
-        console.log('menu-selected-detail\n', detail);
+        // console.log('menu-selected-detail\n', detail);
+        const userSettings = this.userSettings;
+        // console.log('user-settings', userSettings);
+
+        const userSettingsNew = {};
+        userSettingsNew[detail.key] = detail.name;
+
+        const userSettingsNewData = Object.assign(userSettings, userSettingsNew);
+        this._saveUserSettings(userSettingsNewData);
       }
 
       _onZipValid(e) {
@@ -311,6 +319,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					entity: entity,
 					data: data,
 				};
+        // save entire settings variable as a single object contained in detail.data
 				// console.log('detail\n', detail);
 				methods.method(detail);
       }
