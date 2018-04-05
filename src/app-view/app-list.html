@@ -97,9 +97,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <xtemplate xis="dom-if" xif="[[!_computeShowDatalist(viewType)]]">
       <div role="listbox">
         <template mutable-data is="dom-repeat" items="[[items]]">
+          [[item.view]] | [[item.key]]
           <app-item type="[[item.type]]"
-                    view="[[viewName]]"
-                    name="[[item.name]]"
+                    xview="[[viewName]]"
+                    view="[[item.view]]"
+                    key="[[item.key]]"
                     icon="[[item.icon]]"
                     label="[[item.label]]"
                     data="[[item.data]]"
@@ -188,8 +190,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // }
 
       // _itemsChanged(newData, oldData) {
-      //   console.log('old-data\n', oldData);
-      //   console.log('new-data\n', newData);
+      //   // console.log('old-data\n', oldData);
+      //   // console.log('new-data\n', newData);
       //   console.log('items-changed\n', newData);
       // }
 		

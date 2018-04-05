@@ -74,7 +74,7 @@
     <!---->
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="wrapper">
-        <app-list xview-name="[[name]]"
+        <app-list view-name="[[name]]"
                   xview-type="[[type]]"
                   items="[[items]]"
                   xitems="[[appViews.lists.settings]]"
@@ -246,6 +246,8 @@
         // console.log('item\n', item);
         const itemKeys = item.detail;
         // console.log('item-keys\n', itemKeys);
+        const itemKey = item.key;
+        // console.log('item-key\n', itemKey);
         const views = this.appViews;
         const menus = views.menus;
         // console.log('menus\n', menus);
@@ -262,9 +264,11 @@
             // console.log('v\n', v);
             let viewItem = items[v];
             // console.log('view-item\n', viewItem);
+            if(itemKey) viewItem.key = itemKey;
 
             // menus: case: type: 'input-menu'
             if((viewItem.type === 'input-menu') && viewItem.menu) {
+
               //console.log('menus\n', menus);
               let menuName = viewItem.menu;
               // console.log('menu-name\n', menuName); // "lead-type"

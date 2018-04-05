@@ -123,7 +123,7 @@ Types of elements
       <!-- type: 'menu-item' -->
       <template restamp is="dom-if" if="[[_computeTypeIsMenuItem(type)]]">
         <div hidden$="[[!_computeTypeIsMenuItem(type)]]">
-          <paper-icon-item xtoggles name="[[name]]">
+          <paper-icon-item xtoggles>
             <paper-ripple recenters></paper-ripple>    
             <div class="avatar" slot="item-icon">
               <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
@@ -150,7 +150,8 @@ Types of elements
       <!-- type: 'input-menu' -->
       <template restamp is="dom-if" if="[[_computeTypeIsInputMenu(type)]]">
         <div hidden$="[[!_computeTypeIsInputMenu(type)]]">
-          <app-menu subheader="[[label]]"
+          <app-menu key="[[key]]"
+                    subheader="[[label]]"
                     items="[[menuItems]]"
                     selected="{{selectedMenuItem}}"
                     selected-label="{{selectedMenuItemLabel}}"
@@ -261,12 +262,12 @@ Types of elements
 
 				view: { // hidden; for database save methods
 					type: String,
-					//notify: true,
+					notify: true,
 					//observer: '_mediaWidthChanged',
           //value: () => 'vaadin:phone', //'star'
 				},
 
-				name: { // hidden; for database node paths
+				key: { // hidden; for database node paths
 					type: String,
 					notify: true,
 					//observer: '_mediaWidthChanged',
@@ -324,20 +325,26 @@ Types of elements
           //value: () => false,
         },
 
+        // _selectedMenuData: {
+        //   type: Object,
+        //   notify: true,
+        //   computed: '_computeSelectedMenuData(key, selectedMenuItem, selectedMenuItemLabel)',
+        // },
+
 				data: { // right side
 					type: Object,//String, // 
 					notify: true,
 					observer: '_dataChanged',
           // value: () => 'vaadin:phone', //'star'
-          // computed: '_computeData(appSettings, userSettings, view, name)',
+          // computed: '_computeData(appSettings, userSettings, view, key)',
 				},
 
-				dataString: { // right side (or input.value)
-					type: String,
-					notify: true,
-					// observer: '_mediaWidthChanged',
-          // value: () => 'vaadin:phone', //'star'
-				},
+				// dataString: { // right side (or input.value)
+				// 	type: String,
+				// 	notify: true,
+				// 	// observer: '_mediaWidthChanged',
+        //   // value: () => 'vaadin:phone', //'star'
+				// },
 				
         // dataNumber: { // right side (or input.value)
 				// 	type: Number,
@@ -476,23 +483,38 @@ Types of elements
       }
 
       _open() {
-        // const detail = this.detail;
-        const detail = {
-          detail: this.detail,
-          menu: this.menu,
-        };
+        const key = this.key;
+        const menu = this.menu;
+        const detail = this.detail;
+        
+        // console.log('key', key);
+        // console.log('menu', menu);
         // console.log('detail', detail);
-			  this._dispatchEvent('tapped-app-item', detail);
+
+        const edetail = {
+          key: key,
+          menu: menu,
+          detail: detail,
+        };
+
+        // console.log('edetail\n', edetail);
+			  this._dispatchEvent('tapped-app-item', edetail);
       }
 
       _onTap() {
         // console.log('data', this.data);
-        // console.log('data-string', this.dataString);
+        // // console.log('data-string', this.dataString);
         // console.log('value', this.value);
-        // console.log('name', this.name);
+        // console.log('key', this.key);
         // console.log('view', this.view);
         this._open();
       }
+
+      // _computeSelectedMenuData(key, selectedMenuItem, selectedMenuItemLabel) {
+      //   console.log('key', key);
+      //   console.log('selected-menu-item', selectedMenuItem);
+      //   console.log('selected-menu-item-label', selectedMenuItemLabel);
+      // }
 
 			_dispatchEvent(name, detail) {
 				//this.fire('name', detail);
@@ -519,11 +541,11 @@ Types of elements
         // console.log('e\n', e);
       }
 
-      // _computeData(app, user, view, name) {
-      //   if(user && user[view] && user[view][name] && user[view][name]['data']) {
-      //     const out = user[view][name]['data'];
-      //   } else if(app && app[view] && app[view][name] && app[view][name]['data']) {
-      //     const out = app[view][name]['data'];
+      // _computeData(app, user, view, key) {
+      //   if(user && user[view] && user[view][key] && user[view][key]['data']) {
+      //     const out = user[view][key]['data'];
+      //   } else if(app && app[view] && app[view][key] && app[view][key]['data']) {
+      //     const out = app[view][key]['data'];
       //   } else {
       //     return;
       //   }

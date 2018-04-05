@@ -117,6 +117,8 @@
           let viewItems = viewItemsKeys.reduce((ci, vi, ii, ai) => {
             // console.log('vi\n', vi);
             let item = items[vi];
+            item.key = vi; // appends item key as a property for later reference at save time
+            item.view = v.name;
             // console.log('item\n', item);
             let userLocalSetting = userLocal[vi];
             // console.log('user-local\n', userLocal);

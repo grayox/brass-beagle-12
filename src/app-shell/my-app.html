@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         >
     </state-app-settings>
 
-    <!---->
+    <!--- ->
     <button on-tap="_show">Show</button>
     <!---->
 		<iron-pages id="pages" selected="{{route}}" xattr-for-selected="name">
@@ -162,6 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				//console.log('Component Ready');
 				window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
         window.addEventListener('zip-valid', e => this._onZipValid(e));
+        window.addEventListener('menu-selected-property-changed', e => this._onMenuSelectedPropertyChanged(e));
 			}
       
 			// _routeChanged(route) {
@@ -171,6 +172,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // _userSettingsChanged(e) {
       //   // console.log('user-settings', e);
       // }
+
+      _onMenuSelectedPropertyChanged(e) {
+        // console.log('menu-selected-changed\n', e);
+        const detail = e.detail;
+        console.log('menu-selected-detail\n', detail);
+      }
 
       _onZipValid(e) {
         // console.log('data-zip\n', e);
@@ -308,11 +315,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				methods.method(detail);
       }
 
-      _show() {
-        console.log('user-settings\n', this.userSettings);
-        console.log('user-local\n', this.userLocal);
-        console.log('app-settings\n', this.appSettings);
-      }
+      // _show() {
+      //   console.log('user-settings\n', this.userSettings);
+      //   console.log('user-local\n', this.userLocal);
+      //   console.log('app-settings\n', this.appSettings);
+      // }
 			
     }
 
