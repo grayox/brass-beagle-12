@@ -165,8 +165,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
 				//console.log('Component Ready');
 				window.addEventListener('detail-save-button', e => this._onDetailSaveButton(e));
-        window.addEventListener('zip-valid', e => this._onZipValid(e));
-        window.addEventListener('menu-selected-property-changed', e => this._onMenuSelectedPropertyChanged(e));
+        // window.addEventListener('zip-valid', e => this._onZipValid(e));
+        // window.addEventListener('menu-selected-property-changed', e => this._onMenuSelectedPropertyChanged(e));
+        // window.addEventListener('settings-changed', e => this._onSettingsChanged(e));
+        window.addEventListener('zip-valid', e => this._onSettingsChanged(e, 'zip-valid'));
+        window.addEventListener('menu-selected-property-changed', e => this._onSettingsChanged(e, 'menu-selected-property-changed'));
 			}
       
 			// _routeChanged(route) {
@@ -177,42 +180,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   // console.log('user-settings', e);
       // }
 
-      _onMenuSelectedPropertyChanged(e) {
-        // console.log('menu-selected-changed\n', e);
+      _onSettingsChanged(e, type) {
+        // console.log('settings-changed\n', e);
+        // const type = e.type;
         const detail = e.detail;
-        // console.log('menu-selected-detail\n', detail);
+        // console.log('settings-detail\n', detail);
         // const userSettings = this.userSettings;
         // console.log('user-settings', userSettings);
         const userLocal = this.userLocal;
         // console.log('user-local', userLocal);
 
         const userLocalNewData = {};
-        // tags: [menu-maker], [list-maker]
-        // store label for now; // no need to add unnecessary complexity;
-        // TODO: consider using selected or selected-label property at app-menu.html
-        userLocalNewData[detail.key] = detail.name; // financial
-        // userLocalNew[detail.key] = detail.label; // Financial
 
-        const userLocalNew = Object.assign(userLocal, userLocalNewData);
-        // console.log('user-local-new', userLocalNew);
-        this.set('userLocal', null);
-        this.set('userLocal', userLocalNew);
-        this._saveUserSettings(userLocalNew);
-      }
-
-      _onZipValid(e) {
-        // console.log('data-zip\n', e);
-        const detail = e.detail;
-        // console.log('new-location', newLocation);
-        const userLocal = this.userLocal;
-        
         // recast and map properties of detail -> userLocalNewData
-        const userLocalNewData = {};
-        userLocalNewData.city = detail.zipCity;
-        userLocalNewData.zip = detail.zipCode;
-        userLocalNewData.county = detail.zipCounty;
-        userLocalNewData.state = detail.zipState;
-        userLocalNewData['zip-valid'] = detail.zipValid;
+        switch(type) {
+          case 'zip-valid':
+            userLocalNewData.city = detail.zipCity;
+            userLocalNewData.zip = detail.zipCode;
+            userLocalNewData.county = detail.zipCounty;
+            userLocalNewData.state = detail.zipState;
+            userLocalNewData['zip-valid'] = detail.zipValid;
+            break;
+
+          case 'menu-selected-property-changed':
+            // tags: [menu-maker], [list-maker]
+            // store label for now; // no need to add unnecessary complexity;
+            // TODO: consider using selected or selected-label property at app-menu.html
+            userLocalNewData[detail.key] = detail.name; // financial
+            // userLocalNew[detail.key] = detail.label; // Financial
+            break;
+
+          // default:
+          //   code block
+        }
 
         const userLocalNew = Object.assign(userLocal, userLocalNewData);
         // console.log('user-local-new', userLocalNew);
@@ -228,6 +228,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // const settings = this.$.settings;
         // settings.saveAppSettings(appSettings);
       }
+
+      // _onMenuSelectedPropertyChanged(e) {
+      //   // console.log('menu-selected-changed\n', e);
+      //   const detail = e.detail;
+      //   // console.log('menu-selected-detail\n', detail);
+      //   // const userSettings = this.userSettings;
+      //   // console.log('user-settings', userSettings);
+      //   const userLocal = this.userLocal;
+      //   // console.log('user-local', userLocal);
+
+      //   const userLocalNewData = {};
+      //   // tags: [menu-maker], [list-maker]
+      //   // store label for now; // no need to add unnecessary complexity;
+      //   // TODO: consider using selected or selected-label property at app-menu.html
+      //   userLocalNewData[detail.key] = detail.name; // financial
+      //   // userLocalNew[detail.key] = detail.label; // Financial
+
+      //   const userLocalNew = Object.assign(userLocal, userLocalNewData);
+      //   // console.log('user-local-new', userLocalNew);
+      //   this.set('userLocal', null);
+      //   this.set('userLocal', userLocalNew);
+      //   this._saveUserSettings(userLocalNew);
+      // }
+
+      // _onZipValid(e) {
+      //   // console.log('data-zip\n', e);
+      //   const detail = e.detail;
+      //   // console.log('new-location', newLocation);
+      //   const userLocal = this.userLocal;
+        
+      //   // recast and map properties of detail -> userLocalNewData
+      //   const userLocalNewData = {};
+      //   userLocalNewData.city = detail.zipCity;
+      //   userLocalNewData.zip = detail.zipCode;
+      //   userLocalNewData.county = detail.zipCounty;
+      //   userLocalNewData.state = detail.zipState;
+      //   userLocalNewData['zip-valid'] = detail.zipValid;
+
+      //   const userLocalNew = Object.assign(userLocal, userLocalNewData);
+      //   // console.log('user-local-new', userLocalNew);
+      //   this.set('userLocal', null);
+      //   this.set('userLocal', userLocalNew);
+      //   this._saveUserSettings(userLocalNew);
+      //   // this._saveAppSettings(d);
+      //   // this.set('appSettings.zip.dataString', d.zipCode);
+      //   // const appSettings = this.appSettings;
+      //   // console.log('app-settings\n', this.appSettings);
+      //   // console.log('user-settings\n', this.userSettings);
+      //   // this._saveAppSettings(appSettings);
+      //   // const settings = this.$.settings;
+      //   // settings.saveAppSettings(appSettings);
+      // }
 
       // _handleUserSettingsDataChanged(e) {
       //   // console.log('on-user-settings-data-changed', e)
