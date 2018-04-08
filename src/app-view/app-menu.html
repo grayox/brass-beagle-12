@@ -112,13 +112,13 @@
               >
     </app-item>
     <!--- ->
-    [[key]]
+    [[key]] | [[selected]]
     <!---->
     <iron-selector role="listbox"
                    selected="{{selected}}"
                    attr-for-selected="name"
                    selected-attribute="selected">
-      <template mutable-data is="dom-repeat" items="[[items]]">
+      <template xmutable-data is="dom-repeat" items="[[items]]">
         <app-item type="menu-item"
                   key="[[item.key]]"
                   name="[[item.name]]"
@@ -139,6 +139,8 @@
 			
       static get properties() { return {
 				
+        // appSettings: Object,
+
 				subheader: {
 					type: String,
 					notify: true,
@@ -152,6 +154,8 @@
 				selected: {
 					type: String,
 					notify: true,
+          // computed: '_computeSelected(key, appSettings)',
+          // value: () => 'insurance',
 				},
 				
 				selectedLabel: {
@@ -188,6 +192,11 @@
 			ready() {
         super.ready();
 		  }
+
+      // _computeSelected(key, appSettings) {
+      //   console.log('key', key); // 'lead-type'
+      //   console.log('app-settings', appSettings); // undefined
+      // }
 
       _computeSelectedLabel(items, name) {
         // console.log('items\n', items);

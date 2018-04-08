@@ -74,7 +74,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!---->
 		<iron-pages id="pages" selected="{{route}}" xattr-for-selected="name">
 		  <template mutable-data restamp id="repeat" is="dom-repeat" items="[[items]]">
-        <app-view items="[[item]]"></app-view>
+        <app-view items="[[item]]"
+                  xapp-settings="[[appSettings]]"
+                  user-local="[[userLocal]]"
+                  >
+        </app-view>
       </template>
     </iron-pages>
     
@@ -177,31 +181,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // console.log('menu-selected-changed\n', e);
         const detail = e.detail;
         // console.log('menu-selected-detail\n', detail);
-        const userSettings = this.userSettings;
+        // const userSettings = this.userSettings;
         // console.log('user-settings', userSettings);
+        const userLocal = this.userLocal;
+        // console.log('user-local', userLocal);
 
-        const userSettingsNew = {};
-        userSettingsNew[detail.key] = detail.name;
+        const userLocalNewData = {};
+        // tags: [menu-maker], [list-maker]
+        // store label for now; // no need to add unnecessary complexity;
+        // TODO: consider using selected or selected-label property at app-menu.html
+        userLocalNewData[detail.key] = detail.name; // financial
+        // userLocalNew[detail.key] = detail.label; // Financial
 
-        const userSettingsNewData = Object.assign(userSettings, userSettingsNew);
-        this._saveUserSettings(userSettingsNewData);
+        const userLocalNew = Object.assign(userLocal, userLocalNewData);
+        // console.log('user-local-new', userLocalNew);
+        this.set('userLocal', null);
+        this.set('userLocal', userLocalNew);
+        this._saveUserSettings(userLocalNew);
       }
 
       _onZipValid(e) {
         // console.log('data-zip\n', e);
-        const newLocationRaw = e.detail;
+        const detail = e.detail;
         // console.log('new-location', newLocation);
         const userLocal = this.userLocal;
         
-        // recast and map properties of newLocationRaw -> newLocation
-        const newLocation = {};
-        newLocation.city = newLocationRaw.zipCity;
-        newLocation.zip = newLocationRaw.zipCode;
-        newLocation.county = newLocationRaw.zipCounty;
-        newLocation.state = newLocationRaw.zipState;
-        newLocation['zip-valid'] = newLocationRaw.zipValid;
+        // recast and map properties of detail -> userLocalNewData
+        const userLocalNewData = {};
+        userLocalNewData.city = detail.zipCity;
+        userLocalNewData.zip = detail.zipCode;
+        userLocalNewData.county = detail.zipCounty;
+        userLocalNewData.state = detail.zipState;
+        userLocalNewData['zip-valid'] = detail.zipValid;
 
-        const userLocalNew = Object.assign(userLocal, newLocation);
+        const userLocalNew = Object.assign(userLocal, userLocalNewData);
         // console.log('user-local-new', userLocalNew);
         this.set('userLocal', null);
         this.set('userLocal', userLocalNew);

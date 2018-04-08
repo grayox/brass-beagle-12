@@ -12,11 +12,11 @@
 <!--- ->
 <link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/custom-styles/list-view-styles.html">
+<link rel="import" href="app-detail.html">
 <!---->
 <link rel="import" href="/src/app-state/state-app-settings.html">
 
 <link rel="import" href="app-list.html">
-<link rel="import" href="app-detail.html">
 
 <dom-module id="app-view">
   <template>
@@ -114,6 +114,16 @@
 				// 	notify: true,
 				// },
 
+				// userRemote: {
+				// 	type: Object,
+				// 	notify: true,
+				// },
+
+				userLocal: {
+					type: Object,
+					// notify: true,
+				},
+
 				// appViews: {
 				// 	type: Object,
 				// 	notify: true,
@@ -125,7 +135,7 @@
 				// },
 
 				detail: {
-					type: Array,
+					type: Object, // Array,
 					notify: true,
 				},
 				
@@ -241,6 +251,13 @@
       // }
 
       _handleTappedAppItem(e) {
+        // assembles detail view and constructs menu items layout
+
+        // const appSettings = this.appSettings;
+        // console.log('app-settings\n', appSettings);
+        const userLocal = this.userLocal;
+        // console.log('user-local\n', userLocal);
+
         // console.log('e\n', e);
         const item = e.detail; // { detail: @array(strings), menu: @string }
         // console.log('item\n', item);
@@ -260,6 +277,8 @@
         // console.log('item-keys-length\n', itemKeysLength);
 
         const detail = ( itemKeysIsObject && itemKeysLength ) ?
+        // tags: [menu-maker], [list-maker], [detail]
+        
           itemKeys.reduce((c, v, i, a) => {
             // console.log('v\n', v);
             let viewItem = items[v];
@@ -271,7 +290,7 @@
 
               //console.log('menus\n', menus);
               let menuName = viewItem.menu;
-              // console.log('menu-name\n', menuName); // "lead-type"
+              // console.log('menu-name\n', menuName); // 'lead-type'
               let menuDetail = menus[menuName];
               // console.log('menu-detail\n', menuDetail);
               let menuDetailIsObject = (typeof menuDetail === 'object');
@@ -283,7 +302,27 @@
               let menuDetailItemsLength = menuDetailItemsIsObject ? menuDetailItems.length : false;
               if(menuDetail && menuDetailItems && menuDetailItemsLength && menuDetailItemsIsObject) {
                 // console.log('menu-detail-items-length\n', menuDetailItemsLength);
-                let out = [ ...c, { ...viewItem, menuItems: menuDetailItems } ];
+
+                // find selected value
+                // let selectedValue = userLocal['lead-type'];
+                let selectedValue = userLocal[menuName];
+                  
+                // tags: [menu-detail], [menu-selected]
+                // determine which menu item has been selected and set it in the detail menu
+                let j = menuDetailItems.length;
+                while(j--) {
+                  let menuDetailItem = menuDetailItems[j];
+                  // set selected value...
+                  if(menuDetailItem.name === selectedValue) {
+                    // ...at the menu level
+                    menuDetail.selected = selectedValue;
+                    // console.log('menu-detail', menuDetail);
+                    // ...at the item level
+                    menuDetailItem.selected = true;
+                  }
+                };
+
+                let out = [ ...c, { ...viewItem, selected: selectedValue, menuItems: menuDetailItems } ];
                 // console.log('out\n', out);
                 return out;
                 // const ob = Object.assign(viewItem, { menuItems: menuDetailItems } );
@@ -310,6 +349,7 @@
             }
             
           }, []) : [];//true;//false//() => {return};//[];
+        
         // console.log('detail\n', detail);
         this.set('detail', detail);
       }
