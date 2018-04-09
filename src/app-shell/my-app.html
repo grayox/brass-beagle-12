@@ -210,8 +210,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             // userLocalNew[detail.key] = detail.label; // Financial
             break;
 
-          // default:
-          //   code block
+          default:
+            console.error('Unrecognized event name and type');
         }
 
         const userLocalNew = Object.assign(userLocal, userLocalNewData);

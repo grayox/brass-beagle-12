@@ -47,7 +47,7 @@
       "label": "Lead filters"
     },
     "lead-type": {
-      "type": "output",
+      "type": "menu-selection",
       "icon": "track-changes",
       "label": "Your type of services",
       "setting": true,

@@ -26,7 +26,7 @@
     <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
     <!--- ->
-      <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <!---->
 
@@ -108,6 +108,7 @@
         const ready = (appViews && userLocal);
         if(!ready) return;
         
+        // console.log('app-views\n', appViews);
         const views = appViews.views;
         const items = appViews.items;
         // console.log('items\n', items);
@@ -126,6 +127,28 @@
             // console.log('user-local\n', userLocal);
             // console.log('user-local[', vi, ']\n', userLocal[vi]);
             // console.log('user-local-setting\n', userLocalSetting);
+
+            // substitute 'label' for 'name' in 'menu-selection'
+            // item.key = 'lead-type'
+            // item.value = item.data = 'mortgage'
+            // item.type = 'menu-selection'
+            // userLocalSetting = 'mortgage'
+            if(item.type === 'menu-selection') {
+              // console.log('a\n', a); // app views
+              // console.log('ai\n', ai); // array of item keys
+              // console.log('views\n', views);
+              // console.log('items\n', items);
+              const menus = appViews.menus;
+              // console.log('menus\n', menus);
+              const key = item.key; // 'lead-type'
+              const menu = menus[key];
+              const menuItems = menu.items;
+              // console.log('menu-items\n', menuItems);
+              userLocalSetting = menuItems.reduce((cj, vj, ij, aj) => {
+                return (vj.name === userLocalSetting) ? (cj + vj.label) : cj;
+              }, '');
+            }
+
             if ( item && item.setting ) {
               // substitute value from settings object
               let d = userLocalSetting ? userLocalSetting : (item.value ? item.value : null);
