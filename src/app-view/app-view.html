@@ -64,9 +64,20 @@
         <!--- ->
         <div>hello world</div>
         <!---->
-        <app-list items="[[detail]]"></app-list>
+        <template restamp is="dom-if" if="[[detail]]">
+            <div hidden$="[[!detail]]">
+              <app-list items="[[detail]]"></app-list>
+            </div>
+          </template>
         <!--- ->
         <app-detail></app-detail>
+        <!---->
+        <!-- special-case -->
+        <template restamp is="dom-if" if="[[specialCase]]">
+          <div hidden$="[[!specialCase]]">
+            <counties-by-zip></counties-by-zip>
+          </div>
+        </template>
         <!---->
       </div>
     </template>
@@ -138,6 +149,11 @@
 					type: Object, // Array,
 					notify: true,
 				},
+
+        specialCase: {
+          type: String, // 'counties-by-state'
+          notify: true,
+        },
 				
 				// _split: {
 				// 	type: Boolean,
@@ -219,6 +235,8 @@
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , e => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
 		  }
+
+      _computeTypeIsCountiesByZip (s) { return this._computeTypeIsTarget ( s, 'counties-by-zip' ) }
 			
 			// connectedCallback() {
 			// 	super.connectedCallback();
@@ -263,12 +281,24 @@
         // console.log('item\n', item);
         const itemKeys = item.detail;
         // console.log('item-keys\n', itemKeys);
+        
+        // tags: [special-case]
+        // special-case custom element // app-views/menus['custom-elements']
+        const isSpecialCase = (itemKeys[0] === 'counties-by-zip'); // lodash _.isEqual(arg1, arg2)
+        // console.log('isSpecialCase', isSpecialCase);
+        if(isSpecialCase) {
+          this.set('detail', null);
+          this.set('specialCase', 'counties-by-zip');
+          return;
+        }
+        
         const itemKey = item.key;
         // console.log('item-key\n', itemKey);
         const views = this.appViews;
         const menus = views.menus;
         // console.log('menus\n', menus);
         const items = views.items; //views['items-keys']; //
+        // console.log('items\n', items);
         //return;
 
         const itemKeysIsObject = (typeof itemKeys === 'object');
@@ -330,10 +360,12 @@
                 // return c;
               }
 
-              // menu.counties
-              else if(menuName === 'counties-by-zip') {
-                // console.log('counties-by-state\n', this.countiesByState);
-              }
+              // // menu.counties
+              // else if(menuName === 'counties-by-zip') {
+              //   // console.log('counties-by-state\n', this.countiesByState);
+              //   console.log('user-local-state\n', userLocal.state);
+              //   console.log('user-local-zip\n', userLocal.zip);
+              // }
 
               // menu.path
             }
@@ -351,6 +383,7 @@
           }, []) : [];//true;//false//() => {return};//[];
         
         // console.log('detail\n', detail);
+        this.set('specialCase', null);
         this.set('detail', detail);
       }
 

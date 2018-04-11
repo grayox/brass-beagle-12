@@ -115,6 +115,7 @@
     [[key]] | [[selected]]
     <!---->
     <iron-selector role="listbox"
+                   multi="[[multi]]"
                    selected="{{selected}}"
                    attr-for-selected="name"
                    selected-attribute="selected">
@@ -166,6 +167,11 @@
 
         key: {
           type: String, // name
+					notify: true,
+        },
+
+        multi: {
+          type: Boolean,
 					notify: true,
         },
 

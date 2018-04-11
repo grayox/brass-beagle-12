@@ -61,7 +61,7 @@
       }
 
       _computeCounties(state, countiesByState) {
-        const ready = state && countiesByState;
+        const ready = (state && countiesByState);
         if(!ready) return;
 
         const out = countiesByState[state];

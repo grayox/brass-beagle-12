@@ -286,7 +286,11 @@ Example usage (v1):
 				
 				//console.log('s', s);
 				const t = this.$.toast;
-				t.text = 'Item ' + s + 'd';
+				let text = s + 'd';
+				// text = 'Item ' + text; // optional
+        text.charAt(0).toUpperCase();
+        
+        t.text = text;
 				t.show(); //t.open();
 			}
 			
