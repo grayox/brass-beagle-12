@@ -13,15 +13,16 @@
 		<style include="paper-item-styles"></style>
     <!---->
 		
-		<state-counties-by-state state="[[label]]" counties="{{items}}"></state-counties-by-state>
-
+		<state-counties-by-state state="[[state]]" counties="{{counties}}"></state-counties-by-state>
+		
     <app-menu multi
               key="state-counties-by-zip"
               xkey="[[key]]"
-              subheader="[[label]]"
+              subheader="[[state]]"
               xitems="[[menuItems]]"
               items="[[items]]"
-              selected="{{selectedMenuItem}}"
+              xselected="{{selectedMenuItem}}"
+              selected="{{selected}}"
               selected-label="{{selectedMenuItemLabel}}"
               >
     </app-menu>
@@ -36,16 +37,16 @@
 				
         // appSettings: Object,
 
-        label: {
+        state: {
           type: String,
           notify: true,
           value: () => 'Delaware',
         },
 
-				subheader: {
-					type: String,
-					notify: true,
-				},
+				// subheader: {
+				// 	type: String,
+				// 	notify: true,
+				// },
 
 				// subheaderIcon: {
 				// 	type: String,
@@ -53,8 +54,9 @@
 				// },
 
 				selected: {
-					type: String,
+					type: Array,
 					notify: true,
+          observer: '_selectedChagned'
           // computed: '_computeSelected(key, appSettings)',
           // value: () => 'insurance',
 				},
@@ -80,6 +82,7 @@
 				items: {
 					type: Array,
 					notify: true,
+          computed: '_computeItems(counties)'
           // observer: '_itemsChanged',
           // value: () => [
           //   { name: 'home'      , label: 'Home'      , icon: 'home'            , },
@@ -214,6 +217,26 @@
 				//console.log('out', out);
 				return out;
 			}
+
+      _computeItems(a) {
+        let out = [];
+        let i = a.length;
+        while(i--) {
+          out[i] = {
+            name: a[i],
+            label: a[i],
+            icon: 'add',
+            // icon: 'vaadin:plus',
+            // icon: 'vaadin:plus-circle',
+            // icon: 'vaadin:plus-circle-o',
+          }
+        }
+        return out;
+      }
+
+      _selectedChagned(a) {
+        console.log('selected\n', a);
+      }
 
 			// _computeZipCounty(zip, zips) {
 			// 	//console.log('zip', zip);

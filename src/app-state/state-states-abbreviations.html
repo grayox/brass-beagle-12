@@ -1,0 +1,102 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<!---->
+<!---->
+
+<dom-module id="state-states-abbreviations">
+  <template>
+		<style></style>
+		<app-localstorage-document xlog xsession-only key="states-abbreviations" data="{{statesAbbreviations}}"></app-localstorage-document>
+		
+		<iron-ajax id="ajax"
+							 auto
+							 url="/src/custom-libraries/states-abbreviations.json"
+							 handle-as="json"
+							 xon-response="_handleAjaxResponse"
+							 xdebounce-duration="300"
+							 last-response="{{statesAbbreviations}}"
+							 >
+		</iron-ajax>
+		
+  </template>
+
+  <script>
+    class StateStatesAbbreviations extends Polymer.Element {
+      static get is() { return 'state-states-abbreviations'; }
+
+      static get properties() { return {
+				
+        statesAbbreviations: {
+					type: Object,
+					notify: true,
+					// observer: '_statesAbbreviationsChanged',
+				},
+
+				stateAbbreviation: {
+          type: String,
+          notify: true,
+        },
+
+				stateName: {
+          type: String,
+          notify: true,
+          computed: '_computeStateName(stateAbbreviation, statesAbbreviations)',
+        },
+
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+
+      // _statesAbbreviationsChanged(newData, oldData) {
+      //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+      //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+      //   const ready = (newData && oldData);
+      //   if(!ready) {
+      //     // console.log('newData\n', newData);
+      //     // console.log('oldData\n', oldData);
+      //     this.set('zipCodeData', oldData);
+      //   }
+      // }
+			
+      _computeStateName(s, o) {
+        const ready = (s && o);
+        if(!ready) return;
+        return o[s];
+      }
+			
+			// _handleAjaxResponse(e) {
+			// 	//console.log('e', e);
+			// 	// how to get this.data from event e? // use observer instead
+			// 	console.log('zipCodeData', this.zipCodeData);
+			// 	//this._dispatchEvent('app-data-changed', data);
+			// }
+		
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 		//bubbles: true,
+			// 		//composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+			// }
+
+    }
+
+    window.customElements.define(StateStatesAbbreviations.is, StateStatesAbbreviations);
+  </script>
+</dom-module>

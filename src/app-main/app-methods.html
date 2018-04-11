@@ -6,6 +6,8 @@ Use iron-meta to manage state
 <link rel="import" href="/bower_components/iron-meta/iron-meta.html">
 <!---->
 
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+
 <!-- state -->
 <!--- ->
 <link rel="import" href="/src/app-state/state-user.html">
@@ -284,11 +286,12 @@ Example usage (v1):
 			_showToast(s) {
 				if(!this.showToast) return;
 				
+        // convert to sentence case
 				//console.log('s', s);
 				const t = this.$.toast;
 				let text = s + 'd';
 				// text = 'Item ' + text; // optional
-        text.charAt(0).toUpperCase();
+        text = _.capitalize(text);
         
         t.text = text;
 				t.show(); //t.open();

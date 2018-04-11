@@ -5,6 +5,8 @@
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-states-abbreviations.html">
+
 <!--- ->
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-app-views.html">
@@ -40,6 +42,8 @@
 	  <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-app-views app-views="{{appViews}}"></state-app-views>
+    <state-states-abbreviations state-abbreviation="[[userLocal.state]]" state-name="{{stateName}}"></state-states-abbreviations>
+
     <!--- ->
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
@@ -65,17 +69,20 @@
         <div>hello world</div>
         <!---->
         <template restamp is="dom-if" if="[[detail]]">
-            <div hidden$="[[!detail]]">
-              <app-list items="[[detail]]"></app-list>
-            </div>
-          </template>
+          <div hidden$="[[!detail]]">
+            <app-list items="[[detail]]"></app-list>
+          </div>
+        </template>
         <!--- ->
         <app-detail></app-detail>
         <!---->
         <!-- special-case -->
         <template restamp is="dom-if" if="[[specialCase]]">
           <div hidden$="[[!specialCase]]">
-            <counties-by-zip></counties-by-zip>
+            <counties-by-zip xstate="[[userLocal.state]]"
+                             state="[[stateName]]"                 
+                             >
+            </counties-by-zip>
           </div>
         </template>
         <!---->
@@ -282,7 +289,7 @@
         const itemKeys = item.detail;
         // console.log('item-keys\n', itemKeys);
         
-        // tags: [special-case]
+        // special cases // tags: [special-case]
         // special-case custom element // app-views/menus['custom-elements']
         const isSpecialCase = (itemKeys[0] === 'counties-by-zip'); // lodash _.isEqual(arg1, arg2)
         // console.log('isSpecialCase', isSpecialCase);
