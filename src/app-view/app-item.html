@@ -386,12 +386,12 @@ Types of elements
         //   // value: () => true,
 				// },
 
-        // dataZip: { // right side (or input.value)
-				// 	type: Object,
-				// 	notify: true,
-				// 	observer: '_dataZipChanged',
-        //   //value: () => 'vaadin:phone', //'star'
-				// },
+        dataZip: { // right side (or input.value)
+					type: Object,
+					notify: true,
+					observer: '_dataZipChanged',
+          //value: () => 'vaadin:phone', //'star'
+				},
 
 				// urgent: { // make background red
 				// 	type: Boolean,
@@ -495,9 +495,9 @@ Types of elements
       //   // }
       // }
       
-      // _dataZipChanged(o) {
-      //   console.log('data-zip\n', o);
-      // }
+      _dataZipChanged(o) {
+        console.log('data-zip\n', o);
+      }
 
       _onZipValid(e) {
         // console.log('data-zip\n', e);

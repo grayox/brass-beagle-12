@@ -189,6 +189,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // console.log('user-settings', userSettings);
         const userLocal = this.userLocal;
         // console.log('user-local', userLocal);
+      
+        // gate
+        const ready1 = userLocal;
+        if(!ready1) return;
 
         const userLocalNewData = {};
 
@@ -213,6 +217,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           default:
             console.error('Unrecognized event name and type');
         }
+
+        // gate
+        const ready2 = (userLocal && userLocalNewData);
+        if(!ready2) return;
 
         const userLocalNew = Object.assign(userLocal, userLocalNewData);
         // console.log('user-local-new', userLocalNew);

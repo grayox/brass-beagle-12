@@ -408,10 +408,11 @@
 			}
 
       _computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
-        if (!zipValid) return;
+        const ready1 = zipValid;
+        if (!ready1) return;
 
-        const ready = (zipValid && zipCode && zipCity && zipState && zipCounty && zipStateCounty && zipCityStateCounty);
-        if (!ready) return;
+        const ready2 = (zipValid && zipCode && zipCity && zipState && zipCounty && zipStateCounty && zipCityStateCounty);
+        if (!ready2) return;
 
         const out = {
           zipValid: zipValid,

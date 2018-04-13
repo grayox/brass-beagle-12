@@ -1,0 +1,245 @@
+{
+  "menus": {
+    "custom-elements": [
+      "counties-by-zip"
+    ],
+    "lead-type": {
+      "items": [
+        {
+          "name": "home",
+          "label": "Home",
+          "icon": "home"
+        }, {
+          "name": "mortgage",
+          "label": "Mortgage",
+          "icon": "account-balance"
+        }, {
+          "name": "insurance",
+          "label": "Insurance",
+          "icon": "vaadin:diploma"
+        }, {
+          "name": "financial",
+          "label": "Financial",
+          "icon": "assessment"
+        }
+      ]
+    }
+  },
+  "items": {
+    "buttons": {
+      "type": "button-save"
+    },
+    "subhead-status": {
+      "type": "subheader",
+      "label": "Status"
+    },
+    "req-info": {
+      "type": "output",
+      "icon": "vaadin:warning",
+      "label": "Required information",
+      "setting": true,
+      "value": "0/2"
+    },
+    "subhead-filters": {
+      "type": "subheader",
+      "label": "Lead filters"
+    },
+    "lead-type": {
+      "type": "menu-selection",
+      "icon": "track-changes",
+      "label": "Your type of services",
+      "setting": true,
+      "value": "Select",
+      "detail": [ "lead-type-detail" ]
+    },
+    "lead-type-detail": {
+      "type": "input-menu",
+      "label": "Your leads & type of services",
+      "menu": "lead-type"
+    },
+    "counties-list": {
+      "type": "output",
+      "icon": "track-changes",
+      "label": "Counties in your territory",
+      "setting": true,
+      "value": "Select",
+      "detail": [ "counties-by-zip" ]
+    },
+    "subhead-location": {
+      "type": "subheader",
+      "label": "Location (by zip)"
+    },
+    "subhead-contact": {
+      "type": "subheader",
+      "label": "Contact details"
+    },
+    "state": {
+      "type": "output",
+      "icon": "vaadin:flag",
+      "label": "State",
+      "setting": true,
+      "value": "Enter zip",
+      "detail": [ "subhead-zip-detail", "zip-detail" ]
+    },
+    "county": {
+      "type": "output",
+      "icon": "vaadin:map-marker",
+      "label": "County",
+      "setting": true,
+      "value": "Enter zip",
+      "detail": [ "subhead-zip-detail", "zip-detail" ]
+    },
+    "city": {
+      "type": "output",
+      "icon": "vaadin:map-marker",
+      "label": "City",
+      "setting": true,
+      "value": "Enter zip",
+      "detail": [ "subhead-zip-detail", "zip-detail" ]
+    },
+    "zip": {
+      "type": "output",
+      "icon": "vaadin:pin",
+      "label": "Zip",
+      "setting": true,
+      "value": "Enter zip",
+      "detail": [ "subhead-zip-detail", "zip-detail" ]
+    },
+    "subhead-zip-detail": {
+      "type": "subheader",
+      "label": "Your zip code"
+    },
+    "subhead-email-detail": {
+      "type": "subheader",
+      "label": "Your email address"
+    },
+    "subhead-phone-detail": {
+      "type": "subheader",
+      "label": "Your mobile text number"
+    },
+    "zip-detail": {
+      "type": "input-zip",
+      "data": "zip"
+    },
+    "phone": {
+      "type": "output",
+      "icon": "vaadin:phone",
+      "label": "Phone",
+      "setting": true,
+      "value": "Add",
+      "detail": [ "subhead-phone-detail", "phone-detail", "buttons" ]
+    },
+    "phone-detail": {
+      "type": "input-text",
+      "icon": "vaadin:phone",
+      "label": "Phone",
+      "data": "phone"
+    },
+    "email": {
+      "type": "output",
+      "icon": "vaadin:envelope",
+      "label": "Email",
+      "setting": true,
+      "value": "Enter",
+      "detail": [ "subhead-email-detail", "email-detail", "buttons" ]
+    },
+    "email-detail": {
+      "type": "input-text",
+      "icon": "vaadin:envelope",
+      "label": "Email",
+      "data": "myemaildata@example.com",
+      "value": "myemailvalue@example.com"
+    },
+    "subhead-auto": {
+      "type": "subheader",
+      "label": "Auto actions for new incoming leads"
+    },
+    "notify-you-text": {
+      "type": "checkbox",
+      "icon": "communication:textsms",
+      "label": "Notify you via text",
+      "setting": true,
+      "value": true
+    },
+    "notify-you-email": {
+      "type": "checkbox",
+      "icon": "communication:email",
+      "label": "Notify you via email",
+      "setting": true,
+      "value": false
+    },
+    "auto-text-leads": {
+      "type": "checkbox",
+      "icon": "vaadin:bolt",
+      "label": "Text your new leads",
+      "setting": true,
+      "value": false
+    },
+    "auto-email-leads": {
+      "type": "checkbox",
+      "icon": "vaadin:magic",
+      "label": "Email your new leads",
+      "setting": true,
+      "value": false
+    }
+  },
+
+  "comment-1": "Each element in the 'views' array will contain EITHER an 'items' property OR a 'path' property",
+  "comment-2": "Which property will inform the 'app-views' and 'app-list' properties what type of data list items to display",
+  "comment-3": "'path' property will yield a homgeneous element set displayed as a list - e.g., a list of 'contacts'",
+  "comment-4": "'items' property will yield a heterogenous element set representing a form of state - e.g., user 'settings'",
+  "comment-5": "<state-app-settings> manipulates this data to create a useful data object for retrieving and setting the apps settings",
+  "views": [
+    { 
+      "label": "Dashboard",
+      "name": "view-dashboard",
+      "icon": "vaadin:dashboard",
+      "items-keys": [
+      ]
+    }, {
+      "label": "Outbox",
+      "name": "view-outbox",
+      "icon": "vaadin:cloud-upload",
+      "path": "/users/settings/"
+    }, {
+      "label": "Inbox",
+      "name": "view-inbox",
+      "icon": "vaadin:cloud-download",
+      "path": "/users/settings/"
+    }, {
+      "label": "Archive",
+      "name": "view-archive",
+      "icon": "vaadin:database",
+      "path": "/users/settings/"
+    }, {
+      "label": "Contacts",
+      "name": "view-contacts",
+      "icon": "social:person-add",
+      "path": "/users/settings/"
+    }, {
+      "label": "Settings",
+      "name": "view-settings",
+      "icon": "settings",
+      "items-keys": [
+        "subhead-status",
+        "req-info",
+        "subhead-filters",
+        "lead-type",
+        "counties-list",
+        "subhead-location",
+        "zip",
+        "city",
+        "county",
+        "state",
+        "subhead-contact",
+        "email",
+        "phone",
+        "subhead-auto",
+        "notify-you-text",
+        "notify-you-email",
+        "auto-text-leads",
+        "auto-email-leads"
+      ]
+    }
+  ]
+}

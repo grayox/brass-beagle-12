@@ -61,9 +61,9 @@
       // _statesAbbreviationsChanged(newData, oldData) {
       //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
       //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-      //   const ready = (newData && oldData);
-      //   if(!ready) {
-      //     // console.log('newData\n', newData);
+      //   const reset = (!newData && oldData);
+      //   if(reset) {
+             // console.log('newData\n', newData);
       //     // console.log('oldData\n', oldData);
       //     this.set('zipCodeData', oldData);
       //   }

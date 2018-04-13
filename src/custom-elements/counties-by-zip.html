@@ -22,7 +22,7 @@
               xitems="[[menuItems]]"
               items="[[items]]"
               xselected="{{selectedMenuItem}}"
-              selected="{{selected}}"
+              selected-items="{{selectedItems}}"
               selected-label="{{selectedMenuItemLabel}}"
               >
     </app-menu>
@@ -53,7 +53,7 @@
 				// 	notify: true,
 				// },
 
-				selected: {
+				selectedItems: {
 					type: Array,
 					notify: true,
           observer: '_selectedChagned'
@@ -219,6 +219,9 @@
 			}
 
       _computeItems(a) {
+        const ready = !!a;
+        if(!ready) return;
+
         let out = [];
         let i = a.length;
         while(i--) {
@@ -235,7 +238,12 @@
       }
 
       _selectedChagned(a) {
-        console.log('selected\n', a);
+        // console.log('selected\n', a);
+        const out = a.reduce((c, v, i, r) => {
+          // console.log('v\n', v);
+          return [ ...c, v.name ];
+        }, []);
+        console.log('selected\n', out);
       }
 
 			// _computeZipCounty(zip, zips) {
