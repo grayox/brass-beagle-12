@@ -207,6 +207,16 @@ Types of elements
         </div>
       </template>     
   
+      <!-- type: 'counties-by-zip' -->
+      <template is="dom-if" if="[[_computeTypeIsCountiesByZip(type)]]">
+        <div hidden$="[[!_computeTypeIsCountiesByZip(type)]]">
+          <counties-by-zip xstate="[[userLocal.state]]"
+                           state="[[stateName]]"                 
+                           >
+          </counties-by-zip>
+        </div>
+      </template>
+      
       <!-- type: 'input-zip' -->
       <template is="dom-if" if="[[_computeTypeIsInputZip(type)]]">
         <div hidden$="[[!_computeTypeIsInputZip(type)]]">
@@ -461,6 +471,7 @@ Types of elements
 
       _computeTypeIsButtonSave    (s) { return this._computeTypeIsTarget ( s, 'button-save'     ) }
       _computeTypeIsCheckbox      (s) { return this._computeTypeIsTarget ( s, 'checkbox'        ) }
+      _computeTypeIsCountiesByZip (s) { return this._computeTypeIsTarget ( s, 'counties-by-zip' ) }
       _computeTypeIsHeader        (s) { return this._computeTypeIsTarget ( s, 'header'          ) }
       _computeTypeIsInputMenu     (s) { return this._computeTypeIsTarget ( s, 'input-menu'      ) }
       _computeTypeIsInputText     (s) { return this._computeTypeIsTarget ( s, 'input-text'      ) }

@@ -7,6 +7,7 @@
 <link rel="import" href="/src/app-state/state-media.html">
 <link rel="import" href="/src/app-state/state-states-abbreviations.html">
 
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <!--- ->
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-app-views.html">
@@ -76,14 +77,19 @@
         <!--- ->
         <app-detail></app-detail>
         <!---->
-        <!-- special-case -->
+        <!-- special-case - ->
         <template restamp is="dom-if" if="[[specialCase]]">
-          <div hidden$="[[!specialCase]]">
-            <counties-by-zip xstate="[[userLocal.state]]"
-                             state="[[stateName]]"                 
-                             >
-            </counties-by-zip>
-          </div>
+          <iron-pages attr-for-selected="name" selected="[[specialCase]]">
+            <div name="paper-item-zip">
+              <paper-item-zip zip-code="[[userLocal.zip]]"></paper-item-zip>
+            </div>
+            <div name="counties-by-zip">
+              <counties-by-zip xstate="[[userLocal.state]]"
+                               state="[[stateName]]"                 
+                               >
+              </counties-by-zip>
+            </div>
+          </iron-pages>
         </template>
         <!---->
       </div>
@@ -157,10 +163,10 @@
 					notify: true,
 				},
 
-        specialCase: {
-          type: String, // 'counties-by-state' // 'paper-item-zip'
-          notify: true,
-        },
+        // specialCase: {
+        //   type: String, // 'counties-by-state' // 'paper-item-zip'
+        //   notify: true,
+        // },
 				
 				// _split: {
 				// 	type: Boolean,
@@ -243,7 +249,7 @@
         // //window.addEventListener( 'update-user-invite' , e => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
 		  }
 
-      _computeTypeIsCountiesByZip (s) { return this._computeTypeIsTarget ( s, 'counties-by-zip' ) }
+      // _computeTypeIsCountiesByZip (s) { return this._computeTypeIsTarget ( s, 'counties-by-zip' ) }
 			
 			// connectedCallback() {
 			// 	super.connectedCallback();
@@ -285,40 +291,53 @@
 
         // console.log('e\n', e);
         const item = e.detail; // { detail: @array(strings), menu: @string }
-        // console.log('item\n', item);
-        const itemKeys = item.detail;
-        // console.log('item-keys\n', itemKeys);
-        
-        // special cases // tags: [special-case]
-        // special-case custom element // app-views/menus['custom-elements']
-        const isSpecialCase = (itemKeys[0] === 'counties-by-zip'); // lodash _.isEqual(arg1, arg2)
-        // console.log('isSpecialCase', isSpecialCase);
-        if(isSpecialCase) {
-          this.set('detail', null);
-          this.set('specialCase', 'counties-by-zip');
-          return;
-        }
-        
+        console.log('item\n', item);
+        const itemDetailKeys = item.detail;
+        console.log('item-detail-keys\n', itemDetailKeys);
         const itemKey = item.key;
         console.log('item-key\n', itemKey);
         const views = this.appViews;
+
+        // const specialCases = views['custom-elements'];
+        // console.log('special-cases\n', specialCases);
+
+        // // special cases // tags: [special-case]
+        // // special-case custom element // app-views/menus['custom-elements']
+        // const isSpecialCase = () => { //true;//(itemDetailKeys[0] === 'counties-by-zip'); // lodash _.isEqual(arg1, arg2)
+        //   let i = specialCases.length;
+        //   while(i--) {
+        //     let specialCase = specialCases[i];
+        //     if(specialCase === itemKey) return true;
+        //   }
+        //   return false;
+        // }// console.log('isSpecialCase', isSpecialCase);
+        // if(isSpecialCase) {
+        //   this.set('detail', null);
+        //   // this.set('specialCase', 'counties-by-zip');
+        //   // this.set('specialCase', 'paper-item-zip');
+        //   this.set('specialCase', itemKey);
+        //   return;
+        // }
+        // // end special cases
+
+        // continuing...
         const menus = views.menus;
-        // console.log('menus\n', menus);
+        console.log('menus\n', menus);
         const items = views.items; //views['items-keys']; //
         console.log('items\n', items);
         //return;
 
-        const itemKeysIsObject = (typeof itemKeys === 'object');
-        // console.log('item-keys-is-object\n', itemKeysIsObject);
-        const itemKeysLength = itemKeysIsObject ? itemKeys.length : false;
-        // console.log('item-keys-length\n', itemKeysLength);
+        const itemDetailKeysIsObject = (typeof itemDetailKeys === 'object');
+        // console.log('item-detail-keys-is-object\n', itemDetailKeysIsObject);
+        const itemDetailKeysLength = itemDetailKeysIsObject ? itemDetailKeys.length : false;
+        // console.log('item-detail-keys-length\n', itemDetailKeysLength);
 
-        const detail = ( itemKeysIsObject && itemKeysLength ) ?
+        const detail = ( itemDetailKeysIsObject && itemDetailKeysLength ) ?
         // tags: [menu-maker], [list-maker], [detail]
         
-          itemKeys.reduce((c, v, i, a) => {
-            // console.log('v\n', v);
-            let viewItem = items[v];
+          itemDetailKeys.reduce((c, v, i, a) => {
+            console.log('v\n', v);
+            let viewItem = items[v] ? items[v] : {type: v};
             console.log('view-item\n', viewItem);
             if(itemKey) viewItem.key = itemKey;
 

@@ -1,8 +1,9 @@
 {
+  "custom-elements": [
+    "paper-item-zip",
+    "counties-by-zip"
+  ],
   "menus": {
-    "custom-elements": [
-      "counties-by-zip"
-    ],
     "lead-type": {
       "items": [
         {
@@ -79,7 +80,7 @@
       "label": "State",
       "setting": true,
       "value": "Enter zip",
-      "detail": [ "subhead-zip-detail", "zip-detail" ]
+      "detail": [ "subhead-zip-detail", "input-zip" ]
     },
     "county": {
       "type": "output",
@@ -87,7 +88,7 @@
       "label": "County",
       "setting": true,
       "value": "Enter zip",
-      "detail": [ "subhead-zip-detail", "zip-detail" ]
+      "detail": [ "subhead-zip-detail", "input-zip" ]
     },
     "city": {
       "type": "output",
@@ -95,7 +96,7 @@
       "label": "City",
       "setting": true,
       "value": "Enter zip",
-      "detail": [ "subhead-zip-detail", "zip-detail" ]
+      "detail": [ "subhead-zip-detail", "input-zip" ]
     },
     "zip": {
       "type": "output",
@@ -103,7 +104,7 @@
       "label": "Zip",
       "setting": true,
       "value": "Enter zip",
-      "detail": [ "subhead-zip-detail", "zip-detail" ]
+      "detail": [ "subhead-zip-detail", "input-zip" ]
     },
     "subhead-zip-detail": {
       "type": "subheader",
@@ -116,10 +117,6 @@
     "subhead-phone-detail": {
       "type": "subheader",
       "label": "Your mobile text number"
-    },
-    "zip-detail": {
-      "type": "input-zip",
-      "data": "zip"
     },
     "phone": {
       "type": "output",
