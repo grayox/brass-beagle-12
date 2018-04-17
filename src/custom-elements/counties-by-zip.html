@@ -2,6 +2,8 @@
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
 <!-- state -->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<link rel="import" href="/src/app-state/state-states-abbreviations.html">
 <link rel="import" href="/src/app-state/state-counties-by-state.html">
 
 <link rel="import" href="/src/app-view/app-item.html">
@@ -13,12 +15,17 @@
 		<style include="paper-item-styles"></style>
     <!---->
 		
-		<state-counties-by-state state="[[state]]" counties="{{counties}}"></state-counties-by-state>
+    <!-- state -->
+		<state-user-local id="user" user-local="{{userLocal}}"></state-user-local>
+    <state-states-abbreviations id="abbr" state-abbreviation="[[userLocal.state]]" state-name="{{stateName}}"></state-states-abbreviations>
+    <state-counties-by-state state="[[stateName]]" counties="{{counties}}"></state-counties-by-state>
+    <!--- ->
+    <!---->
 		
     <app-menu multi
               key="state-counties-by-zip"
               xkey="[[key]]"
-              subheader="[[state]]"
+              subheader="[[stateName]]"
               xitems="[[menuItems]]"
               items="[[items]]"
               xselected="{{selectedMenuItem}}"
@@ -37,10 +44,18 @@
 				
         // appSettings: Object,
 
-        state: {
+        userLocal: {
+          type: Object,
+					notify: true,
+          observer: '_userLocalChanged',
+        },
+
+        stateName: {
           type: String,
           notify: true,
-          value: () => 'Delaware',
+          // value: () => 'Delaware',
+          value: () => 'Washington',
+          // computed: '_computeState(userLocal)',
         },
 
 				// subheader: {
@@ -103,6 +118,7 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
 				//this.getZipsData(); // use state element instead: <state-zip-code-data>
 				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
+        // this.$.user.attachShadow({ mode: 'closed' });
 		  }
 			
 			// connectedCallback() {
@@ -195,28 +211,32 @@
 			// }
 			
 			// _computeZipCity(zip, zips) {
+			// 	 //console.log('zip', zip);
+			// 	 //console.log('zips', zips);
+			// 	 let out = null;
+			// 	 //const zips = this.zipCodeData;
+			// 	 if(zips && zips[zip] && zips[zip].city) {
+			// 	 	out = zips[zip].city;
+			// 	 }
+			// 	 //console.log('out', out);
+			// 	 return out;
+			// }
+
+			// _computeZipState(zip, zips) {
 			// 	//console.log('zip', zip);
 			// 	//console.log('zips', zips);
 			// 	let out = null;
 			// 	//const zips = this.zipCodeData;
-			// 	if(zips && zips[zip] && zips[zip].city) {
-			// 		out = zips[zip].city;
+			// 	if(zips && zips[zip] && zips[zip].state) {
+			// 		out = zips[zip].state;
 			// 	}
 			// 	//console.log('out', out);
 			// 	return out;
 			// }
 
-			_computeZipState(zip, zips) {
-				//console.log('zip', zip);
-				//console.log('zips', zips);
-				let out = null;
-				//const zips = this.zipCodeData;
-				if(zips && zips[zip] && zips[zip].state) {
-					out = zips[zip].state;
-				}
-				//console.log('out', out);
-				return out;
-			}
+      // _computeState(userLocal) {
+
+      // }
 
       _computeItems(a) {
         const ready = !!a;
@@ -243,7 +263,17 @@
           // console.log('v\n', v);
           return [ ...c, v.name ];
         }, []);
-        console.log('selected\n', out);
+
+        // setTimeout(() => {
+          console.log('selected\n', out);
+          console.log('user-local\n', this.userLocal);
+          console.log('user-local-shadowdom\n', this.$.user);
+          console.log('state-abbr-shadowdom\n', this.$.abbr);
+          console.log('user-local-shadowdom-user\n', this.$.user.userLocal);
+          // console.log('state-name\n', this.stateName);
+          // console.log('counties\n', this.counties);
+        // }, 2000);
+
       }
 
 			// _computeZipCounty(zip, zips) {
@@ -300,6 +330,11 @@
 				const d = new CustomEvent(name, o);
         this.dispatchEvent(d);
 			}
+
+      _userLocalChanged(dataNew, dataOld) {
+        console.log('user-local-new', dataNew);
+        console.log('user-local-old', dataOld);
+      }
 
       // _computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
       //   if (!zipValid) return;

@@ -1,7 +1,61 @@
 {
-  "custom-elements": [
-    "paper-item-zip",
-    "counties-by-zip"
+  "comment-1": "Each element in the 'views' array will contain EITHER an 'items' property OR a 'path' property",
+  "comment-2": "Which property will inform the 'app-views' and 'app-list' properties what type of data list items to display",
+  "comment-3": "'path' property will yield a homgeneous element set displayed as a list - e.g., a list of 'contacts'",
+  "comment-4": "'items' property will yield a heterogenous element set representing a form of state - e.g., user 'settings'",
+  "comment-5": "<state-app-settings> manipulates this data to create a useful data object for retrieving and setting the apps settings",
+  "views": [
+    { 
+      "label": "Dashboard",
+      "name": "view-dashboard",
+      "icon": "vaadin:dashboard",
+      "items-keys": [
+      ]
+    }, {
+      "label": "Outbox",
+      "name": "view-outbox",
+      "icon": "vaadin:cloud-upload",
+      "path": "/users/settings/"
+    }, {
+      "label": "Inbox",
+      "name": "view-inbox",
+      "icon": "vaadin:cloud-download",
+      "path": "/users/settings/"
+    }, {
+      "label": "Archive",
+      "name": "view-archive",
+      "icon": "vaadin:database",
+      "path": "/users/settings/"
+    }, {
+      "label": "Contacts",
+      "name": "view-contacts",
+      "icon": "social:person-add",
+      "path": "/users/settings/"
+    }, {
+      "label": "Settings",
+      "name": "view-settings",
+      "icon": "settings",
+      "items-keys": [
+        "subhead-status",
+        "req-info",
+        "subhead-filters",
+        "lead-type",
+        "counties-list",
+        "subhead-location",
+        "zip",
+        "city",
+        "county",
+        "state",
+        "subhead-contact",
+        "email",
+        "phone",
+        "subhead-auto",
+        "notify-you-text",
+        "notify-you-email",
+        "auto-text-leads",
+        "auto-email-leads"
+      ]
+    }
   ],
   "menus": {
     "lead-type": {
@@ -179,64 +233,5 @@
       "setting": true,
       "value": false
     }
-  },
-
-  "comment-1": "Each element in the 'views' array will contain EITHER an 'items' property OR a 'path' property",
-  "comment-2": "Which property will inform the 'app-views' and 'app-list' properties what type of data list items to display",
-  "comment-3": "'path' property will yield a homgeneous element set displayed as a list - e.g., a list of 'contacts'",
-  "comment-4": "'items' property will yield a heterogenous element set representing a form of state - e.g., user 'settings'",
-  "comment-5": "<state-app-settings> manipulates this data to create a useful data object for retrieving and setting the apps settings",
-  "views": [
-    { 
-      "label": "Dashboard",
-      "name": "view-dashboard",
-      "icon": "vaadin:dashboard",
-      "items-keys": [
-      ]
-    }, {
-      "label": "Outbox",
-      "name": "view-outbox",
-      "icon": "vaadin:cloud-upload",
-      "path": "/users/settings/"
-    }, {
-      "label": "Inbox",
-      "name": "view-inbox",
-      "icon": "vaadin:cloud-download",
-      "path": "/users/settings/"
-    }, {
-      "label": "Archive",
-      "name": "view-archive",
-      "icon": "vaadin:database",
-      "path": "/users/settings/"
-    }, {
-      "label": "Contacts",
-      "name": "view-contacts",
-      "icon": "social:person-add",
-      "path": "/users/settings/"
-    }, {
-      "label": "Settings",
-      "name": "view-settings",
-      "icon": "settings",
-      "items-keys": [
-        "subhead-status",
-        "req-info",
-        "subhead-filters",
-        "lead-type",
-        "counties-list",
-        "subhead-location",
-        "zip",
-        "city",
-        "county",
-        "state",
-        "subhead-contact",
-        "email",
-        "phone",
-        "subhead-auto",
-        "notify-you-text",
-        "notify-you-email",
-        "auto-text-leads",
-        "auto-email-leads"
-      ]
-    }
-  ]
+  }
 }
