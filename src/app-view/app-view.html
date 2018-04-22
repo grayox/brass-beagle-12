@@ -6,18 +6,19 @@
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
+<link rel="import" href="/src/app-state/state-app-settings.html">
+<link rel="import" href="/src/app-state/state-app-views.html">
 <!--- ->
 <link rel="import" href="/src/app-state/state-states-abbreviations.html">
 <!--- ->
 <link rel="import" href="/src/app-state/state-user-remote.html">
-<link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-counties-by-state.html">
 <!--- ->
-<link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/custom-styles/list-view-styles.html">
 <link rel="import" href="app-detail.html">
+<link rel="import" href="/src/custom-elements/counties-by-zip.html">
 <!---->
-<link rel="import" href="/src/app-state/state-app-settings.html">
 
 <link rel="import" href="app-list.html">
 
@@ -69,6 +70,8 @@
         </app-list>
         <!--- ->
         <div>hello world</div>
+        <!--- ->
+        <counties-by-zip></counties-by-zip>
         <!---->
         <template restamp is="dom-if" if="[[detail]]">
           <div hidden$="[[!detail]]">
@@ -288,7 +291,7 @@
         // const appSettings = this.appSettings;
         // console.log('app-settings\n', appSettings);
         const userLocal = this.userLocal;
-        // console.log('user-local\n', userLocal);
+        console.log('user-local\n', userLocal);
 
         // console.log('e\n', e);
         const item = e.detail; // { detail: @array(strings), menu: @string }
