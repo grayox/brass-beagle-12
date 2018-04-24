@@ -291,7 +291,7 @@
         // const appSettings = this.appSettings;
         // console.log('app-settings\n', appSettings);
         const userLocal = this.userLocal;
-        console.log('user-local\n', userLocal);
+        // console.log('user-local\n', userLocal);
 
         // console.log('e\n', e);
         const item = e.detail; // { detail: @array(strings), menu: @string }
@@ -382,8 +382,13 @@
                     menuDetailItem.selected = true;
                   }
                 };
-
-                let out = [ ...c, { ...viewItem, selected: selectedValue, menuItems: menuDetailItems } ];
+                let temp1 = {
+                  selected: selectedValue,
+                  menuItems: menuDetailItems
+                  };
+                let temp2 = Object.assign(viewItem, temp1);
+                let out = c.concat([temp2]);
+                // let out = [ ...c, { ...viewItem, selected: selectedValue, menuItems: menuDetailItems } ];
                 // console.log('out\n', out);
                 return out;
                 // const ob = Object.assign(viewItem, { menuItems: menuDetailItems } );

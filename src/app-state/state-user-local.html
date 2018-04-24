@@ -118,9 +118,9 @@
         if(!ready) return;
 
 				// const out = userSettings;
-				// const out = Object.assign(userLocalDefault, userSettings); // state: undefined or 'Enter zip'
+				const out = Object.assign(userLocalDefault, userSettings); // state: undefined or 'Enter zip'
 				// const out = Object.assign({}, userSettings); // state: CA
-				const out = { ...userLocalDefault, ...userSettings }; // state: CA
+				// const out = { ...userLocalDefault, ...userSettings }; // state: CA
 				// console.log('user-local', out);
 				return out;
 			}
