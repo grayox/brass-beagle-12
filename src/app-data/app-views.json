@@ -40,6 +40,7 @@
         "req-info",
         "subhead-filters",
         "lead-type",
+        "geo-select",
         "counties-list",
         "subhead-location",
         "zip",
@@ -120,6 +121,14 @@
       "value": "Select",
       "detail": [ "counties-by-zip" ]
     },
+    "geo-select": {
+      "type": "output",
+      "icon": "track-changes",
+      "label": "Your location",
+      "setting": true,
+      "value": "Select",
+      "detail": [ "subhead-geo-select", "input-geo-select" ]
+    },
     "subhead-location": {
       "type": "subheader",
       "label": "Location (by zip)"
@@ -163,6 +172,10 @@
     "subhead-zip-detail": {
       "type": "subheader",
       "label": "Your zip code"
+    },
+    "subhead-geo-select": {
+      "type": "subheader",
+      "label": "Your location"
     },
     "subhead-email-detail": {
       "type": "subheader",
