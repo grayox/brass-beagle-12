@@ -7,29 +7,29 @@
 <!---->
 <!---->
 
-<dom-module id="state-zip-code-data">
+<dom-module id="state-geolocations">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="zip-code-data" data="{{zipCodeData}}"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="geolocations-data" data="{{geolocationsData}}"></app-localstorage-document>
 		
 		<iron-ajax id="ajax"
 							 auto
-							 url="/src/custom-libraries/zip-code-data.json"
+							 url="/src/custom-elements/geo-select/geolocations-backpage.json"
 							 handle-as="json"
 							 xon-response="_handleAjaxResponse"
 							 xdebounce-duration="300"
-							 last-response="{{zipCodeData}}"
+							 last-response="{{geolocationsData}}"
 							 >
 		</iron-ajax>
 		
   </template>
 
   <script>
-    class StateZipCodeData extends Polymer.Element {
-      static get is() { return 'state-zip-code-data'; }
+    class StateGeolocations extends Polymer.Element {
+      static get is() { return 'state-geolocations'; }
 
       static get properties() { return {
-				zipCodeData: {
+				geolocationsData: {
 					type: Object,
 					notify: true,
 					observer: '_dataChanged',
@@ -52,7 +52,7 @@
         if(reset) {
           // console.log('newData\n', newData);
           // console.log('oldData\n', oldData);
-          this.set('zipCodeData', oldData);
+          this.set('geolocationsData', oldData);
         }
       }
 			
@@ -83,6 +83,6 @@
 
     }
 
-    window.customElements.define(StateZipCodeData.is, StateZipCodeData);
+    window.customElements.define(StateGeolocations.is, StateGeolocations);
   </script>
 </dom-module>

@@ -2,7 +2,9 @@
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
 <!-- state -->
-<link rel="import" href="/src/app-state/state-zip-code-data.html">
+<link rel="import" href="state-zip-code-data.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
 
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
@@ -133,88 +135,34 @@
       <!---->
     </paper-icon-item>
 
-    <paper-icon-item xclass="editable" hidden$="[[!zipState]]">
-      <!--- ->
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:flag" alt="inbox"></paper-icon-button>
-      </div>
-      <paper-item-body xtwo-line>
-        <div>State</div>
-        <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>Mississippi</div>
-      <!---->
-      <div>[[zipState]]</div>
-    </paper-icon-item>
-    <paper-icon-item xclass="editable" hidden$="[[!zipCounty]]">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar" slot="item-icon">
-        <paper-icon-button icon="vaadin:bullseye" alt="inbox"></paper-icon-button>
-      </div>
-      <paper-item-body xtwo-line>
-        <div>County</div>
-        <!--- ->
-        <div secondary>Jan 17, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>Davis Co.</div>
-      <!---->
-      <div>[[zipCounty]]</div>
-    </paper-icon-item>
-    <paper-icon-item xclass="editable" hidden$="[[!zipCity]]">
-      <!--- ->
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar" slot="item-icon">
-        <paper-icon-button icon="vaadin:pin" alt="inbox"></paper-icon-button>
-      </div>
-      <paper-item-body xtwo-line>
-        <div>City</div>
-        <!--- ->
-        <div secondary>Jan 17, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>Biloxi</div>
-      <!---->
-      <div>[[zipCity]]</div>
-    </paper-icon-item>
-    <paper-icon-item xclass="editable" hidden$="[[!zipCode]]">
-      <!--- ->
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:map-marker" alt="zip"></paper-icon-button>
-      </div>
-      <paper-item-body xtwo-line>
-        <div>Zip</div>
-        <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>90210</div>
-      <!---->
-      <div>[[zipCode]]</div>
-    </paper-icon-item>
-
-
+    <app-item hidden$="[[!zipState]]"
+              type="output"
+              icon="vaadin:flag"
+              label="State"
+              data="[[zipState]]"
+              >
+    </app-item>
+    <app-item hidden$="[[!zipCounty]]"
+              type="output"
+              icon="vaadin:bullseye"
+              label="County"
+              data="[[zipCounty]]"
+              >
+    </app-item>
+    <app-item hidden$="[[!zipCity]]"
+              type="output"
+              icon="vaadin:pin"
+              label="City"
+              data="[[zipCity]]"
+              >
+    </app-item>
+    <app-item hidden$="[[!zipValid]]"
+              type="output"
+              icon="vaadin:map-marker"
+              label="Zip"
+              data="[[zipCode]]"
+              >
+    </app-item>
 
   </template>
 
@@ -223,16 +171,14 @@
       static get is() { return 'paper-item-zip'; }
 
       static get properties() {
-        /**/
+        
         return {
-					/** /
-					zipCodeDataAjaxPath: {
-						type: String,
-						value: function() {
-							return 'src/custom-libraries/zip-code-data.json';
-						},
-					},
-					/**/
+					// zipCodeDataAjaxPath: {
+					// 	type: String,
+					// 	value: function() {
+					// 		return 'src/custom-libraries/zip-code-data.json';
+					// 	},
+					// },
 					zipCodeData: {
 						type: Object,
 						notify: true,
@@ -274,6 +220,11 @@
 						notify: true,
 						computed: '_computeZipValid(zipCity, zipState, zipCounty)',
 					},
+					zipObject: {
+						type: Object,
+						notify: true,
+						computed: '_computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty)',
+					},
 				};
 			}
 			
@@ -281,7 +232,6 @@
 				super();
 			}
 			
-			/**/
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
@@ -289,104 +239,94 @@
 				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
 		  }
 			
-			/** /
-			connectedCallback() {
-				super.connectedCallback();
-				//console.log('connected!');
-				//this._init();
-		  }
-			/**/
+			// connectedCallback() {
+			// 	super.connectedCallback();
+			// 	//console.log('connected!');
+			// 	//this._init();
+		  // }
 			
-			/** /
-			_init(s) {
-				//const z = this.zipCode;
-				//console.log('s\n', s);
-				const city = this._computeZipCity(s);
-				//console.log('city\n', city);
-				const state = this._computeZipState(s);
-				//console.log('state\n', state);
-				const county = this._computeZipCounty(s);
-				//console.log('county\n', county);
-				this.set('zipCity', city);
-				this.set('zipState', state);
-				this.set('zipCounty', county);
-			}
-			/**/
+			// _init(s) {
+			// 	//const z = this.zipCode;
+			// 	//console.log('s\n', s);
+			// 	const city = this._computeZipCity(s);
+			// 	//console.log('city\n', city);
+			// 	const state = this._computeZipState(s);
+			// 	//console.log('state\n', state);
+			// 	const county = this._computeZipCounty(s);
+			// 	//console.log('county\n', county);
+			// 	this.set('zipCity', city);
+			// 	this.set('zipState', state);
+			// 	this.set('zipCounty', county);
+			// }
 			
-			/** /
-			getZipsData() { // use state element instead: <state-zip-code-data>
-				const path = this.zipCodeDataAjaxPath;
-				// const path = 'src/custom-libraries/zip-code-data.json';
-				// http://stackoverflow.com/a/42763681/1640892
-				// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
-				const ajax = document.createElement('iron-ajax');
-				ajax.method = 'get';
-				ajax.handleAs = 'json';
-				ajax.contentType = 'application/json';
-				ajax.url = path;
-				const _this = this;
-				ajax.addEventListener('response', function(e) {
-					// Use imperative method for updating as declarative binding is unavailable in a behavior
-					//response handler
-					//console.log('ajax', e);
-					//console.log('ajax', ajax.lastResponse);
-					//return ajax.lastResponse; // does not work
-					_this.zipCodeData = ajax.lastResponse;
-				});
-				ajax.generateRequest();
-			}
-			/**/
-
+			// getZipsData() { // use state element instead: <state-zip-code-data>
+			// 	const path = this.zipCodeDataAjaxPath;
+			// 	// const path = 'src/custom-libraries/zip-code-data.json';
+			// 	// http://stackoverflow.com/a/42763681/1640892
+			// 	// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
+			// 	const ajax = document.createElement('iron-ajax');
+			// 	ajax.method = 'get';
+			// 	ajax.handleAs = 'json';
+			// 	ajax.contentType = 'application/json';
+			// 	ajax.url = path;
+			// 	const _this = this;
+			// 	ajax.addEventListener('response', function(e) {
+			// 		// Use imperative method for updating as declarative binding is unavailable in a behavior
+			// 		//response handler
+			// 		//console.log('ajax', e);
+			// 		//console.log('ajax', ajax.lastResponse);
+			// 		//return ajax.lastResponse; // does not work
+			// 		_this.zipCodeData = ajax.lastResponse;
+			// 	});
+			// 	ajax.generateRequest();
+			// }
+			
 			latlon2distance(lat1, lon1, lat2, lon2) {
-				Number.prototype.toRadians = function() {
-					return this * Math.PI / 180; // http://stackoverflow.com/a/5260472/1640892
-				}
-				/** /
-				// Source: http://www.movable-type.co.uk/scripts/latlong.html
-
-				Distance
-					This uses the 'haversine' formula to calculate the great-circle distance between two points – that is, the shortest distance over the earth's surface – giving an 'as-the-crow-flies' distance between the points (ignoring any hills they fly over, of course!).
-
-				Haversine
-					formula:	a = sin(deltaPhi/2)^2 + cos(phi1) * cos(phi2) * sin(deltaLambda/2)^2
-					c = 2 * atan2( sqrt(a), sqrt(1−a) )
-					d = R * c
-					where	phi is latitude, lambda is longitude, R is earth’s radius (mean radius = 6,371km);
-					note that angles need to be in radians to pass to trig functions!
-
-				JavaScript:	
-				/**/
-				const R = 6.371e6; // metres
-				const phi1 = lat1.toRadians();
-				const phi2 = lat2.toRadians();
-				//const deltaPhi = (lat2-lat1).toRadians();
-				const deltaPhi = phi2-phi1;
-				const deltaLambda = (lon2-lon1).toRadians();
-
-				const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
-								Math.cos(phi1) * Math.cos(phi2) *
-								Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
-				const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-				const d = R * c;
-				return d; // distance in meters
+        Number.prototype.toRadians = function() {
+          return this * Math.PI / 180; // http://stackoverflow.com/a/5260472/1640892
+        }
+        // // Source: http://www.movable-type.co.uk/scripts/latlong.html
+        
+        // Distance
+        // 	This uses the 'haversine' formula to calculate the great-circle distance between two points – that is, the shortest distance over the earth's surface – giving an 'as-the-crow-flies' distance between the points (ignoring any hills they fly over, of course!).
+        
+        // Haversine
+        // 	formula:	a = sin(deltaPhi/2)^2 + cos(phi1) * cos(phi2) * sin(deltaLambda/2)^2
+        // 	c = 2 * atan2( sqrt(a), sqrt(1−a) )
+        // 	d = R * c
+        // 	where	phi is latitude, lambda is longitude, R is earth’s radius (mean radius = 6,371km);
+        // 	note that angles need to be in radians to pass to trig functions!
+        
+        // JavaScript:	
+        const R = 6.371e6; // metres
+        const phi1 = lat1.toRadians();
+        const phi2 = lat2.toRadians();
+        //const deltaPhi = (lat2-lat1).toRadians();
+        const deltaPhi = phi2-phi1;
+        const deltaLambda = (lon2-lon1).toRadians();
+        
+        const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+        				Math.cos(phi1) * Math.cos(phi2) *
+        				Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        
+        const d = R * c;
+        return d; // distance in meters
 			}
 
-			/** /
-			_zipCodeChanged(s) {
-				//const zipCode = this.zipCode;
-				//const zipCity = this.zipCity;
-				const zipState = this.zipState;
-				//console.log('zip-code\n', s);
-				//console.log('zip-code-this\n', zipCode);
-				//console.log('city\n', zipCity);
-				//console.log('state\n', zipState);
-				if(!zipState) {
-				  //console.log('initializing...', s);
-					this._init(s);
-				}
-			}
-			/**/
+			// _zipCodeChanged(s) {
+			//   //const zipCode = this.zipCode;
+			//   //const zipCity = this.zipCity;
+			//   const zipState = this.zipState;
+			//   //console.log('zip-code\n', s);
+			//   //console.log('zip-code-this\n', zipCode);
+			//   //console.log('city\n', zipCity);
+			//   //console.log('state\n', zipState);
+			//   if(!zipState) {
+			//     //console.log('initializing...', s);
+			//   	 this._init(s);
+			//   }
+			// }
 			
 			_computeZipCity(zip, zips) {
 				//console.log('zip', zip);
@@ -425,19 +365,15 @@
 			}
 
 			_computeZipStateCounty(state, county) {
-				if(state && county) {
-					return [ county , 'County,' , state ].join(' ');
-				} else {
-					return '';
-				}
+        const ready = (state && county);
+				if(!ready) return;
+        return [ county , 'County,' , state ].join(' ');
 			}
 
 			_computeZipCityStateCounty(city, state, county) {
-				if(city && state && county) {
-					return [ city , ', ' , state, ' (', county, ' County)' ].join('');
-				} else {
-					return '';
-				}
+        const ready = (city && state && county);
+				if(!ready) return;
+				return [ city , ', ' , state, ' (', county, ' County)' ].join('');
 			}
 
 			_computeZipValid(city, state, county) {
@@ -445,20 +381,53 @@
 				const b1 = !!city && city.length;
 				const b2 = !!state && state.length;
 				const b3 = !!county && county.length;
-				return !!(b1 && b2 && b3);
+        const out = !!(b1 && b2 && b3);
+        return out;
 			}
 			
-			/** /
-			_zipCodeDataChanged(o) {
-				//console.log('zipCodeData', o);
-    	}
-			/** /
-			_show() {
-				console.log('zipValid\n', this.zipValid);
-				console.log('zip\n', this.zip);
-				console.log('zipCodeData\n', this.zipCodeData);
+			// _zipCodeDataChanged(o) {
+			// 	//console.log('zipCodeData', o);
+    	// }
+			
+      // _show() {
+			// 	console.log('zipValid\n', this.zipValid);
+			// 	console.log('zip\n', this.zip);
+			// 	console.log('zipCodeData\n', this.zipCodeData);
+			// }
+
+			_dispatchEvent(name, detail) {
+				//this.fire('name', detail);
+				// const n = 'save-app-item';
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: detail,
+				};
+				const d = new CustomEvent(name, o);
+        this.dispatchEvent(d);
 			}
-			/**/
+
+      _computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
+        const ready1 = zipValid;
+        if (!ready1) return;
+
+        const ready2 = (zipValid && zipCode && zipCity && zipState && zipCounty && zipStateCounty && zipCityStateCounty);
+        if (!ready2) return;
+
+        const out = {
+          zipValid: zipValid,
+          zipCode: zipCode,
+          zipCity: zipCity,
+          zipState: zipState,
+          zipCounty: zipCounty,
+          zipStateCounty: zipStateCounty,
+          zipCityStateCounty: zipCityStateCounty,        
+        }
+        
+        // console.log('zip-object\n', out);
+        this._dispatchEvent('zip-valid', out);
+        return out;
+      }
 			
 		}
 				

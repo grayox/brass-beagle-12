@@ -2,7 +2,10 @@
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
 <!-- state -->
+<link rel="import" href="state-geolocations.html">
+<!--- ->
 <link rel="import" href="/src/app-state/state-zip-code-data.html">
+<!---->
 
 <link rel="import" href="/src/app-view/app-item.html">
 
@@ -16,9 +19,10 @@
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
-<dom-module id="paper-item-zip">
+<dom-module id="geo-select">
   <template>
 		<style include="paper-item-styles">
+      /** /
 			:host {
 				--prefix-margin: 6px;
 				--prefix-styles: {
@@ -27,10 +31,10 @@
 			}
 			.suffix {
 				font-weight: 300;
-				opacity: var(--opacity-dim); /*0.54;*/
+				opacity: var(--opacity-dim); /*0.54;* /
 				font-size: smaller;
 			}
-			/**/
+			/** /
 			.checkmark {
 				color: lightgreen;
 				@apply --prefix-styles;
@@ -167,8 +171,8 @@
   </template>
 
   <script>
-		class PaperItemZip extends Polymer.Element {
-      static get is() { return 'paper-item-zip'; }
+		class GeoSelect extends Polymer.Element {
+      static get is() { return 'geo-select'; }
 
       static get properties() {
         
@@ -431,6 +435,6 @@
 			
 		}
 				
-    window.customElements.define(PaperItemZip.is, PaperItemZip);
+    window.customElements.define(GeoSelect.is, GeoSelect);
   </script>
 </dom-module>

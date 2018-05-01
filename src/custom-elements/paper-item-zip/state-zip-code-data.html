@@ -7,48 +7,33 @@
 <!---->
 <!---->
 
-<dom-module id="state-counties-by-state">
+<dom-module id="state-zip-code-data">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="counties-by-state" data="{{countiesByState}}"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="zip-code-data" data="{{zipCodeData}}"></app-localstorage-document>
 		
 		<iron-ajax id="ajax"
 							 auto
-							 url="/src/custom-libraries/counties-by-state.json"
+							 url="/src/custom-elements/paper-item-zip/zip-code-data.json"
 							 handle-as="json"
 							 xon-response="_handleAjaxResponse"
 							 xdebounce-duration="300"
-							 last-response="{{countiesByState}}"
+							 last-response="{{zipCodeData}}"
 							 >
 		</iron-ajax>
 		
   </template>
 
   <script>
-    class StateCountiesByState extends Polymer.Element {
-      static get is() { return 'state-counties-by-state'; }
+    class StateZipCodeData extends Polymer.Element {
+      static get is() { return 'state-zip-code-data'; }
 
       static get properties() { return {
-
-				countiesByState: {
+				zipCodeData: {
 					type: Object,
 					notify: true,
-					//observer: '_countiesByStateChanged',
+					observer: '_dataChanged',
 				},
-
-				state: {
-					type: String,
-					notify: true,
-					//observer: '_dataChanged',
-				},
-
-				counties: {
-					type: Array,
-					notify: true,
-					//observer: '_dataChanged',
-          computed: '_computeCounties(state, countiesByState)',
-				},
-
 			}}
 			
 			constructor() {
@@ -60,23 +45,16 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
 
-      _computeCounties(state, countiesByState) {
-        const ready = (state && countiesByState);
-        if(!ready) return;
-
-        const out = countiesByState[state];
-        return out;
+      _dataChanged(newData, oldData) {
+        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+        const reset = (!newData && oldData);
+        if(reset) {
+          // console.log('newData\n', newData);
+          // console.log('oldData\n', oldData);
+          this.set('zipCodeData', oldData);
+        }
       }
-
-      // _dataChanged(newData, oldData) {
-      //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
-      //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-      //   if(!newData && oldData) {
-      //     // console.log('newData\n', newData);
-      //     // console.log('oldData\n', oldData);
-      //     this.set('countiesByState', oldData);
-      //   }
-      // }
 			
       // _appDataChanged(data) {
 			// 	console.log('data', data);
@@ -102,9 +80,9 @@
 			// 	//console.log('d\n', d);
 			// 	this.dispatchEvent(d);				
 			// }
-		
-	  }
 
-    window.customElements.define(StateCountiesByState.is, StateCountiesByState);
+    }
+
+    window.customElements.define(StateZipCodeData.is, StateZipCodeData);
   </script>
 </dom-module>
