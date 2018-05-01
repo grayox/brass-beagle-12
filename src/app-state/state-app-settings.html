@@ -36,7 +36,7 @@
 
   <script>
 
-    // The purpose of this element is to process app-views coming in as a json file
+    // The purpose of this element is to process state-app-views element
     // and fill out and return the entire app-settings object needed and used
     // by the page views to generate all the page elements.
     // TLDR: app-views.json => state-app-views => state-app-settings => my-app => dom-repeat(app-views)
@@ -48,8 +48,8 @@
 				appSettings: {
 					type: Object,
 					notify: true,
-					// observer: '_appSettingsChanged',
-          // computed: '_computeAppSettings(appViews, userLocal)',
+          // observer: '_appSettingsChanged',
+          computed: '_computeAppSettings(appViews, userLocal)',
 				},
 
 				userLocal: {
@@ -107,6 +107,7 @@
 
       handleUserLocalChanged(newValue) {
         // console.log('user-settings-changed', newValue);
+        // force bindings to re-evaluate object
         this.set('userLocal', null);
         this.set('userLocal', newValue);
       }
