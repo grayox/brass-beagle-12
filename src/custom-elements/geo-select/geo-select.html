@@ -1,11 +1,11 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-<!-- state -->
 <link rel="import" href="geolocations-data.html">
 <!--- ->
-<link rel="import" href="/src/app-state/zip-code-data.html">
+<link rel="import" href="/src/app-region/geo-code-data.html">
 <!---->
+<!-- region -->
 
 <link rel="import" href="/src/app-view/app-item.html">
 
@@ -19,154 +19,36 @@
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
 
+<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/app-view/app-menu.html">
+
 <dom-module id="geo-select">
   <template>
-		<style include="paper-item-styles">
-      /** /
-			:host {
-				--prefix-margin: 6px;
-				--prefix-styles: {
-					margin-right: var(--prefix-margin);
-				}
-			}
-			.suffix {
-				font-weight: 300;
-				opacity: var(--opacity-dim); /*0.54;* /
-				font-size: smaller;
-			}
-			/** /
-			.checkmark {
-				color: lightgreen;
-				@apply --prefix-styles;
-			}
-			.exmark {
-				color: red;
-				@apply --prefix-styles;
-			}
-			/** /
-			paper-input {
-        max-width: 5em;
-        margin: auto;
-      }
-			/**/
-		</style>
+		<style include="paper-item-styles"></style>
 		
-		<zip-code-data zip-code-data="{{zipCodeData}}"></zip-code-data>
-		
-    <paper-icon-item xclass="editable" xhidden$="[[!zipState]]">
-      <!--- ->
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:flag" alt="inbox"></paper-icon-button>
-      </div>
-      <paper-item-body xtwo-line>
+		<geolocations-data geolocations-data="{{geoLocationsData}}"></geolocations-data>
 
-
-<!--- ->
-  The following section contains the contents of custom-elements/form-input-zip.html
-  <form-input-zip>
-<!---->
-
-		    <!--- ->
-		    <paper-input label="simple character counter"
-		    						 char-counter
-		    						 value="{{zipCode}}"
-		    						 ></paper-input>
-		    <!---->
-	      <paper-input id="create-zip"
-	      						 name="zip"
-	      						 xis="iron-input"
-	      						 xprevent-invalid-input
-	      						 xallowed-pattern="[0-9]"
-	      						 class="align-left xwide"
-		    						 char-counter
-		    						 maxlength="5"
-	      						 label="Zip code"
-	      						 value="{{zipCode}}"
-	      						 type="string"
-	      						 xtype="number"
-	      						 xmin="1000"
-	      						 xmax="99"
-	      						 xstep="1000"
-	      						 xlength="55"
-	      						 xrequired
-	      						 xmaxlength="2"
-	      						 xtype="text"
-	      						 xpattern="\d*"
-	      						 xdisabled$="[[!isNew]]"
-	      						 >
-	      	<!---->
-	      	<div slot="prefix" xclass="checkmark">
-		    		<!--- ->
-		    		&#10003;
-		    		<!---->
-		    		<iron-icon icon="check-circle"
-		    							 class="checkmark"
-		    							 hidden$="[[!zipValid]]"
-		    							 xon-tap="_show"></iron-icon>
-		    	</div>
-		    	<div slot="prefix" xclass="exmark">
-		    		<!--- ->
-		    		&times;
-		    		<!---->
-		    		<iron-icon icon="cancel"
-		    							 class="exmark"
-		    							 hidden$="[[zipValid]]"
-		    							 xon-tap="_show"></iron-icon>
-		    	</div>
-	      	<!--- ->
-	      	<div slot="suffix">[[zipCityStateCounty]]</div>
-	      	<!---->
-	      </paper-input>
-		    <div class="suffix">[[zipCityStateCounty]]</div>
-	      <!--- ->
-		    <button on-tap="_show">Show</button>
-        <!---->
-
-        <!--- ->
-        <div>State</div>
-        <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>Mississippi</div>
-      <!--- ->
-      <div>[[zipState]]</div>
-      <!---->
-    </paper-icon-item>
-
-    <app-item hidden$="[[!zipState]]"
+    <app-item xhidden$="[[!georegion]]"
               type="output"
               icon="vaadin:flag"
-              label="State"
-              data="[[zipState]]"
+              label="Geo location"
+              xdata="[[georegion]]"
               >
     </app-item>
-    <app-item hidden$="[[!zipCounty]]"
-              type="output"
-              icon="vaadin:bullseye"
-              label="County"
-              data="[[zipCounty]]"
+    <app-menu xmulti
+              key="geo-select"
+              xkey="region-counties-by-geo"
+              xkey="[[key]]"
+              xsubheader="[[regionName]]"
+              subheader="Select your country"
+              xitems="[[menuItems]]"
+              xitems="[[items]]"
+              items="[[geoListCountry]]"
+              xselected="{{selectedMenuItem}}"
+              selected-items="{{selectedItems}}"
+              selected-label="{{selectedMenuItemLabel}}"
               >
-    </app-item>
-    <app-item hidden$="[[!zipCity]]"
-              type="output"
-              icon="vaadin:pin"
-              label="City"
-              data="[[zipCity]]"
-              >
-    </app-item>
-    <app-item hidden$="[[!zipValid]]"
-              type="output"
-              icon="vaadin:map-marker"
-              label="Zip"
-              data="[[zipCode]]"
-              >
-    </app-item>
+    </app-menu>
 
   </template>
 
@@ -177,58 +59,68 @@
       static get properties() {
         
         return {
-					// zipCodeDataAjaxPath: {
-					// 	type: String,
-					// 	value: function() {
-					// 		return 'src/custom-libraries/zip-code-data.json';
-					// 	},
-					// },
-					zipCodeData: {
+
+					geoLocationsData: {
 						type: Object,
 						notify: true,
-						//observer: '_zipCodeDataChanged', // For declarative binding only
+						//observer: '_geoCodeDataChanged', // For declarative binding only
 					},
-					zipCode: {
+
+          geoListCountry: {
+            type: Array,
+            notify: true,
+            computed: '_computeGeoListCountry(geoLocationsData)'
+          },
+
+					geoListRegion: {
+            type: Array,
+            notify: true,
+            computed: '_computeGeoListRegion(geoLocationsData, geoCountry)'
+          },
+
+					// geoListRegion: {
+          //   type: Array,
+          //   notify: true,
+          //   computed: '_computeGeoListRegion(geoListCountry, geoCountry)'
+          // },
+
+					geoListLocation: {
+            type: Array,
+            notify: true,
+            computed: '_computeGeoListLocation(geoLocationsData, geoCountry, geoRegion)'
+          },
+
+					geoCountry: { // 'United regions'
 						type: String,
 						notify: true,
-						// observer: '_zipCodeChanged',
+						// observer: '_geoCodeChanged',
 						// value: () => null,
 					},
-					zipCity: {
+
+					geoRegion: { // 'California'
 						type: String,
 						notify: true,
-						computed: '_computeZipCity(zipCode, zipCodeData)',
+						// computed: '_computeGeoRegion(geoCode, geoCodeData)',
 					},
-					zipState: {
+
+					geoLocation: { // 'San Francisco'
 						type: String,
 						notify: true,
-						computed: '_computeZipState(zipCode, zipCodeData)',
+						// computed: '_computeGeoLocation(geoCode, geoCodeData)',
 					},
-					zipCounty: {
-						type: String,
-						notify: true,
-						computed: '_computeZipCounty(zipCode, zipCodeData)',
-					},
-					zipStateCounty: {
-						type: String,
-						notify: true,
-						computed: '_computeZipStateCounty(zipState, zipCounty)',
-					},
-					zipCityStateCounty: {
-						type: String,
-						notify: true,
-						computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
-					},
-					zipValid: {
+
+					geoValid: {
 						type: Boolean,
 						notify: true,
-						computed: '_computeZipValid(zipCity, zipState, zipCounty)',
+						computed: '_computeGeoValid(geoCountry, geoRegion, geoLocation)',
 					},
-					zipObject: {
+
+					geoObject: {
 						type: Object,
 						notify: true,
-						computed: '_computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty)',
+						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation)',
 					},
+
 				};
 			}
 			
@@ -239,8 +131,8 @@
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-				//this.getZipsData(); // use state element instead: <zip-code-data>
-				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
+				//this.getgeosData(); // use region element instead: <geo-code-data>
+				//this.set('geoValid', !!this._computegeoValid(this.geocountry, this.georegion, this.geolocation));
 		  }
 			
 			// connectedCallback() {
@@ -250,22 +142,22 @@
 		  // }
 			
 			// _init(s) {
-			// 	//const z = this.zipCode;
+			// 	//const z = this.geoCode;
 			// 	//console.log('s\n', s);
-			// 	const city = this._computeZipCity(s);
-			// 	//console.log('city\n', city);
-			// 	const state = this._computeZipState(s);
-			// 	//console.log('state\n', state);
-			// 	const county = this._computeZipCounty(s);
-			// 	//console.log('county\n', county);
-			// 	this.set('zipCity', city);
-			// 	this.set('zipState', state);
-			// 	this.set('zipCounty', county);
+			// 	const country = this._computegeocountry(s);
+			// 	//console.log('country\n', country);
+			// 	const region = this._computegeoregion(s);
+			// 	//console.log('region\n', region);
+			// 	const location = this._computegeolocation(s);
+			// 	//console.log('location\n', location);
+			// 	this.set('geocountry', country);
+			// 	this.set('georegion', region);
+			// 	this.set('geolocation', location);
 			// }
 			
-			// getZipsData() { // use state element instead: <zip-code-data>
-			// 	const path = this.zipCodeDataAjaxPath;
-			// 	// const path = 'src/custom-libraries/zip-code-data.json';
+			// getgeosData() { // use region element instead: <geo-code-data>
+			// 	const path = this.geoCodeDataAjaxPath;
+			// 	// const path = 'src/custom-libraries/geo-code-data.json';
 			// 	// http://stackoverflow.com/a/42763681/1640892
 			// 	// https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
 			// 	const ajax = document.createElement('iron-ajax');
@@ -280,123 +172,93 @@
 			// 		//console.log('ajax', e);
 			// 		//console.log('ajax', ajax.lastResponse);
 			// 		//return ajax.lastResponse; // does not work
-			// 		_this.zipCodeData = ajax.lastResponse;
+			// 		_this.geoCodeData = ajax.lastResponse;
 			// 	});
 			// 	ajax.generateRequest();
 			// }
-			
-			latlon2distance(lat1, lon1, lat2, lon2) {
-        Number.prototype.toRadians = function() {
-          return this * Math.PI / 180; // http://stackoverflow.com/a/5260472/1640892
-        }
-        // // Source: http://www.movable-type.co.uk/scripts/latlong.html
-        
-        // Distance
-        // 	This uses the 'haversine' formula to calculate the great-circle distance between two points – that is, the shortest distance over the earth's surface – giving an 'as-the-crow-flies' distance between the points (ignoring any hills they fly over, of course!).
-        
-        // Haversine
-        // 	formula:	a = sin(deltaPhi/2)^2 + cos(phi1) * cos(phi2) * sin(deltaLambda/2)^2
-        // 	c = 2 * atan2( sqrt(a), sqrt(1−a) )
-        // 	d = R * c
-        // 	where	phi is latitude, lambda is longitude, R is earth’s radius (mean radius = 6,371km);
-        // 	note that angles need to be in radians to pass to trig functions!
-        
-        // JavaScript:	
-        const R = 6.371e6; // metres
-        const phi1 = lat1.toRadians();
-        const phi2 = lat2.toRadians();
-        //const deltaPhi = (lat2-lat1).toRadians();
-        const deltaPhi = phi2-phi1;
-        const deltaLambda = (lon2-lon1).toRadians();
-        
-        const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
-        				Math.cos(phi1) * Math.cos(phi2) *
-        				Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        
-        const d = R * c;
-        return d; // distance in meters
-			}
 
-			// _zipCodeChanged(s) {
-			//   //const zipCode = this.zipCode;
-			//   //const zipCity = this.zipCity;
-			//   const zipState = this.zipState;
-			//   //console.log('zip-code\n', s);
-			//   //console.log('zip-code-this\n', zipCode);
-			//   //console.log('city\n', zipCity);
-			//   //console.log('state\n', zipState);
-			//   if(!zipState) {
+			// _geoCodeChanged(s) {
+			//   //const geoCode = this.geoCode;
+			//   //const geocountry = this.geocountry;
+			//   const georegion = this.georegion;
+			//   //console.log('geo-code\n', s);
+			//   //console.log('geo-code-this\n', geoCode);
+			//   //console.log('country\n', geocountry);
+			//   //console.log('region\n', georegion);
+			//   if(!georegion) {
 			//     //console.log('initializing...', s);
 			//   	 this._init(s);
 			//   }
 			// }
+
+      _computeGeoListCountry(geoLocationsData) {
+				//console.log('geo-locations-data', geoLocationsData);
+        const ready1 = geoLocationsData;
+        // const ready2 = geoCountry && geoLocationsData.geoCountry;
+        // const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+
+        const ready = ready1;// && ready2 && ready3;
+        if(!ready) return;
+
+        const out = Object.keys(geoLocationsData);
+				return out;
+			}
 			
-			_computeZipCity(zip, zips) {
-				//console.log('zip', zip);
-				//console.log('zips', zips);
-				let out = null;
-				//const zips = this.zipCodeData;
-				if(zips && zips[zip] && zips[zip].city) {
-					out = zips[zip].city;
-				}
-				//console.log('out', out);
+			_computeGeoListRegion(geoLocationsData, geoCountry) {
+				//console.log('geo-locations-data', geoLocationsData);
+				//console.log('geo-country', geoCountry);
+        const ready1 = geoLocationsData;
+        const ready2 = geoCountry && geoLocationsData.geoCountry;
+        // const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+
+        const ready = ready1 && ready2;// && ready3;
+        if(!ready) return;
+
+        const out = Object.keys(geoLocationsData.geoCountry);
+				return out;
+			}
+			
+			_computeGeoListLocation(geoLocationsData, geoCountry, geoRegion) {
+				//console.log('geo-locations-data', geoLocationsData);
+				//console.log('geo-country', geoCountry);
+				//console.log('geo-region', geoRegion);
+        const ready1 = geoLocationsData;
+        const ready2 = geoCountry && geoLocationsData.geoCountry;
+        const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+
+        const ready = ready1 && ready2 && ready3;
+        if(!ready) return;
+
+        const out = geoLocationsData.geoCountry.geoRegion;
 				return out;
 			}
 
-			_computeZipState(zip, zips) {
-				//console.log('zip', zip);
-				//console.log('zips', zips);
-				let out = null;
-				//const zips = this.zipCodeData;
-				if(zips && zips[zip] && zips[zip].state) {
-					out = zips[zip].state;
-				}
-				//console.log('out', out);
-				return out;
+			_computeGeoCountryRegionLocation(country, region, location) {
+        // const ready = (country && region && location);
+				// if(!ready) return;
+        country = country ? country : null;
+        region = region ? region : null;
+        location = location ? location : null;
+				return [ country , region, location, ].join(' > ');
 			}
 
-			_computeZipCounty(zip, zips) {
-				//console.log('zip', zip);
-				//console.log('zips', zips);
-				let out = null;
-				//const zips = this.zipCodeData;
-				if(zips && zips[zip] && zips[zip].county) {
-					out = zips[zip].county;
-				}
-				//console.log('out', out);
-				return out;
-			}
-
-			_computeZipStateCounty(state, county) {
-        const ready = (state && county);
-				if(!ready) return;
-        return [ county , 'County,' , state ].join(' ');
-			}
-
-			_computeZipCityStateCounty(city, state, county) {
-        const ready = (city && state && county);
-				if(!ready) return;
-				return [ city , ', ' , state, ' (', county, ' County)' ].join('');
-			}
-
-			_computeZipValid(city, state, county) {
-				//console.log('computeZipValid', city, state, county);
-				const b1 = !!city && city.length;
-				const b2 = !!state && state.length;
-				const b3 = !!county && county.length;
+			_computeGeoValid(country, region, location) {
+				//console.log('compute-geo-valid', country, region, location);
+				const b1 = !!country && country.length;
+				const b2 = !!region && region.length;
+				const b3 = !!location && location.length;
         const out = !!(b1 && b2 && b3);
         return out;
 			}
 			
-			// _zipCodeDataChanged(o) {
-			// 	//console.log('zipCodeData', o);
+			// _geoCodeDataChanged(o) {
+			// 	//console.log('geoCodeData', o);
     	// }
 			
       // _show() {
-			// 	console.log('zipValid\n', this.zipValid);
-			// 	console.log('zip\n', this.zip);
-			// 	console.log('zipCodeData\n', this.zipCodeData);
+			// 	console.log('geoValid\n', this.geoValid);
+			// 	console.log('geo\n', this.geo);
+			// 	console.log('geoCodeData\n', this.geoCodeData);
 			// }
 
 			_dispatchEvent(name, detail) {
@@ -411,25 +273,23 @@
         this.dispatchEvent(d);
 			}
 
-      _computeZipObject(zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
-        const ready1 = zipValid;
+      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation) {
+        const ready1 = geoValid;
         if (!ready1) return;
 
-        const ready2 = (zipValid && zipCode && zipCity && zipState && zipCounty && zipStateCounty && zipCityStateCounty);
+        const ready2 = (geoValid && geoCountry && geoRegion && geoLocation && geoCountryRegionLocation);
         if (!ready2) return;
 
         const out = {
-          zipValid: zipValid,
-          zipCode: zipCode,
-          zipCity: zipCity,
-          zipState: zipState,
-          zipCounty: zipCounty,
-          zipStateCounty: zipStateCounty,
-          zipCityStateCounty: zipCityStateCounty,        
+          geoValid: geoValid,
+          geoCountry: geoCountry,
+          geoRegion: geoRegion,
+          geoLocation: geoLocation,
+          geoCountryRegionLocation: geoCountryRegionLocation,        
         }
         
-        // console.log('zip-object\n', out);
-        this._dispatchEvent('zip-valid', out);
+        // console.log('geo-object\n', out);
+        this._dispatchEvent('geo-valid', out);
         return out;
       }
 			

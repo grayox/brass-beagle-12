@@ -40,7 +40,7 @@
         "req-info",
         "subhead-filters",
         "lead-type",
-        "geo-select",
+        "geo-location",
         "counties-list",
         "subhead-location",
         "zip",
@@ -121,13 +121,13 @@
       "value": "Select",
       "detail": [ "counties-by-zip" ]
     },
-    "geo-select": {
+    "geo-location": {
       "type": "output",
       "icon": "track-changes",
       "label": "Your location",
       "setting": true,
       "value": "Select",
-      "detail": [ "subhead-geo-select", "input-geo-select" ]
+      "detail": [ "subhead-geo-select", "geo-select" ]
     },
     "subhead-location": {
       "type": "subheader",
