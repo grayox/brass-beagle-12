@@ -2,7 +2,7 @@
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
 <!-- state -->
-<link rel="import" href="state-zip-code-data.html">
+<link rel="import" href="zip-code-data.html">
 
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
@@ -45,7 +45,7 @@
 			/**/
 		</style>
 		
-		<state-zip-code-data zip-code-data="{{zipCodeData}}"></state-zip-code-data>
+		<zip-code-data zip-code-data="{{zipCodeData}}"></zip-code-data>
 		
     <paper-icon-item xclass="editable" xhidden$="[[!zipState]]">
       <!--- ->
@@ -285,7 +285,7 @@
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-				//this.getZipsData(); // use state element instead: <state-zip-code-data>
+				//this.getZipsData(); // use state element instead: <zip-code-data>
 				//this.set('zipValid', !!this._computeZipValid(this.zipCity, this.zipState, this.zipCounty));
 		  }
 			
@@ -314,7 +314,7 @@
 			/**/
 			
 			/** /
-			getZipsData() { // use state element instead: <state-zip-code-data>
+			getZipsData() { // use state element instead: <zip-code-data>
 				const path = this.zipCodeDataAjaxPath;
 				// const path = 'src/custom-libraries/zip-code-data.json';
 				// http://stackoverflow.com/a/42763681/1640892

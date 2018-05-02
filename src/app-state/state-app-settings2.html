@@ -13,18 +13,19 @@
 <link rel="import" href="/src/app-state/state-app-views.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-user-local.html">
-<link rel="import" href="/src/custom-elements/counties-by-zip/state-counties-by-state.html">
+<link rel="import" href="/src/custom-elements/counties-by-zip/counties-by-state.html">
 
 <dom-module id="state-app-settings">
   <template>
 		<style></style>
 		<app-localstorage-document xlog xsession-only key="app-settings" data="{{appSettings}}"></app-localstorage-document>
 
-	  <!-- state - ->
+    <counties-by-state counties-by-state="{{countiesByState}}"></counties-by-state>
+    
+    <!-- state - ->
     <state-media media-type="{{mediaType}}"></state-media>
     <!---->
     <state-app-views app-views="{{appViews}}"></state-app-views>
-    <state-counties-by-state counties-by-state="{{countiesByState}}"></state-counties-by-state>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
     <!--- ->
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>

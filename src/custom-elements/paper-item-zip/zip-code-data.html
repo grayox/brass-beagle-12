@@ -7,7 +7,7 @@
 <!---->
 <!---->
 
-<dom-module id="state-zip-code-data">
+<dom-module id="zip-code-data">
   <template>
 		<style></style>
 		<app-localstorage-document xlog xsession-only key="zip-code-data" data="{{zipCodeData}}"></app-localstorage-document>
@@ -25,8 +25,8 @@
   </template>
 
   <script>
-    class StateZipCodeData extends Polymer.Element {
-      static get is() { return 'state-zip-code-data'; }
+    class ZipCodeData extends Polymer.Element {
+      static get is() { return 'zip-code-data'; }
 
       static get properties() { return {
 				zipCodeData: {
@@ -83,6 +83,6 @@
 
     }
 
-    window.customElements.define(StateZipCodeData.is, StateZipCodeData);
+    window.customElements.define(ZipCodeData.is, ZipCodeData);
   </script>
 </dom-module>

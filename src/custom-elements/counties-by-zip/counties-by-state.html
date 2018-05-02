@@ -7,33 +7,48 @@
 <!---->
 <!---->
 
-<dom-module id="state-geolocations">
+<dom-module id="counties-by-state">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="geolocations-data" data="{{geolocationsData}}"></app-localstorage-document>
+		<app-localstorage-document xlog xsession-only key="counties-by-state" data="{{countiesByState}}"></app-localstorage-document>
 		
 		<iron-ajax id="ajax"
 							 auto
-							 url="/src/custom-elements/geo-select/geolocations-backpage.json"
+							 url="/src/custom-elements/counties-by-zip/counties-by-state.json"
 							 handle-as="json"
 							 xon-response="_handleAjaxResponse"
 							 xdebounce-duration="300"
-							 last-response="{{geolocationsData}}"
+							 last-response="{{countiesByState}}"
 							 >
 		</iron-ajax>
 		
   </template>
 
   <script>
-    class StateGeolocations extends Polymer.Element {
-      static get is() { return 'state-geolocations'; }
+    class CountiesByState extends Polymer.Element {
+      static get is() { return 'counties-by-state'; }
 
       static get properties() { return {
-				geolocationsData: {
+
+				countiesByState: {
 					type: Object,
 					notify: true,
-					observer: '_dataChanged',
+					//observer: '_countiesByStateChanged',
 				},
+
+				state: {
+					type: String,
+					notify: true,
+					//observer: '_dataChanged',
+				},
+
+				counties: {
+					type: Array,
+					notify: true,
+					//observer: '_dataChanged',
+          computed: '_computeCounties(state, countiesByState)',
+				},
+
 			}}
 			
 			constructor() {
@@ -45,16 +60,23 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
 
-      _dataChanged(newData, oldData) {
-        // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
-        // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
-        const reset = (!newData && oldData);
-        if(reset) {
-          // console.log('newData\n', newData);
-          // console.log('oldData\n', oldData);
-          this.set('geolocationsData', oldData);
-        }
+      _computeCounties(state, countiesByState) {
+        const ready = (state && countiesByState);
+        if(!ready) return;
+
+        const out = countiesByState[state];
+        return out;
       }
+
+      // _dataChanged(newData, oldData) {
+      //   // upon initialization, prevent <app-localstorage-document> from wiping out previously fetched data
+      //   // previous fix was to use one-way databinding [[]] on data element in <app-localstorage-document>
+      //   if(!newData && oldData) {
+      //     // console.log('newData\n', newData);
+      //     // console.log('oldData\n', oldData);
+      //     this.set('countiesByState', oldData);
+      //   }
+      // }
 			
       // _appDataChanged(data) {
 			// 	console.log('data', data);
@@ -80,9 +102,9 @@
 			// 	//console.log('d\n', d);
 			// 	this.dispatchEvent(d);				
 			// }
+		
+	  }
 
-    }
-
-    window.customElements.define(StateGeolocations.is, StateGeolocations);
+    window.customElements.define(CountiesByState.is, CountiesByState);
   </script>
 </dom-module>
