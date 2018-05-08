@@ -127,7 +127,8 @@
       "label": "Your location",
       "setting": true,
       "value": "Select",
-      "detail": [ "subhead-geo-select", "geo-select" ]
+      "xdetail": [ "subhead-geo-select", "geo-select" ],
+      "detail": [ "geo-select" ]
     },
     "subhead-location": {
       "type": "subheader",

@@ -192,7 +192,11 @@ Types of elements
       <!-- type: 'geo-select' -->
       <template restamp is="dom-if" if="[[_computeTypeIsGeoSelect(type)]]">
         <div hidden$="[[!_computeTypeIsGeoSelect(type)]]">
-          <geo-select></geo-select>
+          <geo-select xgeo-country="[[userLocal.geoCountry]]"
+                      xgeo-region="[[userLocal.geoRegion]]"
+                      xgeo-location="[[userLocal.geoLocation]]"
+                      >
+          </geo-select>
         </div>
       </template>
 
@@ -556,6 +560,7 @@ Types of elements
         // console.log('value', this.value);
         // console.log('key', this.key);
         // console.log('view', this.view);
+        // console.log('user-local\n', this.userLocal);
         this._open();
       }
 

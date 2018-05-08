@@ -12,6 +12,7 @@
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -21,34 +22,116 @@
 
 <link rel="import" href="/src/app-view/app-item.html">
 <link rel="import" href="/src/app-view/app-menu.html">
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
 
 <dom-module id="geo-select">
   <template>
-		<style include="paper-item-styles"></style>
+		<style include="paper-item-styles">
+      iron-collapse {
+        --iron-collapse-transition-duration: 1000ms;
+      }
+    </style>
 		
 		<geolocations-data geolocations-data="{{geoLocationsData}}"></geolocations-data>
 
-    <app-item xhidden$="[[!georegion]]"
+    <paper-item>
+      <paper-item-body two-line>
+        <div>Your location</div>
+        <div secondary>[[geoCountryRegionLocation]]</div>
+      </paper-item-body>
+    </paper-item>
+    
+    <!--- ->
+    <div role="listbox">
+      <paper-item>
+        <paper-item-body two-line>
+          <div>Profile Photo</div>
+          <div secondary>Change your Google+ profile photo</div>
+        </paper-item-body>
+      </paper-item>
+      <paper-icon-item>
+        <iron-icon icon="communication:phone" slot="item-icon">
+        </iron-icon>
+        <paper-item-body two-line>
+          <div>(650) 555-1234</div>
+          <div secondary>Mobile</div>
+        </paper-item-body>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar blue" slot="item-icon"></div>
+        <paper-item-body two-line>
+          <div>Alphonso Engelking</div>
+          <div secondary>Change photo</div>
+        </paper-item-body>
+      </paper-icon-item>
+    </div>
+    <!--- ->
+
+    <!--- ->
+    <app-item xhidden$="[[!geoRegion]]"
               type="output"
-              icon="vaadin:flag"
-              label="Geo location"
-              xdata="[[georegion]]"
+              xicon="vaadin:flag"
+              xlabel="Geo location"
+              xlabel="[[geoCountryRegionLocation]]"
+              data="[[geoCountryRegionLocation]]"
               >
     </app-item>
+    <!---->
+
+    <iron-collapse id="location">
+      <div> 
+        <app-menu xmulti
+                  key="geo-select-location"
+                  xkey="region-counties-by-geo"
+                  xkey="[[key]]"
+                  xsubheader="[[regionName]]"
+                  subheader="Location"
+                  xitems="[[menuItems]]"
+                  xitems="[[items]]"
+                  items="[[geoLocationItems]]"
+                  selected="{{geoLocation}}"
+                  xselected="{{selectedMenuItem}}"
+                  xselected-items="{{selectedItems}}"
+                  xselected-label="{{selectedMenuItemLabel}}"
+                  >
+        </app-menu>
+      </div>
+    </iron-collapse>
+
+    <iron-collapse id="region">
+      <div>    
+        <app-menu xmulti
+                  key="geo-select-region"
+                  xkey="region-counties-by-geo"
+                  xkey="[[key]]"
+                  xsubheader="[[regionName]]"
+                  subheader="State / region"
+                  xitems="[[menuItems]]"
+                  xitems="[[items]]"
+                  items="[[geoRegionItems]]"
+                  selected="{{geoRegion}}"
+                  xselected="{{selectedMenuItem}}"
+                  xselected-items="{{selectedItems}}"
+                  xselected-label="{{selectedMenuItemLabel}}"
+                  >
+        </app-menu>
+      </div>
+    </iron-collapse>
+
     <app-menu xmulti
-              key="geo-select"
               xkey="region-counties-by-geo"
               xkey="[[key]]"
               xsubheader="[[regionName]]"
-              subheader="Select your country"
+              subheader="Country"
               xitems="[[menuItems]]"
               xitems="[[items]]"
-              items="[[geoListCountry]]"
+              items="[[geoCountryItems]]"
+              selected="{{geoCountry}}"
               xselected="{{selectedMenuItem}}"
-              selected-items="{{selectedItems}}"
-              selected-label="{{selectedMenuItemLabel}}"
+              xselected-items="{{selectedItems}}"
+              xselected-label="{{selectedMenuItemLabel}}"
               >
-    </app-menu>
+    </app-menu>        
 
   </template>
 
@@ -66,47 +149,55 @@
 						//observer: '_geoCodeDataChanged', // For declarative binding only
 					},
 
-          geoListCountry: {
+          geoCountryItems: {
             type: Array,
             notify: true,
-            computed: '_computeGeoListCountry(geoLocationsData)'
+            computed: '_computeGeoCountryItems(geoLocationsData)',
           },
 
-					geoListRegion: {
+					geoRegionItems: {
             type: Array,
             notify: true,
-            computed: '_computeGeoListRegion(geoLocationsData, geoCountry)'
+            computed: '_computeGeoRegionItems(geoLocationsData, geoCountry)',
           },
 
-					// geoListRegion: {
+					// geoRegionItems: {
           //   type: Array,
           //   notify: true,
-          //   computed: '_computeGeoListRegion(geoListCountry, geoCountry)'
+          //   computed: '_computeGeoRegionItems(geoCountryItems, geoCountry)',
           // },
 
-					geoListLocation: {
+					geoLocationItems: {
             type: Array,
             notify: true,
-            computed: '_computeGeoListLocation(geoLocationsData, geoCountry, geoRegion)'
+            computed: '_computeGeoLocationItems(geoLocationsData, geoCountry, geoRegion)',
           },
 
-					geoCountry: { // 'United regions'
+					geoCountry: { // 'United States'
 						type: String,
 						notify: true,
 						// observer: '_geoCodeChanged',
-						// value: () => null,
+            // value: () => 'United States',
 					},
 
 					geoRegion: { // 'California'
 						type: String,
 						notify: true,
 						// computed: '_computeGeoRegion(geoCode, geoCodeData)',
+            // value: () => 'California',
 					},
 
 					geoLocation: { // 'San Francisco'
 						type: String,
 						notify: true,
 						// computed: '_computeGeoLocation(geoCode, geoCodeData)',
+            // value: () => 'San Francisco',
+					},
+
+					geoCountryRegionLocation: {
+						type: String,
+						notify: true,
+						computed: '_computeGeoCountryRegionLocation(geoCountry, geoRegion, geoLocation)',
 					},
 
 					geoValid: {
@@ -118,7 +209,7 @@
 					geoObject: {
 						type: Object,
 						notify: true,
-						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation)',
+						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation)',
 					},
 
 				};
@@ -191,61 +282,128 @@
 			//   }
 			// }
 
-      _computeGeoListCountry(geoLocationsData) {
+      _computeGeoCountryItems(geoLocationsData) {
 				//console.log('geo-locations-data', geoLocationsData);
+        
         const ready1 = geoLocationsData;
         // const ready2 = geoCountry && geoLocationsData.geoCountry;
-        // const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+        // const ready3 = geoRegion && geoLocationsData[geoCountry][geoRegion];
 
         const ready = ready1;// && ready2 && ready3;
         if(!ready) return;
 
-        const out = Object.keys(geoLocationsData);
+        let out = [];
+        const keys = Object.keys(geoLocationsData); // unique line
+        let i = keys.length;
+        while(i--) {
+          const label = keys[i];
+          // const name = _.kebabCase(label);
+          const name = label;
+          const key = 'geo-select-country';
+          const icon = 'add';
+          out[i] = {
+            key: key,
+            name: name,
+            icon: icon,
+            label: label,
+          };
+        }      
+        // console.log('out', out);
 				return out;
 			}
 			
-			_computeGeoListRegion(geoLocationsData, geoCountry) {
-				//console.log('geo-locations-data', geoLocationsData);
-				//console.log('geo-country', geoCountry);
+			_computeGeoRegionItems(geoLocationsData, geoCountry) {
+				// console.log('geo-locations-data\n', geoLocationsData);
+				// console.log('geo-country\n', geoCountry);
+				// console.log('geo-location-country\n', geoLocationsData[geoCountry]);
         const ready1 = geoLocationsData;
-        const ready2 = geoCountry && geoLocationsData.geoCountry;
-        // const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+        const ready2 = geoCountry && geoLocationsData[geoCountry];
+        // const ready3 = geoRegion && geoLocationsData[geoCountry][geoRegion];
 
         const ready = ready1 && ready2;// && ready3;
         if(!ready) return;
 
-        const out = Object.keys(geoLocationsData.geoCountry);
+        // cleanup
+        this.set('geoRegion', null);
+        this.set('geoLocation', null);
+
+        let out = [];
+        const keys = Object.keys(geoLocationsData[geoCountry]); // unique line
+				// console.log('keys\n', keys);
+        let i = keys.length;
+        while(i--) {
+          const label = keys[i];
+          // const name = _.kebabCase(label);
+          const name = label;
+          const key = 'geo-select-region';
+          const icon = 'add';
+          out[i] = {
+            key: key,
+            name: name,
+            icon: icon,
+            label: label,
+          };
+        }
+        // console.log('out', out);
 				return out;
 			}
 			
-			_computeGeoListLocation(geoLocationsData, geoCountry, geoRegion) {
+			_computeGeoLocationItems(geoLocationsData, geoCountry, geoRegion) {
 				//console.log('geo-locations-data', geoLocationsData);
 				//console.log('geo-country', geoCountry);
 				//console.log('geo-region', geoRegion);
         const ready1 = geoLocationsData;
-        const ready2 = geoCountry && geoLocationsData.geoCountry;
-        const ready3 = geoRegion && geoLocationsData.geoCountry.geoRegion;
+        const ready2 = geoCountry && geoLocationsData[geoCountry];
+        const ready3 = geoRegion && geoLocationsData[geoCountry][geoRegion];
 
         const ready = ready1 && ready2 && ready3;
         if(!ready) return;
 
-        const out = geoLocationsData.geoCountry.geoRegion;
+        // cleanup
+        // this.set('geoRegion', null);
+        this.set('geoLocation', null);
+
+        let out = [];
+        const keys = geoLocationsData[geoCountry][geoRegion]; // unique line
+        let i = keys.length;
+        while(i--) {
+          const label = keys[i];
+          // const name = _.kebabCase(label);
+          const name = label;
+          const key = 'geo-select-location';
+          const icon = 'add';
+          out[i] = {
+            key: key,
+            name: name,
+            icon: icon,
+            label: label,
+          };
+        }
+        // console.log('out', out);
 				return out;
 			}
 
 			_computeGeoCountryRegionLocation(country, region, location) {
         // const ready = (country && region && location);
 				// if(!ready) return;
-        country = country ? country : null;
-        region = region ? region : null;
-        location = location ? location : null;
-				return [ country , region, location, ].join(' > ');
+
+        let a = [];
+        if(country) a.push(country);
+        if(region) a.push(region);
+        if(location) a.push(location);
+        // country = country ? country : null;
+        // region = region ? region : null;
+        // location = location ? location : null;
+        const out = a.join(' > ');
+        
+        // console.log('out\n', out);
+				return out;
 			}
 
 			_computeGeoValid(country, region, location) {
 				//console.log('compute-geo-valid', country, region, location);
-				const b1 = !!country && country.length;
-				const b2 = !!region && region.length;
+				const b1 = this.$.region.opened = !!country && country.length; // control region visibility based on country
+				const b2 = this.$.location.opened = !!region && region.length; // control location visibility based on region
 				const b3 = !!location && location.length;
         const out = !!(b1 && b2 && b3);
         return out;
@@ -273,7 +431,7 @@
         this.dispatchEvent(d);
 			}
 
-      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation) {
+      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation) {
         const ready1 = geoValid;
         if (!ready1) return;
 
@@ -289,7 +447,7 @@
         }
         
         // console.log('geo-object\n', out);
-        this._dispatchEvent('geo-valid', out);
+        // this._dispatchEvent('geo-valid', out);
         return out;
       }
 			

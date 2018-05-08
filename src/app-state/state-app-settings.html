@@ -69,15 +69,15 @@
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
 		  }
 
-      static get observers() {
-        return [
-          // '_updateDatabase(userRemote, appData, appSettings)',
-          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
-          // '_userSettingsStoredChanged(userSettingsStored.*)',
-          // '_computeAppSettings(appViews, userLocal.*)',
-          '_userLocalChanged(userLocal.*)',
-        ]
-      }
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     // '_userSettingsStoredChanged(userSettingsStored.*)',
+      //     // '_computeAppSettings(appViews, userLocal.*)',
+      //     '_userLocalChanged(userLocal.*)',
+      //   ]
+      // }
 
 			// save(data) {
 				
@@ -99,11 +99,11 @@
 			// 	methods.method(detail);
 			// }
 			
-      _userLocalChanged(newData, oldData) {
-        // console.log('user-local-old', oldData);
-        // console.log('user-local-new', newData);
-        console.log('user-local-new', newData.value);
-      }
+      // _userLocalChanged(newData, oldData) {
+      //   // console.log('user-local-old', oldData);
+      //   // console.log('user-local-new', newData);
+      //   console.log('user-local-new', newData.value);
+      // }
 
       handleUserLocalChanged(newValue) {
         // console.log('user-settings-changed', newValue);
