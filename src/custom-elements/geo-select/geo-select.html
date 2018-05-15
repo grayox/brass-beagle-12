@@ -37,7 +37,11 @@
     <paper-item>
       <paper-item-body two-line>
         <div>Your location</div>
+        <!---->
         <div secondary>[[geoCountryRegionLocation]]</div>
+        <!--- ->
+        <div secondary>[[geoLocationRegionCountry]]</div>
+        <!---->
       </paper-item-body>
     </paper-item>
     
@@ -200,6 +204,12 @@
 						computed: '_computeGeoCountryRegionLocation(geoCountry, geoRegion, geoLocation)',
 					},
 
+					geoLocationRegionCountry: {
+						type: String,
+						notify: true,
+						computed: '_computeGeoLocationRegionCountry(geoCountry, geoRegion, geoLocation)',
+					},
+
 					geoValid: {
 						type: Boolean,
 						notify: true,
@@ -209,7 +219,7 @@
 					geoObject: {
 						type: Object,
 						notify: true,
-						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation)',
+						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry)',
 					},
 
 				};
@@ -400,6 +410,21 @@
 				return out;
 			}
 
+			_computeGeoLocationRegionCountry(country, region, location) {
+        // const ready = (country && region && location);
+				// if(!ready) return;
+
+        let a = [];
+        if(country) a.unshift(country);
+        if(region) a.unshift(region);
+        if(location) a.unshift(location);
+
+        const out = a.join(', ');
+        
+        // console.log('out\n', out);
+				return out;
+			}
+
 			_computeGeoValid(country, region, location) {
 				//console.log('compute-geo-valid', country, region, location);
 				const b1 = this.$.region.opened = !!country && country.length; // control region visibility based on country
@@ -431,11 +456,11 @@
         this.dispatchEvent(d);
 			}
 
-      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation) {
+      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry) {
         const ready1 = geoValid;
         if (!ready1) return;
 
-        const ready2 = (geoValid && geoCountry && geoRegion && geoLocation && geoCountryRegionLocation);
+        const ready2 = (geoValid && geoCountry && geoRegion && geoLocation && geoCountryRegionLocation && geoLocationRegionCountry);
         if (!ready2) return;
 
         const out = {
@@ -444,6 +469,7 @@
           geoRegion: geoRegion,
           geoLocation: geoLocation,
           geoCountryRegionLocation: geoCountryRegionLocation,        
+          geoLocationRegionCountry: geoLocationRegionCountry,        
         }
         
         // console.log('geo-object\n', out);

@@ -127,6 +127,7 @@
       "label": "Your location",
       "setting": true,
       "value": "Select",
+      "dataString" : "Biloxi",
       "xdetail": [ "subhead-geo-select", "geo-select" ],
       "detail": [ "geo-select" ]
     },
