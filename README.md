@@ -54,6 +54,11 @@ bower install
 
 ## Version History
 
+### v10
+1. Began solidity smart contracts -- /src/smart-contracts/x.sol
+2. Pausing attempt to programmatically populate views and pages from views.json file
+3. TODO: Manually write page views
+
 ### v09
 1. Implemented standardized <app-view> element to complement standard <app-item>.
 2. Made all views consistently styled.
