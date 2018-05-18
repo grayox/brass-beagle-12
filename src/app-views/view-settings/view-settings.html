@@ -33,8 +33,8 @@
 		<state-media media-type="{{mediaType}}"></state-media>
 
 		<div class="wrapper split">
-      <view-settings-list></view-settings-list>
-      <view-settings-detail></view-settings-detail>
+      <view-settings-list selected="{{selected}}"></view-settings-list>
+      <view-settings-detail selected="[[selected]]"></view-settings-detail>
     </div>
 		
   </template>
@@ -55,6 +55,11 @@
 					type: Boolean,
 					notify: true,
 					computed: '_computeSplit(mediaType)',
+				},
+
+				selected: {
+					type: String,
+					notify: true,
 				},
 				
 				// settings: {

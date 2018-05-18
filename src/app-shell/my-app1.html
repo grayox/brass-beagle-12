@@ -14,6 +14,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
+<link rel="import" href="/src/app-state/state-app-views.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
 
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 
@@ -37,41 +39,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<style></style>		
 		
 		<!-- state -->
-		<state-route route="{{route}}"></state-route>
-		
-		<!--- ->
-    Hello world
-		<!--- ->
-		<iron-pages selected="{{route}}">
-      <div>One</div>
-      <div>Two</div>
-      <div>Three</div>
-    </iron-pages>
-		<!---->
+		<state-route route="{{route}}"></state-route>		
+		<state-app-views app-views="{{appViews}}"></state-app-views>		
+		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>		
 		
 		<iron-pages selected="{{route}}" xattr-for-selected="name">
-		  <!---->
-		  <view-dashboard name="view-dashboard"></view-dashboard>
-		  <!--- ->
-			<div>Outbox</div>
-		  <!---->
-		  <view-outbox    name="view-outbox"></view-outbox>
-		  <!--- ->
-			<div>Inbox</div>
-		  <!---->
-		  <view-inbox     name="view-inbox"></view-inbox>
-			<view-archive   name="view-archive"></view-archive>
-		  <view-contacts  name="view-contacts"></view-contacts>
-			<view-settings  name="view-settings"></view-settings>
-			<!--- ->
-		  <view-account   name="view-account"></view-account>
-			<!---->
-		  
-		  <!---->
-		  <view-feedback  name="view-feedback"></view-feedback>
-		  <view-help      name="view-help"></view-help>
-		  <view-logout    name="view-logout"></view-logout>
-		  <!---->
+		  <template is="dom-repeat" items="{{appViews.views}}">
+        <app-view name="[[item.name]]"
+                  type="[[item.type]]"
+                  item-keys="[[item.items]]"
+                  >
+        </app-view>
+      </template>
     </iron-pages>
 		
 
@@ -84,13 +63,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get is() { return 'my-app'; }
 
 			static get properties() { return {
-			  /** /
-				route: {
-					type: Number,
-					notify: true,
-					//observer: '_routeChanged',
-				},
-			  /**/
+        
+        appViews: Object,
+			  
+        // route: {
+				// 	type: Number,
+				// 	notify: true,
+				// 	//observer: '_routeChanged',
+				// },
+			  
+        // items: {
+        //   type: Array,
+        //   computed: _computeItems(appViews),
+        // }
+        
       }}
 			
       constructor() {
@@ -102,13 +88,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				//console.log('Component Ready');
 			}
       
-			/**/
-			/** /
-			_routeChanged(route) {
-				console.log('route', route);
-			}
-			/**/
-			/**/
+			// _routeChanged(route) {
+			// 	console.log('route', route);
+			// }
+
+      // _computeItems(o) {
+      //   const views = o.views;
+      //   const out = views.reduce...
+      //   return out;
+      // }
 			
     }
 

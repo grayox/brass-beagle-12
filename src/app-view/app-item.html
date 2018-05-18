@@ -112,20 +112,68 @@ Types of elements
       <!-- type: 'output' -->
       <template restamp is="dom-if" if="[[_computeTypeIsOutput(type)]]">
         <div hidden$="[[!_computeTypeIsOutput(type)]]">
-          <paper-icon-item>
-            <xpaper-ripple recenters></xpaper-ripple>
-            <div class="avatar" slot="item-icon">
-              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+          <!-- one line -->
+          <div hidden$="[[twoLine]]">
+            <!-- no icon -->
+            <div hidden$="[[icon]]">
+              <paper-item>
+                <paper-ripple recenters></paper-ripple>
+                <paper-item-body xtwo-line>
+                  <div>[[label]]</div>
+                </paper-item-body>
+                <div>[[data]]</div>
+                <!--- ->
+                <div>[[dataString]][[dataNumber]]</div>
+                <!--- ->
+                <app-item-data data="[[data]]"></app-item-data>
+                <!---->
+              </paper-item>
             </div>
-            <paper-item-body xtwo-line>
-              <div>[[label]]</div>
-            </paper-item-body>
-            <!--- ->
-            <div>[[dataString]][[dataNumber]]</div>
-            <!---->
-            <app-item-data data="[[data]]"></app-item-data>
-            <!---->
-          </paper-icon-item>
+            <!-- icon -->
+            <div hidden$="[[!icon]]">
+              <paper-icon-item>
+                <paper-ripple recenters></paper-ripple>
+                <div class="avatar" slot="item-icon">
+                  <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+                </div>
+                <paper-item-body xtwo-line>
+                  <div>[[label]]</div>
+                </paper-item-body>
+                <div>[[data]]</div>
+                <!--- ->
+                <div>[[dataString]][[dataNumber]]</div>
+                <!--- ->
+                <app-item-data data="[[data]]"></app-item-data>
+                <!---->
+              </paper-icon-item>
+            </div>
+          </div>
+          <!-- two line -->
+          <div hidden$="[[!twoLine]]">
+            <!-- no icon -->
+            <div hidden$="[[icon]]">
+              <paper-item>
+                <paper-ripple recenters></paper-ripple>
+                <paper-item-body two-line>
+                  <div>[[label]]</div>
+                  <div secondary>[[data]]</div>
+                </paper-item-body>
+              </paper-item>
+            </div>
+            <!-- icon -->
+            <div hidden$="[[!icon]]">
+              <paper-icon-item>
+                <paper-ripple recenters></paper-ripple>
+                <div class="avatar" slot="item-icon">
+                  <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+                </div>
+                <paper-item-body two-line>
+                  <div>[[label]]</div>
+                  <div secondary>[[data]]</div>
+                </paper-item-body>
+              </paper-icon-item>
+            </div>
+          </div>
         </div>
       </template>
       
@@ -189,7 +237,7 @@ Types of elements
         </div>
       </template>
   
-      <!-- type: 'geo-select' -->
+      <!-- type: 'geo-select' - ->
       <template restamp is="dom-if" if="[[_computeTypeIsGeoSelect(type)]]">
         <div hidden$="[[!_computeTypeIsGeoSelect(type)]]">
           <geo-select xgeo-country="[[userLocal.geoCountry]]"
@@ -297,8 +345,7 @@ Types of elements
     class AppItem extends Polymer.Element {
       static get is() { return 'app-item'; }
 
-      /**/
-			static get properties() { return {
+      static get properties() { return {
 
         // appSettings: {
         //   type: Object,
@@ -333,11 +380,16 @@ Types of elements
           //value: () => 'vaadin:phone', //'star'
         },
 
+        twoLine: {
+          type: Boolean,
+          value: () => false,
+        },
+
 				icon: { // left edge
 					type: String,
 					notify: true,
 					//observer: '_mediaWidthChanged',
-          //value: () => 'vaadin:phone', //'star'
+          value: () => null,//'vaadin:phone', //'star'
 				},
 
 				label: { // left side
@@ -382,7 +434,7 @@ Types of elements
         // },
 
 				data: { // right side
-					type: Object,//String, // 
+					type: String, //Object, 
 					notify: true,
 					// observer: '_dataChanged',
           // value: () => 'vaadin:phone', //'star'
