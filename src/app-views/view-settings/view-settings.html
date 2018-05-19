@@ -103,7 +103,6 @@
 				super();
 			}
 
-			/**/
 			ready() {
         super.ready();
         // //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
@@ -113,17 +112,15 @@
         // //window.addEventListener( 'update-user-invite' , (e) => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
 		  }
 			
-			/** /
-			connectedCallback() {
-				super.connectedCallback();
-				window.addEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
-			}
+			// connectedCallback() {
+			// 	super.connectedCallback();
+			// 	window.addEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
+			// }
 
-			disconnectedCallback() {
-				super.disconnectedCallback();
-				window.removeEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
-			}
-			/**/
+			// disconnectedCallback() {
+			// 	super.disconnectedCallback();
+			// 	window.removeEventListener('updateuserzip', (e) => this.onUpdateUserZip(e));
+			// }
 			
 			// static get observers() {
 			// 	return [

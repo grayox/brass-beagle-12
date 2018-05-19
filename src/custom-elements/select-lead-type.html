@@ -1,0 +1,126 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!--- ->
+<link rel="import" href="/src/app-region/geo-code-data.html">
+<!---->
+
+<link rel="import" href="/src/app-view/app-item.html">
+
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/app-view/app-menu.html">
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+
+<dom-module id="select-lead-type">
+  <template>
+		<style include="paper-item-styles">
+      iron-collapse {
+        --iron-collapse-transition-duration: 1000ms;
+      }
+    </style>
+    
+    <!--- ->
+		<geolocations-data geolocations-data="{{geoLocationsData}}"></geolocations-data>
+    <!--- ->
+  
+    <!--- ->
+    <app-item type="subheader"
+              label="Lead type"
+              data="[[selected]]"
+              >
+    </app-item>
+    <!---->
+    
+    <app-menu xmulti
+              key="geo-select-location"
+              xkey="region-counties-by-geo"
+              xkey="[[key]]"
+              xsubheader="[[regionName]]"
+              xsubheader="Location"
+              subheader="Lead type"
+              xitems="[[menuItems]]"
+              items="[[items]]"
+              xitems="[[geoLocationItems]]"
+              selected="{{geoLocation}}"
+              xselected="{{selectedMenuItem}}"
+              xselected-items="{{selectedItems}}"
+              xselected-label="{{selectedMenuItemLabel}}"
+              >
+    </app-menu>       
+
+  </template>
+
+  <script>
+		class SelectLeadType extends Polymer.Element {
+      static get is() { return 'select-lead-type'; }
+
+      static get properties() {
+        
+        return {
+
+          items: {
+            type: Array,
+            // notify: true,
+            value: () =>
+              [
+                {
+                  "name": "home",
+                  "label": "Home",
+                  "icon": "home"
+                }, {
+                  "name": "mortgage",
+                  "label": "Mortgage",
+                  "icon": "account-balance"
+                }, {
+                  "name": "insurance",
+                  "label": "Insurance",
+                  "icon": "vaadin:diploma"
+                }, {
+                  "name": "financial",
+                  "label": "Financial",
+                  "icon": "assessment"
+                }
+              ]         
+          },
+
+					selected: {
+						type: String,
+						notify: true,
+					},
+
+				};
+			}
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+				//this.getgeosData(); // use region element instead: <geo-code-data>
+				//this.set('geoValid', !!this._computegeoValid(this.geocountry, this.georegion, this.geolocation));
+		  }
+			
+			// connectedCallback() {
+			// 	super.connectedCallback();
+			// 	//console.log('connected!');
+			// 	//this._init();
+		  // }
+			
+		}
+				
+    window.customElements.define(SelectLeadType.is, SelectLeadType);
+  </script>
+</dom-module>

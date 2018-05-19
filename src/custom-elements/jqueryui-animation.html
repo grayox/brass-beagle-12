@@ -1,0 +1,128 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/src/custom-libraries/jquery-ui-js.html">
+
+<!--- ->
+https://jqueryui.com/toggle/
+$ bower install jquery-ui --save
+<!---->
+
+<dom-module id="jqueryui-animation">
+  <template>
+    <!--- ->
+		<style></style>
+    <!---->
+    <div hidden id="target">
+      <slot></slot>     
+    </div>
+
+  </template>
+
+  <script>
+		class JqueryuiAnimation extends Polymer.Element {
+      static get is() { return 'jqueryui-animation'; }
+
+      static get properties() {   
+        return {
+
+          // animation: {
+					//   type: String,
+          //   notify: true,
+          //   value: () => 'toggle', // toggle show hide effect
+          // },
+          
+          // effect: {
+					//   type: String,
+          //   notify: true,
+          //   value: () => 'slide', // drop fold // blind bounce clip drop explode fade fold highlight puff pulsate scale shake size slide
+          // },
+          
+          opened: {
+					  type: Boolean,
+            notify: true,
+            value: () => false,
+            observer: '_openedChanged',
+          },
+          
+				};
+			}
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+				//this.getgeosData(); // use region element instead: <geo-code-data>
+				//this.set('geoValid', !!this._computegeoValid(this.geocountry, this.georegion, this.geolocation));
+      }
+			
+			// connectedCallback() {
+			// 	super.connectedCallback();
+			// 	//console.log('connected!');
+			// 	//this._init();
+      // }
+
+      _openedChanged(bNew, bOld) {
+        const target = this.$.target;
+        if(bNew) {
+          this.runEffect('show', 'slide', 500)
+        } else {
+          this.runEffect('hide', 'drop', 500)
+        }
+
+        target.hidden = !bNew;
+      }
+      
+      runEffect(animation, selectedEffect, duration) {
+        // https://jqueryui.com/toggle/
+        animation = animation || 'toggle';
+        selectedEffect = selectedEffect || 'slide';
+        duration = duration || 500;
+
+        const target = this.$.target;
+
+        // get effect type from
+        // var selectedEffect = $( "#effectTypes" ).val();
+   
+        // Most effect types need no options passed by default
+        let options = {};
+        // some effects have required parameters
+        if ( selectedEffect === "scale" ) {
+          options = { percent: 50 };
+        } else if ( selectedEffect === "size" ) {
+          options = { to: { width: 200, height: 60 } };
+        }
+   
+        // Run the effect
+        //$( "#effect" ).toggle( selectedEffect, options, 500 );
+        switch(animation) {
+          case 'toggle':
+            $( "#target" ).toggle( selectedEffect, options, duration );
+            // target.toggle( selectedEffect, options, duration );
+            break;
+          case 'show':
+            $( "#target" ).show( selectedEffect, options, duration );
+            // target.show( selectedEffect, options, duration );
+            break;
+          case 'hide':
+            $( "#target" ).hide( selectedEffect, options, duration );
+            //target.hide( selectedEffect, options, duration );
+            break;
+            case 'effect':
+            $( "#target" ).effect( selectedEffect, options, duration );
+            // target.effect( selectedEffect, options, duration );
+            break;
+          default:
+            //code block
+        }
+
+      }
+			
+		}
+				
+    window.customElements.define(JqueryuiAnimation.is, JqueryuiAnimation);
+  </script>
+</dom-module>

@@ -15,6 +15,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="dashboard-detail-zip.html">
 <link rel="import" href="dashboard-detail-type.html">
 
+<!-- custom elememts -->
+<link rel="import" href="/src/custom-elements/geo-select/geo-select.html">
+<link rel="import" href="/src/custom-elements/select-lead-type.html">
+<link rel="import" href="/src/custom-elements/paper-item-zip/paper-item-zip.html">
+<!--- ->
+<link rel="import" href="/src/custom-elements/counties-by-zip/counties-by-zip.html">
+<!---->
+
 <!--- ->
 Demos
 https://gridbyexample.com/patterns/header-asmany-footer/
@@ -25,18 +33,46 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
   <template>
     <style>
+
       :host {
         --line-color: #DDDDDD;
         border-left: 1px var(--line-color) solid;
       }
+
+      p:first-of-type {
+        padding-top: 3em; 
+      }
+
+      p {
+        text-align: start;
+        padding: 0.5em 2.5em;
+        opacity: var(--opacity-dim);
+      }
+
     </style>
 
     <!--- ->
 		<dashboard-detail-zip></dashboard-detail-zip>
-    <!---->
+    <!--- ->
 		<dashboard-detail-type></dashboard-detail-type>
+    <!--- ->
+    [[selected]]
     <!---->
-
+    <div hidden id="req-info">
+      <p>
+        Select your lead type and location.
+      </p>
+      <p>
+        Then you can start swapping leads!
+      </p>
+    </div>
+    <div hidden id="lead-type">
+      <select-lead-type></select-lead-type>
+    </div>
+    <div hidden id="user-location">
+      <geo-select></geo-select>
+    </div>
+    
   </template>
 
   <script>
@@ -45,16 +81,22 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-settings-detail'; }
 
-      /** /
-			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
+      static get properties() { return {
+				
+        // mediaWidth: {
+				// 	 type: Number, // 0, 1, 2, 3
+				// 	 notify: true,
+				// 	 //observer: '_mediaWidthChanged',
+				// },
+        
+        selected: {
+          type: String,
+          notify: true,
+          observer: '_selectedChanged',
+        },
+
       }}
-      /**/
-			
+      
       constructor() {
         super();
       }
@@ -63,9 +105,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
-      
-			/**/
-			/**/
+
+      _selectedChanged(sNew, sOld) {
+        // console.log('s-old', sOld);
+        // console.log('s-new', sNew);
+
+        if(sOld) this.$[sOld].hidden = true;
+        if(sNew) this.$[sNew].hidden = false;
+      }
 		
     }
 

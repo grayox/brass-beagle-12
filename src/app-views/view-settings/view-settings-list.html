@@ -15,8 +15,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-<!---->
+<!--- ->
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<!---->
+<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 
 <!---->
@@ -45,23 +47,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <style include="paper-item-styles"></style>
     
+    <!--- ->
     <div role="listbox">
+    <!---->
+    <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
       
       <!---->
-      <app-item name="subhead-status"
+      <app-item name="user-status"
                 type="subheader"
                 label="Status"
                 >
       </app-item>
       <!--- ->
-      <app-item type="output"
+      <app-item name="req-info"
+                type="output"
                 icon="vaadin:warning"
                 label="Required information"
                 data="0/2"
                 >
       </app-item>
       <!---->
-      <app-item type="output"
+      <app-item name="req-info"
+                type="output"
                 icon="vaadin:warning"
                 label="Required information"
                 data="2 required, 0 complete"
@@ -69,14 +76,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 >
       </app-item>
       <!--- ->
-      <app-item type="output"
+      <app-item name="req-info"
+                type="output"
                 xicon="vaadin:warning"
                 label="Required information"
                 data="0/2"
                 >
       </app-item>
       <!--- ->
-      <app-item type="output"
+      <app-item name="req-info"
+                type="output"
                 xicon="vaadin:warning"
                 label="Required information"
                 data="2 required, 0 complete"
@@ -84,26 +93,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 >
       </app-item>
       <!---->
-      <app-item type="subheader"
+      <app-item name="lead-filters"
+                type="subheader"
                 label="Lead filters"
                 >
       </app-item>
       <!---->
-      <app-item type="output"
+      <app-item name="lead-type"
+                type="output"
                 icon="track-changes"
                 label="Your type of services"
                 two-line
                 >
       </app-item>
-      <app-item type="output"
+      <app-item name="user-location"
+                type="output"
                 icon="track-changes"
                 label="Your location"
                 two-line
                 >
       </app-item>
       <!---->
-      
+
+    </iron-selector>
+    <!--- ->
     </div>
+    <!---->
 
   </template>
 
@@ -122,7 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				// },
 
 				selected: {
-					type: String,
+					type: String, //Number,
 					notify: true,
 				},
 
