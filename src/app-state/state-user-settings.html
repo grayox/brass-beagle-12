@@ -21,9 +21,11 @@
 <dom-module id="state-user-settings">
   <template>
     <style></style>
-    <state-app-data app-data="{{appData}}"></state-app-data>
+
+    <!-- state -->
     <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
     <!--- ->
+    <state-app-data app-data="{{appData}}"></state-app-data>
     <app-methods id="methods"></app-methods>
     <state-app-views app-views="{{appViews}}"></state-app-views>
     <state-user-local user-settings="{{userSettings}}"></state-user-local>
@@ -133,11 +135,11 @@
 				//   observer: '_userSettingsStoredChanged',
         // },
         
-				// userRemote: {
-				// 	type: Object,
-				// 	// notify: true,
-				// 	// observer: '_userRemoteChanged',
-				// },
+				userRemote: {
+					type: Object,
+					notify: true,
+					// observer: '_userRemoteChanged',
+				},
 
 				// appData: {
 				// 	type: Object,
@@ -216,14 +218,16 @@
       //     // '_updateDatabase(userRemote, appData, appSettings)',
       //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
       //     // '_userSettingsStoredChanged(userSettingsStored.*)',
+      //     '_userSettingsChanged(userSettings.*)',
       //   ]
       // }
 
       // _userSettingsChanged(dataNew, dataOld) {
       //   // console.log('uid\n', this.userRemote.uid);
       //   // console.log('userSettings\n', r);
-      //   // console.log('data-old\n', dataOld);
-      //   // console.log('data-new\n', dataNew);
+      //   console.log('data-old\n', dataOld);
+      //   console.log('data-new\n', dataNew);
+      // }
 
       //   // conditionals
       //   // dirty-check for changes to prevent redundant calls firing multiple events
@@ -417,6 +421,11 @@
       //   this._resetOldData(newData, oldData, 'appSettings');
       // }
       
+      // _userRemoteChanged(dataNew, dataOld) {
+      //   console.log('user-remote-old\n', dataOld);
+      //   console.log('user-remote-new\n', dataNew);
+      // }
+
       // _userRemoteChanged(newData, oldData) {
       //   this._resetOldData(newData, oldData, 'userRemote');
       // }
@@ -443,6 +452,11 @@
 
       // get zeroValue() {
       //   return { new: 'data', j: 5, o: 'N' };
+      // }
+
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old\n', oldData);
+      //   console.log('user-settings-new\n', newData);
       // }
 
       // _userSettingsChanged(newData, oldData) {

@@ -15,6 +15,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!--- ->
+<link rel="import" href="/src/app-state/state-user-remote.html">
+<!--- ->
+
 <!--- ->
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <!---->
@@ -47,6 +53,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <style include="paper-item-styles"></style>
     
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+
     <!--- ->
     <div role="listbox">
     <!---->
@@ -101,9 +109,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!---->
       <app-item name="lead-type"
                 type="output"
-                icon="track-changes"
+                icon="vaadin:puzzle-piece"
                 label="Your type of services"
                 two-line
+                xdata="[[leadType]]"
+                data="[[userLocal.lead-type]]"
                 >
       </app-item>
       <app-item name="user-location"
@@ -111,6 +121,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 icon="track-changes"
                 label="Your location"
                 two-line
+                data="[[userLocal.geo-select-location]], [[userLocal.geo-select-region]]"
                 >
       </app-item>
       <!---->
@@ -139,7 +150,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				selected: {
 					type: String, //Number,
 					notify: true,
-				},
+        },
+        
+        userLocal: {
+      		type: Object,
+					notify: true,
+          observer: '_userLocalChanged',
+        },
+
+        // leadType: {
+        //   type: String,
+        //   notify: true,
+        // },
 
       }}
       
@@ -150,7 +172,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			ready() {
         super.ready();
 				//console.log('Component Ready');
-			}
+      }
+
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     '_userLocalChanged(userLocal.*)',
+      //   ]
+      // }
+      
+      _userLocalChanged(dataNew, dataOld) {
+        // console.log('data-old\n', dataOld);
+        // console.log('data-new\n', dataNew);
+
+        const ready = dataNew;
+        if(!ready) return;
+
+        const userLocal = dataNew; //dataNew.value; // dataNew.base
+        this.set('userLocal', userLocal);
+        
+        // console.log('user-local\n', userLocal);
+
+        // this.set('leadType', userLocal['lead-type']);
+        // console.log('lead-type\n', this.leadType);
+        const leadType = userLocal['lead-type'];
+        console.log('lead-type\n', leadType);
+      }
 		
     }
 

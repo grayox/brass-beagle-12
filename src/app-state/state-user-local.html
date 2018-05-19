@@ -16,6 +16,7 @@
 		<style></style>
     <app-localstorage-document xlog xsession-only key="user-local" data="{{userLocal}}"></app-localstorage-document>
 		<!--- ->
+    <app-localstorage-document xlog xsession-only key="user-local" data="{{userLocal}}"></app-localstorage-document>
 		<app-localstorage-document xlog xsession-only key="user-local-extended" data="{{userLocalExtended}}"></app-localstorage-document>
     <!--- ->
     <app-localstorage-document id="storage"
@@ -25,6 +26,7 @@
                                data="{{userSettings}}"
                                >
     </app-localstorage-document>
+    <!---->
     <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
     <!---->
   </template>
@@ -53,7 +55,8 @@
 					notify: true,
 					// observer: '_userLocalChanged',
 					// computed: '_computeUserLocal(userLocalExtended)',
-					computed: '_computeUserLocal(userSettings, userLocalDefault)',
+					// computed: '_computeUserLocal(userSettings, userLocalDefault)',
+					computed: '_computeUserLocal(userSettings)',
 				},
 
 				userSettings: {
@@ -63,31 +66,31 @@
 					// observer: '_userSettingsChanged',
         },
         
-        userLocalDefault: {
-					type: Object,
-					notify: true,
-					// observer: '_userSettingsChanged', // doesn't recognize sub-property changes; listen for event: on-data-changed
-          value: () => {
-            // to user-local
-            const out = {
-              'auto-email-leads': false,
-              'auto-text-leads': false,
-              city: "Enter zip",
-              'counties-list': "Select",
-              county: "Enter zip",
-              email: "Enter",
-              'lead-type': "Select",
-              'notify-you-email': false,
-              'notify-you-text': true,
-              phone: "Add",
-              'req-info': '0/2',
-              state: 'Enter zip',
-              zip: 'Enter zip',
-            }
-            // console.log('out\n', out);
-            return out;
-          },
-        },
+        // userLocalDefault: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	// observer: '_userSettingsChanged', // doesn't recognize sub-property changes; listen for event: on-data-changed
+        //   value: () => {
+        //     // to user-local
+        //     const out = {
+        //       'auto-email-leads': false,
+        //       'auto-text-leads': false,
+        //       city: "Enter zip",
+        //       'counties-list': "Select",
+        //       county: "Enter zip",
+        //       email: "Enter",
+        //       'lead-type': "Select",
+        //       'notify-you-email': false,
+        //       'notify-you-text': true,
+        //       phone: "Add",
+        //       'req-info': '0/2',
+        //       state: 'Enter zip',
+        //       zip: 'Enter zip',
+        //     }
+        //     // console.log('out\n', out);
+        //     return out;
+        //   },
+        // },
 
 			}}
 			
@@ -102,28 +105,38 @@
         // this.$.doc.destroy();
       }
 			
-			// _userLocalChanged(userLocal) {
-			// 	console.log('user-local', userLocal);
+			// _userLocalChanged(userLocalNew, userLocalOld) {
+      // 	console.log('user-local-old\n', userLocalOld);
+			// 	console.log('user-local-new\n', userLocalNew);
 			// }
 
-      // _userSettingsChanged(newData, oldData) {
-      //   console.log('user-settings-old\n', oldData);
-      //   console.log('user-settings-new\n', newData);
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   console.log('user-settings-old\n', dataOld);
+      //   console.log('user-settings-new\n', dataNew);
       // }
 			
-			_computeUserLocal(userSettings, userLocalDefault) {
-				// console.log('computing user-local...');
-				// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
-        const ready = (userSettings && userLocalDefault);
-        if(!ready) return;
+			// _computeUserLocal(userSettings, userLocalDefault) {
+			// 	console.log('computing user-local...');
+			// 	// const out = a[0]; //https://stackoverflow.com/a/46529958/1640892
+        
+      //   const ready = (userSettings && userLocalDefault);
+      //   if(!ready) return;
 
-				// const out = userSettings;
-				const out = Object.assign(userLocalDefault, userSettings); // state: undefined or 'Enter zip'
-				// const out = Object.assign({}, userSettings); // state: CA
-				// const out = { ...userLocalDefault, ...userSettings }; // state: CA
-				// console.log('user-local', out);
-				return out;
-			}
+			// 	// const out = userSettings;
+			// 	const out = Object.assign(userLocalDefault, userSettings); // state: undefined or 'Enter zip'
+			// 	// const out = Object.assign({}, userSettings); // state: CA
+			// 	// const out = { ...userLocalDefault, ...userSettings }; // state: CA
+			// 	console.log('user-local', out);
+			// 	return out;
+      // }
+      
+      _computeUserLocal(userSettingsNew, userSettingsOld) {
+        console.log('user-settings-old', userSettingsOld);
+        console.log('user-settings-new', userSettingsNew);
+        const out = userSettingsNew;
+        console.log('user-Local', out);
+        return out;
+      }
 			
     }
 
