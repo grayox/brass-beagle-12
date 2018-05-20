@@ -121,7 +121,7 @@
     <!---->
 
     <!---->
-    <jqueryui-toggle id="region">
+    <jqueryui-animation id="region">
     <!--- ->
     <iron-collapse xhorizontal id="region">
     <!---->
@@ -145,7 +145,7 @@
     <!--- ->
     </iron-collapse>
     <!---->
-    </jqueryui-toggle>
+    </jqueryui-animation>
     <!---->
 
     <app-menu xmulti
@@ -525,7 +525,7 @@
         }
         
         // console.log('geo-object\n', out);
-        // this._dispatchEvent('geo-valid', out);
+        this._dispatchEvent('geo-select-valid', out);
         return out;
       }
 			

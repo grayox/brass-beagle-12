@@ -15,6 +15,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<link rel="import" href="/src/app-main/app-methods.html">
+
 <!-- state -->
 <link rel="import" href="/src/app-state/state-user-local.html">
 <!--- ->
@@ -51,8 +53,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
 
-    <style include="paper-item-styles"></style>
+    <style include="paper-item-styles">
+      app-item[name=lead-type] div[secondary] {
+        text-transform: initial; 
+      }
+    </style>
     
+    <app-methods id="methods" show-toast dispatch-event></app-methods>
+    <!-- state -->
     <state-user-local user-local="{{userLocal}}"></state-user-local>
 
     <!--- ->
@@ -196,8 +204,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // this.set('leadType', userLocal['lead-type']);
         // console.log('lead-type\n', this.leadType);
-        const leadType = userLocal['lead-type'];
-        console.log('lead-type\n', leadType);
+        
+        // const leadType = userLocal['lead-type'];
+        // console.log('lead-type\n', leadType);
       }
 		
     }

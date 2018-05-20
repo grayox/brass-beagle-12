@@ -70,10 +70,10 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       </p>
     </div>
     <div hidden id="lead-type">
-      <select-lead-type></select-lead-type>
+      <select-lead-type on-lead-type-selected='_handleLeadTypeSelected'></select-lead-type>
     </div>
     <div hidden id="user-location">
-      <geo-select></geo-select>
+      <geo-select on-geo-select-valid='_handleGeoSelectValid'></geo-select>
     </div>
     
   </template>
@@ -116,6 +116,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         if(sOld) this.$[sOld].hidden = true;
         if(sNew) this.$[sNew].hidden = false;
       }
+
+      _handleLeadTypeSelected(e) {console.log('lead-type-selected\n', e)}
+      _handleGeoSelectValid  (e) {console.log('geo-select-valid\n'  , e)}
 		
     }
 

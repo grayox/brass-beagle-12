@@ -52,7 +52,8 @@
               xitems="[[menuItems]]"
               items="[[items]]"
               xitems="[[geoLocationItems]]"
-              selected="{{geoLocation}}"
+              selected="{{selected}}"
+              xselected="{{geoLocation}}"
               xselected="{{selectedMenuItem}}"
               xselected-items="{{selectedItems}}"
               xselected-label="{{selectedMenuItemLabel}}"
@@ -96,7 +97,8 @@
 
 					selected: {
 						type: String,
-						notify: true,
+            notify: true,
+            observer: '_selectedChanged',
 					},
 
 				};
@@ -117,7 +119,28 @@
 			// 	super.connectedCallback();
 			// 	//console.log('connected!');
 			// 	//this._init();
-		  // }
+      // }
+      
+			_dispatchEvent(name, detail) {
+				//this.fire('name', detail);
+				// const n = 'save-app-item';
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: detail,
+				};
+				const d = new CustomEvent(name, o);
+        this.dispatchEvent(d);
+      }
+      
+      _selectedChanged(sNew, sOld) {
+        // console.log('s-old', sOld);
+        // console.log('s-new', sNew);
+
+        const name = 'lead-type-selected';
+        const detail = sNew;
+        this._dispatchEvent(name, detail)
+      }
 			
 		}
 				
