@@ -3,8 +3,8 @@
 <link rel="import" href="/src/app-main/app-methods.html">
 <!-- state -->
 <link rel="import" href="/src/app-state/state-media.html">
-<!--- ->
 <link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
 <!---->
 
 <link rel="import" href="view-settings-list.html">
@@ -26,14 +26,17 @@
 		
 		<!-- v.3 | css-grid layout, responsive, two columns -->
 
-		<!--- ->
-		<app-methods id="methods" xshow-toast xdispatch-event></app-methods>
-		<!---->
-	  <!-- state -->
+    <!--- ->
+    <app-methods id="methods" show-toast dispatch-event></app-methods>
+    <!-- state -->
 		<state-media media-type="{{mediaType}}"></state-media>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
 
 		<div class="wrapper split">
-      <view-settings-list selected="{{selected}}"></view-settings-list>
+      <view-settings-list selected="{{selected}}"
+                          user-local="[[userLocal]]"
+                          >
+      </view-settings-list>
       <view-settings-detail selected="[[selected]]"></view-settings-detail>
     </div>
 		
@@ -61,7 +64,13 @@
 					type: String,
 					notify: true,
 				},
-				
+    
+        userLocal: {
+      		type: Object,
+					notify: true,
+          observer: '_userLocalChanged',
+        },
+
 				// settings: {
 				// 	type: Object,
 				// 	notify: true,
@@ -89,13 +98,11 @@
 				// 	value: () => ({}),
 				// },
 				
-				/** /
-				settingsInvite: {
-					type: Object,
-					notify: true,
-					//computed: '_computeSplit(mediaType)',
-				},
-				/**/
+				// settingsInvite: {
+				// 	type: Object,
+				// 	notify: true,
+				// 	//computed: '_computeSplit(mediaType)',
+				// },
 				
 			}}
 			
@@ -110,6 +117,8 @@
         // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , (e) => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
+        window.addEventListener( 'lead-type-selected'  , e => this._handleLeadTypeSelected(e)  );
+        window.addEventListener( 'geo-select-valid'    , e => this._handleGeoSelectValid  (e)  );
 		  }
 			
 			// connectedCallback() {
@@ -130,7 +139,66 @@
 			
 			_computeSplit(s) {
 				return s !== 'mobile';
-			}
+      }  
+      
+      _userLocalChanged(dataNew, dataOld) {
+        // console.log('data-old\n', dataOld);
+        // console.log('data-new\n', dataNew);
+
+        const ready = dataNew;
+        if(!ready) return;
+
+        const userLocal = dataNew; //dataNew.value; // dataNew.base
+        this.set('userLocal', userLocal);
+        
+        // console.log('user-local\n', userLocal);
+
+        // this.set('leadType', userLocal['lead-type']);
+        // console.log('lead-type\n', this.leadType);
+
+        // const leadType = userLocal['lead-type'];
+        // console.log('lead-type\n', leadType);
+      }
+
+      _handleLeadTypeSelected(e) { this._updateSettings('lead-type'  , e.detail); } // first arg must match datastore key, bc typeof data === 'string'
+      _handleGeoSelectValid  (e) { this._updateSettings('geo-select' , e.detail); }
+
+      _updateSettings(s, data) {
+        // console.log(s, '\n', s);
+        // console.log(data, '\n', data);
+
+        let o = {};
+        const dataType = typeof data;
+
+        switch(dataType) {
+          case 'string':
+            o[s] = data;
+            break;
+          case 'object':
+            o = data;
+            break;
+          default:
+            console.error('Data provided does not match available types.');
+            return;
+        }
+
+        const updatedData = Object.assign( this.userLocal, o );
+        console.log('updated-data\n', updatedData);
+        this._dispatchEvent('app-settings-changed', updatedData);
+      }
+
+		  _dispatchEvent(name, data) {
+				const n = name;
+				const o = {
+				  bubbles: true,
+					composed: true,
+					detail: data,
+				};
+				//console.log('o\n', o);
+				const d = new CustomEvent(n, o);
+				//console.log('d\n', d);
+				this.dispatchEvent(d);				
+      }
 
 			// save(data) {
 				
@@ -206,15 +274,13 @@
 			// 	this.save(settings);
 			// }
 			
-			/** /
-			_onUpdateUserInvite(e) { // no need to save prior invitations to settings
-				//console.log('on-update-user-invite\n', e); // {detail: {data: 'somestring', label: 'contact'}}
-				const data = e.detail;
-				this.set('settingsInvite', {});
-				this.set('settingsInvite[label]', data);
-				console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
-			}
-			/**/
+			// _onUpdateUserInvite(e) { // no need to save prior invitations to settings
+			// 	//console.log('on-update-user-invite\n', e); // {detail: {data: 'somestring', label: 'contact'}}
+			// 	const data = e.detail;
+			// 	this.set('settingsInvite', {});
+			// 	this.set('settingsInvite[label]', data);
+			// 	console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
+			// }
 			
     }
 

@@ -15,11 +15,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<!--- ->
 <link rel="import" href="/src/app-main/app-methods.html">
 
 <!-- state -->
-<link rel="import" href="/src/app-state/state-user-local.html">
 <!--- ->
+<link rel="import" href="/src/app-state/state-user-local.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <!--- ->
 
@@ -59,83 +60,84 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     
+    <!--- ->
     <app-methods id="methods" show-toast dispatch-event></app-methods>
-    <!-- state -->
+    <!-- state - ->
     <state-user-local user-local="{{userLocal}}"></state-user-local>
 
-    <!--- ->
-    <div role="listbox">
     <!---->
-    <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
-      
+    <div role="listbox">
       <!---->
-      <app-item name="user-status"
-                type="subheader"
-                label="Status"
-                >
-      </app-item>
-      <!--- ->
-      <app-item name="req-info"
-                type="output"
-                icon="vaadin:warning"
-                label="Required information"
-                data="0/2"
-                >
-      </app-item>
+      <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
+        
+        <!---->
+        <app-item name="user-status"
+                  type="subheader"
+                  label="Status"
+                  >
+        </app-item>
+        <!--- ->
+        <app-item name="req-info"
+                  type="output"
+                  icon="vaadin:warning"
+                  label="Required information"
+                  data="0/2"
+                  >
+        </app-item>
+        <!---->
+        <app-item name="req-info"
+                  type="output"
+                  icon="vaadin:warning"
+                  label="Required information"
+                  data="2 required, 0 complete"
+                  two-line
+                  >
+        </app-item>
+        <!--- ->
+        <app-item name="req-info"
+                  type="output"
+                  xicon="vaadin:warning"
+                  label="Required information"
+                  data="0/2"
+                  >
+        </app-item>
+        <!--- ->
+        <app-item name="req-info"
+                  type="output"
+                  xicon="vaadin:warning"
+                  label="Required information"
+                  data="2 required, 0 complete"
+                  two-line
+                  >
+        </app-item>
+        <!---->
+        <app-item name="lead-filters"
+                  type="subheader"
+                  label="Lead filters"
+                  >
+        </app-item>
+        <!---->
+        <app-item name="lead-type"
+                  type="output"
+                  icon="vaadin:puzzle-piece"
+                  label="Your type of services"
+                  two-line
+                  xdata="[[leadType]]"
+                  data="[[userLocal.lead-type]]"
+                  >
+        </app-item>
+        <app-item name="user-location"
+                  type="output"
+                  icon="track-changes"
+                  label="Your location"
+                  two-line
+                  data="[[userLocal.geo-select-location]], [[userLocal.geo-select-region]]"
+                  >
+        </app-item>
+        <!---->
+  
+      </iron-selector>
       <!---->
-      <app-item name="req-info"
-                type="output"
-                icon="vaadin:warning"
-                label="Required information"
-                data="2 required, 0 complete"
-                two-line
-                >
-      </app-item>
-      <!--- ->
-      <app-item name="req-info"
-                type="output"
-                xicon="vaadin:warning"
-                label="Required information"
-                data="0/2"
-                >
-      </app-item>
-      <!--- ->
-      <app-item name="req-info"
-                type="output"
-                xicon="vaadin:warning"
-                label="Required information"
-                data="2 required, 0 complete"
-                two-line
-                >
-      </app-item>
-      <!---->
-      <app-item name="lead-filters"
-                type="subheader"
-                label="Lead filters"
-                >
-      </app-item>
-      <!---->
-      <app-item name="lead-type"
-                type="output"
-                icon="vaadin:puzzle-piece"
-                label="Your type of services"
-                two-line
-                xdata="[[leadType]]"
-                data="[[userLocal.lead-type]]"
-                >
-      </app-item>
-      <app-item name="user-location"
-                type="output"
-                icon="track-changes"
-                label="Your location"
-                two-line
-                data="[[userLocal.geo-select-location]], [[userLocal.geo-select-region]]"
-                >
-      </app-item>
-      <!---->
-
-    </iron-selector>
-    <!--- ->
     </div>
     <!---->
 
@@ -163,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         userLocal: {
       		type: Object,
 					notify: true,
-          observer: '_userLocalChanged',
+          // observer: '_userLocalChanged',
         },
 
         // leadType: {
@@ -204,7 +206,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         // this.set('leadType', userLocal['lead-type']);
         // console.log('lead-type\n', this.leadType);
-        
+
         // const leadType = userLocal['lead-type'];
         // console.log('lead-type\n', leadType);
       }
