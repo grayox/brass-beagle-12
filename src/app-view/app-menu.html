@@ -121,7 +121,11 @@
                    selected-items="{{selectedItems}}"
                    attr-for-selected="name"
                    selected-attribute="selected">
-      <template xmutable-data is="dom-repeat" items="[[items]]">
+      <template mutable-data
+                is="dom-repeat"
+                items="[[items]]"
+                on-dom-change='_onDomChange'
+                >
         <app-item type="menu-item"
                   key="[[item.key]]"
                   name="[[item.name]]"
@@ -275,6 +279,11 @@
         const name = 'menu-selected-property-changed';
         this._dispatchEvent(name, detail);
         // this._dispatchEvent(name, item);
+      }
+
+      _onDomChange(e) {
+        // console.log('app-menu-dom-change', e);
+        this._dispatchEvent('app-menu-dom-change', e);
       }
 			
     }

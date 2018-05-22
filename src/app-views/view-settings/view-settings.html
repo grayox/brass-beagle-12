@@ -27,10 +27,10 @@
 		<!-- v.3 | css-grid layout, responsive, two columns -->
 
     <!--- ->
-    <app-methods id="methods" show-toast dispatch-event></app-methods>
     <!-- state -->
-		<state-media media-type="{{mediaType}}"></state-media>
+    <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <app-methods id="methods" show-toast dispatch-event></app-methods>
 
 		<div class="wrapper split">
       <view-settings-list selected="{{selected}}"
@@ -183,42 +183,43 @@
         }
 
         const updatedData = Object.assign( this.userLocal, o );
-        console.log('updated-data\n', updatedData);
-        this._dispatchEvent('app-settings-changed', updatedData);
+        // console.log('updated-data\n', updatedData);
+        // this._dispatchEvent('app-settings-changed', updatedData);
+        this.save(updatedData);
       }
 
-		  _dispatchEvent(name, data) {
-				const n = name;
-				const o = {
-				  bubbles: true,
-					composed: true,
-					detail: data,
-				};
-				//console.log('o\n', o);
-				const d = new CustomEvent(n, o);
-				//console.log('d\n', d);
-				this.dispatchEvent(d);				
-      }
-
-			// save(data) {
-				
-			// 	//const timestamp = new Date().getTime();
-			// 	const methods = this.$.methods;
-				
-			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-			// 	const method = 'save'; // 'save'|'delete'
-			// 	const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
-			// 	//const data = data;
-			// 	//const timestampedData = { ...data, ...{timestamp: timestamp} };
-			// 	const detail = {
-			// 		method: method,
-			// 		entity: entity,
-			// 		data: data,
-			// 		//data: timestampedData,
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 	  bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
 			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+      // }
+
+			save(data) {
 				
-			// 	methods.method(detail);
-			// }
+				const timestamp = new Date().getTime();
+				const methods = this.$.methods;
+				
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
+				//const data = data;
+				const timestampedData = { ...data, ...{timestamp: timestamp} };
+				const detail = {
+					method: method,
+					entity: entity,
+					// data: data,
+					data: timestampedData,
+				};
+				
+				methods.method(detail);
+			}
 			
 			// _computeSettings(sZip, sSwitch, sInput) {
 			// 	const out = {};

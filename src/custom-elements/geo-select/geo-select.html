@@ -224,6 +224,14 @@
             // value: () => 'San Francisco',
 					},
 
+					geoKey: { // 'united_states-california-los_angeles'
+						type: String,
+						notify: true,
+						computed: '_computeGeoKey(geoCountry, geoRegion, geoLocation)',
+						// observer: '_geoCodeChanged',
+            // value: () => 'united_states-california-los_angeles',
+					},
+
 					geoCountryRegionLocation: {
 						type: String,
 						notify: true,
@@ -251,7 +259,7 @@
 					geoObject: {
 						type: Object,
 						notify: true,
-						computed: '_computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry, geoLocationRegion)',
+						computed: '_computeGeoObject(geoValid, geoKey, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry, geoLocationRegion)',
 					},
 
 				};
@@ -425,6 +433,35 @@
 				return out;
 			}
 
+			_computeGeoKey(country, region, location) {
+        const ready = (country && region && location);
+				if(!ready) return;
+
+        let a = [];
+        if(country) {
+          // const x = _.snakeCase(country);
+          const x = _.kebabCase(country);
+          a.push(x);
+        }
+        if(region) {
+          // const y = _.snakeCase(region);
+          const y = _.kebabCase(region);
+          a.push(y);
+        }
+        if(location) {
+          // const z = _.snakeCase(location);
+          const z = _.kebabCase(location);
+          a.push(z);
+        }
+        // country = country ? country : null;
+        // region = region ? region : null;
+        // location = location ? location : null;
+        const out = a.join('_');
+        
+        // console.log('out\n', out);
+				return out;
+			}
+
 			_computeGeoCountryRegionLocation(country, region, location) {
         // const ready = (country && region && location);
 				// if(!ready) return;
@@ -476,6 +513,7 @@
 				//console.log('compute-geo-valid', country, region, location);
 				const b1 = !!country && country.length; // control region visibility based on country
 				this.$.region.opened = b1;
+				// this.$.region.opened = b1;
 				// this.$.region.hidden = !b1;
         const b2 = !!region && region.length; // control location visibility based on region
 				this.$.location.opened = b2;
@@ -507,7 +545,7 @@
         this.dispatchEvent(d);
 			}
 
-      _computeGeoObject(geoValid, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry, geoLocationRegion) {
+      _computeGeoObject(geoValid, geoKey, geoCountry, geoRegion, geoLocation, geoCountryRegionLocation, geoLocationRegionCountry, geoLocationRegion) {
         const ready1 = geoValid;
         if (!ready1) return;
 
@@ -515,13 +553,21 @@
         if (!ready2) return;
 
         const out = {
-          geoValid: geoValid,
-          geoCountry: geoCountry,
-          geoRegion: geoRegion,
-          geoLocation: geoLocation,
-          geoCountryRegionLocation: geoCountryRegionLocation,        
-          geoLocationRegionCountry: geoLocationRegionCountry,        
-          geoLocationRegion: geoLocationRegion,        
+          // geoValid: geoValid,
+          // geoKey: geoKey,
+          // geoCountry: geoCountry,
+          // geoRegion: geoRegion,
+          // geoLocation: geoLocation,
+          // geoCountryRegionLocation: geoCountryRegionLocation,        
+          // geoLocationRegionCountry: geoLocationRegionCountry,        
+          'geo-select-valid': geoValid,
+          'geo-select-key': geoKey,
+          'geo-select-country': geoCountry,
+          'geo-select-region': geoRegion,
+          'geo-select-location': geoLocation,
+          'geo-select-country-region-location': geoCountryRegionLocation,        
+          'geo-select-location-region-country': geoLocationRegionCountry,        
+          'geo-select-location-region': geoLocationRegion,     
         }
         
         // console.log('geo-object\n', out);

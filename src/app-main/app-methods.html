@@ -455,7 +455,6 @@ Example usage (v1):
 
 			// main flow
 
-			/**/
 			_itemPaths(e) {
 				const ref        = e.r;      // e.r: Firebase database reference; // const ref = this.$.document.db.ref('/');
 				const method     = e.method; // e.method {string}: method name; 'save'|'delete'
@@ -486,7 +485,6 @@ Example usage (v1):
 						path = a[i].path;
 						key = this._array2string_path(path);
 				    // console.log('key\n', key);
-						/**/
 						switch(type) {
 							case 'create':
 								dat = data;
@@ -495,7 +493,6 @@ Example usage (v1):
 								//dat = true;
 								dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
 								break;
-							/**/
 							case 'update':
 								if(a[i].data) {
 									//console.log('typeof data', typeof a[i].data);
@@ -516,7 +513,6 @@ Example usage (v1):
 								//code block
 								continue;
 						}
-						/**/
 					} else {
 						continue;
 					}
@@ -612,7 +608,30 @@ Example usage (v1):
           case 'save':
 						// console.log('paths', paths);
 						if(!!paths) {
-							return r.update(paths);
+              
+              // original pattern
+              // return r.update(paths);
+              
+              // upgrade: completion callback reference
+              // https://firebase.google.com/docs/database/admin/save-data#section-completion-callback
+              // dataRef.set("I'm writing data", function(error) {
+              //   if (error) {
+              //     alert("Data could not be saved." + error);
+              //   } else {
+              //     alert("Data saved successfully.");
+              //   }
+              // });
+
+              // upgrade: completion callback
+              r.update(paths, (error)  => {
+                if (error) {
+                  console.log('Data could not be saved\n', error);
+                } else {
+                  console.log('Data saved successfully\n', paths);
+                }
+              });
+              return;
+              
 						}
 						break;
 					

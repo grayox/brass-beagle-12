@@ -66,11 +66,12 @@ $ bower install jquery-ui --save
       // }
 
       _openedChanged(bNew, bOld) {
+        // console.log('opened', bNew);
         const target = this.$.target;
         if(bNew) {
-          this.runEffect('show', 'slide', 500)
+          this.runEffect('show', 'slide', 500);
         } else {
-          this.runEffect('hide', 'drop', 500)
+          this.runEffect('hide', 'drop', 500);
         }
 
         target.hidden = !bNew;
@@ -83,7 +84,7 @@ $ bower install jquery-ui --save
         duration = duration || 500;
 
         // const target = this.$.target;
-        const target = $( "#target" );
+        const target = $( '#target' );
 
         // get effect type from
         // var selectedEffect = $( "#effectTypes" ).val();
@@ -91,29 +92,31 @@ $ bower install jquery-ui --save
         // Most effect types need no options passed by default
         let options = {};
         // some effects have required parameters
-        if ( selectedEffect === "scale" ) {
+        if ( selectedEffect === 'scale' ) {
           options = { percent: 50 };
-        } else if ( selectedEffect === "size" ) {
+        } else if ( selectedEffect === 'size' ) {
           options = { to: { width: 200, height: 60 } };
         }
    
+        // console.log('options', options);
+
         // Run the effect
-        //$( "#effect" ).toggle( selectedEffect, options, 500 );
+        //$( '#effect' ).toggle( selectedEffect, options, 500 );
         switch(animation) {
           case 'toggle':
-            // $( "#target" ).toggle( selectedEffect, options, duration );
+            // $( '#target' ).toggle( selectedEffect, options, duration );
             target.toggle( selectedEffect, options, duration );
             break;
           case 'show':
-            // $( "#target" ).show( selectedEffect, options, duration );
+            // $( '#target' ).show( selectedEffect, options, duration );
             target.show( selectedEffect, options, duration );
             break;
           case 'hide':
-            // $( "#target" ).hide( selectedEffect, options, duration );
+            // $( '#target' ).hide( selectedEffect, options, duration );
             target.hide( selectedEffect, options, duration );
             break;
-            case 'effect':
-            // $( "#target" ).effect( selectedEffect, options, duration );
+          case 'effect':
+            // $( '#target' ).effect( selectedEffect, options, duration );
             target.effect( selectedEffect, options, duration );
             break;
           default:
