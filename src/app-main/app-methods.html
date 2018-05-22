@@ -629,7 +629,8 @@ Example usage (v1):
                   console.log('Data could not be saved\n', error);
                 } else {
                   this._dispatchEvent('update');
-                  console.log('Data saved successfully\n', paths);
+                  console.log('Data saved successfully');
+                  // console.log('Data saved successfully\n', paths);
                 }
               });
               return;
