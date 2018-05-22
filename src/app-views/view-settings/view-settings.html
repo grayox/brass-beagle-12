@@ -30,7 +30,8 @@
     <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
-    <app-methods id="methods" show-toast dispatch-event></app-methods>
+    <app-methods id="methods" show-toast event-dispatch
+                 on-method-success="_onMethodSuccess"></app-methods>
 
 		<div class="wrapper split">
       <view-settings-list selected="{{selected}}"
@@ -219,7 +220,17 @@
 				};
 				
 				methods.method(detail);
-			}
+      }
+      
+      _onMethodSuccess(e) {
+        console.log('method-success\n', e.detail);
+
+        // https://www.polymer-project.org/1.0/docs/devguide/model-data#override-dirty-check
+        // Force data system to pick up subproperty changes
+        var userLocal = this.userLocal;
+        this.userLocal = {};
+        this.userLocal = userLocal;
+      }
 			
 			// _computeSettings(sZip, sSwitch, sInput) {
 			// 	const out = {};

@@ -295,7 +295,8 @@ Example usage (v1):
 			}
 			
 			_dispatchEvent(method) {
-				if(!this.eventDispatch) return;
+        const ready = this.eventDispatch;
+				if(!ready) return;
 				
 				//this.fire('method-success', method);
 				const n = 'method-success';
@@ -627,6 +628,7 @@ Example usage (v1):
                 if (error) {
                   console.log('Data could not be saved\n', error);
                 } else {
+                  this._dispatchEvent('update');
                   console.log('Data saved successfully\n', paths);
                 }
               });
