@@ -137,8 +137,23 @@
         // console.log('s-old', sOld);
         // console.log('s-new', sNew);
 
+        // use item.label to save
+        let detail = '';
+        const a = this.items;
+        let i = a.length;
+        while(i--) {
+          let name = a[i].name;
+          // console.log('name', name);
+          let label = a[i].label;
+          // console.log('label', label);
+          if(name === sNew) {
+            detail = label;
+            // console.log('detail', detail);
+            break;
+          }
+        }
+        
         const name = 'lead-type-selected';
-        const detail = sNew;
         this._dispatchEvent(name, detail)
       }
 			
