@@ -70,10 +70,18 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       </p>
     </div>
     <div hidden id="lead-type">
-      <select-lead-type xon-lead-type-selected='_handleLeadTypeSelected'></select-lead-type>
+      <select-lead-type xon-lead-type-selected="_handleLeadTypeSelected"
+                        xselected="[[userLocal.lead-type]]"
+                        >
+      </select-lead-type>
     </div>
     <div hidden id="user-location">
-      <geo-select xon-geo-select-valid='_handleGeoSelectValid'></geo-select>
+      <geo-select xon-geo-select-valid="_handleGeoSelectValid"
+                  xgeo-country="[[userLocal.geo-select-country]]"
+                  xgeo-region="[[userLocal.geo-select-region]]"
+                  xgeo-location="[[userLocal.geo-select-location]]"
+                  >
+      </geo-select>
     </div>
     
   </template>
@@ -96,6 +104,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
           type: String,
           notify: true,
           observer: '_selectedChanged',
+        },
+        
+        userLocal: {
+      		type: Object,
+					notify: true,
+          // observer: '_userLocalChanged',
         },
 
       }}

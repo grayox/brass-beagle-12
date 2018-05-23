@@ -228,7 +228,7 @@ Example usage (v1):
 
 			_computeEmailKey(user) {
 				if(!!user) {
-					return this.emailEncode(user.email);
+					// return this.emailEncode(user.email);
 				}
 			}
 
@@ -626,10 +626,10 @@ Example usage (v1):
               // upgrade: completion callback
               r.update(paths, (error)  => {
                 if (error) {
-                  console.log('Data could not be saved\n', error);
+                  console.error('Data could not be saved\n', error);
                 } else {
                   this._dispatchEvent('update');
-                  console.log('Data saved successfully');
+                  // console.log('Data saved successfully');
                   // console.log('Data saved successfully\n', paths);
                 }
               });
