@@ -129,7 +129,7 @@ https://stackoverflow.com/a/45498792/1640892
 		<!---->
 		<iron-selector selected="{{route}}"
 									 xselected="{{page}}"
-									 xattr-for-selected="name"
+									 attr-for-selected="name"
 									 xclass="drawer-list"
 									 xrole="navigation"
 									 xon-selected-changed="_onSelectedChanged" 
@@ -158,16 +158,19 @@ https://stackoverflow.com/a/45498792/1640892
       static get is() { return 'nav-menu-desktop'; }
 
 			static get properties() { return {
+        
 				mediaWidth: {
 					type: Number, // 0, 1, 2, 3
 					notify: true,
 					//observer: '_mediaWidthChanged',
-				},
+        },
+        
 				route: {
 					type: Number,
 					notify: true,
 					//observer: '_routeChanged',
-				},
+        },
+        
       }}
 			
       constructor() {

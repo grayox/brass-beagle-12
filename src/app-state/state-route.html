@@ -19,7 +19,7 @@ code shared at: https://notehub.org/7mjqj
 <dom-module id="state-route">
   <template>
 		<style></style>
-		<app-localstorage-document xlog xsession-only key="route" data="{{route}}"></app-localstorage-document>
+		<app-localstorage-document xlog session-only key="route" data="{{route}}"></app-localstorage-document>
   </template>
 
   <script>
@@ -28,10 +28,11 @@ code shared at: https://notehub.org/7mjqj
 
       static get properties() { return {
 				route: {
-					//type: Number,
+					// type: Number,
 					type: String,
 					notify: true,
-					//observer: '_routeChanged',
+          // observer: '_routeChanged',
+          value: () => 'view-dashboard',
 				},
 			}}
 			
@@ -39,18 +40,15 @@ code shared at: https://notehub.org/7mjqj
 				super();
 			}
 			
-			/**/
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
-			/**/
 			
-			/** /
-			_routeChanged(route) {
-				console.log('route', route);
-			}
-			/**/			
+			// _routeChanged(route) {
+			// 	console.log('route', route);
+      // }
+      
     }
 
     window.customElements.define(StateRoute.is, StateRoute);
