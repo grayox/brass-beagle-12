@@ -31,18 +31,34 @@
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
     <app-methods id="methods" show-toast event-dispatch
-                 on-method-success="_onMethodSuccess"></app-methods>
+                 on-method-success="_onMethodSuccess"
+                 >
+    </app-methods>
 
-		<div class="wrapper split">
-      <view-settings-list selected="{{selected}}"
-                          user-local="[[userLocal]]"
-                          >
-      </view-settings-list>
-      <view-settings-detail selected="[[selected]]"
-                            xuser-local="[[userLocal]]"
+
+    <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
+      <div class="wrapper split">
+        <view-settings-list selected="{{selected}}"
+                            user-local="[[userLocal]]"
                             >
-      </view-settings-detail>
-    </div>
+        </view-settings-list>
+        <view-settings-detail selected="[[selected]]"
+                              user-local="[[userLocal]]"
+                              >
+        </view-settings-detail>
+      </div>
+    </template>
+
+
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="wrapper">
+        <view-settings-list selected="{{selected}}"
+                            user-local="[[userLocal]]"
+                            >
+        </view-settings-list>
+      </div>
+    </template>
+    
 		
   </template>
 
@@ -54,15 +70,15 @@
       static get properties() { return {
 				
 				mediaType: {
-					type: String,
+					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
 				},
 				
-				_split: {
-					type: Boolean,
-					notify: true,
-					computed: '_computeSplit(mediaType)',
-				},
+				// _split: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// 	computed: '_computeSplit(mediaType)',
+				// },
 
 				selected: {
 					type: String,
@@ -141,7 +157,8 @@
 			// 	]
 			// }
 			
-			_computeSplit(s) {
+			// _computeSplit(s) {
+      _computeShowSplit(s) {
 				return s !== 'mobile';
       }  
       

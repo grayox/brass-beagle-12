@@ -69,12 +69,19 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         Then you can start swapping leads!
       </p>
     </div>
+    <!--- ->
+    <template restamp is="dom-if" if="[[selected]]=='lead-type'">
+    <!---->
     <div hidden id="lead-type">
       <select-lead-type xon-lead-type-selected="_handleLeadTypeSelected"
-                        xselected="[[userLocal.lead-type]]"
+                        selected="[[userLocal.lead-type]]"
                         >
       </select-lead-type>
     </div>
+    <!--- ->
+    </template>
+    <template restamp is="dom-if" if="[[selected]]=='user-location'">
+    <!---->
     <div hidden id="user-location">
       <geo-select xon-geo-select-valid="_handleGeoSelectValid"
                   xgeo-country="[[userLocal.geo-select-country]]"
@@ -83,6 +90,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                   >
       </geo-select>
     </div>
+    <!--- ->
+    </template>
+    <!---->
     
   </template>
 
@@ -127,8 +137,19 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // console.log('s-old', sOld);
         // console.log('s-new', sNew);
 
+        // without dom-if
+
         if(sOld) this.$[sOld].hidden = true;
         if(sNew) this.$[sNew].hidden = false;
+
+        // using dom-if
+
+        // const selectorSold = '#' + sOld;
+        // const selectorSnew = '#' + sNew;
+        // // if(sOld) this.$$(selectorSold).hidden = true;
+        // // if(sNew) this.$$(selectorSnew).hidden = false;
+        // if(sOld) this.root.querySelector(selectorSold).hidden = true;
+        // if(sNew) this.root.querySelector(selectorSnew).hidden = false;
       }
 
       // _handleLeadTypeSelected(e) {

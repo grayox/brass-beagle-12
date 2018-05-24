@@ -373,9 +373,9 @@
         const ready = ready1 && ready2;// && ready3;
         if(!ready) return;
 
-        // cleanup
-        this.set('geoRegion', null);
-        this.set('geoLocation', null);
+        // // cleanup
+        // this.set('geoRegion', null);
+        // this.set('geoLocation', null);
 
         let out = [];
         const keys = Object.keys(geoLocationsData[geoCountry]); // unique line
@@ -409,9 +409,9 @@
         const ready = ready1 && ready2 && ready3;
         if(!ready) return;
 
-        // cleanup
-        // this.set('geoRegion', null);
-        this.set('geoLocation', null);
+        // // cleanup
+        // // this.set('geoRegion', null);
+        // this.set('geoLocation', null);
 
         let out = [];
         const keys = geoLocationsData[geoCountry][geoRegion]; // unique line
