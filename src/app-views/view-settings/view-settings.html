@@ -6,6 +6,9 @@
 <link rel="import" href="/src/app-state/state-user-local.html">
 <!---->
 <!---->
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="view-settings-list.html">
 <link rel="import" href="view-settings-detail.html">
@@ -35,7 +38,7 @@
                  >
     </app-methods>
 
-
+    <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-settings-list selected="{{selected}}"
@@ -49,17 +52,37 @@
       </div>
     </template>
 
-
+    <!-- mobile -->
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="wrapper">
         <view-settings-list selected="{{selected}}"
                             user-local="[[userLocal]]"
+                            on-tap="_dialogOpen"
                             >
         </view-settings-list>
       </div>
+
+      <paper-dialog id="dialog" modal>
+        <h2>
+          Header
+          <paper-icon-button icon="left-arrow" on-tap="_dialogClose"></paper-icon-button>
+        </h2>
+        <paper-dialog-scrollable>
+          <view-settings-detail selected="[[selected]]"
+                                user-local="[[userLocal]]"
+                                >
+          </view-settings-detail>
+        </paper-dialog-scrollable>
+        <!--- ->
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus>Accept</paper-button>
+        </div>
+        <!---->
+      </paper-dialog>
+
     </template>
     
-		
   </template>
 
   <script>
@@ -312,7 +335,15 @@
 			// 	this.set('settingsInvite', {});
 			// 	this.set('settingsInvite[label]', data);
 			// 	console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
-			// }
+      // }
+      
+      _dialogOpen() {
+        this.root.querySelector('#dialog').opened = true;
+      }
+      
+      _dialogClose() {
+        this.root.querySelector('#dialog').opened = false;
+      }
 			
     }
 

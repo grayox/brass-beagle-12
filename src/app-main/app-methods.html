@@ -72,16 +72,24 @@ Example usage (v1):
 
 <dom-module id="app-methods">
 	<template>
-    <!--- ->
+    <!---->
 		<style>		
-		  /** /
+		  /**/
       paper-toast {
-				/**/
 				/** /
+        <paper-toast> is partially hidden by app-drawer
+        https://github.com/PolymerElements/paper-toast/issues/80
+        tl;dr: place <paper-toast> in <body> to override "stacking contexts" of host element
+        we position to horizontal-align="right" to avoid overlay stacking context problem
+        /**/
+        text-align: left;
+				/** /
+				z-index: 99999;
 				--paper-toast-color: #00FF00;
 				--paper-toast-color: var(--paper-green-A400);
-				z-index: 99999;
-				/** /
+        --paper-toast-background-color: red;
+        text-align: right;
+				/**/
 			}
 			/**/	
     </style>
@@ -93,8 +101,15 @@ Example usage (v1):
     <!---->
 		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>
 		<state-app-data app-data="{{appData}}"></state-app-data>
-		
-		<paper-toast id="toast"></paper-toast>
+    
+    <paper-toast id="toast"
+                 xclass="fit-bottom"
+                 xalways-on-top
+                 xfit-into
+                 horizontal-align="right"
+                 >
+    </paper-toast>
+    </div>
 		<firebase-document id="document"
 											 app-name="app"
 											 xpath="/emails/[[emailKey]]"
