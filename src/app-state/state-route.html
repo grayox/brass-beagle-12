@@ -28,11 +28,11 @@ code shared at: https://notehub.org/7mjqj
 
       static get properties() { return {
 				route: {
-					// type: Number,
-					type: String,
+					type: Number,
+					// type: String,
 					notify: true,
-          // observer: '_routeChanged',
-          value: () => 'view-dashboard',
+          observer: '_routeChanged',
+          value: () => 0, // 'view-dashboard',
 				},
 			}}
 			
@@ -45,9 +45,9 @@ code shared at: https://notehub.org/7mjqj
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
 			
-			// _routeChanged(route) {
-			// 	console.log('route', route);
-      // }
+			_routeChanged(route) {
+				console.log('route', route);
+      }
       
     }
 

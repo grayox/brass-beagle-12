@@ -49,7 +49,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-pages>
 		<!---->
 		
-		<iron-pages selected="{{route}}" attr-for-selected="name">
+    <iron-pages selected="{{route}}"
+                xattr-for-selected="name"
+                xfallback-selection="view-dashboard"
+                >
 		  <!---->
 		  <view-dashboard name="view-dashboard"></view-dashboard>
 		  <!--- ->

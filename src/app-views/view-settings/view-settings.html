@@ -16,15 +16,22 @@
 <dom-module id="view-settings">
   <template>
 		<style>
+
 			:host {
 				--line-color: #DDDDDD;
 			}
+
+      paper-icon-button {
+        text-align: left;
+      }
+
 			.split {
 				border-bottom: 1px var(--line-color) solid;
 				
 				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
 				grid-template-columns: 1fr 1fr;
 			}
+
 		</style>
 		
 		<!-- v.3 | css-grid layout, responsive, two columns -->
@@ -55,6 +62,34 @@
     <!-- mobile -->
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="wrapper">
+        <iron-pages selected="{{subroute}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    >
+          <div name="list" on-tap="_setDetail">
+            <!-- view-settings-list -->
+            <view-settings-list selected="{{selected}}"
+                                user-local="[[userLocal]]"
+                                >
+            </view-settings-list>
+          </div>         
+          <div name="detail">
+            <!-- view-settings-detail -->
+            <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+            <view-settings-detail selected="[[selected]]"
+                                  user-local="[[userLocal]]"
+                                  >
+            </view-settings-detail>
+          </div>         
+          <!---->
+          <!---->      
+        </iron-pages>
+      </div>
+    </template>
+
+    <!--- ->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="wrapper">
         <view-settings-list selected="{{selected}}"
                             user-local="[[userLocal]]"
                             on-tap="_dialogOpen"
@@ -78,10 +113,11 @@
           <paper-button dialog-dismiss>Cancel</paper-button>
           <paper-button dialog-confirm autofocus>Accept</paper-button>
         </div>
-        <!---->
+        <!--- /->
       </paper-dialog>
-
+      <!--- ->
     </template>
+    <!---->
     
   </template>
 
@@ -106,6 +142,12 @@
 				selected: {
 					type: String,
 					notify: true,
+				},
+    
+				subroute: {
+					type: String,
+          notify: true,
+          value: () => 'list', // 'list' | 'detail'
 				},
     
         userLocal: {
@@ -337,12 +379,20 @@
 			// 	console.log('settings-invite\n', this.settingsInvite); // {data: 'somestring', label: 'contact'}
       // }
       
-      _dialogOpen() {
-        this.root.querySelector('#dialog').opened = true;
-      }
+      // _dialogOpen() {
+      //   this.root.querySelector('#dialog').opened = true;
+      // }
       
-      _dialogClose() {
-        this.root.querySelector('#dialog').opened = false;
+      // _dialogClose() {
+      //   this.root.querySelector('#dialog').opened = false;
+      // }
+
+      _resetList() {
+        this.set('subroute', 'list');
+      }			
+
+      _setDetail() {
+        this.set('subroute', 'detail');
       }
 			
     }
