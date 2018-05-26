@@ -10,6 +10,7 @@
 <link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 
+<link rel="import" href="/src/app-view/app-item.html">
 <link rel="import" href="view-settings-list.html">
 <link rel="import" href="view-settings-detail.html">
 
@@ -75,7 +76,14 @@
           </div>         
           <div name="detail">
             <!-- view-settings-detail -->
+            <!--- ->
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+            <!---->
+            <app-item type="subpage-header"
+                      on-subpage-back-button="_resetList"
+                      label="[[selected]]"
+                      >
+            </app-item>
             <view-settings-detail selected="[[selected]]"
                                   user-local="[[userLocal]]"
                                   >

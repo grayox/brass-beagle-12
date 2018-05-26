@@ -64,7 +64,7 @@
 		  	 on-animationend="_onAnimationEnd"
 	       xclass="animated bounce"
 				 xon-tap="test"
-		  	 xhidden$="{{hixde}}"
+		  	 xhidden$="{{xhide}}"
 				 >
 			<span class="xtext danger">
 			  <!--- ->
@@ -111,7 +111,6 @@
 				super();
 			}
 
-			/**/
 			ready() {
         super.ready();
         //window.addEventListener('animationend', (e) => { this.onAnimationEnd(e); });
@@ -186,11 +185,12 @@
 				t.add('animated', animation);
 				//t.toggle(animation);
 				//t.toggle(animation);
-				/*
-				t.add('animated', animation).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
-				  console.log('t\n', t);
-					t.remove('animated', animation);
-				});*/
+				
+				// t.add('animated', animation).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
+				//   console.log('t\n', t);
+				// 	t.remove('animated', animation);
+        // });
+        
 				//console.log('t\n', t);
 				//t.remove('animated', 'tada');
 				//t.add('animated', 'tada');

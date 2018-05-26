@@ -65,7 +65,36 @@ Types of elements
 
 <dom-module id="app-item">
   <template>
-    <style include="paper-item-styles"></style>
+    <style include="paper-item-styles">
+      .subpage-header {
+        color: white;
+        opacity: 1.0;
+        font-weight: bold;
+        background-color: var(--apple-ios-blue);
+        /** /
+        background-color: orange;
+        --iron-icon-stroke-color: white;
+        --iron-icon: {
+          opacity: 1.0;
+          color: white;
+        };
+        /**/
+      }
+
+      /** /
+      .subpage-header > paper-icon-button {
+        --paper-icon-button: {
+          opacity: 1.0;
+          color: white;
+          --iron-icon: {
+            opacity: 1.0;
+            color: white;
+          };
+          --iron-icon-stroke-color: white;
+        };
+      }
+      /**/
+    </style>
     <app-localstorage-document xlog xsession-only key="app-views" data="{{appViews}}"></app-localstorage-document>
     <app-localstorage-document xlog xsession-only key="user-local" data="{{userLocal}}"></app-localstorage-document>
     
@@ -87,6 +116,29 @@ Types of elements
             <app-item-data data="[[data]]"></app-item-data>
             <!---->
           </paper-item>
+        </div>
+      </template>
+
+      <!-- type: 'subpage-header' -->
+      <template restamp is="dom-if" if="[[_computeTypeIsSubpageHeader(type)]]">
+        <div hidden$="[[!_computeTypeIsSubpageHeader(type)]]">
+          <paper-icon-item class="subpage-header">
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div xclass="avatar" slot="item-icon">
+              <paper-icon-button icon="arrow-back"
+                                 xicon="[[icon]]"
+                                 alt=""
+                                 on-tap="_subpageBackButton"
+                                 >
+              </paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <div>[[label]]</div>
+            </paper-item-body>
+            <!--- ->
+            <paper-checkbox checked="{{dataBoolean}}"></paper-checkbox>
+            <!---->
+          </paper-icon-item>
         </div>
       </template>
   
@@ -547,6 +599,7 @@ Types of elements
       _computeTypeIsMenuSelection (s) { return this._computeTypeIsTarget ( s, 'menu-selection'  ) }
       _computeTypeIsOutput        (s) { return this._computeTypeIsTarget ( s, 'output'          ) }
       _computeTypeIsSubheader     (s) { return this._computeTypeIsTarget ( s, 'subheader'       ) }
+      _computeTypeIsSubpageHeader (s) { return this._computeTypeIsTarget ( s, 'subpage-header'  ) }
       _computeTypeIsToggleButton  (s) { return this._computeTypeIsTarget ( s, 'toggle-button'   ) }
 
       // _handleTap(e) {
@@ -645,6 +698,10 @@ Types of elements
 
       _reset(e) {
         // console.log('e\n', e);
+      }
+
+      _subpageBackButton() {
+        this._dispatchEvent('subpage-back-button');
       }
 
       // _computeData(app, user, view, key) {
