@@ -1,0 +1,232 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/custom-styles/animate-css.html">
+
+
+<dom-module id="animated-css">
+  <template>
+		<style include="animate-css">
+      :host {
+        display: inline;
+        white-space: nowrap;
+      }
+    </style>
+    
+    <!--- ->
+    <p class="animated infinite wobble">hello world</p>
+    <!---->
+    <div id="animated"
+         class="animated xinfinite [[animation]]"
+         on-animationend="_onAnimationEnd"
+         hidden$="[[!show]]"
+         >
+      <slot></slot>
+    </div>
+		
+  </template>
+
+  <script>
+    class AnimatedCss extends Polymer.Element {
+      static get is() { return 'animated-css'; }
+			
+			static get properties() {
+        return {
+					
+					animation: {
+						type: String,
+						notify: true,
+						// value: () => 'bounce',
+						// observer: '_animationChanged',
+					},
+					
+					entryAnimation: {
+						type: String,
+						notify: true,
+						// value: () => 'slideInLeft',
+						// observer: '_entryAnimationChanged',
+					},
+					
+					exitAnimation: {
+						type: String,
+						notify: true,
+						// value: () => 'slideOutLeft',
+						// observer: '_exitAnimationChanged',
+					},
+					
+					show: {
+						type: Boolean,
+						notify: true,
+						// value: () => true,
+						value: () => false,
+						// observer: '_showChanged',
+					},
+					
+					_showAfter: {
+						type: Boolean,
+						notify: true,
+						value: () => true,
+						// value: () => false,
+						// observer: '_showChanged',
+					},
+					
+        };
+      }
+			
+			constructor() {
+				super();
+			}
+
+			ready() {
+        super.ready();
+        //window.addEventListener('animationend', (e) => { this.onAnimationEnd(e); });
+				//window.addEventListener('animationend', () => this.onAnimationEnd());
+				//window.addEventListener('animationEnd', () => this.onAnimationEnd());
+				//window.addEventListener('webkitAnimationEnd', () => this.onAnimationEnd());
+				//window.addEventListener('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => this.onAnimationEnd());
+		  }
+			
+			// _showChanged(b) {
+			// 	//console.log('b\n', b);
+			// 	const ENTRY_ANIMATION = 'slideInRight';
+			// 	const EXIT_ANIMATION = 'slideOutLeft';
+				
+			// 	// prepare the target
+			// 	const r = this.$.animated;
+			// 	//const t = r.classList;
+				
+			// 	let animation;			
+				
+			// 	// show
+			// 	if(b) {
+			// 	  r.hidden = false;
+			// 	  animation = ENTRY_ANIMATION;			
+			// 	  this.animate(animation);
+			// 	  //console.log( 'animation\n' , animation );
+			// 	} else {
+			// 	// hide
+			// 	  animation = EXIT_ANIMATION;			
+			// 	  this.animate(animation);
+			// 	  //r.hidden = true; // _onAnimationEnd()
+			// 	  //console.log( 'animation\n' , animation );
+			// 	}
+				
+			// 	//this.animate(animation);
+			// 	//console.log( 'animation\n' , animation );
+			// 	//return;
+			// }
+			
+			// test() {
+			// 	this.animate('tada');
+			// 	//this.animate('orange');
+			// 	//this.animate('purple');
+      // }
+      
+      // _animationChanged(sNew,sOld) {
+      //   console.log('s-old\n', sOld);
+      //   console.log('s-new\n', sNew);
+
+      //   if(sNew) this.animate(sNew);
+      // }
+			
+			_onAnimationEnd(e) {
+				// console.log('animation-end\n, e');
+				
+				// define animation variables
+				const animated = this.$.animated;
+				const animation = e.animationName;
+				// console.log('animation-end\n, animation');
+				
+				// appropriately hide or unhide target
+				const show = this.showAfter;
+        // animated.hidden = !show;
+        this.set('show', show);
+				
+				// remove animation class
+				const classList = animated.classList;
+        // classList.remove('animated', animation);
+        classList.remove(animation);
+        
+        // dispatch event
+        const name = 'animation-end';
+        const detail = animation;
+        this._dispatchEvent(name, detail);
+
+				//return;
+      }
+      
+      _dispatchEvent(name, detail) {
+				//this.fire('name', detail);
+				// const n = 'save-app-item';
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: detail,
+				};
+				const d = new CustomEvent(name, o);
+        this.dispatchEvent(d);
+			}
+			
+			animate(animation) {
+				// list of animations: https://github.com/daneden/animate.css
+				const animated = this.$.animated;
+				//console.log('animated\n', t);
+				const classList = animated.classList;
+				//console.log('classList\n', classList);
+				classList.add('animated', animation);
+				//classList.toggle(animation);
+				//classList.toggle(animation);
+				
+				// classList.add('animated', animation).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
+				//   console.log('classList\n', classList);
+				// 	classList.remove('animated', animation);
+        // });
+        
+				//console.log('classList\n', classList);
+				//classList.remove('animated', 'tada');
+				//classList.add('animated', 'tada');
+      }
+      
+      animateEntry(s) {
+        this.set('showAfter', true);
+
+        const animation = s || this.entryAnimation;
+        const animated = this.$.animated;
+
+        animated.hidden = false;
+        this.animate(animation);
+      }
+      
+      animateExit(s) {
+        this.set('showAfter', false);
+        
+        const animation = s || this.exitAnimation;
+        const animated = this.$.animated;
+
+        // animated.hidden = false;
+        this.animate(animation);
+      }
+
+      // _onAnimateEntryEnd(e) {
+      //   console.log('e\n', e);
+      //   const animation = e.detail;
+      //   const r = this.$.animated;
+      //   const t = r.classList;
+      //   t.remove(animation);
+      //   r.hidden = false;
+      // }			
+
+      // _onAnimateExitEnd() {
+      //   console.log('e\n', e);
+      //   const animation = e.detail;
+      //   const r = this.$.animated;
+      //   const t = r.classList;
+      //   t.remove(animation);
+      //   r.hidden = true;
+      // }
+			
+    }
+
+    window.customElements.define(AnimatedCss.is, AnimatedCss);
+  </script>
+
+</dom-module>

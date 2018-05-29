@@ -70,7 +70,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!---->
     <div role="listbox">
       <!---->
-      <iron-selector role="listbox" selected="{{selected}}" attr-for-selected="name">
+      <iron-selector role="listbox"
+                     selected="{{selected}}"
+                     attr-for-selected="name"
+                     selectable=".selectable"
+                     >
         
         <!---->
         <app-item name="user-status"
@@ -123,18 +127,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   type="output"
                   icon="vaadin:puzzle-piece"
                   label="Your type of services"
+                  xlabel-short="Lead type"
                   two-line
                   xdata="[[leadType]]"
                   xdata="[[userLocal.lead-type.charAt(0).toUpperCase()]]"
                   data="[[userLocal.lead-type]]"
+                  class="selectable"
                   >
         </app-item>
         <app-item name="user-location"
                   type="output"
                   icon="track-changes"
                   label="Your location"
+                  xlabel-short="Your location"
                   two-line
                   data="[[userLocal.geo-select-location-region]]"
+                  class="selectable"
                   >
         </app-item>
         <!---->

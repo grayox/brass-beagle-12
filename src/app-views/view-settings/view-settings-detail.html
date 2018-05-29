@@ -34,16 +34,18 @@ https://codepen.io/rachelandrew/pen/zwPEoX
   <template>
     <style>
 
+      /** /
       :host {
         --line-color: #DDDDDD;
         border-left: 1px var(--line-color) solid;
       }
+      /**/
 
-      p:first-of-type {
+      #req-info > p:first-of-type {
         padding-top: 3em; 
       }
 
-      p {
+      #req-info > p {
         text-align: start;
         padding: 0.5em 2.5em;
         opacity: var(--opacity-dim);

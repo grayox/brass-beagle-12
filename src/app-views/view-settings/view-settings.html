@@ -11,6 +11,7 @@
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/custom-elements/animated-css.html">
 <link rel="import" href="view-settings-list.html">
 <link rel="import" href="view-settings-detail.html">
 
@@ -21,6 +22,42 @@
 			:host {
 				--line-color: #DDDDDD;
 			}
+
+      /* correct css for positioning animated pages */
+
+      #detail {
+        position: absolute;
+        top: 0px;
+        width: 100%; /* not 100vw */
+      }
+
+      .animated-pages-wrapper {
+        overflow: hidden;
+      }
+
+      /* other attempts * /
+      .animated-pages-wrapper {
+        width: 200vw;
+        white-space: nowrap;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        vertical-align: top;
+        width: 200vw;
+        height: 120px;
+        display: inline;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .animated-pages-wrapper:first-child {
+        float: left;
+        width: 100vw;
+      }
+      .animated-pages-wrapper:last-child {
+        width: 100vw;
+        margin: 100vw;
+        z-index: 2;
+      }
+      /**/
 
       paper-icon-button {
         text-align: left;
@@ -60,27 +97,121 @@
       </div>
     </template>
 
+    <!-- with animation and without iron pages -->
     <!-- mobile -->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="animated-pages-wrapper">
+       
+        <!-- view-settings-list -->
+        <animated-css id="animated-list"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      show
+                      >
+          <div name="list" on-tap="_showDetail">
+            <view-settings-list selected="{{selected}}"
+                                user-local="[[userLocal]]"
+                                >
+            </view-settings-list>
+          </div>      
+        </animated-css>
+
+        <!-- view-settings-detail -->
+        <div name="detail" id="detail">
+          <animated-css id="animated-detail"
+                        entry-animation="slideInRight"
+                        exit-animation="slideOutRight"
+                        xhidden
+                        >
+            <!--- ->
+            <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+            <!---->
+            <app-item type="subpage-header"
+                      on-subpage-back-button="_showList"
+                      label="[[selected]]"
+                      >
+            </app-item>
+            <!---->
+            <view-settings-detail selected="[[selected]]"
+                                  user-local="[[userLocal]]"
+                                  >
+            </view-settings-detail>
+          </animated-css>
+        </div>         
+        <!---->
+        <!---->      
+  
+      </div>
+    </template>
+    <!---->
+
+    <!-- with animation and with iron pages -->
+    <!-- mobile - ->
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="wrapper">
         <iron-pages selected="{{subroute}}"
                     attr-for-selected="name"
                     fallback-selection="list"
                     >
-          <div name="list" on-tap="_setDetail">
-            <!-- view-settings-list -->
+
+          <!-- view-settings-list - /->
+          <div name="list" on-tap="_showDetail">
+            <animated-css id="animated-list">
+              <view-settings-list selected="{{selected}}"
+                                  user-local="[[userLocal]]"
+                                  >
+              </view-settings-list>
+            </animated-css>
+          </div>      
+
+          <!-- view-settings-detail - /->
+          <div name="detail">
+            <animated-css id="animated-detail">
+              <!--- ->
+              <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+              <!--- /->
+              <app-item type="subpage-header"
+                        on-subpage-back-button="_showList"
+                        label="[[selected]]"
+                        >
+              </app-item>
+              <view-settings-detail selected="[[selected]]"
+                                    user-local="[[userLocal]]"
+                                    >
+              </view-settings-detail>
+            </animated-css>
+          </div>         
+          <!--- /->
+          <!--- /->      
+        </iron-pages>
+      </div>
+    </template>
+    <!---->
+
+    <!-- without animation (working) - ->
+    <!-- mobile - ->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="wrapper">
+        <iron-pages selected="{{subroute}}"
+                    attr-for-selected="name"
+                    fallback-selection="list"
+                    >
+
+          <!-- view-settings-list - ->
+          <div name="list" on-tap="_showDetail">
             <view-settings-list selected="{{selected}}"
                                 user-local="[[userLocal]]"
                                 >
             </view-settings-list>
-          </div>         
+          </div>      
+
+          <!-- view-settings-detail - ->
           <div name="detail">
-            <!-- view-settings-detail -->
             <!--- ->
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
-            <!---->
+            <!--- ->
             <app-item type="subpage-header"
-                      on-subpage-back-button="_resetList"
+                      on-subpage-back-button="_showList"
                       label="[[selected]]"
                       >
             </app-item>
@@ -89,11 +220,12 @@
                                   >
             </view-settings-detail>
           </div>         
-          <!---->
-          <!---->      
+          <!--- ->
+          <!--- ->      
         </iron-pages>
       </div>
     </template>
+    <!---->
 
     <!--- ->
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
@@ -150,6 +282,12 @@
 				selected: {
 					type: String,
 					notify: true,
+				},
+
+				label: {
+					type: String,
+          notify: true,
+          computed: '_computeLabel(selected)',
 				},
     
 				subroute: {
@@ -235,6 +373,10 @@
 				return s !== 'mobile';
       }  
       
+      _computeLabel(s) {
+
+      }
+
       _userLocalChanged(dataNew, dataOld) {
         // console.log('data-old\n', dataOld);
         // console.log('data-new\n', dataNew);
@@ -272,7 +414,7 @@
             o = data;
             break;
           default:
-            console.error('Data provided does not match available types.');
+            console.error('Data provided does not match available types');
             return;
         }
 
@@ -395,13 +537,46 @@
       //   this.root.querySelector('#dialog').opened = false;
       // }
 
-      _resetList() {
-        this.set('subroute', 'list');
-      }			
+      _showDetail() {
+        // this.set('subroute', 'detail');
 
-      _setDetail() {
-        this.set('subroute', 'detail');
+        const list = this.root.querySelector('#animated-list');
+        // list.animation = 'slideOutLeft';
+        list.animateExit();
+
+        const detail = this.root.querySelector('#animated-detail');
+        // detail.hidden = false;
+        // detail.animation = 'slideInRight';
+        detail.animateEntry();
       }
+      
+      _showList() {
+        // this.set('subroute', 'list');
+
+        const list = this.root.querySelector('#animated-list');
+        // list.animation = 'slideInLeft';
+        list.animateEntry();
+
+        const detail = this.root.querySelector('#animated-detail');
+        // detail.animation = 'slideOutRight';
+        detail.animateExit();
+      }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list');
+      //   list.hidden = false;
+
+      //   const detail = this.root.querySelector('#animated-detail');
+      //   detail.hidden = true;
+      // }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list');
+      //   list.hidden = true;
+
+      //   const detail = this.root.querySelector('#animated-detail');
+      //   detail.hidden = false;
+      // }
 			
     }
 
