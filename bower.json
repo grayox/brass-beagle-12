@@ -62,7 +62,9 @@
     "vaadin-dialog": "vaadin/vaadin-dialog#^2.0.2",
     "vaadin-button": "vaadin/vaadin-button#^2.0.1",
     "vaadin-lumo-styles": "vaadin/vaadin-lumo-styles#^1.0.0",
-    "vaadin-text-field": "vaadin/vaadin-text-field#^2.0.1"
+    "vaadin-text-field": "vaadin/vaadin-text-field#^2.0.1",
+    "vaadin-item": "vaadin/vaadin-item#^2.0.0",
+    "vaadin-list-box": "vaadin/vaadin-list-box#^1.0.2"
   },
   "devDependencies": {
     "web-component-tester": "^6.0.0"

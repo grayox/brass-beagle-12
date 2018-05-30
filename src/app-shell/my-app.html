@@ -41,7 +41,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/vaadin-form-layout/vaadin-form-layout.html">
 <link rel="import" href="/bower_components/vaadin-text-field/vaadin-text-field.html">
 
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 
 <link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
 <link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
@@ -72,6 +76,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       left: 35%;
       left: 200px;
       /**/
+    }
+
+    .buttons {
+      text-align: end;
+    }
+
+    .primary {
+      background-color: var(--primary-color);
+      color: white;
     }
 
     </style>		
@@ -110,19 +123,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
     <vaadin-button on-tap="_openDialog">Show dialog</vaadin-button>
     <!---->
-    <vaadin-dialog id="dialog">
+    <vaadin-dialog id="dialog"
+                   xno-close-on-esc
+                   no-close-on-outside-click
+                   >
       <template>
         <!--- ->
         <div>This simple dialog will close by pressing the Esc key,</div>
         <div> or by a mouse click anywhere outside the dialog area</div>
         <!---->
         <vaadin-form-layout>
-            <paper-input label="First Name" value="Jane"></paper-input>
-            <paper-input label="Last Name" value="Doe"></paper-input>
-            <paper-input label="Email" value="jane.doe@example.com"></paper-input>
-            <br>
-            <paper-input label="Confirm Email" value="jane.doe@example.com"></paper-input>
-            <paper-input colspan="2" label="Address"></paper-input>
+          <h3>New Lead</h3>
+          <paper-input label="Name" value="{{name}}"></paper-input>
+          <paper-dropdown-menu label="Type">
+            <paper-listbox slot="dropdown-content" selected="{{type}}" attr-for-selected="name">
+              <paper-item name="home"     >Home</paper-item>
+              <paper-item name="mortgage" >Mortgage</paper-item>
+              <paper-item name="insurance">Insurance</paper-item>
+              <paper-item name="financial">Financial</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <paper-input label="Phone" value="{{phone}}"></paper-input>
+          <paper-input label="Email" value="{{email}}"></paper-input>
+          <paper-input label="Zip code" value="{{zip}}"></paper-input>
+          <div class="buttons">
+            <paper-button dialog-dismiss on-tap="_tapDismiss">Cancel</paper-button>
+            <paper-button dialog-confirm autofocus class="primary" on-tap="_tapSave">Save</paper-button>
+          </div>          
         </vaadin-form-layout>
       </template>
     </vaadin-dialog>
@@ -187,16 +214,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			// 	console.log('route', route);
       // }
       
-      _tapFab() {
-        this._openDialog();
-      }
-
       _openDialog() {
         const dialog = this.$.dialog;
         dialog.opened = true;
       }
-
-			
+      
+      _closeDialog() {
+        const dialog = this.$.dialog;
+        dialog.opened = false;
+      }
+      
+      _tapFab() {
+        this._openDialog();
+      }
+    
+      _tapDismiss() {
+        this._closeDialog();
+      }
+    
+      _tapSave() {
+        this._closeDialog();
+      }
+		
     }
 
     customElements.define(MyApp.is, MyApp);
