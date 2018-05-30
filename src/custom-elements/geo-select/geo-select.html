@@ -35,7 +35,7 @@
       }
     </style>
 		
-		<geolocations-data geolocations-data="{{geoLocationsData}}"></geolocations-data>
+		<geolocations-data geolocations-data="{{geoLocationsData}}" id="top"></geolocations-data>
     
     <!--- ->
     <div role="listbox">
@@ -450,12 +450,17 @@
         y.opened = false;
 
         // auto scroll to top of page, with animation
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
         const top = document.body;
         top.scrollIntoView({
           behavior: "smooth",
           block: "start", // "end", 
           inline: "nearest", // "end", // "start", //
         });
+        
+        // https://api.jquery.com/scrollTop/
+        // $('#top').scrollTop();
+        // $(window).scrollTop();
 
       }
    
@@ -467,12 +472,17 @@
         y.opened = true;
 
         // auto scroll to top of page, with animation
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
         const top = document.body;
         top.scrollIntoView({
           behavior: "smooth",
           block: "start", // "end", 
           inline: "nearest", // "end", // "start", //
         });
+
+        // https://api.jquery.com/scrollTop/
+        // $('#top').scrollTop();
+        // $(window).scrollTop();
 
       }
 

@@ -15,7 +15,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
 
+<!-- styles -->
+<link rel="import" href="/bower_components/vaadin-lumo-styles/color.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/sizing.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/style.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/typography.html">
+
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+
+<!-- diaglog - ->
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<!---->
+<link rel="import" href="/bower_components/vaadin-dialog/vaadin-dialog.html">
+
+<link rel="import" href="/bower_components/vaadin-button/vaadin-button.html">
+<link rel="import" href="/bower_components/vaadin-dropdown-menu/vaadin-dropdown-menu.html">
+<link rel="import" href="/bower_components/vaadin-form-layout/vaadin-form-layout.html">
+<link rel="import" href="/bower_components/vaadin-text-field/vaadin-text-field.html">
+
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
 <link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
@@ -34,11 +60,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
 
-		<style></style>		
+		<style include="lumo-color lumo-typography">
+    
+    paper-fab {
+      z-index: 2;
+
+      position: fixed;
+      bottom: 30px;          
+      right: 25px;
+      /** /
+      left: 35%;
+      left: 200px;
+      /**/
+    }
+
+    </style>		
 		
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>
-		
+    
+    <paper-fab icon="add" elevation="1" on-tap="_tapFab"></paper-fab>
+
 		<!--- ->
     Hello world
 		<!--- ->
@@ -47,8 +89,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>Two</div>
       <div>Three</div>
     </iron-pages>
-		<!---->
-		
+    <!---->
+
+    <!--- ->
+    <paper-dialog id="dialog"
+                  modal
+                  entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation"
+                  >
+      <h2>Header</h2>
+      <paper-dialog-scrollable>
+        Lorem ipsum...
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </paper-dialog>
+    <!--- ->
+      
+    <vaadin-button on-tap="_openDialog">Show dialog</vaadin-button>
+    <!---->
+    <vaadin-dialog id="dialog">
+      <template>
+        <!--- ->
+        <div>This simple dialog will close by pressing the Esc key,</div>
+        <div> or by a mouse click anywhere outside the dialog area</div>
+        <!---->
+        <vaadin-form-layout>
+            <paper-input label="First Name" value="Jane"></paper-input>
+            <paper-input label="Last Name" value="Doe"></paper-input>
+            <paper-input label="Email" value="jane.doe@example.com"></paper-input>
+            <br>
+            <paper-input label="Confirm Email" value="jane.doe@example.com"></paper-input>
+            <paper-input colspan="2" label="Address"></paper-input>
+        </vaadin-form-layout>
+      </template>
+    </vaadin-dialog>
+   	
     <iron-pages selected="{{route}}"
                 xattr-for-selected="name"
                 xfallback-selection="view-dashboard"
@@ -105,13 +183,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				//console.log('Component Ready');
 			}
       
-			/**/
-			/** /
-			_routeChanged(route) {
-				console.log('route', route);
-			}
-			/**/
-			/**/
+			// _routeChanged(route) {
+			// 	console.log('route', route);
+      // }
+      
+      _tapFab() {
+        this._openDialog();
+      }
+
+      _openDialog() {
+        const dialog = this.$.dialog;
+        dialog.opened = true;
+      }
+
 			
     }
 
