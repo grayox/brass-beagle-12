@@ -1,0 +1,213 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state - ->
+<link rel="import" href="/src/app-state/state-route.html">
+
+<!-- styles -->
+<link rel="import" href="/bower_components/vaadin-lumo-styles/color.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/sizing.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/spacing.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/style.html">
+<link rel="import" href="/bower_components/vaadin-lumo-styles/typography.html">
+
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
+<!-- diaglog - ->
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<!---->
+<link rel="import" href="/bower_components/vaadin-dialog/vaadin-dialog.html">
+
+<link rel="import" href="/bower_components/vaadin-button/vaadin-button.html">
+<link rel="import" href="/bower_components/vaadin-dropdown-menu/vaadin-dropdown-menu.html">
+<link rel="import" href="/bower_components/vaadin-form-layout/vaadin-form-layout.html">
+<link rel="import" href="/bower_components/vaadin-text-field/vaadin-text-field.html">
+
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<!---->
+
+<dom-module id="form-new-lead">
+
+  <template>
+
+		<style include="lumo-color lumo-typography">
+
+    .buttons {
+      text-align: end;
+    }
+
+    .primary {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    </style>		
+
+    <iron-a11y-keys id="a11y"
+                    xtarget="[[target]]"
+                    keys="enter"
+                    xon-keys-pressed="onEnter"
+                    xon-keys-pressed="_save"
+                    on-keys-pressed="_tapSave"
+                    >
+    </iron-a11y-keys>
+
+    <!--- ->
+    <paper-dialog id="dialog"
+                  modal
+                  entry-animation="scale-up-animation"
+                  exit-animation="fade-out-animation"
+                  >
+      <h2>Header</h2>
+      <paper-dialog-scrollable>
+        Lorem ipsum...
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </paper-dialog>
+    <!--- ->
+      
+    <vaadin-button on-tap="_openDialog">Show dialog</vaadin-button>
+    <!---->
+    <vaadin-dialog id="dialog"
+                   xno-close-on-esc
+                   no-close-on-outside-click
+                   >
+      <template>
+        <!--- ->
+        <div>This simple dialog will close by pressing the Esc key,</div>
+        <div> or by a mouse click anywhere outside the dialog area</div>
+        <!---->
+        <vaadin-form-layout>
+          <h3 colspan="2">New Lead</h3>
+          <paper-input label="Name" value="{{data.name}}"></paper-input>
+          <paper-dropdown-menu label="Type">
+            <paper-listbox slot="dropdown-content" selected="{{data.type}}" attr-for-selected="name">
+              <paper-item name="home"     >Home</paper-item>
+              <paper-item name="mortgage" >Mortgage</paper-item>
+              <paper-item name="insurance">Insurance</paper-item>
+              <paper-item name="financial">Financial</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <paper-input label="Phone" value="{{data.phone}}"></paper-input>
+          <paper-input label="Email" value="{{data.email}}"></paper-input>
+          <paper-input label="Zip code" value="{{data.zip}}"></paper-input>
+          <div class="buttons" colspan="2">
+            <paper-button dialog-dismiss on-tap="_tapDismiss">Cancel</paper-button>
+            <paper-button dialog-confirm autofocus class="primary" on-tap="_tapSave">Save</paper-button>
+          </div>          
+        </vaadin-form-layout>
+      </template>
+    </vaadin-dialog>
+
+  </template>
+
+  <script>
+
+    class FormNewLead extends Polymer.Element {
+
+      static get is() { return 'form-new-lead'; }
+
+			static get properties() { return {
+
+				opened: {
+					type: Boolean,
+          notify: true,
+          value: () => false,
+					observer: '_openedChanged',
+        },
+
+        data: {
+          type: Object,
+          notify: true,
+          value: () => ({}),
+					// observer: '_openedChanged',
+        },
+
+		  }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			_openedChanged(dataNew, dataOld) {
+				// console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+        
+        const dialog = this.$.dialog;
+        dialog.opened = dataNew;
+      }
+      
+      _openDialog() {
+        this.set('opened', true);
+      }
+      
+      _closeDialog() {
+        this.set('opened', false);
+      }
+    
+      _tapDismiss() {
+        this._closeDialog();
+        this._resetData();
+      }
+
+      _resetData() {
+        this.set('data', {});
+      }
+    
+      _tapSave() {
+        const name = 'form-new-lead';
+        const data = this.data;
+        this._dispatchEvent(name, data);
+
+        this._closeDialog();
+        this._resetData();
+      }
+
+      _dispatchEvent(name, data) {
+			   const n = name;
+			   const o = {
+			     bubbles: true,
+			   	composed: true,
+			   	detail: data,
+			   };
+			   console.log('o\n', o);
+			   const d = new CustomEvent(n, o);
+			   //console.log('d\n', d);
+			   this.dispatchEvent(d);				
+      }
+		
+    }
+
+    customElements.define(FormNewLead.is, FormNewLead);
+
+  </script>
+
+</dom-module>

@@ -88,12 +88,19 @@
       <div class="wrapper split">
         <view-settings-list selected="{{selected}}"
                             user-local="[[userLocal]]"
+                            on-tap="_showDetailDesktop"
                             >
         </view-settings-list>
-        <view-settings-detail selected="[[selected]]"
-                              user-local="[[userLocal]]"
-                              >
-        </view-settings-detail>
+        <animated-css id="animated-detail-desktop"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      show
+                      >
+          <view-settings-detail selected="[[selected]]"
+                                user-local="[[userLocal]]"
+                                >
+          </view-settings-detail>
+        </animated-css>
       </div>
     </template>
 
@@ -103,12 +110,12 @@
       <div class="animated-pages-wrapper">
        
         <!-- view-settings-list -->
-        <animated-css id="animated-list"
+        <animated-css id="animated-list-mobile"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       show
                       >
-          <div name="list" on-tap="_showDetail">
+          <div name="list" on-tap="_showDetailMobile">
             <view-settings-list selected="{{selected}}"
                                 user-local="[[userLocal]]"
                                 >
@@ -118,7 +125,7 @@
 
         <!-- view-settings-detail -->
         <div name="detail" id="detail">
-          <animated-css id="animated-detail"
+          <animated-css id="animated-detail-mobile"
                         entry-animation="slideInRight"
                         exit-animation="slideOutRight"
                         xhidden
@@ -127,7 +134,7 @@
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
             <!---->
             <app-item type="subpage-header"
-                      on-subpage-back-button="_showList"
+                      on-subpage-back-button="_showListMobile"
                       label="[[selected]]"
                       >
             </app-item>
@@ -155,8 +162,8 @@
                     >
 
           <!-- view-settings-list - /->
-          <div name="list" on-tap="_showDetail">
-            <animated-css id="animated-list">
+          <div name="list" on-tap="_showDetailMobile">
+            <animated-css id="animated-list-mobile">
               <view-settings-list selected="{{selected}}"
                                   user-local="[[userLocal]]"
                                   >
@@ -166,12 +173,12 @@
 
           <!-- view-settings-detail - /->
           <div name="detail">
-            <animated-css id="animated-detail">
+            <animated-css id="animated-detail-mobile">
               <!--- ->
               <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
               <!--- /->
               <app-item type="subpage-header"
-                        on-subpage-back-button="_showList"
+                        on-subpage-back-button="_showListMobile"
                         label="[[selected]]"
                         >
               </app-item>
@@ -198,7 +205,7 @@
                     >
 
           <!-- view-settings-list - ->
-          <div name="list" on-tap="_showDetail">
+          <div name="list" on-tap="_showDetailMobile">
             <view-settings-list selected="{{selected}}"
                                 user-local="[[userLocal]]"
                                 >
@@ -211,7 +218,7 @@
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
             <!--- ->
             <app-item type="subpage-header"
-                      on-subpage-back-button="_showList"
+                      on-subpage-back-button="_showListMobile"
                       label="[[selected]]"
                       >
             </app-item>
@@ -537,44 +544,50 @@
       //   this.root.querySelector('#dialog').opened = false;
       // }
 
-      _showDetail() {
+      _showDetailDesktop() {
+        // const detail = this.root.querySelector('#animated-detail-desktop');
+        // detail.animateExit();
+        // detail.animateEntry();
+      }
+
+      _showDetailMobile() {
         // this.set('subroute', 'detail');
 
-        const list = this.root.querySelector('#animated-list');
+        const list = this.root.querySelector('#animated-list-mobile');
         // list.animation = 'slideOutLeft';
         list.animateExit();
 
-        const detail = this.root.querySelector('#animated-detail');
+        const detail = this.root.querySelector('#animated-detail-mobile');
         // detail.hidden = false;
         // detail.animation = 'slideInRight';
         detail.animateEntry();
       }
       
-      _showList() {
+      _showListMobile() {
         // this.set('subroute', 'list');
 
-        const list = this.root.querySelector('#animated-list');
+        const list = this.root.querySelector('#animated-list-mobile');
         // list.animation = 'slideInLeft';
         list.animateEntry();
 
-        const detail = this.root.querySelector('#animated-detail');
+        const detail = this.root.querySelector('#animated-detail-mobile');
         // detail.animation = 'slideOutRight';
         detail.animateExit();
       }
 
       // _afterShowList() {
-      //   const list = this.root.querySelector('#animated-list');
+      //   const list = this.root.querySelector('#animated-list-mobile');
       //   list.hidden = false;
 
-      //   const detail = this.root.querySelector('#animated-detail');
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
       //   detail.hidden = true;
       // }
 
       // _afterShowList() {
-      //   const list = this.root.querySelector('#animated-list');
+      //   const list = this.root.querySelector('#animated-list-mobile');
       //   list.hidden = true;
 
-      //   const detail = this.root.querySelector('#animated-detail');
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
       //   detail.hidden = false;
       // }
 			

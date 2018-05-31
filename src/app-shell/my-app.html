@@ -15,17 +15,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- state -->
 <link rel="import" href="/src/app-state/state-route.html">
 
-<!-- styles -->
+<!-- styles - ->
 <link rel="import" href="/bower_components/vaadin-lumo-styles/color.html">
 <link rel="import" href="/bower_components/vaadin-lumo-styles/sizing.html">
 <link rel="import" href="/bower_components/vaadin-lumo-styles/spacing.html">
 <link rel="import" href="/bower_components/vaadin-lumo-styles/style.html">
 <link rel="import" href="/bower_components/vaadin-lumo-styles/typography.html">
+<!---->
 
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/src/app-forms/form-new-lead.html">
 
 <!-- diaglog - ->
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
@@ -33,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
-<!---->
+<!--- ->
 <link rel="import" href="/bower_components/vaadin-dialog/vaadin-dialog.html">
 
 <link rel="import" href="/bower_components/vaadin-button/vaadin-button.html">
@@ -46,6 +48,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<!---->
 
 <link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
 <link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
@@ -64,28 +67,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <template>
 
-		<style include="lumo-color lumo-typography">
-    
-    paper-fab {
-      z-index: 2;
+		<style>
 
-      position: fixed;
-      bottom: 30px;          
-      right: 25px;
-      /** /
-      left: 35%;
-      left: 200px;
-      /**/
-    }
-
-    .buttons {
-      text-align: end;
-    }
-
-    .primary {
-      background-color: var(--primary-color);
-      color: white;
-    }
+      paper-fab {
+        z-index: 1;
+  
+        position: fixed;
+        bottom: 30px;          
+        right: 25px;
+        /** /
+        left: 35%;
+        left: 200px;
+        /**/
+      }
 
     </style>		
 		
@@ -93,6 +87,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<state-route route="{{route}}"></state-route>
     
     <paper-fab icon="add" elevation="1" on-tap="_tapFab"></paper-fab>
+
+    <form-new-lead id="form"></form-new-lead>
 
 		<!--- ->
     Hello world
@@ -102,58 +98,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>Two</div>
       <div>Three</div>
     </iron-pages>
-    <!---->
-
-    <!--- ->
-    <paper-dialog id="dialog"
-                  modal
-                  entry-animation="scale-up-animation"
-                  exit-animation="fade-out-animation"
-                  >
-      <h2>Header</h2>
-      <paper-dialog-scrollable>
-        Lorem ipsum...
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus>Accept</paper-button>
-      </div>
-    </paper-dialog>
-    <!--- ->
-      
-    <vaadin-button on-tap="_openDialog">Show dialog</vaadin-button>
-    <!---->
-    <vaadin-dialog id="dialog"
-                   xno-close-on-esc
-                   no-close-on-outside-click
-                   >
-      <template>
-        <!--- ->
-        <div>This simple dialog will close by pressing the Esc key,</div>
-        <div> or by a mouse click anywhere outside the dialog area</div>
-        <!---->
-        <vaadin-form-layout>
-          <h3>New Lead</h3>
-          <paper-input label="Name" value="{{name}}"></paper-input>
-          <paper-dropdown-menu label="Type">
-            <paper-listbox slot="dropdown-content" selected="{{type}}" attr-for-selected="name">
-              <paper-item name="home"     >Home</paper-item>
-              <paper-item name="mortgage" >Mortgage</paper-item>
-              <paper-item name="insurance">Insurance</paper-item>
-              <paper-item name="financial">Financial</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-          <paper-input label="Phone" value="{{phone}}"></paper-input>
-          <paper-input label="Email" value="{{email}}"></paper-input>
-          <paper-input label="Zip code" value="{{zip}}"></paper-input>
-          <div class="buttons">
-            <paper-button dialog-dismiss on-tap="_tapDismiss">Cancel</paper-button>
-            <paper-button dialog-confirm autofocus class="primary" on-tap="_tapSave">Save</paper-button>
-          </div>          
-        </vaadin-form-layout>
-      </template>
-    </vaadin-dialog>
-   	
+    <!---->   	
     <iron-pages selected="{{route}}"
                 xattr-for-selected="name"
                 xfallback-selection="view-dashboard"
@@ -192,14 +137,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get is() { return 'my-app'; }
 
 			static get properties() { return {
-			  /** /
-				route: {
-					type: Number,
-					notify: true,
-					//observer: '_routeChanged',
-				},
-			  /**/
-      }}
+				// route: {
+				// 	type: Number,
+				// 	notify: true,
+				// 	//observer: '_routeChanged',
+				// },
+	    }}
 			
       constructor() {
         super();
@@ -214,26 +157,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			// 	console.log('route', route);
       // }
       
-      _openDialog() {
-        const dialog = this.$.dialog;
-        dialog.opened = true;
+      _openForm() {
+        const form = this.$.form;
+        form.opened = true;
       }
       
-      _closeDialog() {
-        const dialog = this.$.dialog;
-        dialog.opened = false;
+      _closeForm() {
+        const form = this.$.form;
+        form.opened = false;
       }
       
       _tapFab() {
-        this._openDialog();
-      }
-    
-      _tapDismiss() {
-        this._closeDialog();
-      }
-    
-      _tapSave() {
-        this._closeDialog();
+        this._openForm();
       }
 		
     }

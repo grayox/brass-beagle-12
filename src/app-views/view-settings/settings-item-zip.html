@@ -203,57 +203,56 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 						//observer: '_selectedChanged',
 					},
 					
-					/** /
-					icon: {
-						type: String,
-						notify: true,
-						//value: () => 'home',
-						//observer: '_selectedChanged',
-					},
+					// icon: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//value: () => 'home',
+					// 	//observer: '_selectedChanged',
+					// },
 					
-					/** /
-					_output: {
-						type: String,
-						notify: true,
-						//value: () => false,
-						//observer: '_selectedChanged',
-						computed: '_computeOutput(checked)',
-					},
+					// _output: {
+					// 	type: String,
+					// 	notify: true,
+					// 	//value: () => false,
+					// 	//observer: '_selectedChanged',
+					// 	computed: '_computeOutput(checked)',
+					// },
 					
-					/** /
-					checked: {
-						type: Boolean,
-						notify: true,
-						value: () => false,
-						//observer: '_selectedChanged',
-					},
-					/**/
+					// checked: {
+					// 	type: Boolean,
+					// 	notify: true,
+					// 	value: () => false,
+					// 	//observer: '_selectedChanged',
+					// },
 					
 					// unique properties
-					
-					
+										
 					zipValid: {
 						type: Boolean,
 						notify: true,
 						//computed: '_computeZipValid(zipCity, zipState, zipCounty)',
 					},
-					zipCode: {
+          
+          zipCode: {
 						type: String,
 						notify: true,
 						// observer: '_zipCodeChanged',
 						// value: () => null,
 					},
-					zipCity: {
+          
+          zipCity: {
 						type: String,
 						notify: true,
 						//computed: '_computeZipCity(zipCode, zipCodeData)',
 					},
-					zipState: {
+          
+          zipState: {
 						type: String,
 						notify: true,
 						//computed: '_computeZipState(zipCode, zipCodeData)',
 					},
-					zipCounty: {
+          
+          zipCounty: {
 						type: String,
 						notify: true,
 						//computed: '_computeZipCounty(zipCode, zipCodeData)',
@@ -264,7 +263,8 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 						notify: true,
 						//computed: '_computeZipStateCounty(zipState, zipCounty)',
 					},
-					zipCityStateCounty: {
+          
+          zipCityStateCounty: {
 						type: String,
 						notify: true,
 						//computed: '_computeZipCityStateCounty(zipCity, zipState, zipCounty)',
@@ -277,26 +277,22 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 				super();
 			}
 
-			/**/
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', e => this.onUserActionSelect(e));
 		  }
 			
-			/** /
-			_toggle() {
-				// must add to "on-tap" event of switch to "double toggle"
-				// switch because item's "on-tap" event also toggles switch
-				// in reverse direction when switch is tapped
-				const s = this.$.switch;
-				s.checked = !s.checked;
-			}
+			// _toggle() {
+			// 	// must add to "on-tap" event of switch to "double toggle"
+			// 	// switch because item's "on-tap" event also toggles switch
+			// 	// in reverse direction when switch is tapped
+			// 	const s = this.$.switch;
+			// 	s.checked = !s.checked;
+			// }
 			
-			/** /
-			_computeOutput(b) {
-				return !!b ? 'On' : 'Off';
-			}
-			/**/
+			// _computeOutput(b) {
+			// 	return !!b ? 'On' : 'Off';
+			// }
 			
 			_toggleCollapse() {
 				const r = this.$.collapse;
@@ -308,52 +304,46 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 				this.set('zipCode', '');
 			}			
 			
-			/** /
-			_itemMethod(e) {
-				//console.log('e', e);
-				var detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				var entity = detail.entity; // 'deal'|'bid'|'network'
-				/** /
-				var method = detail.method; // 'save'|'delete'
-				//this.$['app-methods'][method](detail);
-				/** //
-				//console.log('detail', detail);
-				//console.log('entity', entity);
-				this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
-				this._closeEditor(entity);
-			}
-			/**/
-			
-			/** /
-			_save() {
-				// This method saves user-zip entity. We will deprecate it because we want to save a user-settings entity instead.
-        // In order to save user-settings, we will dispatch event to upstream compontent view-settings to mediate
-        // Update: We are reversing the above decision. We will write to DB locally to this element and not use a mediator.
-        // Changes will be reflected in the other version of this method in this file.
+			// _itemMethod(e) {
+			// 	//console.log('e', e);
+			// 	var detail = e.detail; // {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	var entity = detail.entity; // 'deal'|'bid'|'network'
+			// //  var method = detail.method; // 'save'|'delete'
+			// //  //this.$['app-methods'][method](detail);
+			// //  //console.log('detail', detail);
+			// //  //console.log('entity', entity);
+			// //  this.$['app-methods'].method(detail); // detail == {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: foo}
+			// //  this._closeEditor(entity);
+			// }
+  
+      // _save() {
+			// 	// This method saves user-zip entity. We will deprecate it because we want to save a user-settings entity instead.
+      //   // In order to save user-settings, we will dispatch event to upstream compontent view-settings to mediate
+      //   // Update: We are reversing the above decision. We will write to DB locally to this element and not use a mediator.
+      //   // Changes will be reflected in the other version of this method in this file.
 				
-				const methods = this.$.methods;
+			// 	const methods = this.$.methods;
 				
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				const entity = 'user-zip'; // 'zip'|'deal'|'bid'|'network'
-				const data = { // {new: 'data'}
-					zipValid: this.zipValid,
-					zipCode: this.zipCode,
-					zipCity: this.zipCity,
-					zipState: this.zipState,
-					zipCounty: this.zipCounty,
-					zipStateCounty: this.zipStateCounty,
-					zipCityStateCounty: this.zipCityStateCounty,
-				};
-				const detail = {
-					method: method,
-					entity: entity,
-					data: data,
-				};
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	const entity = 'user-zip'; // 'zip'|'deal'|'bid'|'network'
+			// 	const data = { // {new: 'data'}
+			// 		zipValid: this.zipValid,
+			// 		zipCode: this.zipCode,
+			// 		zipCity: this.zipCity,
+			// 		zipState: this.zipState,
+			// 		zipCounty: this.zipCounty,
+			// 		zipStateCounty: this.zipStateCounty,
+			// 		zipCityStateCounty: this.zipCityStateCounty,
+			// 	};
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 	};
 				
-				methods.method(detail);
-			}
-			/**/
+			// 	methods.method(detail);
+			// }
 			
 			_save() {
 
@@ -402,10 +392,9 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 			}
 
 			// _dispatchEvent(name, data) {
-			// 	/** /
-			// 	const m = this.$.methods;
+
+      // 	const m = this.$.methods;
 			// 	m.fireEvent(name, data);
-			// 	/**/
 				
 			// 	const n = name;
 			// 	const o = {
