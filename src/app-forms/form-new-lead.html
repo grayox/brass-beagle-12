@@ -44,6 +44,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+
+<link rel="import" href="/src/app-views/view-outbox/add-outbox-item.html">
 <!---->
 
 <dom-module id="form-new-lead">
@@ -99,7 +101,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--- ->
         <div>This simple dialog will close by pressing the Esc key,</div>
         <div> or by a mouse click anywhere outside the dialog area</div>
-        <!---->
+        
+        <!--- ->
+        vaadin-form-layout is a good mockup; we can come back to it.
+        for now, we will go with add-outbox-item because it's prettier.
+        <!--- ->
         <vaadin-form-layout>
           <h3 colspan="2">New Lead</h3>
           <paper-input label="Name" value="{{data.name}}"></paper-input>
@@ -119,6 +125,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-button dialog-confirm autofocus class="primary" on-tap="_tapSave">Save</paper-button>
           </div>          
         </vaadin-form-layout>
+        <!---->
+
+        <add-outbox-item></add-outbox-item>
       </template>
     </vaadin-dialog>
 

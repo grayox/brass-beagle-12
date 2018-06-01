@@ -25,6 +25,10 @@
 
       /* correct css for positioning animated pages */
 
+      #animated-list-desktop {
+        z-index: 1;
+      }
+
       #detail {
         position: absolute;
         top: 0px;
@@ -86,21 +90,25 @@
     <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
-        <view-settings-list selected="{{selected}}"
+        <view-settings-list id="animated-list-desktop"
+                            selected="{{selected}}"
+                            xselected="{{selectedList}}"
                             user-local="[[userLocal]]"
-                            on-tap="_showDetailDesktop"
+                            xon-tap="_showDetailDesktop"
                             >
         </view-settings-list>
-        <animated-css id="animated-detail-desktop"
+        <!-- <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
+                      on-animation-end="_onAnimationEnd"
                       show
-                      >
+                      > -->
           <view-settings-detail selected="[[selected]]"
+                                xselected="[[selectedDetail]]"
                                 user-local="[[userLocal]]"
                                 >
-          </view-settings-detail>
-        </animated-css>
+          </view-settings-detail>    
+        <!-- </animated-css> -->
       </div>
     </template>
 
@@ -285,6 +293,17 @@
 				// 	notify: true,
 				// 	computed: '_computeSplit(mediaType)',
 				// },
+
+				selectedList: {
+					type: String,
+          notify: true,
+          observer: '_selectedListChanged',
+				},
+
+				selectedDetail: {
+					type: String,
+					notify: true,
+				},
 
 				selected: {
 					type: String,
@@ -543,6 +562,54 @@
       // _dialogClose() {
       //   this.root.querySelector('#dialog').opened = false;
       // }
+
+      _selectedListChanged(dataNew, dataOld) {
+        // log to verify
+        console.log('data-old', dataOld);
+        console.log('data-new', dataNew);
+
+        // define variables
+        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        
+        // check for old value
+        if(dataOld) {
+          // animate old selectedDetail exit
+          detail.animateExit(); // wait for on-animation-end to proceed
+        } else {
+          // hide to do machinations behind-the-scenes
+          detail.hidden = true;
+
+          // set new selectedDetail
+          this.set('selectedDetail', dataNew);
+
+          // animate new selectedDetail entry
+          detail.animateExit();
+
+          // unhide to show animations
+          detail.hidden = false;
+        }
+      }
+
+      _onAnimationEnd() {
+        // wait for promise to return or no element
+        
+        // define variables
+        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        
+        // hide to do machinations behind-the-scenes
+        detail.hidden = true;
+
+        // set new selectedDetail
+        const selectedList = this.selectedList;
+        this.set('selectedDetail', selectedList);
+
+        // animate new selectedDetail entry
+        detail.animateExit();
+        
+        // unhide to show animations
+        detail.hidden = false;
+          
+      }
 
       _showDetailDesktop() {
         // const detail = this.root.querySelector('#animated-detail-desktop');
