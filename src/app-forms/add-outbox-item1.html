@@ -9,7 +9,7 @@
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <!---->
 
-<dom-module id="add-outbox-item">
+<dom-module id="form-new-lead">
   <template>
     <style include="paper-item-styles">
       .buttons {
@@ -150,8 +150,8 @@
 	</template>
 
   <script>
-    class AddOutboxItem extends Polymer.Element {
-      static get is() { return 'add-outbox-item'; }
+    class FormNewLead extends Polymer.Element {
+      static get is() { return 'form-new-lead'; }
 
       static get properties() { return {
 				item: {
@@ -203,6 +203,6 @@
 		
 		}
 
-    window.customElements.define(AddOutboxItem.is, AddOutboxItem);
+    window.customElements.define(FormNewLead.is, FormNewLead);
   </script>
 </dom-module>

@@ -46,11 +46,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 
 <!--- ->
-<link rel="import" href="/src/app-views/view-outbox/add-outbox-item.html">
+<link rel="import" href="/src/app-forms/form-new-lead.html">
 <!---->
-<link rel="import" href="add-outbox-item.html">
+<link rel="import" href="form-new-lead.html">
 
-<dom-module id="form-new-lead">
+<dom-module id="new-lead-dialog">
 
   <template>
 
@@ -106,7 +106,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         <!--- ->
         vaadin-form-layout is a good mockup; we can come back to it.
-        for now, we will go with add-outbox-item because it's prettier.
+        for now, we will go with add-outbox-item (changed to form-new-lead)
+        because it's prettier.
         <!--- ->
         <vaadin-form-layout>
           <h3 colspan="2">New Lead</h3>
@@ -128,8 +129,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>          
         </vaadin-form-layout>
         <!---->
-
-        <add-outbox-item></add-outbox-item>
+        
+        <form-new-lead></form-new-lead>
+        <!---->
 
       </template>
     </vaadin-dialog>
@@ -138,9 +140,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    class FormNewLead extends Polymer.Element {
+    class NewLeadDialog extends Polymer.Element {
 
-      static get is() { return 'form-new-lead'; }
+      static get is() { return 'new-lead-dialog'; }
 
 			static get properties() { return {
 
@@ -195,7 +197,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     
       _tapSave() {
-        const name = 'form-new-lead';
+        const name = 'new-lead-dialog';
         const data = this.data;
         this._dispatchEvent(name, data);
 
@@ -204,21 +206,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _dispatchEvent(name, data) {
-			   const n = name;
-			   const o = {
-			     bubbles: true,
+			  const n = name;
+			  const o = {
+			    bubbles: true,
 			   	composed: true,
 			   	detail: data,
-			   };
-			   console.log('o\n', o);
-			   const d = new CustomEvent(n, o);
-			   //console.log('d\n', d);
-			   this.dispatchEvent(d);				
+			  };
+			  console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  //console.log('d\n', d);
+			  this.dispatchEvent(d);				
       }
 		
     }
 
-    customElements.define(FormNewLead.is, FormNewLead);
+    customElements.define(NewLeadDialog.is, NewLeadDialog);
 
   </script>
 
