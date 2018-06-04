@@ -22,7 +22,10 @@
       }
     </style>
     <app-methods id="methods"></app-methods>
+    
     <!---->
+    <h3 colspan="2">New Lead</h3>
+    <!--- ->
     <paper-item class="header">
       <!--- ->
       <paper-ripple></paper-ripple>
@@ -30,18 +33,18 @@
         <div class="avatar xblue" slot="item-icon">
           <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
         </div>
-      <!---->
+      <!--- /->
       <paper-item-body xtwo-line>
         Send a new lead
         <!--- ->
         <div secondary>Jan 9, 2014</div>
-        <!---->
+        <!--- /->
       </paper-item-body>
       <!--- ->
       <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
       <!--- ->
       <div>0/2</div>
-      <!---->
+      <!--- /->
     </paper-item>
     <!---->
     <paper-icon-item>
@@ -135,8 +138,8 @@
       <!---->
       <paper-item-body xtwo-line>
         <div>
-          <paper-button on-tap="_reset">Cancel</paper-button>
-          <paper-button on-tap="_save" class="primary">Save</paper-button>
+          <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+          <paper-button on-tap="_tappedSave" autofocus class="primary">Save</paper-button>
         </div>
       </paper-item-body>
       <!--- ->
@@ -174,9 +177,21 @@
 			// _itemChanged(o) {
 			// 	console.log('item', o);
 			// }
+
+      _tappedCancel() {
+        this._resetItem();
+        this._dispatchCloseDialog();
+      }
 			
-      _save() {
+      _tappedSave() {
         const data = this.item;
+        this._save(data);
+        this._dispatchCloseDialog();
+        this._resetItem();
+      }
+
+      _save(r) {
+        const data = r || this.item;
 				const entity = 'lead-sent';
 				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
 				//const name = ['update', entity].join('-');
@@ -194,11 +209,35 @@
 				methods.method(detail);
 
         // new Promise().then()
-        this._reset();       
+        // this._resetItem();       
       }
 
-      _reset() {
+      _resetItem() {
         this.set('item', {});
+      }
+
+      _dispatchEvent(name, data) {
+			  const n = name;
+			  const o = {
+			    bubbles: true,
+			   	composed: true,
+			   	detail: data,
+			  };
+			  // console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  //console.log('d\n', d);
+			  this.dispatchEvent(d);				
+      }
+
+      // _dispatchSaveItem() {
+      //   // at present time (june 2018), we will decentralize save operations by policy
+      //   // this preserves and facilitates maximum flexibility in the save method at each node
+      //   // therefore, do not dispatch an event
+      // }
+
+      _dispatchCloseDialog() {
+        // this._dispatchEvent(name, data);
+        this._dispatchEvent('close-dialog');
       }
 		
 		}

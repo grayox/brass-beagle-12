@@ -72,7 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     keys="enter"
                     xon-keys-pressed="onEnter"
                     xon-keys-pressed="_save"
-                    on-keys-pressed="_tapSave"
+                    on-keys-pressed="_tappedSave"
                     >
     </iron-a11y-keys>
 
@@ -124,13 +124,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-input label="Email" value="{{data.email}}"></paper-input>
           <paper-input label="Zip code" value="{{data.zip}}"></paper-input>
           <div class="buttons" colspan="2">
-            <paper-button dialog-dismiss on-tap="_tapDismiss">Cancel</paper-button>
-            <paper-button dialog-confirm autofocus class="primary" on-tap="_tapSave">Save</paper-button>
+            <paper-button dialog-dismiss on-tap="_tappedCancel">Cancel</paper-button>
+            <paper-button dialog-confirm autofocus class="primary" on-tap="_tappedSave">Save</paper-button>
           </div>          
         </vaadin-form-layout>
         <!---->
         
-        <form-new-lead></form-new-lead>
+        <form-new-lead on-close-dialog="_closeDialog"></form-new-lead>
         <!---->
 
       </template>
@@ -187,7 +187,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.set('opened', false);
       }
     
-      _tapDismiss() {
+      _tappedCancel() {
         this._closeDialog();
         this._resetData();
       }
@@ -196,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.set('data', {});
       }
     
-      _tapSave() {
+      _tappedSave() {
         const name = 'new-lead-dialog';
         const data = this.data;
         this._dispatchEvent(name, data);

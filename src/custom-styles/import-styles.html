@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<style>
+  
+  /* font imports */
+  /** /
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
+  @import url('https://fonts.googleapis.com/css?family=Lato:300,400');
+  /**/
+  
+  html,
+  body {
+    
+    margin: 0;
+    font-family: 'Roboto', 'Noto', 'Lato', 'Open Sans', sans-serif;
+    font-size: 15px; /* 13px */
+    line-height: 1.15; /* 1.5 */
+    min-height: 100vh;
+    background-color: red; /* yellow; /* should never see; indicates problem */
+    
+    /* variables */
+    
+    /* https://codecrafted.net/randommaterial/                 */
+    /* https://www.materialpalette.com/deep-purple/deep-orange */
+    /* theme-colors.html                                       */
+    /* --dark-primary-color                                    */
+    /* --primary-color                                         */
+    /* --light-primary-color                                   */
+    /* --accent-color                                          */
+    /* --text-icons             #FFFFFF opacity: 1.00          */
+    /* --primary-text           #212121 opacity: 0.87          */
+    /* --secondary-text         #757575 opacity: 0.54          */
+    /* --divider-color-text     #BDBDBD opacity: 0.26          */
+    --opacity-normal:   0.87; /* #212121 --primary-text         */
+    --opacity-dim:      0.54; /* #757575 --secondary-text       */
+    --opacity-divider:  0.26; /* #BDBDBD --divider-color        */
+    --opacity-disabled: 0.26; /* #BDBDBD --divider-color        */
+
+    /* https://developer.apple.com/ios/human-interface-guidelines/visual-design/color/ */
+    --apple-ios-red:       rgb( 255,  59,  48 );
+    --apple-ios-orange:    rgb( 255, 149,   0 );
+    --apple-ios-yellow:    rgb( 255, 204,   0 );
+    --apple-ios-green:     rgb(  76, 217, 100 );
+    --apple-ios-teal-blue: rgb(  90, 200, 250 );
+    --apple-ios-blue:      rgb(   0, 122, 255 );
+    --apple-ios-purple:    rgb(  88,  86, 214 );
+    --apple-ios-pink:      rgb( 255,  45,  85 );
+    
+    --water: #1879DB; /* #187CDD #1778DC */
+    --water-light: #1B87E3;
+    --water-dark: #166ED5;
+    --charcoal: rgb(75, 75, 75); /*#4B4B4B;*/
+    --charcoal-light: #585858;
+    --charcoal-dark: rgb(67, 67, 67); /*#434343;*/
+    --mist: #FAFAFA;
+    --highlight: var(--paper-amber-500);/*var(--paper-red-500);/*#FFBB00;/*#FFFF00;#FFEE00;>#FFEA00;#FFDD00;#FFCC00;#FFBB00;#FFAA00;#FF9900;#FF8800;yellow;/*#DB6318;*/
+
+    --app-primary-color: var(--apple-ios-blue);
+    --app-primary-color: var(--water);
+    --app-primary-color-light: var(--water-light);
+    --app-primary-color-dark: var(--water-dark);
+    --app-background-color: var(--mist);
+    --app-highlight-color: var(--highlight);
+    
+    --dashboard-element: var(--charcoal);
+    --dashboard-element-hover: var(--charcoal-dark);
+
+    --primary-color: var(--app-primary-color);
+    --primary-color-light: var(--app-primary-color-light);
+    --primary-color-dark: var(--app-primary-color-dark);
+    --accent-color: var(--app-highlight-color);
+  }
+  
+  /* styling for render while resources are loading */
+  app-main[unresolved] {
+    display: block;
+    min-height: 101vh;
+    font-weight: normal;
+    text-align: center;
+    /** /
+    font-size: 16px;
+    line-height: 68px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    /**/
+    color: #202020;
+    padding: 0 16px;
+    overflow: visible;
+    
+    background-color: var(--app-primary-color); /*rgb(24, 121, 219); /* rgb(250, 250, 250) */
+  }
+  
+  app-main[unresolved] > img.brand {
+    margin-top: 25%;
+    height: 8em;
+    max-width: 50vw;
+  }
+
+</style>
+
+<script>
+  const importDoc = document.currentScript.ownerDocument;
+  const style = importDoc.querySelector('style');
+  document.head.appendChild(style);
+</script>

@@ -86,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>
     
-    <paper-fab icon="add" elevation="1" on-tap="_tapFab"></paper-fab>
+    <paper-fab icon="add" elevation="1" on-tap="_tappedFab"></paper-fab>
 
     <new-lead-dialog id="form"></new-lead-dialog>
 
@@ -167,7 +167,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         form.opened = false;
       }
       
-      _tapFab() {
+      _tappedFab() {
         this._openForm();
       }
 		
