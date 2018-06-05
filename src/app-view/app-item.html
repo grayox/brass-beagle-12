@@ -215,6 +215,11 @@ Types of elements
                   <div>[[label]]</div>
                   <div secondary>[[data]]</div>
                 </paper-item-body>
+                <!---->
+                <div>[[dataRight]]</div>
+                <!--- ->
+                <slot></slot>
+                <!---->
               </paper-item>
             </div>
             <!-- icon -->
@@ -228,6 +233,23 @@ Types of elements
                   <div>[[label]]</div>
                   <div secondary>[[data]]</div>
                 </paper-item-body>
+                <!---->
+                <div>[[dataRight]]</div>
+                <!--- ->
+                TODO: Maybe use a slot or hidden$ to handle HTML content like <paper-icon-button> or <iron-icon>
+                TODO: Figure out how to call functions from <paper-icon-button>.
+                      For those use cases, aybe just copypaste this code directly
+                      and use <paper-item> directly> instead of using <app-item>.
+                <!--- ->
+                Update: Replaced databinding with <slot> to allow HTML content
+                        of the above data, icons and buttons attached to functions.
+                Update: Slot implementation does not render. Will circle back later.
+                        Might need to consider having multiple options/cases using hidden$.
+                <!--- ->
+                <div>
+                  <slot></slot>
+                </div>
+                <!---->
               </paper-icon-item>
             </div>
           </div>
@@ -490,7 +512,15 @@ Types of elements
         //   computed: '_computeSelectedMenuData(key, selectedMenuItem, selectedMenuItemLabel)',
         // },
 
-				data: { // right side
+				data: { // right-side for one-line // secondary (left, below label) for two-line
+					type: String, //Object, 
+					notify: true,
+					// observer: '_dataChanged',
+          // value: () => 'vaadin:phone', //'star'
+          // computed: '_computeData(appSettings, userSettings, view, key)',
+				},
+
+				dataRight: { // right-side for two-line
 					type: String, //Object, 
 					notify: true,
 					// observer: '_dataChanged',
