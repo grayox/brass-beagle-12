@@ -84,6 +84,37 @@
 				//window.addEventListener('webkitAnimationEnd', () => this.onAnimationEnd());
 				//window.addEventListener('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => this.onAnimationEnd());
 		  }
+
+      // * * * * * usage notes * * * * *
+
+      // include some of the following code in the element calling <annimated-css>
+
+      // _showDetailMobile() {
+      //   // this.set('subroute', 'detail');
+
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   // list.animation = 'slideOutLeft';
+      //   list.animateExit();
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   // detail.hidden = false;
+      //   // detail.animation = 'slideInRight';
+      //   detail.animateEntry();
+      // }
+      
+      // _showListMobile() {
+      //   // this.set('subroute', 'list');
+
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   // list.animation = 'slideInLeft';
+      //   list.animateEntry();
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   // detail.animation = 'slideOutRight';
+      //   detail.animateExit();
+      // }
+
+      // * * * * * end: usage notes * * * * *
 			
 			// _showChanged(b) {
 			// 	//console.log('b\n', b);
@@ -169,9 +200,9 @@
 			animate(animation) {
 				// list of animations: https://github.com/daneden/animate.css
 				const animated = this.$.animated;
-				//console.log('animated\n', t);
+				// console.log('animated\n', animated);
 				const classList = animated.classList;
-				//console.log('classList\n', classList);
+				// console.log('class-list\n', classList);
 				classList.add('animated', animation);
 				//classList.toggle(animation);
 				//classList.toggle(animation);
@@ -187,6 +218,8 @@
       }
       
       animateEntry(s) {
+        // console.log('animate-entry\n', s);
+
         this.set('showAfter', true);
 
         const animation = s || this.entryAnimation;
@@ -197,6 +230,8 @@
       }
       
       animateExit(s) {
+        // console.log('animate-exit\n', s);
+
         this.set('showAfter', false);
         
         const animation = s || this.exitAnimation;

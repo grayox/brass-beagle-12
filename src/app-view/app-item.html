@@ -66,6 +66,19 @@ Types of elements
 <dom-module id="app-item">
   <template>
     <style include="paper-item-styles">
+      .header-parent, .subheader-parent {
+        /**
+         * 1. background-color css needs to be applied to <div> parent of <paper-item>
+         * otherwise, the background will be partially transparent
+         * 2. var(--mist) color matches with css set for #main-content
+         */
+        background-color: var(--mist);
+        /** /
+        background-color: blue;
+        background-color:rgba(0, 0, 255, 1.0);
+        z-index: 1;
+        /**/
+      }
       .subpage-header {
         color: white;
         opacity: 1.0;
@@ -107,7 +120,7 @@ Types of elements
 
       <!-- type: 'header' -->
       <template restamp is="dom-if" if="[[_computeTypeIsHeader(type)]]">
-        <div hidden$="[[!_computeTypeIsHeader(type)]]">
+        <div class="header-parent" hidden$="[[!_computeTypeIsHeader(type)]]">
           <paper-item class="header">
             <!--- ->
             <paper-ripple recenters></paper-ripple>
@@ -149,7 +162,7 @@ Types of elements
   
       <!-- type: 'subheader' -->
       <template restamp is="dom-if" if="[[_computeTypeIsSubheader(type)]]">
-        <div hidden$="[[!_computeTypeIsSubheader(type)]]">
+        <div class="subheader-parent" hidden$="[[!_computeTypeIsSubheader(type)]]">
           <paper-item class="subheader">
             <!--- ->
             <paper-ripple recenters></paper-ripple>

@@ -25,7 +25,7 @@
 
       /* correct css for positioning animated pages */
 
-      #animated-list-desktop {
+      #list-desktop {
         z-index: 1;
       }
 
@@ -90,11 +90,11 @@
     <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
-        <view-settings-list id="animated-list-desktop"
+        <view-settings-list id="list-desktop"
                             selected="{{selected}}"
                             xselected="{{selectedList}}"
                             user-local="[[userLocal]]"
-                            xon-tap="_showDetailDesktop"
+                            on-tap="_showDetailDesktop"
                             >
         </view-settings-list>
         <animated-css id="animated-detail-desktop"
@@ -563,6 +563,8 @@
       //   this.root.querySelector('#dialog').opened = false;
       // }
 
+      // * * * * * start: animations * * * * *
+
       _selectedListChanged(dataNew, dataOld) {
         // log to verify
         console.log('data-old', dataOld);
@@ -591,6 +593,7 @@
       }
 
       _onAnimationEnd() {
+        return;
         // wait for promise to return or no element
         
         // define variables
@@ -612,9 +615,9 @@
       }
 
       _showDetailDesktop() {
-        // const detail = this.root.querySelector('#animated-detail-desktop');
-        // detail.animateExit();
-        // detail.animateEntry();
+        const detail = this.root.querySelector('#animated-detail-desktop');
+        //detail.animateExit();
+        detail.animateEntry();
       }
 
       _showDetailMobile() {
@@ -657,6 +660,8 @@
       //   const detail = this.root.querySelector('#animated-detail-mobile');
       //   detail.hidden = false;
       // }
+
+      // * * * * * end: animations * * * * *
 			
     }
 
