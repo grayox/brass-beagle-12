@@ -52,6 +52,18 @@
 						// value: () => 'slideOutLeft',
 						// observer: '_exitAnimationChanged',
 					},
+
+          lastAnimationType: {
+            type: String, // 'entry', 'exit', 'other', 'none'
+            notify: true,
+						value: () => 'none',
+          },
+
+          lastAnimationName: {
+            type: String,
+            notify: true,
+						// value: () => 'none',
+          },
 					
 					show: {
 						type: Boolean,
@@ -209,7 +221,7 @@
 				
 				// classList.add('animated', animation).on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', () => {
 				//   console.log('classList\n', classList);
-				// 	classList.remove('animated', animation);
+				// 	 classList.remove('animated', animation);
         // });
         
 				//console.log('classList\n', classList);
@@ -218,15 +230,19 @@
       }
       
       animateEntry(s) {
-        // console.log('animate-entry\n', s);
 
         this.set('showAfter', true);
 
         const animation = s || this.entryAnimation;
         const animated = this.$.animated;
+        // console.log('animation\n', animation);
 
         animated.hidden = false;
         this.animate(animation);
+
+        // set properties
+        this.set('lastAnimationType', 'entry');
+        this.set('lastAnimationName', animation);
       }
       
       animateExit(s) {
@@ -239,6 +255,10 @@
 
         // animated.hidden = false;
         this.animate(animation);
+
+        // set properties
+        this.set('lastAnimationType', 'exit');
+        this.set('lastAnimationName', animation);
       }
 
       // _onAnimateEntryEnd(e) {

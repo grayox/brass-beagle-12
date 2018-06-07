@@ -3,10 +3,8 @@
 
 <!---->
 <link rel="import" href="/src/app-main/app-methods.html">
+<link rel="import" href="/src/app-view/app-item.html">
 <link rel="import" href="/src/custom-elements/paper-item-zip/paper-item-zip.html">
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
-
-<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <!---->
 
 <dom-module id="form-new-lead">
@@ -23,29 +21,10 @@
     </style>
     <app-methods id="methods"></app-methods>
     
-    <!---->
-    <h3 colspan="2">New Lead</h3>
-    <!--- ->
-    <paper-item class="header">
-      <!--- ->
-      <paper-ripple></paper-ripple>
-      <!--- ->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
-        </div>
-      <!--- /->
-      <paper-item-body xtwo-line>
-        Send a new lead
-        <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!--- /->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!--- /->
-    </paper-item>
+    <app-item type="header"
+              label="New lead"
+              >
+    </app-item>
     <!---->
     <paper-icon-item>
       <paper-ripple></paper-ripple>

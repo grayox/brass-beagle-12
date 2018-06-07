@@ -91,20 +91,22 @@
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-settings-list id="list-desktop"
-                            selected="{{selected}}"
-                            xselected="{{selectedList}}"
+                            xselected="{{selected}}"
+                            selected="{{selectedList}}"
                             user-local="[[userLocal]]"
-                            on-tap="_showDetailDesktop"
+                            xon-tap="_showDetailDesktop"
                             >
         </view-settings-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       on-animation-end="_onAnimationEnd"
+                      last-animation-type="{{lastAnimationType}}"
+                      last-animation-name="{{lastAnimationName}}"
                       show
                       >
-          <view-settings-detail selected="[[selected]]"
-                                xselected="[[selectedDetail]]"
+          <view-settings-detail xselected="[[selected]]"
+                                selected="[[selectedDetail]]"
                                 user-local="[[userLocal]]"
                                 >
           </view-settings-detail>    
@@ -567,8 +569,8 @@
 
       _selectedListChanged(dataNew, dataOld) {
         // log to verify
-        console.log('data-old', dataOld);
-        console.log('data-new', dataNew);
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
 
         // define variables
         const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
@@ -579,38 +581,56 @@
           detail.animateExit(); // wait for on-animation-end to proceed
         } else {
           // hide to do machinations behind-the-scenes
-          detail.hidden = true;
+          // detail.hidden = true;
 
           // set new selectedDetail
           this.set('selectedDetail', dataNew);
 
           // animate new selectedDetail entry
-          detail.animateExit();
+          detail.animateEntry();
 
           // unhide to show animations
-          detail.hidden = false;
+          // detail.hidden = false;
         }
       }
 
-      _onAnimationEnd() {
-        return;
-        // wait for promise to return or no element
-        
+      _onAnimationEnd(e) {
+        // console.log('on-animation-end', e);
+        // console.log('detail', e.detail); // slideInLeft
+        // console.log('type'  , e.type  ); // animation-end
+     
         // define variables
         const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        // const lastAnimationType = detail.lastAnimationType;
+        const lastAnimationType = this.lastAnimationType;
+        const lastAnimationName = this.lastAnimationName;
+        // console.log('last-animation-type', lastAnimationType);
+        
+        // return if entry-animation just ended (to avoid infinite loop)
+        if(lastAnimationType !== 'exit') {
+          return;
+        }
+        
+        // otherwise, the last animation type was an 'exit',
+        // so now proceed to implement the next 'entry' animation
+        // console.log('last-animation-name', lastAnimationName);
+
+        // this.set('selectedDetail', dataNew);
+        
+        // wait for promise to return or no element
         
         // hide to do machinations behind-the-scenes
-        detail.hidden = true;
+        // detail.hidden = true;
 
         // set new selectedDetail
         const selectedList = this.selectedList;
         this.set('selectedDetail', selectedList);
 
         // animate new selectedDetail entry
-        detail.animateExit();
+        detail.animateEntry();
         
         // unhide to show animations
-        detail.hidden = false;
+        // detail.hidden = false;
           
       }
 
