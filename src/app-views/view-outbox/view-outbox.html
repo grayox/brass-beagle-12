@@ -14,6 +14,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="view-outbox-list.html">
 <link rel="import" href="view-outbox-detail.html">
 
+<!-- state -->
+<link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
+<!---->
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/custom-elements/animated-css.html">
+
 <!--- ->
 <!--- ->
 Demos
@@ -37,67 +48,88 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
     </style>
 		
-		<!---->
-      <div class="wrapper split">
-				<!--- ->
-        <header class="header">
-					Dashboard
-				</header>
-        
-				<!--- ->
-        <div class="panel">Panel A</div>
-        <div class="panel">Panel B</div>
-        <div class="panel">Panel C</div>
-        <div class="panel">Panel D</div>
-        <div class="panel">Panel E</div>
-        <div class="panel">Panel F</div>
-        <div class="panel">Panel G</div>
-        <div class="panel">Panel H</div>
-        <div class="panel">Panel I</div>
-        <div class="panel">Panel J</div>
-				<!---->
-				
-				<!--- ->
-        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
-        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
-        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-				<!---->
-				
-				<!--- ->
-				<shields-io left="left"
-										right="right"
-										color="blue"
-										>
-				</shields-io>
-				<!--- ->
-        <footer class="footer">My footer</footer>
-        <!---->
-        <view-outbox-list></view-outbox-list>
-        <view-outbox-detail></view-outbox-detail>
-        
-        <!--- ->
-        <template is="dom-if" if="{{!_split}}">
-          <view-outbox-list></view-outbox-list>
-          <view-outbox-detail></view-outbox-detail>
-        </template>
-        
-        <template is="dom-if" if="{{_split}}">
-          <div class="split">
-            <view-outbox-list></view-outbox-list>
-            <view-outbox-detail></view-outbox-detail>  		
-          </div>
-        </template>
-        <!---->
+    <!-- state -->
+    <state-media media-type="{{mediaType}}"></state-media>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <app-methods id="methods" show-toast event-dispatch
+                 on-method-success="_onMethodSuccess"
+                 >
+    </app-methods>
 
+    <!-- desktop, tablet -->
+    <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
+      <div class="wrapper split">
+        <view-outbox-list id="list-desktop"
+                            xselected="{{selected}}"
+                            selected="{{selectedList}}"
+                            user-local="[[userLocal]]"
+                            xon-tap="_showDetailDesktop"
+                            >
+        </view-outbox-list>
+        <animated-css id="animated-detail-desktop"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      on-animation-end="_onAnimationEnd"
+                      last-animation-type="{{lastAnimationType}}"
+                      last-animation-name="{{lastAnimationName}}"
+                      show
+                      >
+          <view-outbox-detail xselected="[[selected]]"
+                                selected="[[selectedDetail]]"
+                                user-local="[[userLocal]]"
+                                >
+          </view-outbox-detail>    
+        </animated-css>
       </div>
-		<!---->
+    </template>
+
+    <!-- with animation and without iron pages -->
+    <!-- mobile -->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="animated-pages-wrapper">
+       
+        <!-- view-outbox-list -->
+        <animated-css id="animated-list-mobile"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      show
+                      >
+          <div name="list" on-tap="_showDetailMobile">
+            <view-outbox-list selected="{{selected}}"
+                                user-local="[[userLocal]]"
+                                >
+            </view-outbox-list>
+          </div>      
+        </animated-css>
+
+        <!-- view-outbox-detail -->
+        <div name="detail" id="detail">
+          <animated-css id="animated-detail-mobile"
+                        entry-animation="slideInRight"
+                        exit-animation="slideOutRight"
+                        xhidden
+                        >
+            <!--- ->
+            <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+            <!---->
+            <app-item type="subpage-header"
+                      on-subpage-back-button="_showListMobile"
+                      label="[[selected]]"
+                      >
+            </app-item>
+            <!---->
+            <view-outbox-detail selected="[[selected]]"
+                                user-local="[[userLocal]]"
+                                >
+            </view-outbox-detail>
+          </animated-css>
+        </div>         
+        <!---->
+        <!---->      
+  
+      </div>
+    </template>
+    <!---->
 
   </template>
 
@@ -108,11 +140,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       static get is() { return 'view-outbox'; }
 
 			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
+				
+				mediaType: {
+					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
-					//observer: '_mediaWidthChanged',
 				},
+
       }}
 			
       constructor() {
@@ -124,8 +157,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				//console.log('Component Ready');
 			}
       
-			/**/
-			/**/
+      _computeShowSplit(s) {
+				return s !== 'mobile';
+      }  
 		
     }
 

@@ -66,6 +66,14 @@ Types of elements
 <dom-module id="app-item">
   <template>
     <style include="paper-item-styles">
+
+      /**
+       * * * Note * * *
+       * Wrap app-items in <div role="listbox"></div>
+       * to prevent spaces between items
+       * * * *  * * * *
+       */  
+
       .header-parent, .subheader-parent {
         /**
          * 1. background-color css needs to be applied to <div> parent of <paper-item>
@@ -79,6 +87,7 @@ Types of elements
         z-index: 1;
         /**/
       }
+
       .subpage-header {
         color: white;
         opacity: 1.0;

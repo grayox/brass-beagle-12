@@ -21,112 +21,66 @@
     </style>
     <app-methods id="methods"></app-methods>
     
-    <app-item type="header"
-              label="New lead"
-              >
-    </app-item>
-    <!---->
-    <paper-icon-item>
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:user" alt="inbox"></paper-icon-button>
-      </div>
-      <!---->
-      <paper-item-body xtwo-line>
-        <paper-input label="Name" value="{{item.name}}"></paper-input>
-        <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!---->
-    </paper-icon-item>
-    
-    <paper-item-zip></paper-item-zip>
+    <div role="listbox">
+    <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
 
-    <paper-icon-item>
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:map-marker" alt="inbox"></paper-icon-button>
-      </div>
-      <!---->
-      <paper-item-body xtwo-line>
-        <paper-input label="Zip code" value="{{item.zip}}"></paper-input>
+      <app-item type="header"
+                label="New lead"
+                >
+      </app-item>
+      
+      <app-item type="input-text"
+                label="Name"
+                icon="vaadin:user"
+                data="{{item.name}}"
+                >
+      </app-item>
+  
+      <paper-item-zip></paper-item-zip>
+  
+      <app-item type="input-text"
+                label="Zip code"
+                icon="vaadin:map-marker"
+                data="{{item.zip}}"
+                >
+      </app-item>
+  
+      <app-item type="input-text"
+                label="Phone"
+                icon="vaadin:phone"
+                data="{{item.phone}}"
+                >
+      </app-item>
+  
+      <app-item type="input-text"
+                label="Email"
+                icon="communication:email"
+                data="{{item.email}}"
+                >
+      </app-item>
+  
+      <dashboard-detail-type></dashboard-detail-type>
+  
+      <paper-item class="buttons">
         <!--- ->
-        <div secondary>Jan 9, 2014</div>
+          <div class="avatar xblue" slot="item-icon">
+            <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+          </div>
         <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!---->
-    </paper-icon-item>
-
-    <paper-icon-item>
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="vaadin:phone" alt="inbox"></paper-icon-button>
-      </div>
-      <!---->
-      <paper-item-body xtwo-line>
-        <paper-input label="Phone" value="{{item.phone}}"></paper-input>
+        <paper-item-body xtwo-line>
+          <div>
+            <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+            <paper-button on-tap="_tappedSave" autofocus class="primary">Save</paper-button>
+          </div>
+        </paper-item-body>
         <!--- ->
-        <div secondary>Jan 9, 2014</div>
-        <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!---->
-    </paper-icon-item>
-    <paper-icon-item>
-      <paper-ripple></paper-ripple>
-      <!---->
-      <div class="avatar xblue" slot="item-icon">
-        <paper-icon-button icon="communication:email" alt="inbox"></paper-icon-button>
-      </div>
-      <!---->
-      <paper-item-body xtwo-line>
-        <paper-input label="Email" value="{{item.email}}"></paper-input>
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
         <!--- ->
-        <div secondary>Jan 9, 2014</div>
+        <div>0/2</div>
         <!---->
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!---->
-    </paper-icon-item>
+      </paper-item>
 
-    <dashboard-detail-type></dashboard-detail-type>
-
-    <paper-item class="buttons">
-      <!--- ->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
-        </div>
-      <!---->
-      <paper-item-body xtwo-line>
-        <div>
-          <paper-button on-tap="_tappedCancel">Cancel</paper-button>
-          <paper-button on-tap="_tappedSave" autofocus class="primary">Save</paper-button>
-        </div>
-      </paper-item-body>
-      <!--- ->
-      <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-      <!--- ->
-      <div>0/2</div>
-      <!---->
-    </paper-item>
+    </div>
     
 		
 	</template>
@@ -136,12 +90,14 @@
       static get is() { return 'form-new-lead'; }
 
       static get properties() { return {
-				item: {
+				
+        item: {
 					type: Object,
 					notify: true,
           value: () => ({}),
 					// observer: '_itemChanged',
 				},
+
 			}}
 			
 			constructor() {

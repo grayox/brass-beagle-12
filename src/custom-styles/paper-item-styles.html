@@ -9,7 +9,18 @@
           background-color: var(--app-primary-color);
           color: white;
           border-radius: 4px;
-        };
+        }
+        /** /
+        --bleed-spacing: {
+          margin: 0;
+          padding: 0;
+        }
+        /** /
+        paper-item {
+          margin: 0;
+          padding: 0;
+        }
+        /**/
       }
 
       .button-save {
@@ -76,8 +87,11 @@
         background-color: white;
         border-bottom: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
 
-        white-space: nowrap;
         cursor: pointer;
+        /** /
+        white-space: nowrap;
+        @apply --bleed-spacing;
+        /**/
       }
 
       .header {
