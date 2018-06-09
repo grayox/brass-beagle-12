@@ -429,8 +429,8 @@ Types of elements
             <xpaper-ripple recenters></xpaper-ripple>
             <paper-item-body xtwo-line>
               <div>
-                <paper-button class="button-cancel" on-tap="_reset">Cancel</paper-button>
-                <paper-button class="button-save" on-tap="_save">Save</paper-button>
+                <paper-button class="button-cancel" on-tap="_tappedCancel">Cancel</paper-button>
+                <paper-button class="button-save" autofocus on-tap="_tappedSave">Save</paper-button>
               </div>
             </paper-item-body>
           </paper-item>
@@ -744,17 +744,18 @@ Types of elements
         this.dispatchEvent(d);
 			}
 
-      _save(e) {
+      _tappedSave(e) {
         // console.log('e\n', e);
         // this._dispatchEvent('save-app-item');
         // const data = this.dataString;
         const data = this.data;
         // console.log('data\n', data);
-        this._dispatchEvent('detail-save-button', data);
+        this._dispatchEvent('save-button-tapped', data);
       }
 
-      _reset(e) {
+      _tappedCancel(e) {
         // console.log('e\n', e);
+        this._dispatchEvent('cancel-button-tapped');
       }
 
       _subpageBackButton() {

@@ -60,25 +60,14 @@
       </app-item>
   
       <dashboard-detail-type></dashboard-detail-type>
-  
-      <paper-item class="buttons">
-        <!--- ->
-          <div class="avatar xblue" slot="item-icon">
-            <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
-          </div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div>
-            <paper-button on-tap="_tappedCancel">Cancel</paper-button>
-            <paper-button on-tap="_tappedSave" autofocus class="primary">Save</paper-button>
-          </div>
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>0/2</div>
-        <!---->
-      </paper-item>
+
+      <!---->
+      <app-item type="button-save"
+                on-save-button-tapped="_tappedSave"
+                on-cancel-button-tapped="_tappedCancel"
+                >
+      </app-item>
+      <!---->
 
     </div>
     
