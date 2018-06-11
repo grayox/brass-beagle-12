@@ -36,14 +36,16 @@
                 >
       </app-item>
   
-      <paper-item-zip></paper-item-zip>
+      <paper-item-zip zip-code="{{item.zip}}"></paper-item-zip>
   
+      <!--- ->
       <app-item type="input-text"
                 label="Zip code"
                 icon="vaadin:map-marker"
                 data="{{item.zip}}"
                 >
       </app-item>
+      <!---->
   
       <app-item type="input-text"
                 label="Phone"
@@ -59,7 +61,7 @@
                 >
       </app-item>
   
-      <select-lead-type></select-lead-type>
+      <select-lead-type selected="{{item.type}}"></select-lead-type>
 
       <!---->
       <app-item type="button-save"

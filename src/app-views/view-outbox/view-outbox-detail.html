@@ -30,11 +30,118 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         --line-color: #DDDDDD;
         border-left: 1px var(--line-color) solid;
       }
+
+      div {
+        padding: 0;
+        margin: 0;
+      }
     </style>
 
-    <!---->
+    <!--- ->
 		<form-new-lead></form-new-lead>
+    <!--- ->
+    hello world
     <!---->
+
+    <div role="listbox">
+    <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
+
+      <app-item type="header"
+                label="Lead detail"
+                >
+      </app-item>
+  
+      <app-item type="output"
+                two-line
+                label="Type"
+                icon="vaadin:home"
+                data="{{item.type}}"
+                >
+      </app-item>
+
+      <app-item type="output"
+                two-line
+                label="Name"
+                icon="vaadin:user"
+                data="{{item.name}}"
+                >
+      </app-item>  
+      
+      <app-item type="output"
+                two-line
+                label="City"
+                icon="star"
+                data="{{item.city}}"
+                >
+      </app-item>
+      
+      <app-item type="output"
+                two-line
+                label="State"
+                icon="star"
+                data="{{item.state}}"
+                >
+      </app-item>  
+      
+      <app-item type="output"
+                two-line
+                label="Zip"
+                icon="star"
+                data="{{item.zip}}"
+                >
+      </app-item>
+
+      <!--- ->
+      <paper-item-zip zip-code="{{item.zip}}"></paper-item-zip>
+  
+      <!--- ->
+      <app-item type="output"
+                two-line
+                label="Zip code"
+                icon="vaadin:map-marker"
+                data="{{item.zip}}"
+                >
+      </app-item>
+      <!---->
+  
+      <app-item type="output"
+                two-line
+                label="Phone"
+                icon="vaadin:phone"
+                data="{{item.phone}}"
+                >
+      </app-item>
+  
+      <app-item type="output"
+                two-line
+                label="Email"
+                icon="communication:email"
+                data="{{item.email}}"
+                >
+      </app-item>
+  
+      <!--- ->
+      <select-lead-type selected="{{item.type}}"></select-lead-type>
+
+      <!--- ->
+      <app-item type="button-save"
+                on-save-button-tapped="_tappedSave"
+                on-cancel-button-tapped="_tappedCancel"
+                >
+      </app-item>
+      <!---->
+  
+      <app-item type="output"
+                two-line
+                label="Submitted"
+                xicon="watch-later"
+                icon="device:access-time"
+                xicon="vaadin:clock"
+                data="{{item.submitted}}"
+                >
+      </app-item>
+
+    </div>
 
   </template>
 
@@ -44,16 +151,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-outbox-detail'; }
 
-      /** /
-			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
-      }}
-      /**/
-			
+      // static get properties() { return {
+			// 	mediaWidth: {
+			// 		type: Number, // 0, 1, 2, 3
+			// 		notify: true,
+			// 		//observer: '_mediaWidthChanged',
+			// 	},
+      // }}
+     	
       constructor() {
         super();
       }
@@ -62,9 +167,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
-      
-			/**/
-			/**/
 		
     }
 

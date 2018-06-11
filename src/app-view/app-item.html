@@ -18,6 +18,10 @@
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 <link rel="import" href="/src/custom-styles/icon-imports.html">
 
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-icons/device-icons.html">
+
 <link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-item/paper-item-body.html">
@@ -69,7 +73,8 @@ Types of elements
 
       /**
        * * * Note * * *
-       * Wrap app-items in <div role="listbox"></div>
+       * Wrap groups of app-items in
+       * <div role="listbox"></div>
        * to prevent spaces between items
        * * * *  * * * *
        */  
@@ -277,7 +282,34 @@ Types of elements
           </div>
         </div>
       </template>
-      
+
+      <!-- type: 'input-text' -->
+      <template is="dom-if" if="[[_computeTypeIsInputText(type)]]">
+        <div hidden$="[[!_computeTypeIsInputText(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <paper-input label="[[label]]" value="{{data}}"></paper-input>
+            </paper-item-body>
+            <!--- ->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <div>[[dataString]]</div>
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
+            <!---->            
+          </paper-icon-item>
+        </div>
+      </template>
+
+      <!-- type: 'input-phone' -->
+      <!-- <gold-phone-input></gold-phone-input> -->
+
+      <!-- type: 'input-email' -->
+      <!-- <paper-item type="email"></paper-item> -->
+
       <!-- type: 'menu-selection' -->
       <template restamp is="dom-if" if="[[_computeTypeIsMenuSelection(type)]]">
         <div hidden$="[[!_computeTypeIsMenuSelection(type)]]">
@@ -347,28 +379,7 @@ Types of elements
                       >
           </geo-select>
         </div>
-      </template>
-
-      <!-- type: 'input-text' -->
-      <template is="dom-if" if="[[_computeTypeIsInputText(type)]]">
-        <div hidden$="[[!_computeTypeIsInputText(type)]]">
-          <paper-icon-item>
-            <xpaper-ripple recenters></xpaper-ripple>
-            <div class="avatar" slot="item-icon">
-              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
-            </div>
-            <paper-item-body xtwo-line>
-              <paper-input label="[[label]]" value="{{data}}"></paper-input>
-            </paper-item-body>
-            <!--- ->
-            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-            <div>[[dataString]]</div>
-            <app-item-data data="[[data]]"></app-item-data>
-            <!---->
-            <!---->            
-          </paper-icon-item>
-        </div>
-      </template>     
+      </template>   
   
       <!-- type: 'counties-by-zip' -->
       <template is="dom-if" if="[[_computeTypeIsCountiesByZip(type)]]">
@@ -473,7 +484,8 @@ Types of elements
 				},
         
         type: { // for markup
-          // default: 'header' | 'subheader' | 'output' | 'input-text' | 'menu-item'
+          // default: 'header' | 'subpage-header' | 'subheader' | 'output'
+          // 'input-text' | 'input-phone' | 'input-email' | 'menu-item' |
           // 'checkbox' | 'toggle-button' | 'button-save' | 'xurgent' | 'xaction'
           type: String,
           notify: true,
@@ -649,9 +661,11 @@ Types of elements
       _computeTypeIsCountiesByZip (s) { return this._computeTypeIsTarget ( s, 'counties-by-zip' ) }
       _computeTypeIsGeoSelect     (s) { return this._computeTypeIsTarget ( s, 'geo-select'      ) } // verify import // item not defined in app-views.json // see app-view._handleTappedAppItem(): special-case
       _computeTypeIsHeader        (s) { return this._computeTypeIsTarget ( s, 'header'          ) }
-      _computeTypeIsInputMenu     (s) { return this._computeTypeIsTarget ( s, 'input-menu'      ) } // verify import // item not defined in app-views.json // see app-view._handleTappedAppItem(): special-case
-      _computeTypeIsInputText     (s) { return this._computeTypeIsTarget ( s, 'input-text'      ) } // verify import // item not defined in app-views.json // see app-view._handleTappedAppItem(): special-case
-      _computeTypeIsInputZip      (s) { return this._computeTypeIsTarget ( s, 'input-zip'       ) } // verify import // item not defined in app-views.json // see app-view._handleTappedAppItem(): special-case
+      _computeTypeIsInputEmail    (s) { return this._computeTypeIsTarget ( s, 'input-email'     ) }
+      _computeTypeIsInputMenu     (s) { return this._computeTypeIsTarget ( s, 'input-menu'      ) }
+      _computeTypeIsInputPhone    (s) { return this._computeTypeIsTarget ( s, 'input-phone'     ) }
+      _computeTypeIsInputText     (s) { return this._computeTypeIsTarget ( s, 'input-text'      ) }
+      _computeTypeIsInputZip      (s) { return this._computeTypeIsTarget ( s, 'input-zip'       ) }
       _computeTypeIsMenuItem      (s) { return this._computeTypeIsTarget ( s, 'menu-item'       ) }
       _computeTypeIsMenuSelection (s) { return this._computeTypeIsTarget ( s, 'menu-selection'  ) }
       _computeTypeIsOutput        (s) { return this._computeTypeIsTarget ( s, 'output'          ) }
