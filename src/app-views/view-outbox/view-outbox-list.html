@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 <link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/app-database/database-outbox.html">
 
 
 <dom-module id="view-outbox-list">
@@ -41,12 +42,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
    
-    <iron-list items="[[items]]">
+    <!-- state -->
+    <database-outbox items="{{items}}"></database-outbox>
+    <!---->
+
+    <iron-list role="listbox"
+               xmutable-data xrestamp
+               selection-enabled
+               items="[[items]]"
+               selected-item="{{selectedItem}}"
+               xselected="{{selected}}"
+               xattr-for-selected="name"
+               xselectable=".selectable"
+               >
       <template>
         <app-item two-line
                   type="output"
                   icon="[[item.icon]]"
                   label="[[item.name]]"
+                  name="[[item.name]]"
                   data="[[item.location]]"
                   data-right="[[item.age]] days ago"
                   >[[item.age]] days ago (does not work because slot not implemented in paper-item)
@@ -70,50 +84,62 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				// 	//observer: '_mediaWidthChanged',
 				// },
 
+				// selected: {
+				// 	type: String,
+				// 	notify: true,
+        //   observer: '_selectedChanged',
+        // },
+
+				selectedItem: {
+					type: Object,
+					notify: true,
+          //observer: '_selectedItemChanged',
+        },
+
 			  items: {
 			  	type: Array,
 			  	notify: true,
           // observer: '_itemsChanged',
-          value: () => [
-            { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age:  1, } ,
-            { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age:  2, } ,
-            { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age:  3, } ,
-            { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age:  4, } ,
-            { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age:  5, } ,
-            { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age:  6, } ,
-            { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age:  7, } ,
-            { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age:  8, } ,
-            { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age:  9, } ,
-            { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 10, } ,
-            { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 11, } ,
-            { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 12, } ,
-            // repeats above 12
-            { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 13, } ,
-            { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 14, } ,
-            { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 15, } ,
-            { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 16, } ,
-            { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 17, } ,
-            { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 18, } ,
-            { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 19, } ,
-            { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 20, } ,
-            { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 21, } ,
-            { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 22, } ,
-            { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 23, } ,
-            { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 24, } ,
-            // repeats above 12
-            { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 25, } ,
-            { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 26, } ,
-            { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 27, } ,
-            { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 28, } ,
-            { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 29, } ,
-            { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 30, } ,
-            { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 31, } ,
-            { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 32, } ,
-            { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 33, } ,
-            { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 34, } ,
-            { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 35, } ,
-            { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 36, } ,
-          ],
+          // value: () => [
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age:  1, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age:  2, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age:  3, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age:  4, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age:  5, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age:  6, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age:  7, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age:  8, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age:  9, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 10, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 11, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 12, } ,
+          //   // repeats above 12
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 13, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 14, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 15, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 16, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 17, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 18, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 19, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 20, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 21, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 22, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 23, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 24, } ,
+          //   // repeats above 12
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 25, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 26, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 27, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 28, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 29, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 30, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 31, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 32, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 33, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 34, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 35, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 36, } ,
+          // ],
 			  },
 
       }}
@@ -126,7 +152,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
 				//console.log('Component Ready');
 			}
-      
+
+      static get observers() {
+        return [
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          // '_userSettingsStoredChanged(userSettingsStored.*)',
+          // '_userSettingsChanged(userSettings.*)',
+          // '_selectedItemChanged(selectedItem.*)',
+        ]
+      }
+
+      // _itemsChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      // _selectedChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      // _selectedItemChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
 		
     }
 

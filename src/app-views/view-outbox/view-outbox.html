@@ -51,17 +51,38 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
-    <app-methods id="methods" show-toast event-dispatch
-                 on-method-success="_onMethodSuccess"
-                 >
-    </app-methods>
+
+
+    <div class="wrapper split">
+
+      <view-outbox-list id="list-desktop"
+                        xselected="{{selected}}"
+                        xselected="{{selectedList}}"
+                        xselected-item="{{selectedList}}"
+                        selected-item="{{selectedItem}}"
+                        user-local="[[userLocal]]"
+                        xon-tap="_showDetailDesktop"
+                        >
+      </view-outbox-list>
+
+      <view-outbox-detail xselected="[[selected]]"
+                          xselected="[[selectedDetail]]"
+                          xitem="[[selectedDetail]]"
+                          item="[[selectedItem]]"
+                          user-local="[[userLocal]]"
+                          >
+      </view-outbox-detail>
+
+    </div>
+
 
     <!-- desktop, tablet -->
-    <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
+    <!-- <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-outbox-list id="list-desktop"
                             xselected="{{selected}}"
-                            selected="{{selectedList}}"
+                            xselected="{{selectedList}}"
+                            selected-item="{{selectedList}}"
                             user-local="[[userLocal]]"
                             xon-tap="_showDetailDesktop"
                             >
@@ -75,60 +96,62 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       show
                       >
           <view-outbox-detail xselected="[[selected]]"
-                                selected="[[selectedDetail]]"
-                                user-local="[[userLocal]]"
-                                >
-          </view-outbox-detail>    
+                              xselected="[[selectedDetail]]"
+                              item="[[selectedDetail]]"
+                              user-local="[[userLocal]]"
+                              >
+          </view-outbox-detail>
         </animated-css>
       </div>
-    </template>
+    </template> -->
 
     <!-- with animation and without iron pages -->
     <!-- mobile -->
-    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
-      <div class="animated-pages-wrapper">
+    <!-- <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="animated-pages-wrapper"> -->
        
         <!-- view-outbox-list -->
-        <animated-css id="animated-list-mobile"
+        <!-- <animated-css id="animated-list-mobile"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       show
                       >
           <div name="list" on-tap="_showDetailMobile">
-            <view-outbox-list selected="{{selected}}"
-                                user-local="[[userLocal]]"
-                                >
+            <view-outbox-list selected-item="{{selected}}"
+                              user-local="[[userLocal]]"
+                              >
             </view-outbox-list>
           </div>      
-        </animated-css>
+        </animated-css> -->
 
         <!-- view-outbox-detail -->
-        <div name="detail" id="detail">
+        <!-- <div name="detail" id="detail">
           <animated-css id="animated-detail-mobile"
                         entry-animation="slideInRight"
                         exit-animation="slideOutRight"
                         xhidden
-                        >
+                        > -->
             <!--- ->
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
             <!---->
-            <app-item type="subpage-header"
+            <!-- <app-item type="subpage-header"
                       on-subpage-back-button="_showListMobile"
                       label="[[selected]]"
                       >
-            </app-item>
+            </app-item> -->
             <!---->
-            <view-outbox-detail selected="[[selected]]"
+            <!-- <view-outbox-detail xselected="[[selectedDetail]]"
+                                item="[[selectedDetail]]"
                                 user-local="[[userLocal]]"
                                 >
             </view-outbox-detail>
           </animated-css>
-        </div>         
+        </div>          -->
         <!---->
         <!---->      
   
-      </div>
-    </template>
+      <!-- </div>
+    </template> -->
     <!---->
 
   </template>
@@ -145,6 +168,52 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
 				},
+				
+				// _split: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// 	computed: '_computeSplit(mediaType)',
+				// },
+
+        // selectedItem: {
+        //   type: Object,
+        //   notify: true,
+        //   observer: '_selectedItemChanged',
+        // },
+
+				selectedList: {
+					 type: String,
+          notify: true,
+          observer: '_selectedListChanged',
+				},
+
+				selectedDetail: {
+					type: String,
+					notify: true,
+				},
+
+				selected: {
+					type: String,
+					notify: true,
+				},
+
+				label: {
+					type: String,
+          notify: true,
+          computed: '_computeLabel(selected)',
+				},
+    
+				subroute: {
+					type: String,
+          notify: true,
+          value: () => 'list', // 'list' | 'detail'
+				},
+    
+        userLocal: {
+      		type: Object,
+					notify: true,
+          // observer: '_userLocalChanged',
+        },
 
       }}
 			
@@ -159,7 +228,125 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       
       _computeShowSplit(s) {
 				return s !== 'mobile';
-      }  
+      }
+
+      // * * * * * start: animations * * * * *
+
+      _selectedListChanged(dataNew, dataOld) {
+        // log to verify
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+
+        // define variables
+        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        
+        // check for old value
+        if(dataOld) {
+          // animate old selectedDetail exit
+          detail.animateExit(); // wait for on-animation-end to proceed
+        } else {
+          // hide to do machinations behind-the-scenes
+          // detail.hidden = true;
+
+          // set new selectedDetail
+          this.set('selectedDetail', dataNew);
+
+          // animate new selectedDetail entry
+          detail.animateEntry();
+
+          // unhide to show animations
+          // detail.hidden = false;
+        }
+      }
+
+      _onAnimationEnd(e) {
+        // console.log('on-animation-end', e);
+        // console.log('detail', e.detail); // slideInLeft
+        // console.log('type'  , e.type  ); // animation-end
+     
+        // define variables
+        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        // const lastAnimationType = detail.lastAnimationType;
+        const lastAnimationType = this.lastAnimationType;
+        const lastAnimationName = this.lastAnimationName;
+        // console.log('last-animation-type', lastAnimationType);
+        
+        // return if entry-animation just ended (to avoid infinite loop)
+        if(lastAnimationType !== 'exit') {
+          return;
+        }
+        
+        // otherwise, the last animation type was an 'exit',
+        // so now proceed to implement the next 'entry' animation
+        // console.log('last-animation-name', lastAnimationName);
+
+        // this.set('selectedDetail', dataNew);
+        
+        // wait for promise to return or no element
+        
+        // hide to do machinations behind-the-scenes
+        // detail.hidden = true;
+
+        // set new selectedDetail
+        const selectedList = this.selectedList;
+        this.set('selectedDetail', selectedList);
+
+        // animate new selectedDetail entry
+        detail.animateEntry();
+        
+        // unhide to show animations
+        // detail.hidden = false;
+          
+      }
+
+      _showDetailDesktop() {
+        const detail = this.root.querySelector('#animated-detail-desktop');
+        //detail.animateExit();
+        detail.animateEntry();
+      }
+
+      _showDetailMobile() {
+        // this.set('subroute', 'detail');
+
+        const list = this.root.querySelector('#animated-list-mobile');
+        // list.animation = 'slideOutLeft';
+        list.animateExit();
+
+        const detail = this.root.querySelector('#animated-detail-mobile');
+        // detail.hidden = false;
+        // detail.animation = 'slideInRight';
+        detail.animateEntry();
+      }
+      
+      _showListMobile() {
+        // this.set('subroute', 'list');
+
+        const list = this.root.querySelector('#animated-list-mobile');
+        // list.animation = 'slideInLeft';
+        list.animateEntry();
+
+        const detail = this.root.querySelector('#animated-detail-mobile');
+        // detail.animation = 'slideOutRight';
+        detail.animateExit();
+      }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   list.hidden = false;
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   detail.hidden = true;
+      // }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   list.hidden = true;
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   detail.hidden = false;
+      // }
+
+      // * * * * * end: animations * * * * *
 		
     }
 

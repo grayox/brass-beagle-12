@@ -11,10 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-<!--- ->
-<link rel="import" href="form-new-lead.html">
-<!---->
-<link rel="import" href="/src/app-forms/form-new-lead.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
 
 <!--- ->
 Demos
@@ -25,6 +23,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-outbox-detail">
 
   <template>
+    <!--- ->
     <style>
       :host {
         --line-color: #DDDDDD;
@@ -36,6 +35,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         margin: 0;
       }
     </style>
+    <!---->
 
     <!--- ->
 		<form-new-lead></form-new-lead>
@@ -46,11 +46,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
 
-      <app-item type="header"
+      <app-item type="subheader"
                 label="Lead detail"
                 >
       </app-item>
-  
+        
       <app-item type="output"
                 two-line
                 label="Type"
@@ -63,6 +63,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 two-line
                 label="Name"
                 icon="vaadin:user"
+                xdata="John Doe"
                 data="{{item.name}}"
                 >
       </app-item>  
@@ -151,13 +152,20 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-outbox-detail'; }
 
-      // static get properties() { return {
-			// 	mediaWidth: {
-			// 		type: Number, // 0, 1, 2, 3
-			// 		notify: true,
-			// 		//observer: '_mediaWidthChanged',
-			// 	},
-      // }}
+      static get properties() { return {
+
+      // 	mediaWidth: {
+      // 		type: Number, // 0, 1, 2, 3
+      // 		notify: true,
+      // 		//observer: '_mediaWidthChanged',
+      // 	},
+      
+        item: {
+          type: Object,
+          notify: true,
+        },
+      
+      }}
      	
       constructor() {
         super();

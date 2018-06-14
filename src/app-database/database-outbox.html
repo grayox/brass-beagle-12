@@ -7,8 +7,10 @@
 <link rel="import" href="/src/app-state/state-user-local.html">
 <!---->
 <link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<!--- ->
 <link rel="import" href="/src/app-state/state-user.html">
-
+<!---->
+<link rel="import" href="/src/app-state/state-user-remote.html">
 
 <dom-module id="database-outbox">
   <template>
@@ -17,12 +19,14 @@
 		<app-localstorage-document xlog xsession-only key="outbox-data" data="{{outboxData}}"></app-localstorage-document>
     <!---->
 		
-		<!-- import user  -->
-		<state-user user-remote="{{userRemote}}"
+    <!-- import user  -->
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <!--- ->
+    <state-user user-remote="{{userRemote}}"
 								user-local="{{userLocal}}"
 								>
 		</state-user>
-		
+		<!---->
     
 		<!-- query database -->
     <firebase-query id="query"
@@ -33,11 +37,13 @@
 									  xpath="[[path]]"
 									  xpath="/"
 									  xpath="leads"
-									  path="user-leads-sent/[[userRemote.uid]]"
+									  path="/user-leads-sent/[[userRemote.uid]]"
 									  data="{{items}}"
 										xorder-by-child="filterindex"
 										xstart-at="g"
-										xend-at="j"
+                    xend-at="j"
+                    xverbose
+                    log
 										>
     </firebase-query>
 		
@@ -48,21 +54,29 @@
       static get is() { return 'database-outbox'; }
 
       static get properties() { return {
+
 				items: {
 					type: Object,
 					notify: true,
+          // observer: '_itemsChanged'
 				},
+
 			}}
 			
 			constructor() {
 				super();
 			}
 			
-			/** /
-			ready() {
-        super.ready();
-      }
-			/**/
+			// ready() {
+      //   super.ready();
+      // }
+
+      // _itemsChanged(dataNew, dataOld) {
+      //   console.log('data-new', dataNew);
+      //   console.log('data-old', dataOld);
+      //   console.log('path', this.$.query.path);
+      //   // console.log('uid', this.userRemote.uid);
+      // }
 		
 		}
 
