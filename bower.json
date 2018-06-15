@@ -64,7 +64,8 @@
     "vaadin-lumo-styles": "vaadin/vaadin-lumo-styles#^1.0.0",
     "vaadin-text-field": "vaadin/vaadin-text-field#^2.0.1",
     "vaadin-item": "vaadin/vaadin-item#^2.0.0",
-    "vaadin-list-box": "vaadin/vaadin-list-box#^1.0.2"
+    "vaadin-list-box": "vaadin/vaadin-list-box#^1.0.2",
+    "gold-phone-input": "^2.1.0"
   },
   "devDependencies": {
     "web-component-tester": "^6.0.0"

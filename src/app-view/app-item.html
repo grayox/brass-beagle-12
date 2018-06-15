@@ -29,6 +29,7 @@
 
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="/bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 
@@ -306,9 +307,54 @@ Types of elements
 
       <!-- type: 'input-phone' -->
       <!-- <gold-phone-input></gold-phone-input> -->
+      <template is="dom-if" if="[[_computeTypeIsInputPhone(type)]]">
+        <div hidden$="[[!_computeTypeIsInputPhone(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <gold-phone-input label="[[label]]"
+                                value="{{data}}"
+                                xcountry-code="33"
+                                xphone-number-pattern="X-XX-XX-XX-XX"
+                                auto-validate
+                                required
+              >
+              </gold-phone-input>
+            </paper-item-body>
+            <!--- ->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <div>[[dataString]]</div>
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
+            <!---->            
+          </paper-icon-item>
+        </div>
+      </template>
 
       <!-- type: 'input-email' -->
       <!-- <paper-item type="email"></paper-item> -->
+      <template is="dom-if" if="[[_computeTypeIsInputEmail(type)]]">
+        <div hidden$="[[!_computeTypeIsInputEmail(type)]]">
+          <paper-icon-item>
+            <xpaper-ripple recenters></xpaper-ripple>
+            <div class="avatar" slot="item-icon">
+              <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
+            </div>
+            <paper-item-body xtwo-line>
+              <paper-input type="email" label="[[label]]" value="{{data}}"></paper-input>
+            </paper-item-body>
+            <!--- ->
+            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+            <div>[[dataString]]</div>
+            <app-item-data data="[[data]]"></app-item-data>
+            <!---->
+            <!---->            
+          </paper-icon-item>
+        </div>
+      </template>
 
       <!-- type: 'menu-selection' -->
       <template restamp is="dom-if" if="[[_computeTypeIsMenuSelection(type)]]">
@@ -441,7 +487,11 @@ Types of elements
             <paper-item-body xtwo-line>
               <div>
                 <paper-button class="button-cancel" on-tap="_tappedCancel">Cancel</paper-button>
-                <paper-button class="button-save" autofocus on-tap="_tappedSave">Save</paper-button>
+                <paper-button class="button-save"
+                              autofocus
+                              disabled
+                              on-tap="_tappedSave"
+                              >Save</paper-button>
               </div>
             </paper-item-body>
           </paper-item>

@@ -8,8 +8,16 @@
         --highlight: {
           background-color: var(--app-primary-color);
           color: white;
+          /** /
           border-radius: 4px;
-        }
+          /**/
+          }
+
+        --disabled: {
+            opacity: 0.33;
+            cursor: not-allowed;
+          }
+
         /** /
         --bleed-spacing: {
           margin: 0;
@@ -23,75 +31,24 @@
         /**/
       }
 
-      .button-save {
-        @apply --highlight;
+      paper-icon-button {
+        cursor: default;
       }
-
-			paper-fab {
-        position: fixed;
-        top: 54px;
-        right: 8px;
-        z-index: 1;
-        /** /
-        margin: auto;
-        right: 24px;
-        bottom: 32px;          
-        /**/
-      }
-
-      div[role="listbox"] {
-        border: 1px solid #DDDDDD;
-      }
-
-      .avatar {
-        display: inline-block;
-        box-sizing: border-box;
-        width: 40px; /*40px*/
-        height: 40px; /*40px*/
-        border-radius: 50%;
-        /** /
-        background: var(--app-primary-color);
-        background: var(--paper-amber-500);
-        /**/
-        opacity: var(--opacity-dim); /*0.54;*/
-      }
-
-      .avatar-small {
-        width: 20px;
-        height: 20px;
-      }
-
-      .dim {
-        opacity: var(--opacity-dim); /*0.54;*/
-      }
-
-      .italic {
-        font-style: italic;
-      }
-
-      .urgent {
-        font-weight: 900;
-        opacity: 1.0;
-        color: white;
-        background-color: red;
-      }
-
-      /** /
-      .blue {
-        background-color: var(--paper-light-blue-300);
-      }
-      /**/
 
       paper-icon-item, paper-item {
         text-align: start;
         background-color: white;
         border-bottom: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
 
-        cursor: pointer;
         /** /
+        cursor: pointer;
         white-space: nowrap;
         @apply --bleed-spacing;
         /**/
+      }
+
+      app-item[type="menu-item"] {
+        cursor: pointer;
       }
 
       .header {
@@ -124,20 +81,81 @@
         /**/
       }
 
-      /* test-1 */
+      .button-save {
+        border-radius: 4px;          
+        @apply --highlight;
+        @apply --disabled;
+      }
+
+			paper-fab {
+        position: fixed;
+        top: 54px;
+        right: 8px;
+        z-index: 1;
+        /** /
+        margin: auto;
+        right: 24px;
+        bottom: 32px;          
+        /**/
+      }
+
+      div[role="listbox"] {
+        border: 1px solid #DDDDDD;
+      }
+
+      .avatar {
+        display: inline-block;
+        box-sizing: border-box;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        /** /
+        background: var(--app-primary-color);
+        background: var(--paper-amber-500);
+        /**/
+        opacity: var(--opacity-dim); /*0.54;*/
+      }
+
+      .avatar-small {
+        width: 20px;  /*40px*/
+        height: 20px;  /*40px*/
+      }
+
+      .dim {
+        opacity: var(--opacity-dim); /*0.54;*/
+      }
+
+      .italic {
+        font-style: italic;
+      }
+
+      .urgent {
+        font-weight: 900;
+        opacity: 1.0;
+        color: white;
+        background-color: red;
+      }
+
+      /** /
+      .blue {
+        background-color: var(--paper-light-blue-300);
+      }
+      /**/
+
+      /* test-1 * /
 
       .selected {
         color: var(--paper-amber-500);
         /** /
         --paper-icon-button-ink-color: var(--paper-amber-500);;
-        /**/
+        /** /
       }
 
       .default {
         color: var(--primary-text-color);
       }
 
-      /* test-2 */
+      /* test-2 * /
 
       paper-item-body {
         margin-left: 8px;
@@ -146,6 +164,8 @@
       paper-icon-item {
         padding-right: 42px;
       }
+
+      /**/
 
     </style>
   </template>
