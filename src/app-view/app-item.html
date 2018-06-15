@@ -71,63 +71,15 @@ Types of elements
 <dom-module id="app-item">
   <template>
     <style include="paper-item-styles">
-
       /**
        * * * Note * * *
        * Wrap groups of app-items in
        * <div role="listbox"></div>
        * to prevent spaces between items
        * * * *  * * * *
-       */  
-
-      .header-parent, .subheader-parent {
-        /**
-         * 1. background-color css needs to be applied to <div> parent of <paper-item>
-         * otherwise, the background will be partially transparent
-         * 2. var(--mist) color matches with css set for #main-content
-         */
-        background-color: var(--mist);
-        /** /
-        background-color: blue;
-        background-color:rgba(0, 0, 255, 1.0);
-        z-index: 1;
-        /**/
-      }
-
-      .subpage-header {
-        color: white;
-        opacity: 1.0;
-        font-weight: bold;
-        background-color: var(--accent-color);
-        /** /
-        background-color: var(--primary-color-dark);
-        background-color: var(--primary-color-light);
-        background-color: var(--paper-blue-500);
-        background-color: var(--apple-ios-blue);
-        background-color: orange;
-        /** /
-        --iron-icon-stroke-color: white;
-        --iron-icon: {
-          opacity: 1.0;
-          color: white;
-        };
-        /**/
-      }
-
-      /** /
-      .subpage-header > paper-icon-button {
-        --paper-icon-button: {
-          opacity: 1.0;
-          color: white;
-          --iron-icon: {
-            opacity: 1.0;
-            color: white;
-          };
-          --iron-icon-stroke-color: white;
-        };
-      }
-      /**/
+       */
     </style>
+
     <app-localstorage-document xlog xsession-only key="app-views" data="{{appViews}}"></app-localstorage-document>
     <app-localstorage-document xlog xsession-only key="user-local" data="{{userLocal}}"></app-localstorage-document>
     
@@ -321,7 +273,9 @@ Types of elements
                                 xphone-number-pattern="X-XX-XX-XX-XX"
                                 auto-validate
                                 required
-              >
+                                maxlength="12"
+                                xerror-message="Enter valid phone number | note: limited by paper-item height"
+                                >
               </gold-phone-input>
             </paper-item-body>
             <!--- ->
@@ -344,7 +298,13 @@ Types of elements
               <paper-icon-button icon="[[icon]]" alt=""></paper-icon-button>
             </div>
             <paper-item-body xtwo-line>
-              <paper-input type="email" label="[[label]]" value="{{data}}"></paper-input>
+              <paper-input type="email"
+                           label="[[label]]"
+                           value="{{data}}"
+                           auto-validate
+                           xerror-message="Enter valid email | note: limited by paper-item height"
+                           >
+              </paper-input>
             </paper-item-body>
             <!--- ->
             <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
