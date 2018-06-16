@@ -12,9 +12,9 @@
 	],
 	"emailServerUrl": "https://script.google.com/macros/s/AKfycbxvOmt0M-OACnHJWZvfvaUEBLRdbl6TlEMutQ8MH0DbALamxNU/exec",
 	"firebase": {
-		"authDomain": "green-comet.firebaseapp.com",
-		"databaseUrl": "https://green-comet.firebaseio.com/",
-		"apiKey": "AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+		"authDomain": "green-comet-e2c85.firebaseapp.com",
+		"databaseUrl": "https://green-comet-e2c85.firebaseio.com/",
+		"apiKey": "AIzaSyAOEXILaYcxjmJsJ81_WfubS_h3AQ3lLdA"
 	},
 	"comment-views": "Reminder: After editing pages, manually edit my-app.html (previously loggedin-view.html) to match pages order sequence",
 	"views": [

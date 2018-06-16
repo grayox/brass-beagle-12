@@ -10,7 +10,7 @@ const outbox = require('./outbox.js');
 
 // Send to client the list of emails stored in outbox
 exports.outboxSend = functions.https.onRequest((request, response) => {
-  // https://us-central1-green-comet.cloudfunctions.net/outboxSend
+  // https://us-central1-green-comet-e2c85.cloudfunctions.net/outboxSend
   outbox.send()
   .then(val => {
     //console.log('val, index.js, line 13', val);
@@ -23,7 +23,7 @@ exports.outboxSend = functions.https.onRequest((request, response) => {
 
 // Cleanup (delete) from outbox a list of keys (batch) returned from the client who sent out the emails
 exports.outboxCleanup = functions.https.onRequest((request, response) => {
-  // https://us-central1-green-comet.cloudfunctions.net/outboxCleanup
+  // https://us-central1-green-comet-e2c85.cloudfunctions.net/outboxCleanup
   outbox.cleanup(request.body)
   // .then(val => {
     //   return response.send(val);

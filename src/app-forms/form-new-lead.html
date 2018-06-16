@@ -36,21 +36,6 @@
                 >
       </app-item>
   
-      <paper-item-zip zip-code="{{item.zip}}"
-                      zip-city="{{item.city}}"
-                      zip-state="{{item.state}}"
-                      zip-valid="{{zipValid}}"
-                      ></paper-item-zip>
-  
-      <!--- ->
-      <app-item type="input-text"
-                label="Zip code"
-                icon="vaadin:map-marker"
-                data="{{item.zip}}"
-                >
-      </app-item>
-      <!---->
-  
       <app-item type="input-phone"
                 label="Phone"
                 invalid="{{invalidPhone}}"
@@ -66,7 +51,22 @@
                 data="{{item.email}}"
                 >
       </app-item>
+    
+      <paper-item-zip zip-code="{{item.zip}}"
+                      zip-city="{{item.city}}"
+                      zip-state="{{item.state}}"
+                      zip-valid="{{zipValid}}"
+                      ></paper-item-zip>
   
+      <!--- ->
+      <app-item type="input-text"
+                label="Zip code"
+                icon="vaadin:map-marker"
+                data="{{item.zip}}"
+                >
+      </app-item>
+      <!---->
+
       <select-lead-type selected="{{item.type}}"></select-lead-type>
 
       <!---->

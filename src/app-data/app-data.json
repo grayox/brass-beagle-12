@@ -26,9 +26,9 @@
 	  "emailServerKey": "wjs66mhgxfputsdf1gne"
 	},
 	"firebase": {
-		"authDomain": "green-comet.firebaseapp.com",
-		"databaseUrl": "https://green-comet.firebaseio.com/",
-		"apiKey": "AIzaSyBOqawzjd994lNbsCTb6hzDZ7wI7yFNw5o"
+		"authDomain": "green-comet-e2c85.firebaseapp.com",
+		"databaseUrl": "https://green-comet-e2c85.firebaseio.com/",
+		"apiKey": "AIzaSyAOEXILaYcxjmJsJ81_WfubS_h3AQ3lLdA"
 	},
 	"comment-nav-menu-1": "Reference: https://material.io/guidelines/patterns/navigation-drawer.html",
 	"comment-nav-menu-2": "Reminder: After editing nav-menu items, manually edit /src/app-shell/my-app.html (previously loggedin-view.html) to match pages order sequence",

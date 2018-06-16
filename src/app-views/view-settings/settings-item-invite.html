@@ -327,7 +327,17 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 				/**/
 				
 				const timestamp = new Date().getTime();
-				const eventData = {...{data: data}, ...{timestamp: timestamp}};
+        const timestampReverse = (-1) * timestamp;
+				// const eventData = {
+        //   ...{data: data},
+        //   ...{timestamp: timestamp},
+        //   ...{timestampReverse: timestampReverse},
+        // };
+				const eventData = Object.assign({}, {
+          data: data,
+          timestamp: timestamp,
+          timestampReverse: timestampReverse,
+        })
 				
 				const n = name;
 				const o = {

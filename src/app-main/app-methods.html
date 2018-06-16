@@ -138,42 +138,56 @@ Example usage (v1):
       static get properties() {
 				
 				return {
+
 					appData: {
 						type: Object,
             notify: true,
             observer: '_appDataChanged',
 						//statePath: 'appData',
 					},
+
 					userRemote: {
 						type: Object,
             notify: true,
             //observer: '_appDataChanged',
 						//statePath: 'userRemote',
 					},
+
 					editableItem: Object,
+
 					emailKey: {
 						type: String,
 						computed: '_computeEmailKey(userRemote)',
 					},
+
 					timestamp: Number,
+          
+					timestampReverse: Number,
+
 					newPostKey: String,
+
 					data: Object,
+
 					readData: {
 						type: Object,
 						observer: '_readDataChanged',
 					},
+
 					methodArg: {
 						type: Object,
 						observer: '_methodArgChanged',
 					},
+
 					showToast: {
 						type: Boolean,
 						value: () => false,
 					},
+
 					eventDispatch: {
 						type: Boolean,
 						value: () => false,
 					},
+
 				};
 				
 			}
@@ -285,7 +299,7 @@ Example usage (v1):
 			}
 
 			_array2string_path(a) {
-				const timestamp = this.timestamp ? this.timestamp : Date.now();
+				// const timestamp = this.timestamp ? this.timestamp : Date.now();
 				if (typeof a != 'object') return a;
 				const out = [];
 				let i = a.length;
@@ -365,7 +379,10 @@ Example usage (v1):
 				//console.log('userRemote', this.userRemote);
 				const timestamp = Date.now(); //new Date().getTime();
 				this.set('timestamp', timestamp);
+        const timestampReverse = (-1) * timestamp;
+				this.set('timestampReverse', timestampReverse);
 				data.timestamp = timestamp;
+				data.timestampReverse = timestampReverse;
 				const keystub = [ 'users', uid, type, ].join('/');
 				let newPostKey;
 				switch (type) {
@@ -421,7 +438,8 @@ Example usage (v1):
 
 			_initData(ob) {
 				//console.log('this.data', this.data);
-				const timestamp = this.timestamp ? this.timestamp : Date.now();
+				// const timestamp = this.timestamp ? this.timestamp : Date.now();
+        // const timestampReverse = (-1) * timestamp;
 				const out = {};
 				//console.log('ob', ob);
 				if (typeof ob != 'object') {
