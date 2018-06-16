@@ -4,21 +4,15 @@
 <!---->
 <link rel="import" href="/src/app-main/app-methods.html">
 <link rel="import" href="/src/app-view/app-item.html">
+
 <link rel="import" href="/src/custom-elements/paper-item-zip/paper-item-zip.html">
+<link rel="import" href="/src/custom-elements/select-lead-type.html">
 <!---->
 
 <dom-module id="form-new-lead">
   <template>
-    <style include="paper-item-styles">
-      .buttons {
-        text-align: end;
-      }
+    <style include="paper-item-styles"></style>
 
-      .primary {
-        background-color: var(--primary-color);
-        color: white;
-      }
-    </style>
     <app-methods id="methods"></app-methods>
     
     <div role="listbox">
@@ -229,7 +223,7 @@
       _dispatchEvent(name, data) {
 			  const n = name;
 			  const o = {
-			    bubbles: true,
+			    bubbles: false, //true,
 			   	composed: true,
 			   	detail: data,
 			  };

@@ -15,6 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="dashboard-detail-zip.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
 
+<!-- state -->
+<link rel="import" href="/src/app-main/app-methods.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!--- ->
+<link rel="import" href="/src/app-state/state-media.html">
+<!---->
+
 <!-- custom elememts -->
 <link rel="import" href="/src/custom-elements/geo-select/geo-select.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
@@ -53,6 +60,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
     </style>
 
+    <!-- state -->
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!---->
+    <app-methods id="methods" show-toast event-dispatch
+                 on-method-success="_onMethodSuccess"
+                 >
+    </app-methods>
+    <!---->
+
     <!--- ->
 		<dashboard-detail-zip></dashboard-detail-zip>
     <!--- ->
@@ -75,7 +91,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <template restamp is="dom-if" if="[[selected]]=='lead-type'">
     <!---->
     <div hidden id="lead-type">
-      <select-lead-type xon-lead-type-selected="_handleLeadTypeSelected"
+      <select-lead-type on-lead-type-selected="_handleLeadTypeSelected"
                         selected="[[userLocal.lead-type]]"
                         >
       </select-lead-type>
@@ -85,7 +101,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <template restamp is="dom-if" if="[[selected]]=='user-location'">
     <!---->
     <div hidden id="user-location">
-      <geo-select xon-geo-select-valid="_handleGeoSelectValid"
+      <geo-select on-geo-select-valid="_handleGeoSelectValid"
                   xgeo-country="[[userLocal.geo-select-country]]"
                   xgeo-region="[[userLocal.geo-select-region]]"
                   xgeo-location="[[userLocal.geo-select-location]]"
@@ -178,7 +194,65 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 			// 	//console.log('d\n', d);
 			// 	this.dispatchEvent(d);				
       // }
-		
+
+      _handleLeadTypeSelected(e) { this._updateSettings('lead-type'  , e.detail); } // first arg must match datastore key, bc typeof data === 'string'
+      _handleGeoSelectValid  (e) { this._updateSettings('geo-select' , e.detail); }
+
+      _updateSettings(s, data) {
+        // console.log(s, '\n', s);
+        // console.log(data, '\n', data);
+
+        let o = {};
+        const dataType = typeof data;
+
+        switch(dataType) {
+          case 'string':
+            o[s] = data;
+            break;
+          case 'object':
+            o = data;
+            break;
+          default:
+            console.error('Data provided does not match available types');
+            return;
+        }
+
+        const updatedData = Object.assign( this.userLocal, o );
+        // console.log('updated-data\n', updatedData);
+        // this._dispatchEvent('app-settings-changed', updatedData);
+        this.save(updatedData);
+      }
+
+      save(data) {
+				
+				const timestamp = new Date().getTime();
+				const methods = this.$.methods;
+				
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
+				//const data = data;
+				const timestampedData = { ...data, ...{timestamp: timestamp} };
+				const detail = {
+					method: method,
+					entity: entity,
+					// data: data,
+					data: timestampedData,
+				};
+				
+				methods.method(detail);
+      }
+      
+      _onMethodSuccess(e) {
+        // console.log('method-success\n', e.detail);
+
+        // https://www.polymer-project.org/1.0/docs/devguide/model-data#override-dirty-check
+        // Force data system to pick up subproperty changes
+        var userLocal = this.userLocal;
+        this.userLocal = {};
+        this.userLocal = userLocal;
+      }
+			
     }
 
     customElements.define(ViewSettingsDetail.is, ViewSettingsDetail);

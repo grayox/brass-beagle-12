@@ -81,10 +81,12 @@
     <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!--- ->
     <app-methods id="methods" show-toast event-dispatch
                  on-method-success="_onMethodSuccess"
                  >
     </app-methods>
+    <!---->
 
     <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
@@ -375,8 +377,8 @@
         // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , (e) => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
-        window.addEventListener( 'lead-type-selected'  , e => this._handleLeadTypeSelected(e)  );
-        window.addEventListener( 'geo-select-valid'    , e => this._handleGeoSelectValid  (e)  );
+        // window.addEventListener( 'lead-type-selected'  , e => this._handleLeadTypeSelected(e)  ); // doing this at this level causes other elements to "double save"
+        // window.addEventListener( 'geo-select-valid'    , e => this._handleGeoSelectValid  (e)  ); // doing this at this level causes other elements to "double save"
 		  }
 			
 			// connectedCallback() {
@@ -423,33 +425,33 @@
         // console.log('lead-type\n', leadType);
       }
 
-      _handleLeadTypeSelected(e) { this._updateSettings('lead-type'  , e.detail); } // first arg must match datastore key, bc typeof data === 'string'
-      _handleGeoSelectValid  (e) { this._updateSettings('geo-select' , e.detail); }
+      // _handleLeadTypeSelected(e) { this._updateSettings('lead-type'  , e.detail); } // first arg must match datastore key, bc typeof data === 'string'
+      // _handleGeoSelectValid  (e) { this._updateSettings('geo-select' , e.detail); }
 
-      _updateSettings(s, data) {
-        console.log(s, '\n', s);
-        console.log(data, '\n', data);
+      // _updateSettings(s, data) {
+      //   console.log(s, '\n', s);
+      //   console.log(data, '\n', data);
 
-        let o = {};
-        const dataType = typeof data;
+      //   let o = {};
+      //   const dataType = typeof data;
 
-        switch(dataType) {
-          case 'string':
-            o[s] = data;
-            break;
-          case 'object':
-            o = data;
-            break;
-          default:
-            console.error('Data provided does not match available types');
-            return;
-        }
+      //   switch(dataType) {
+      //     case 'string':
+      //       o[s] = data;
+      //       break;
+      //     case 'object':
+      //       o = data;
+      //       break;
+      //     default:
+      //       console.error('Data provided does not match available types');
+      //       return;
+      //   }
 
-        const updatedData = Object.assign( this.userLocal, o );
-        // console.log('updated-data\n', updatedData);
-        // this._dispatchEvent('app-settings-changed', updatedData);
-        this.save(updatedData);
-      }
+      //   const updatedData = Object.assign( this.userLocal, o );
+      //   // console.log('updated-data\n', updatedData);
+      //   // this._dispatchEvent('app-settings-changed', updatedData);
+      //   this.save(updatedData);
+      // }
 
 		  // _dispatchEvent(name, data) {
 			// 	const n = name;
@@ -464,35 +466,35 @@
 			// 	this.dispatchEvent(d);				
       // }
 
-			save(data) {
+			// save(data) {
 				
-				const timestamp = new Date().getTime();
-				const methods = this.$.methods;
+			// 	const timestamp = new Date().getTime();
+			// 	const methods = this.$.methods;
 				
-				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				const method = 'save'; // 'save'|'delete'
-				const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
-				//const data = data;
-				const timestampedData = { ...data, ...{timestamp: timestamp} };
-				const detail = {
-					method: method,
-					entity: entity,
-					// data: data,
-					data: timestampedData,
-				};
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
+			// 	//const data = data;
+			// 	const timestampedData = { ...data, ...{timestamp: timestamp} };
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		// data: data,
+			// 		data: timestampedData,
+			// 	};
 				
-				methods.method(detail);
-      }
+			// 	methods.method(detail);
+      // }
       
-      _onMethodSuccess(e) {
-        // console.log('method-success\n', e.detail);
+      // _onMethodSuccess(e) {
+      //   // console.log('method-success\n', e.detail);
 
-        // https://www.polymer-project.org/1.0/docs/devguide/model-data#override-dirty-check
-        // Force data system to pick up subproperty changes
-        var userLocal = this.userLocal;
-        this.userLocal = {};
-        this.userLocal = userLocal;
-      }
+      //   // https://www.polymer-project.org/1.0/docs/devguide/model-data#override-dirty-check
+      //   // Force data system to pick up subproperty changes
+      //   var userLocal = this.userLocal;
+      //   this.userLocal = {};
+      //   this.userLocal = userLocal;
+      // }
 			
 			// _computeSettings(sZip, sSwitch, sInput) {
 			// 	const out = {};
