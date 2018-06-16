@@ -36,7 +36,11 @@
                 >
       </app-item>
   
-      <paper-item-zip zip-code="{{item.zip}}"></paper-item-zip>
+      <paper-item-zip zip-code="{{item.zip}}"
+                      zip-city="{{item.city}}"
+                      zip-state="{{item.state}}"
+                      zip-valid="{{zipValid}}"
+                      ></paper-item-zip>
   
       <!--- ->
       <app-item type="input-text"
@@ -49,6 +53,7 @@
   
       <app-item type="input-phone"
                 label="Phone"
+                invalid="{{invalidPhone}}"
                 icon="vaadin:phone"
                 data="{{item.phone}}"
                 >
@@ -56,6 +61,7 @@
   
       <app-item type="input-email"
                 label="Email"
+                invalid="{{invalidEmail}}"
                 icon="communication:email"
                 data="{{item.email}}"
                 >
@@ -64,11 +70,22 @@
       <select-lead-type selected="{{item.type}}"></select-lead-type>
 
       <!---->
-      <app-item type="button-save"
-                on-save-button-tapped="_tappedSave"
-                on-cancel-button-tapped="_tappedCancel"
-                >
-      </app-item>
+      <div hidden$="{{_hide(formValid)}}">
+        <app-item type="button-save-disabled"
+                  on-save-button-tapped="_tappedSave"
+                  on-cancel-button-tapped="_tappedCancel"
+                  >
+        </app-item>
+      </div>
+
+      <!---->
+      <div hidden$="{{!_hide(formValid)}}">
+        <app-item type="button-save"
+                  on-save-button-tapped="_tappedSave"
+                  on-cancel-button-tapped="_tappedCancel"
+                  >
+        </app-item>
+      </div>
       <!---->
 
     </div>
@@ -89,6 +106,63 @@
 					// observer: '_itemChanged',
 				},
 
+        invalidPhone: {
+          type: Boolean,
+          notify: true,
+        },
+
+        invalidEmail: {
+          type: Boolean,
+          notify: true,
+        },
+
+        formValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computeFormValid(nameValid, zipValid, phoneValid, emailValid, phoneLengthValid, emailLengthValid, menuValid)',
+        },
+
+        zipValid: {
+          type: Boolean,
+          notify: true,
+        },
+
+        nameValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeNameValid(item)',
+        },
+
+        menuValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeMenuValid(item)',
+        },
+
+        emailValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computeEmailValid(invalidEmail)',
+        },
+
+        phoneValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computePhoneValid(invalidPhone)',
+        },
+
+        emailLengthValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeEmailLengthValid(invalidEmail)', // _itemChanged()
+        },
+
+        phoneLengthValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computePhoneLengthValid(invalidPhone)', // _itemChanged()
+        },
+
 			}}
 			
 			constructor() {
@@ -99,6 +173,16 @@
       //   super.ready();
       //   window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       // }
+
+      static get observers() {
+        return [
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          // '_userSettingsStoredChanged(userSettingsStored.*)',
+          // '_computeAppSettings(appViews, userLocal.*)',
+          '_itemChanged(item.*)',
+        ]
+      }
 			
 			// _itemChanged(o) {
 			// 	console.log('item', o);
@@ -165,6 +249,72 @@
         // this._dispatchEvent(name, data);
         this._dispatchEvent('close-dialog');
       }
+
+      // begin: form validation
+
+      _hide(b) {
+        return !!b;
+      }
+
+      _computeFormValid(nameValid, zipValid, phoneValid, emailValid, phoneLengthValid, emailLengthValid, menuValid) {
+
+        // console.log('name-valid', nameValid);
+        // console.log('zip-valid', zipValid);
+        // console.log('phone-valid', phoneValid);
+        // console.log('email-valid', emailValid);
+        // console.log('phone-length-valid', phoneLengthValid);
+        // console.log('email-length-valid', emailLengthValid);
+        // console.log('menu-valid', menuValid);
+
+        const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
+        const valid2a = (!!phoneValid) && (!!phoneLengthValid);
+        const valid2b = (!!emailValid) && (!!emailLengthValid);
+        const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
+        const out     = !!(valid1 && valid2);
+
+        // console.log('valid-1' , valid1 );
+        // console.log('valid-2a', valid2a);
+        // console.log('valid-2b', valid2b);
+        // console.log('valid-2' , valid2 );
+        
+        // console.log('form-valid', out);
+      
+        return !!out;
+      }
+
+      // _computeNameValid(item) {
+      //   const out = item.name && item.name.length;
+      //   return out;
+      // }
+      
+      // _computeMenuValid(item) {
+      //   const out = item.type && item.type.length;
+      //   return out;
+      // }
+
+      _itemChanged(dataNew, dataOld) {
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+
+        this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
+        this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
+        this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
+        this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
+
+        // console.log('form-valid', this.formValid);
+      } 
+      
+      _computeEmailValid(invalidEmail) {
+        const out = !invalidEmail;
+        return out;
+      }
+      
+      _computePhoneValid(invalidPhone) {
+        const out = !invalidPhone;
+        return out;
+      }
+
+      // end: form validation
 		
 		}
 
