@@ -65,7 +65,7 @@
 
     <!--- ->
     <app-item xhidden$="[[!geoRegion]]"
-              type="output"
+              type="output-one-line"
               xicon="vaadin:flag"
               xlabel="Geo location"
               xlabel="[[geoCountryRegionLocation]]"
@@ -87,10 +87,10 @@
     </paper-item>
     <!---->
 
-    <app-item type="output"
+    <app-item type="output-two-line"
+              xtwo-line
               label="Your location"
               data="[[geoCountryRegionLocation]]"
-              two-line
               >
     </app-item>
 

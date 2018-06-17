@@ -146,10 +146,10 @@ Types of elements
         </div>
       </template>
   
-      <!-- type: 'output' -->
-      <template restamp is="dom-if" if="[[_computeTypeIsOutput(type)]]">
-        <div hidden$="[[!_computeTypeIsOutput(type)]]">
-          <!-- one line -->
+      <!-- type: 'output-one-line' -->
+      <template restamp is="dom-if" if="[[_computeTypeIsOutputOneLine(type)]]">
+        <div hidden$="[[!_computeTypeIsOutputOneLine(type)]]">
+          <!-- one line - ->
           <div hidden$="[[twoLine]]">
             <!-- no icon -->
             <div hidden$="[[icon]]">
@@ -184,11 +184,19 @@ Types of elements
                 <!---->
               </paper-icon-item>
             </div>
+          <!--- ->
           </div>
-          <!-- two line -->
+          <!---->
+        </div>
+      </template>
+            
+      <!-- type: 'output-two-line' -->
+      <template restamp is="dom-if" if="[[_computeTypeIsOutputTwoLine(type)]]">
+          <div hidden$="[[!_computeTypeIsOutputTwoLine(type)]]">
+          <!-- two line - ->
           <div hidden$="[[!twoLine]]">
             <!-- no icon -->
-            <div hidden$="[[icon]]">
+            <div hidden$="[[_hide(icon)]]">
               <paper-item>
                 <paper-ripple recenters></paper-ripple>
                 <paper-item-body two-line>
@@ -203,7 +211,7 @@ Types of elements
               </paper-item>
             </div>
             <!-- icon -->
-            <div hidden$="[[!icon]]">
+            <div hidden$="[[!_hide(icon)]]">
               <paper-icon-item>
                 <paper-ripple recenters></paper-ripple>
                 <div class="avatar" slot="item-icon">
@@ -232,7 +240,9 @@ Types of elements
                 <!---->
               </paper-icon-item>
             </div>
+          <!--- ->
           </div>
+          <!---->
         </div>
       </template>
 
@@ -518,7 +528,7 @@ Types of elements
         
         type: { // for markup
           // default:
-          // 'header' | 'subpage-header' | 'subheader' | 'output'
+          // 'header' | 'subpage-header' | 'subheader' | 'output-one-line' | 'output-two-line'
           // 'input-text' | 'input-phone' | 'input-email' | 'menu-item'
           // 'checkbox' | 'toggle-button' | 'button-save' | 'button-save-disabled'
           // 'xurgent' | 'xaction'
@@ -528,10 +538,10 @@ Types of elements
           //value: () => 'vaadin:phone', //'star'
         },
 
-        twoLine: {
-          type: Boolean,
-          value: () => false,
-        },
+        // twoLine: {
+        //   type: Boolean,
+        //   value: () => false,
+        // },
 
 				icon: { // left edge
 					type: String,
@@ -710,7 +720,9 @@ Types of elements
       _computeTypeIsInputZip           (s) { return this._computeTypeIsTarget ( s, 'input-zip'            ) }
       _computeTypeIsMenuItem           (s) { return this._computeTypeIsTarget ( s, 'menu-item'            ) }
       _computeTypeIsMenuSelection      (s) { return this._computeTypeIsTarget ( s, 'menu-selection'       ) }
-      _computeTypeIsOutput             (s) { return this._computeTypeIsTarget ( s, 'output'               ) }
+   // _computeTypeIsOutput             (s) { return this._computeTypeIsTarget ( s, 'output'               ) }
+      _computeTypeIsOutputOneLine      (s) { return this._computeTypeIsTarget ( s, 'output-one-line'      ) }
+      _computeTypeIsOutputTwoLine      (s) { return this._computeTypeIsTarget ( s, 'output-two-line'      ) }
       _computeTypeIsSubheader          (s) { return this._computeTypeIsTarget ( s, 'subheader'            ) }
       _computeTypeIsSubpageHeader      (s) { return this._computeTypeIsTarget ( s, 'subpage-header'       ) }
       _computeTypeIsToggleButton       (s) { return this._computeTypeIsTarget ( s, 'toggle-button'        ) }
@@ -816,6 +828,11 @@ Types of elements
 
       _subpageBackButton() {
         this._dispatchEvent('subpage-back-button');
+      }
+
+      _hide(b) {
+        // this is necessary to prevent the hidden$="[[b]]" attribute from causing a double rendering
+        return b;
       }
 
       // _computeData(app, user, view, key) {

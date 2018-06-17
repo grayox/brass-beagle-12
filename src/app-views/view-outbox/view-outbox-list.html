@@ -52,7 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </app-item>
 
     <iron-list role="listbox"
-               xmutable-data xrestamp
+               mutable-data restamp
                selection-enabled
                items="[[items]]"
                selected-item="{{selectedItem}}"
@@ -61,12 +61,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                xselectable=".selectable"
                >
       <template>
-        <app-item two-line
-                  type="output"
-                  icon="[[item.icon]]"
+        <app-item type="output-two-line"
+                  xtwo-line
+                  xicon="[[item.icon]]"
+                  icon="star"
                   label="[[item.name]]"
                   name="[[item.name]]"
-                  data="[[item.location]]"
+                  xdata="[[item.location]]"
+                  data="[[item.city]], [[item.state]]"
                   data-right="[[item.age]] days ago"
                   >[[item.age]] days ago (does not work because slot not implemented in paper-item)
         </app-item>

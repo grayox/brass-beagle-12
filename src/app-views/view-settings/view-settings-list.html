@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-item>
         <!--- ->
         <app-item name="req-info"
-                  type="output"
+                  type="output-one-line"
                   icon="vaadin:warning"
                   label="Required information"
                   data="0/2"
@@ -92,16 +92,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-item>
         <!---->
         <app-item name="req-info"
-                  type="output"
+                  type="output-two-line"
+                  xtwo-line
                   icon="vaadin:warning"
                   label="Required information"
                   data="2 required, 0 completed"
-                  two-line
                   >
         </app-item>
         <!--- ->
         <app-item name="req-info"
-                  type="output"
+                  type="output-one-line"
                   xicon="vaadin:warning"
                   label="Required information"
                   data="0/2"
@@ -109,11 +109,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-item>
         <!--- ->
         <app-item name="req-info"
-                  type="output"
+                  type="output-two-line"
+                  xtwo-line
                   xicon="vaadin:warning"
                   label="Required information"
                   data="2 required, 0 complete"
-                  two-line
                   >
         </app-item>
         <!---->
@@ -124,11 +124,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-item>
         <!---->
         <app-item name="lead-type"
-                  type="output"
+                  type="output-two-line"
+                  xtwo-line
                   icon="vaadin:puzzle-piece"
                   label="Your type of services"
                   xlabel-short="Lead type"
-                  two-line
                   xdata="[[leadType]]"
                   xdata="[[userLocal.lead-type.charAt(0).toUpperCase()]]"
                   data="[[userLocal.lead-type]]"
@@ -136,11 +136,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   >
         </app-item>
         <app-item name="user-location"
-                  type="output"
+                  type="output-two-line"
+                  xtwo-line
                   icon="track-changes"
                   label="Your location"
                   xlabel-short="Your location"
-                  two-line
                   data="[[userLocal.geo-select-location-region]]"
                   class="selectable"
                   >
