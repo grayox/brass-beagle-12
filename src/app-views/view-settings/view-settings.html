@@ -62,6 +62,8 @@
       }
       /**/
 
+      /* end: correct css for positioning animated pages */
+
       paper-icon-button {
         text-align: left;
       }
@@ -319,11 +321,11 @@
           computed: '_computeLabel(selected)',
 				},
     
-				subroute: {
-					type: String,
-          notify: true,
-          value: () => 'list', // 'list' | 'detail'
-				},
+				// subroute: {
+				// 	type: String,
+        //   notify: true,
+        //   value: () => 'list', // 'list' | 'detail'
+				// },
     
         userLocal: {
       		type: Object,
@@ -377,8 +379,8 @@
         // window.addEventListener( 'update-user-switch' , e => this._onUpdateUserSwitch(e) );
         // window.addEventListener( 'update-user-input'  , e => this._onUpdateUserInput(e)  );
         // //window.addEventListener( 'update-user-invite' , (e) => this._onUpdateUserInvite(e) ); // no need to save prior invitations to settings
-        window.addEventListener( 'lead-type-selected'  , e => this._handleLeadTypeSelected(e)  ); // doing this at this level causes other elements to "double save"
-        window.addEventListener( 'geo-select-valid'    , e => this._handleGeoSelectValid  (e)  ); // doing this at this level causes other elements to "double save"
+        // window.addEventListener( 'lead-type-selected'  , e => this._handleLeadTypeSelected(e)  ); // doing this at this level causes other elements to "double save"
+        // window.addEventListener( 'geo-select-valid'    , e => this._handleGeoSelectValid  (e)  ); // doing this at this level causes other elements to "double save"
 		  }
 			
 			// connectedCallback() {

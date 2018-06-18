@@ -47,7 +47,15 @@
       paper-icon-item, paper-item {
         text-align: start;
         background-color: white;
-        border-bottom: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
+
+        /** /
+        border: 1px solid #DDDDDD; /* rgb(221, 221, 221);*/
+        /* per reference: https://stackoverflow.com/a/4062032/1640892 */
+        /**/
+        border: 1px solid rgb(221, 221, 221);
+        border: 1px solid rgba(221, 221, 221, .5);
+        -webkit-background-clip: padding-box; /* for Safari */
+        background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
 
         /** /
         cursor: pointer;

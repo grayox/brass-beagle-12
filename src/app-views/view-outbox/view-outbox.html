@@ -37,22 +37,66 @@ https://codepen.io/rachelandrew/pen/zwPEoX
   <template>
 
     <style xinclude="dashboard-styles">
+
       :host {
         --line-color: #DDDDDD;
       }
+
       .split {
         border-bottom: 1px var(--line-color) solid;
         
         display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
         grid-template-columns: 1fr 1fr;
       }
+
+      /* correct css for positioning animated pages */
+
+      #list-desktop {
+        z-index: 1;
+      }
+
+      #detail {
+        position: absolute;
+        top: 0px;
+        width: 100%; /* not 100vw */
+      }
+
+      .animated-pages-wrapper {
+        overflow: hidden;
+      }
+
+      /* other attempts * /
+      .animated-pages-wrapper {
+        width: 200vw;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        vertical-align: top;
+        width: 200vw;
+        height: 120px;
+        display: inline;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .animated-pages-wrapper:first-child {
+        float: left;
+        width: 100vw;
+      }
+      .animated-pages-wrapper:last-child {
+        width: 100vw;
+        margin: 100vw;
+        z-index: 2;
+      }
+      /**/
+
+      /* end: correct css for positioning animated pages */
+
     </style>
 		
     <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
 
-
+    <!--- ->
     <div class="wrapper split">
 
       <view-outbox-list id="list-desktop"
@@ -74,18 +118,20 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       </view-outbox-detail>
 
     </div>
+    <!---->
 
 
     <!-- desktop, tablet -->
-    <!-- <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
+    <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-outbox-list id="list-desktop"
-                            xselected="{{selected}}"
-                            xselected="{{selectedList}}"
-                            selected-item="{{selectedList}}"
-                            user-local="[[userLocal]]"
-                            xon-tap="_showDetailDesktop"
-                            >
+                          xselected="{{selected}}"
+                          xselected="{{selectedList}}"
+                          xselected-item="{{selectedList}}"
+                          selected-item="{{selectedItem}}"
+                          user-local="[[userLocal]]"
+                          on-tap="_showDetailDesktop"
+                          >
         </view-outbox-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
@@ -93,65 +139,73 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       on-animation-end="_onAnimationEnd"
                       last-animation-type="{{lastAnimationType}}"
                       last-animation-name="{{lastAnimationName}}"
-                      show
+                      xshow
                       >
           <view-outbox-detail xselected="[[selected]]"
                               xselected="[[selectedDetail]]"
-                              item="[[selectedDetail]]"
+                              xitem="[[selectedDetail]]"
+                              item="[[selectedItem]]"
                               user-local="[[userLocal]]"
                               >
           </view-outbox-detail>
         </animated-css>
       </div>
-    </template> -->
+    </template>
 
     <!-- with animation and without iron pages -->
     <!-- mobile -->
-    <!-- <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
-      <div class="animated-pages-wrapper"> -->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="animated-pages-wrapper">
        
         <!-- view-outbox-list -->
-        <!-- <animated-css id="animated-list-mobile"
+        <animated-css id="animated-list-mobile"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       show
                       >
           <div name="list" on-tap="_showDetailMobile">
-            <view-outbox-list selected-item="{{selected}}"
+            <view-outbox-list id="list-desktop"
+                              xselected="{{selected}}"
+                              xselected="{{selectedList}}"
+                              xselected-item="{{selectedList}}"
+                              selected-item="{{selectedItem}}"
                               user-local="[[userLocal]]"
+                              xon-tap="_showDetailDesktop"
                               >
             </view-outbox-list>
           </div>      
-        </animated-css> -->
+        </animated-css>
 
         <!-- view-outbox-detail -->
-        <!-- <div name="detail" id="detail">
+        <div name="detail" id="detail">
           <animated-css id="animated-detail-mobile"
                         entry-animation="slideInRight"
                         exit-animation="slideOutRight"
                         xhidden
-                        > -->
+                        >
             <!--- ->
             <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
             <!---->
-            <!-- <app-item type="subpage-header"
+            <app-item type="subpage-header"
                       on-subpage-back-button="_showListMobile"
-                      label="[[selected]]"
+                      xlabel="[[selected]]"
+                      label="Lead detail"
                       >
-            </app-item> -->
+            </app-item>
             <!---->
-            <!-- <view-outbox-detail xselected="[[selectedDetail]]"
-                                item="[[selectedDetail]]"
+            <view-outbox-detail xselected="[[selected]]"
+                                xselected="[[selectedDetail]]"
+                                xitem="[[selectedDetail]]"
+                                item="[[selectedItem]]"
                                 user-local="[[userLocal]]"
                                 >
             </view-outbox-detail>
           </animated-css>
-        </div>          -->
+        </div>
         <!---->
         <!---->      
-  
-      <!-- </div>
-    </template> -->
+      </div>
+    </template>
     <!---->
 
   </template>
@@ -197,17 +251,17 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 					notify: true,
 				},
 
-				label: {
-					type: String,
-          notify: true,
-          computed: '_computeLabel(selected)',
-				},
+				// label: {
+				// 	type: String,
+        //   notify: true,
+        //   computed: '_computeLabel(selected)',
+				// },
     
-				subroute: {
-					type: String,
-          notify: true,
-          value: () => 'list', // 'list' | 'detail'
-				},
+				// subroute: {
+				// 	type: String,
+        //   notify: true,
+        //   value: () => 'list', // 'list' | 'detail'
+				// },
     
         userLocal: {
       		type: Object,
@@ -301,7 +355,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       _showDetailDesktop() {
         const detail = this.root.querySelector('#animated-detail-desktop');
-        //detail.animateExit();
+        detail.animateExit();
         detail.animateEntry();
       }
 

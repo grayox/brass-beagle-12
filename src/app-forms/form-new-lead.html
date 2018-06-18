@@ -196,6 +196,12 @@
 
       _save(r) {
         const data = r || this.item;
+
+        const timestamp = new Date().getTime();
+        const timestampReverse = (-1) * timestamp;
+        data.timestamp = timestamp;
+        data.timestampReverse = timestampReverse;
+
 				const entity = 'lead-sent';
 				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
 				//const name = ['update', entity].join('-');
