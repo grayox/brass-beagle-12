@@ -1,4 +1,4 @@
-<!--
+<!--- ->
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -6,11 +6,12 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-<!--- ->
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+
 <!--- ->
 <link rel="import" href="dashboard-detail-zip.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
@@ -226,22 +227,35 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       save(data) {
-				
-				const timestamp = new Date().getTime();
-				const methods = this.$.methods;
-				
+
+        // 1. add timestamp
+        // const data = data;
+				// const timestampedData = { ...data, ...{timestamp: timestamp} };
+        const timestamp = new Date().getTime();
+        data.timestamp = timestamp;
+        
+        // 2. add location-category hash index
+        console.log('user-local', this.userLocal);
+        const userLocal = this.userLocal;
+        const key1 = userLocal['geo-select-key']; // "united-states_michigan_upper-peninsula"
+        const key2 = _.kebabCase(userLocal['lead-type']); // Mortgage => mortgage
+        const key = [key1, key2].join('_'); // lodash.snakeCase()
+        data['key-lead-send-stem'] = key1;
+        data['key-lead-receive'] = key;
+
+        // 3. prepare save method
 				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
 				const method = 'save'; // 'save'|'delete'
 				const entity = 'user-settings'; // 'zip'|'deal'|'bid'|'network'
-				//const data = data;
-				const timestampedData = { ...data, ...{timestamp: timestamp} };
 				const detail = {
 					method: method,
 					entity: entity,
-					// data: data,
-					data: timestampedData,
+					data: data,
+					// data: timestampedData,
 				};
-				
+        
+        // 4. define, execute save
+        const methods = this.$.methods;
 				methods.method(detail);
       }
       
