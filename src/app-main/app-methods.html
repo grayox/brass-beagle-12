@@ -12,6 +12,8 @@ Use iron-meta to manage state
 <!--- ->
 <link rel="import" href="/src/app-state/state-user.html">
 <!---->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
 <link rel="import" href="/src/app-state/state-user-remote.html">
 <link rel="import" href="/src/app-state/state-app-data.html">
 
@@ -99,6 +101,8 @@ Example usage (v1):
 		<!--- ->
     <state-user user-remote="{{userRemote}}"></state-user>
     <!---->
+		<state-user-local user-local="{{userLocal}}"></state-user-local>
+		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
 		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>
 		<state-app-data app-data="{{appData}}"></state-app-data>
     
@@ -141,15 +145,29 @@ Example usage (v1):
 
 					appData: {
 						type: Object,
-            notify: true,
+            // notify: true,
             observer: '_appDataChanged',
 						//statePath: 'appData',
 					},
 
 					userRemote: {
 						type: Object,
-            notify: true,
+            // notify: true,
             //observer: '_appDataChanged',
+						//statePath: 'userRemote',
+					},
+
+					userLocal: {
+						type: Object,
+            // notify: true,
+            observer: '_userLocalChanged',
+						//statePath: 'userRemote',
+					},
+
+					userSettings: {
+						type: Object,
+            // notify: true,
+            observer: '_userSettingsChanged',
 						//statePath: 'userRemote',
 					},
 
@@ -206,7 +224,22 @@ Example usage (v1):
 			ready() {
         super.ready();
         //window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-		  }
+      }
+      
+      // _userRemoteChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+			
+      _userLocalChanged(dataNew, dataOld) {
+        console.log('data-old', dataOld);
+        console.log('data-new', dataNew);
+      }
+      
+      _userSettingsChanged(dataNew, dataOld) {
+        console.log('data-old', dataOld);
+        console.log('data-new', dataNew);
+      }
 				
 			_resetVariables() {
         const r = [ 'timestamp', 'newPostKey', 'data', 'readData', 'methodArg', ];

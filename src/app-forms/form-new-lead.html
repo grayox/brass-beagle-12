@@ -1,6 +1,12 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!--- ->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
+
 <!---->
 <link rel="import" href="/src/app-main/app-methods.html">
 <link rel="import" href="/src/app-view/app-item.html">
@@ -12,6 +18,12 @@
 <dom-module id="form-new-lead">
   <template>
     <style include="paper-item-styles"></style>
+
+    <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <!--- ->
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!---->
 
     <app-methods id="methods"></app-methods>
     
@@ -92,6 +104,18 @@
       static get is() { return 'form-new-lead'; }
 
       static get properties() { return {
+
+        // userLocal: {
+        //   type: Object,
+        //   // notify: true,
+        //   observer: '_userLocalChanged',
+        // },
+
+        userSettings: {
+          type: Object,
+          // notify: true,
+          observer: '_userSettingsChanged',
+        },
 				
         item: {
 					type: Object,
@@ -182,6 +206,16 @@
 			// 	console.log('item', o);
 			// }
 
+      // _userLocalChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      _userSettingsChanged(dataNew, dataOld) {
+        console.log('data-old', dataOld);
+        console.log('data-new', dataNew);
+      }
+
       _tappedCancel() {
         this._resetItem();
         this._dispatchCloseDialog();
@@ -197,10 +231,20 @@
       _save(r) {
         const data = r || this.item;
 
+        // set timestamps (and reverse)
         const timestamp = new Date().getTime();
         const timestampReverse = (-1) * timestamp;
         data.timestamp = timestamp;
         data.timestampReverse = timestampReverse;
+
+        // deal with key index
+        // reference: app-data.json => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]"
+        const userSettings = this.userSettings;
+        console.log('user-settings', userSettings);
+        const stem = userSettings['key-lead-send-stem'];
+        const suffix = data.type.toLowerCase();
+        const keyLeadSend = [stem, suffix].join('_');
+        data.keyLeadSend = keyLeadSend;
 
 				const entity = 'lead-sent';
 				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
