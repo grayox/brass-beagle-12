@@ -171,30 +171,32 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // if(sNew) this.root.querySelector(selectorSnew).hidden = false;
       }
 
-      // _handleLeadTypeSelected(e) {
-      //   console.log('lead-type-selected\n', e);
-      //   const data = e.detail;
-      //   this._dispatchEvent('app-settings-changed', data);
-      // }
+      _handleLeadTypeSelected(e) {
+        // console.log('lead-type-selected\n', e);
+        const data = e.detail;
+        // this._dispatchEvent('app-settings-changed', data);
+        this._dispatchEvent('user-settings-changed', data);
+      }
 
-      // _handleGeoSelectValid(e) {
-      //   console.log('geo-select-valid\n', e);
-      //   const data = e.detail;
-      //   this._dispatchEvent('app-settings-changed', data);
-      // }
+      _handleGeoSelectValid(e) {
+        // console.log('geo-select-valid\n', e);
+        const data = e.detail;
+        // this._dispatchEvent('app-settings-changed', data);
+        this._dispatchEvent('user-settings-changed', data);
+      }
 
-		  // _dispatchEvent(name, data) {
-			// 	const n = name;
-			// 	const o = {
-			// 	  bubbles: true,
-			// 		composed: true,
-			// 		detail: data,
-			// 	};
-			// 	//console.log('o\n', o);
-			// 	const d = new CustomEvent(n, o);
-			// 	//console.log('d\n', d);
-			// 	this.dispatchEvent(d);				
-      // }
+		  _dispatchEvent(name, data) {
+				const n = name;
+				const o = {
+				  bubbles: true,
+					composed: true,
+					detail: data,
+				};
+				//console.log('o\n', o);
+				const d = new CustomEvent(n, o);
+				//console.log('d\n', d);
+				this.dispatchEvent(d);				
+      }
 
       // begin: event save
 

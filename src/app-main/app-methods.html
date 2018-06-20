@@ -160,14 +160,14 @@ Example usage (v1):
 					userLocal: {
 						type: Object,
             // notify: true,
-            observer: '_userLocalChanged',
+            // observer: '_userLocalChanged',
 						//statePath: 'userRemote',
 					},
 
 					userSettings: {
 						type: Object,
             // notify: true,
-            observer: '_userSettingsChanged',
+            // observer: '_userSettingsChanged',
 						//statePath: 'userRemote',
 					},
 
@@ -231,15 +231,15 @@ Example usage (v1):
       //   console.log('data-new', dataNew);
       // }
 			
-      _userLocalChanged(dataNew, dataOld) {
-        console.log('data-old', dataOld);
-        console.log('data-new', dataNew);
-      }
+      // _userLocalChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
       
-      _userSettingsChanged(dataNew, dataOld) {
-        console.log('data-old', dataOld);
-        console.log('data-new', dataNew);
-      }
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
 				
 			_resetVariables() {
         const r = [ 'timestamp', 'newPostKey', 'data', 'readData', 'methodArg', ];

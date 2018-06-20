@@ -96,7 +96,9 @@
         <view-settings-list id="list-desktop"
                             xselected="{{selected}}"
                             selected="{{selectedList}}"
-                            user-local="[[userLocal]]"
+                            xuser-local="[[userLocal]]"
+                            geo-select-location-region="[[userLocal.geo-select-location-region]]"
+                            lead-type="[[userLocal.lead-type]]"
                             xon-tap="_showDetailDesktop"
                             >
         </view-settings-list>
@@ -111,6 +113,8 @@
           <view-settings-detail xselected="[[selected]]"
                                 selected="[[selectedDetail]]"
                                 user-local="[[userLocal]]"
+                                xon-app-settings-changed="_onAppSettingsChanged"
+                                on-user-settings-changed="_onUserSettingsChanged"
                                 >
           </view-settings-detail>
         </animated-css>
@@ -130,7 +134,9 @@
                       >
           <div name="list" on-tap="_showDetailMobile">
             <view-settings-list selected="{{selected}}"
-                                user-local="[[userLocal]]"
+                                xuser-local="[[userLocal]]"
+                                geo-select-location-region="[[userLocal.geo-select-location-region]]"
+                                lead-type="[[userLocal.lead-type]]"
                                 >
             </view-settings-list>
           </div>      
@@ -154,6 +160,8 @@
             <!---->
             <view-settings-detail selected="[[selected]]"
                                   user-local="[[userLocal]]"
+                                  xon-app-settings-changed="_onAppSettingsChanged"
+                                  on-user-settings-changed="_onUserSettingsChanged"
                                   >
             </view-settings-detail>
           </animated-css>
@@ -178,7 +186,9 @@
           <div name="list" on-tap="_showDetailMobile">
             <animated-css id="animated-list-mobile">
               <view-settings-list selected="{{selected}}"
-                                  user-local="[[userLocal]]"
+                                  xuser-local="[[userLocal]]"
+                                  geo-select-location-region="[[userLocal.geo-select-location-region]]"
+                                  lead-type="[[userLocal.lead-type]]"
                                   >
               </view-settings-list>
             </animated-css>
@@ -197,6 +207,8 @@
               </app-item>
               <view-settings-detail selected="[[selected]]"
                                     user-local="[[userLocal]]"
+                                    xon-app-settings-changed="_onAppSettingsChanged"
+                                    on-user-settings-changed="_onUserSettingsChanged"
                                     >
               </view-settings-detail>
             </animated-css>
@@ -220,7 +232,9 @@
           <!-- view-settings-list - ->
           <div name="list" on-tap="_showDetailMobile">
             <view-settings-list selected="{{selected}}"
-                                user-local="[[userLocal]]"
+                                xuser-local="[[userLocal]]"
+                                geo-select-location-region="[[userLocal.geo-select-location-region]]"
+                                lead-type="[[userLocal.lead-type]]"
                                 >
             </view-settings-list>
           </div>      
@@ -237,6 +251,8 @@
             </app-item>
             <view-settings-detail selected="[[selected]]"
                                   user-local="[[userLocal]]"
+                                  xon-app-settings-changed="_onAppSettingsChanged"
+                                  on-user-settings-changed="_onUserSettingsChanged"
                                   >
             </view-settings-detail>
           </div>         
@@ -251,7 +267,9 @@
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="wrapper">
         <view-settings-list selected="{{selected}}"
-                            user-local="[[userLocal]]"
+                            xuser-local="[[userLocal]]"
+                            geo-select-location-region="[[userLocal.geo-select-location-region]]"
+                            lead-type="[[userLocal.lead-type]]"
                             on-tap="_dialogOpen"
                             >
         </view-settings-list>
@@ -265,6 +283,8 @@
         <paper-dialog-scrollable>
           <view-settings-detail selected="[[selected]]"
                                 user-local="[[userLocal]]"
+                                xon-app-settings-changed="_onAppSettingsChanged"
+                                on-user-settings-changed="_onUserSettingsChanged"
                                 >
           </view-settings-detail>
         </paper-dialog-scrollable>
@@ -330,7 +350,7 @@
         userLocal: {
       		type: Object,
 					notify: true,
-          observer: '_userLocalChanged',
+          // observer: '_userLocalChanged',
         },
 
 				// settings: {
@@ -408,23 +428,36 @@
 
       }
 
-      _userLocalChanged(dataNew, dataOld) {
-        // console.log('data-old\n', dataOld);
-        // console.log('data-new\n', dataNew);
+      // _userLocalChanged(dataNew, dataOld) {
+      //   // console.log('data-old\n', dataOld);
+      //   // console.log('data-new\n', dataNew);
 
-        const ready = dataNew;
-        if(!ready) return;
+      //   const ready = dataNew;
+      //   if(!ready) return;
 
-        const userLocal = dataNew; //dataNew.value; // dataNew.base
-        this.set('userLocal', userLocal);
+      //   const userLocal = dataNew; //dataNew.value; // dataNew.base
+      //   this.set('userLocal', userLocal);
         
-        // console.log('user-local\n', userLocal);
+      //   // console.log('user-local\n', userLocal);
 
-        // this.set('leadType', userLocal['lead-type']);
-        // console.log('lead-type\n', this.leadType);
+      //   // this.set('leadType', userLocal['lead-type']);
+      //   // console.log('lead-type\n', this.leadType);
 
-        // const leadType = userLocal['lead-type'];
-        // console.log('lead-type\n', leadType);
+      //   // const leadType = userLocal['lead-type'];
+      //   // console.log('lead-type\n', leadType);
+      // }
+
+      // _onAppSettingsChanged(e) {
+      _onUserSettingsChanged(e) {
+        console.log('e', e);
+
+        // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data
+        // Force data system to pick up subproperty changes
+        // const userLocal = this.userLocal;
+        // this.userLocal = {};
+        // this.userLocal = userLocal;
+
+        this.set('userLocal', e);
       }
 
       // begin: event save

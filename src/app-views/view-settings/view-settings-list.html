@@ -131,7 +131,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   xlabel-short="Lead type"
                   xdata="[[leadType]]"
                   xdata="[[userLocal.lead-type.charAt(0).toUpperCase()]]"
-                  data="[[userLocal.lead-type]]"
+                  xdata="[[userLocal.lead-type]]"
+                  data="[[leadType]]"
                   class="selectable"
                   >
         </app-item>
@@ -141,7 +142,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   icon="track-changes"
                   label="Your location"
                   xlabel-short="Your location"
-                  data="[[userLocal.geo-select-location-region]]"
+                  xdata="[[userLocal.geo-select-location-region]]"
+                  data="[[geoSelectLocationRegion]]"
                   class="selectable"
                   >
         </app-item>
@@ -173,16 +175,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 					notify: true,
         },
         
-        userLocal: {
-      		type: Object,
-					notify: true,
-          // observer: '_userLocalChanged',
+        // userLocal: {
+      	// 	type: Object,
+				// 	notify: true,
+        //   // observer: '_userLocalChanged',
+        // },
+
+        leadType: {
+          type: String,
+          notify: true,
         },
 
-        // leadType: {
-        //   type: String,
-        //   notify: true,
-        // },
+        geoSelectLocationRegion: {
+          type: String,
+          notify: true,
+        },
 
       }}
       
