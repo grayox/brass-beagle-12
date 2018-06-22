@@ -193,7 +193,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 					composed: true,
 					detail: data,
 				};
-				console.log('o\n', o);
+				// console.log('o\n', o);
 				const d = new CustomEvent(n, o);
 				//console.log('d\n', d);
 				this.dispatchEvent(d);				
@@ -250,10 +250,10 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         });
 
         promise.then(result => {
-          console.log(result); // "Stuff worked!"
+          // console.log(result); // "Stuff worked!"
           this._dispatchEvent('user-settings-changed', data);
         }, (err) => {
-          console.log(err); // Error: "It broke"
+          // console.log(err); // Error: "It broke"
         });
 
         // return new Promise((resolve, reject) => {

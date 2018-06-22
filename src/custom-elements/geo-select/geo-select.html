@@ -210,13 +210,14 @@
 					geoCountry: { // 'United States'
 						type: String,
 						notify: true,
-						// observer: '_geoCodeChanged',
+						observer: '_geoCountryChanged',
             // value: () => 'United States',
 					},
-
+          
 					geoRegion: { // 'California'
-						type: String,
-						notify: true,
+            type: String,
+            notify: true,
+            observer: '_geoRegionChanged',
 						// computed: '_computeGeoRegion(geoCode, geoCodeData)',
             // value: () => 'California',
 					},
@@ -334,7 +335,19 @@
 			//     //console.log('initializing...', s);
 			//   	 this._init(s);
 			//   }
-			// }
+      // }
+      
+      _geoCountryChanged(dataNew, dataOld) {
+        // delete region and location
+        this.set('geoRegion', null);
+        this.set('geoLocation', null);
+      }
+      
+      _geoRegionChanged(dataNew, dataOld) {
+        // delete location
+        // this.set('geoRegion', null);
+        this.set('geoLocation', null);
+      }
 
       _computeGeoCountryItems(geoLocationsData) {
 				//console.log('geo-locations-data', geoLocationsData);
