@@ -211,10 +211,10 @@
       //   console.log('data-new', dataNew);
       // }
 
-      _userSettingsChanged(dataNew, dataOld) {
-        console.log('data-old', dataOld);
-        console.log('data-new', dataNew);
-      }
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
 
       _tappedCancel() {
         this._resetItem();
@@ -240,7 +240,7 @@
         // deal with key index
         // reference: app-data.json => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]"
         const userSettings = this.userSettings;
-        console.log('user-settings', userSettings);
+        // console.log('user-settings', userSettings);
         const stem = userSettings['key-lead-send-stem'];
         const suffix = data.type.toLowerCase();
         const keyLeadSend = [stem, suffix].join('_');

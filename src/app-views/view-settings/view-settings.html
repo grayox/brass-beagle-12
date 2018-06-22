@@ -449,15 +449,15 @@
 
       // _onAppSettingsChanged(e) {
       _onUserSettingsChanged(e) {
-        console.log('e', e);
+        console.log('e\n', e);
 
         // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data
         // Force data system to pick up subproperty changes
-        // const userLocal = this.userLocal;
-        // this.userLocal = {};
-        // this.userLocal = userLocal;
+        const userLocal = this.userLocal;
+        this.userLocal = {};
+        this.userLocal = userLocal;
 
-        this.set('userLocal', e);
+        // this.set('userLocal', e); // error: do not use
       }
 
       // begin: event save

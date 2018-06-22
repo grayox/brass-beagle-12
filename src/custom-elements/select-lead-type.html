@@ -127,11 +127,15 @@
 				//this.fire('name', detail);
 				// const n = 'save-app-item';
 				const o = {
-					bubbles: true,
+					bubbles: false, // true,
 					composed: true,
 					detail: detail,
 				};
 				const d = new CustomEvent(name, o);
+        
+        // console.log('name\n', name);
+        // console.log('o\n', o);
+
         this.dispatchEvent(d);
       }
       
