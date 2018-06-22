@@ -184,13 +184,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         leadType: {
           type: String,
           notify: true,
-          observer: '_leadTypeChanged',
+          // observer: '_leadTypeChanged',
         },
 
         geoSelectLocationRegion: {
           type: String,
           notify: true,
-          observer: '_geoSelectLocationRegionChanged',
+          // observer: '_geoSelectLocationRegionChanged',
         },
 
       }}
@@ -212,15 +212,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       //   ]
       // }
 
-      _leadTypeChanged(dataNew, dataOld) {
-        console.log('data-old\n', dataOld);
-        console.log('data-new\n', dataNew);
-      }
+      // _leadTypeChanged(dataNew, dataOld) {
+      //   console.log('data-old\n', dataOld);
+      //   console.log('data-new\n', dataNew);
+      // }
 
-      _geoSelectLocationRegionChanged(dataNew, dataOld) {
-        console.log('data-old\n', dataOld);
-        console.log('data-new\n', dataNew);
-      }
+      // _geoSelectLocationRegionChanged(dataNew, dataOld) {
+      //   console.log('data-old\n', dataOld);
+      //   console.log('data-new\n', dataNew);
+      // }
       
       // _userLocalChanged(dataNew, dataOld) {
       //   // console.log('data-old\n', dataOld);
