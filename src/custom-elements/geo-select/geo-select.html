@@ -195,12 +195,6 @@
             computed: '_computeGeoRegionItems(geoLocationsData, geoCountry)',
           },
 
-					// geoRegionItems: {
-          //   type: Array,
-          //   notify: true,
-          //   computed: '_computeGeoRegionItems(geoCountryItems, geoCountry)',
-          // },
-
 					geoLocationItems: {
             type: Array,
             notify: true,
@@ -212,7 +206,9 @@
 						notify: true,
 						observer: '_geoCountryChanged',
             // value: () => 'United States',
-					},
+          },
+          
+          geoCountryPrior: String,
           
 					geoRegion: { // 'California'
             type: String,
@@ -222,6 +218,8 @@
             // value: () => 'California',
 					},
 
+          geoRegionPrior: String,
+          
 					geoLocation: { // 'San Francisco'
 						type: String,
 						notify: true,
@@ -339,14 +337,20 @@
       
       _geoCountryChanged(dataNew, dataOld) {
         // delete region and location
+        this.set('geoValid', false);
         this.set('geoRegion', null);
         this.set('geoLocation', null);
+
+        this.set('geoCountryPrior', dataNew);
       }
       
       _geoRegionChanged(dataNew, dataOld) {
         // delete location
+        this.set('geoValid', false);
         // this.set('geoRegion', null);
         this.set('geoLocation', null);
+
+        this.set('geoRegionPrior', dataNew);
       }
 
       _computeGeoCountryItems(geoLocationsData) {
@@ -581,15 +585,33 @@
 
 			_computeGeoValid(country, region, location) {
 				//console.log('compute-geo-valid', country, region, location);
-				const b1 = !!country && country.length; // control region visibility based on country
-				// this.$.region.opened = b1;
-				// this.$.region.opened = b1;
-				// this.$.region.hidden = !b1;
-        const b2 = !!region && region.length; // control location visibility based on region
-				// this.$.location.opened = b2;
-				// this.$.location.hidden = !b2;
-        const b3 = !!location && location.length;
-        const out = !!(b1 && b2 && b3);
+				const ready1 = !!country && country.length; // control region visibility based on country
+				// this.$.region.opened = ready1;
+				// this.$.region.opened = ready1;
+        // this.$.region.hidden = !ready1;
+        // console.log('ready-1', ready1);
+        if(!ready1) return;
+        
+        const ready2 = !!region && region.length; // control location visibility based on region
+				// this.$.location.opened = ready2;
+        // this.$.location.hidden = !ready2;
+        // console.log('ready-2', ready2);
+        if(!ready2) return;
+        
+        const ready3 = !!location && location.length;
+        // console.log('ready-3', ready3);
+        if(!ready3) return;
+        
+        const data = this.geoLocationsData;
+        const ready4 = !!data
+                      && data[country]
+                      && data[country][region]
+                      && (data[country][region].indexOf(location) > -1)
+        // console.log('ready-4', ready4);
+        if(!ready4) return;
+        
+        const out = !!(ready1 && ready2 && ready3 && ready4);
+        // const out = !!(ready1 && ready2 && ready3);
         return out;
 			}
 			
@@ -619,8 +641,27 @@
         const ready1 = geoValid;
         if (!ready1) return;
 
-        const ready2 = (geoValid && geoCountry && geoRegion && geoLocation && geoCountryRegionLocation && geoLocationRegionCountry && geoLocationRegion);
+        const ready2 = (  geoValid
+                       && geoCountry
+                       && geoRegion
+                       && geoLocation
+                       && geoCountryRegionLocation
+                       && geoLocationRegionCountry
+                       && geoLocationRegion
+                       );
         if (!ready2) return;
+        
+        // region changed without changing location
+        const geoRegionPrior = this.geoRegionPrior;
+        // const ready3 = !( (geoRegion != geoRegionPrior) && (geoLocation == geoLocationPrior) );
+        const ready3 = ( (geoRegionPrior === undefined) || (geoRegionPrior === geoRegion) );
+        if (!ready3) return;
+        
+        // country changed without changing region
+        const geoCountryPrior = this.geoCountryPrior;
+        // const ready4 = !( (geoCountry != geoCountryPrior) && (geoRegion == geoRegionPrior) );
+        const ready4 = ( (geoCountryPrior === undefined) || (geoCountryPrior === geoCountry) );
+        if (!ready4) return;
 
         const out = {
           // geoValid: geoValid,
@@ -640,8 +681,9 @@
           'geo-select-location-region': geoLocationRegion,     
         }
         
-        // console.log('geo-object\n', out);
+        console.log('geo-object-valid\n', out);
         this._dispatchEvent('geo-select-valid', out);
+        // this.set('geoValid', false);
         return out;
       }
 			

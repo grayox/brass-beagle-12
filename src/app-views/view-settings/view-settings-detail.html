@@ -280,7 +280,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         const userLocal = this.userLocal;
         const key1 = userLocal['geo-select-key']; // 'united-states_michigan_upper-peninsula'
         // const key2 = _.kebabCase(userLocal['lead-type']); // Mortgage => mortgage
-        const key2 = userLocal['lead-type']; // Mortgage => mortgage
+        const key2 = userLocal['lead-type'].toLowerCase(); // Mortgage => mortgage
         // const key = [key1, key2].join('_'); // lodash.snakeCase()
         const key = [key1, key2].join('_'); // lodash.snakeCase()
         data['key-lead-send-stem'] = key1; // 'united-states_michigan_upper-peninsula'
