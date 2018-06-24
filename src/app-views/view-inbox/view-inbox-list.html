@@ -9,35 +9,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <!--- ->
 <!---->
-
-<link rel="import" href="/bower_components/polymer/polymer-element.html">
-
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
+<link rel="import" href="/src/custom-libraries/moment-js.html">
 <!---->
-<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/iron-list/iron-list.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 
-<!---->
-<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
-<!---->
-<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
-<!---->
-<link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
-<link rel="import" href="/src/app-data/app-database.html">
+<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/app-database/database-inbox.html">
 
-<!--- ->
-<!--- ->
-Demos
-https://gridbyexample.com/patterns/header-asmany-footer/
-https://codepen.io/rachelandrew/pen/zwPEoX
-<!---->
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-local.html">
+
 
 <dom-module id="view-inbox-list">
 
@@ -50,35 +37,77 @@ https://codepen.io/rachelandrew/pen/zwPEoX
   
       iron-list {
         height: 100vh; /* don't use % values unless the parent element is sized. */
+        text-align: left; /* fixes center alignment of list items */
+        /** /
+        border: 2px solid black;
+        padding: 0;
+        margin: 0;
+        /**/
       }
     </style>
+   
+    <!-- state -->
+    <database-inbox items="{{items}}"></database-inbox>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!---->
 
-    <app-database items-available="[[items]]"></app-database>
+    <app-item type="subheader"
+              label="Lead type and market location"
+              >
+    </app-item>
 
-    <div role="listbox">
-      <iron-list items="[[items]]">
-        <template>
+    <app-item type="output-one-line"
+              xicon="vaadin:user"
+              label="Lead type"
+              data="[[userLocal.lead-type]]"
+              >
+    </app-item>
 
-          <paper-icon-item xclass="urgent">
-            <!---->
-            <div class="avatar-small" slot="item-icon"></div>
-            <!---->
-            <paper-item-body xtwo-line>
-              <div xclass="dim">[[item.name]]</div>
-              <!--- ->
-              <div secondary>Jan 17, 2014</div>
-              <!---->
-            </paper-item-body>
-            <!---->
-            <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-            <!--- ->
-            <div>12</div>
-            <!---->
-          </paper-icon-item>
-          
-        </template>
-      </iron-list>
-    </div>
+    <app-item type="output-two-line"
+              xicon="vaadin:user"
+              label="Market location"
+              data="[[userLocal.geo-select-country-region-location]]"
+              >
+    </app-item>
+
+    <app-item type="subheader"
+              label="List of leads"
+              >
+    </app-item>
+
+    <iron-list role="listbox"
+               mutable-data restamp
+               selection-enabled
+               items="[[items]]"
+               selected-item="{{selectedItem}}"
+               xselected="{{selected}}"
+               xattr-for-selected="name"
+               xselectable=".selectable"
+               >
+      <template>
+        <!--- ->
+        <app-item type="output-two-line"
+                  xtwo-line
+                  xicon="[[item.icon]]"
+                  xicon="star"
+                  icon="chevron-right"
+                  label="[[item.name]]"
+                  name="[[item.name]]"
+                  xdata="[[item.location]]"
+                  data="[[item.city]], [[item.state]]"
+                  dataright="[[_computeTimeAgo(item.timestamp)]]"
+                  >
+        </app-item>
+        <!---->
+        <app-item type="output-one-line"
+                  icon="chevron-right"
+                  label="[[item.city]], [[item.state]]"
+                  data="[[_computeTimeAgo(item.timestamp)]]"
+                  xon-tap="_itemTapped"
+                  >
+        </app-item>
+      </template>
+    </iron-list>
 
   </template>
 
@@ -88,14 +117,74 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-inbox-list'; }
 
- 			// static get properties() { return {
-			// 	mediaWidth: {
-			// 		type: Number, // 0, 1, 2, 3
-			// 		notify: true,
-			// 		//observer: '_mediaWidthChanged',
-			// 	},
-      // }}
- 			
+      static get properties() { return {
+			
+      	// mediaWidth: {
+				// 	type: Number, // 0, 1, 2, 3
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				// selected: {
+				// 	type: String,
+				// 	notify: true,
+        //   observer: '_selectedChanged',
+        // },
+
+				selectedItem: {
+					type: Object,
+					notify: true,
+          //observer: '_selectedItemChanged',
+        },
+
+			  items: {
+			  	type: Array,
+			  	notify: true,
+          // observer: '_itemsChanged',
+          // value: () => [
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age:  1, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age:  2, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age:  3, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age:  4, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age:  5, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age:  6, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age:  7, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age:  8, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age:  9, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 10, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 11, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 12, } ,
+          //   // repeats above 12
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 13, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 14, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 15, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 16, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 17, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 18, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 19, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 20, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 21, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 22, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 23, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 24, } ,
+          //   // repeats above 12
+          //   { icon: 'home'            , name: 'Orval Okuneva'       , location: 'Jakubowskiborough, ND' , age: 25, } ,
+          //   { icon: 'account-balance' , name: 'Ms. Carmella Hickle' , location: 'Hoegerburgh, OK '      , age: 26, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Ezekiel Hammes'      , location: 'Mauricioside, OH'      , age: 27, } ,
+          //   { icon: 'assessment'      , name: 'Dan Swaniawski II'   , location: 'Lake Palmaland, OR'    , age: 28, } ,
+          //   { icon: 'home'            , name: 'Flossie Flatley'     , location: 'Port Elmorestad, NC'   , age: 29, } ,
+          //   { icon: 'account-balance' , name: 'Lysanne Greenfelder' , location: 'East Robyn, LA'        , age: 30, } ,
+          //   { icon: 'home'            , name: 'Ms. Walker Rowe'     , location: 'Ornshire, LA'          , age: 31, } ,
+          //   { icon: 'assessment'      , name: 'Oliver Zemlak'       , location: 'West Doyle, MT'        , age: 32, } ,
+          //   { icon: 'account-balance' , name: 'Hayley Friesen'      , location: 'Williechester, HI'     , age: 33, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Jessika Heidenreich' , location: 'Lake Alizaburgh, NC'   , age: 34, } ,
+          //   { icon: 'assessment'      , name: 'Stacey Gerlach'      , location: 'Lake Beverly, NH'      , age: 35, } ,
+          //   { icon: 'vaadin:diploma'  , name: 'Saige Erdman'        , location: 'Quitzonbury, VT'       , age: 36, } ,
+          // ],
+			  },
+
+      }}
+      
       constructor() {
         super();
       }
@@ -104,6 +193,47 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
+
+      static get observers() {
+        return [
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          // '_userSettingsStoredChanged(userSettingsStored.*)',
+          // '_userSettingsChanged(userSettings.*)',
+          // '_selectedItemChanged(selectedItem.*)',
+        ]
+      }
+      
+			_computeTimeAgo(n) {
+				// console.log('item', item);
+        // console.log('n', n);
+        // console.log('typeof-n', typeof n);
+        
+        // const t = item.timestamp;
+        
+        const ready1 = !!n;
+        const ready2 = (typeof n == 'number');
+        const ready = ready1 && ready2;
+        if(!ready) return '';
+        
+				const s = moment(n).fromNow(true); // http://momentjs.com/docs/#/displaying/fromnow/
+				return s;
+			}
+
+      // _itemsChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      // _selectedChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      // _selectedItemChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
 		
     }
 

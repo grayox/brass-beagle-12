@@ -235,11 +235,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   observer: '_selectedItemChanged',
         // },
 
-				selectedList: {
-					 type: String,
-          notify: true,
-          observer: '_selectedListChanged',
-				},
+				// selectedList: {
+				// 	type: String,
+        //   notify: true,
+        //   observer: '_selectedListChanged',
+				// },
 
 				selectedDetail: {
 					type: String,
@@ -252,13 +252,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				},
 
 				// label: {
-				// 	type: String,
-        //   notify: true,
-        //   computed: '_computeLabel(selected)',
+				// 	  type: String,
+        //    notify: true,
+        //    computed: '_computeLabel(selected)',
 				// },
     
 				// subroute: {
-				// 	type: String,
+				// 	 type: String,
         //   notify: true,
         //   value: () => 'list', // 'list' | 'detail'
 				// },
@@ -286,32 +286,32 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       // * * * * * start: animations * * * * *
 
-      _selectedListChanged(dataNew, dataOld) {
-        // log to verify
-        // console.log('data-old', dataOld);
-        // console.log('data-new', dataNew);
+      // _selectedListChanged(dataNew, dataOld) {
+      //   // log to verify
+      //   // console.log('data-old', dataOld);
+      //   // console.log('data-new', dataNew);
 
-        // define variables
-        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+      //   // define variables
+      //   const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
         
-        // check for old value
-        if(dataOld) {
-          // animate old selectedDetail exit
-          detail.animateExit(); // wait for on-animation-end to proceed
-        } else {
-          // hide to do machinations behind-the-scenes
-          // detail.hidden = true;
+      //   // check for old value
+      //   if(dataOld) {
+      //     // animate old selectedDetail exit
+      //     detail.animateExit(); // wait for on-animation-end to proceed
+      //   } else {
+      //     // hide to do machinations behind-the-scenes
+      //     // detail.hidden = true;
 
-          // set new selectedDetail
-          this.set('selectedDetail', dataNew);
+      //     // set new selectedDetail
+      //     this.set('selectedDetail', dataNew);
 
-          // animate new selectedDetail entry
-          detail.animateEntry();
+      //     // animate new selectedDetail entry
+      //     detail.animateEntry();
 
-          // unhide to show animations
-          // detail.hidden = false;
-        }
-      }
+      //     // unhide to show animations
+      //     // detail.hidden = false;
+      //   }
+      // }
 
       _onAnimationEnd(e) {
         // console.log('on-animation-end', e);

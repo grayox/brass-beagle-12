@@ -3,49 +3,54 @@
 
 <!--- ->
 <link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
 <!---->
 <link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+<!--- ->
 <link rel="import" href="/src/app-state/state-user.html">
-
+<link rel="import" href="/src/app-state/state-user-remote.html">
+<!---->
+<link rel="import" href="/src/app-state/state-user-local.html">
 
 <dom-module id="database-inbox">
   <template>
 		<style></style>
-		<!--- ->
+    <!--- ->
 		<app-localstorage-document xlog xsession-only key="inbox-data" data="{{inboxData}}"></app-localstorage-document>
-		<!---->
+    <!---->
 		
-		<!-- state  -->
-		<state-user user-remote="{{userRemote}}"
+    <!-- import user  -->
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!--- ->
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <state-user user-remote="{{userRemote}}"
 								user-local="{{userLocal}}"
 								>
 		</state-user>
-		
+		<!---->
+    
 		<!-- query database -->
-    <firebase-query id="query-received"
+    <firebase-query id="query"
 										app-name="app"
 									  xpath="users/[[user.uid]]/items"
 									  xpath="users/[[user.uid]]/deals"
 									  xpath="user-deals/[[user.uid]]"
-									  xpath="deals"
+									  xpath="[[path]]"
+									  xpath="/"
 									  xpath="leads"
-										xpath="[[path]]"
-									  xpath="leads-state-county/[[userLocal.state]]/[[userLocal.county]]/[[userLocal.category]]"
-									  path="user-leads-received/[[userRemote.uid]]"
-									  data="{{itemsReceived}}"
+									  xpath="/user-leads-sent/[[userRemote.uid]]"
+									  path="/leads-country-region-location-category/[[userLocal.key-lead-receive]]"
+									  data="{{items}}"
 										xorder-by-child="filterindex"
+										order-by-child="timestampReverse"
 										xstart-at="g"
-										xend-at="j"
+                    xend-at="j"
+                    xverbose
+                    xlog
 										>
     </firebase-query>
-		<!---->
-    <firebase-query id="query-available"
-										app-name="app"
-									  path="leads-state-county-category-index/[[userLocal.state]]/[[userLocal.county]]/[[userLocal.category]]"
-									  data="{{itemsAvailable}}"
-										>
-    </firebase-query>
-		<!---->
+		
   </template>
 	
   <script>
@@ -53,25 +58,35 @@
       static get is() { return 'database-inbox'; }
 
       static get properties() { return {
-				itemsReceived: {
+
+				// userLocal: {
+				// 	type: Object,
+				// 	notify: true,
+        //   // observer: '_itemsChanged'
+				// },
+
+				items: {
 					type: Object,
 					notify: true,
+          // observer: '_itemsChanged'
 				},
-				itemsAvailable: {
-					type: Object,
-					notify: true,
-				},
+
 			}}
 			
 			constructor() {
 				super();
 			}
 			
-			/** /
-			ready() {
-        super.ready();
-      }
-			/**/
+			// ready() {
+      //   super.ready();
+      // }
+
+      // _itemsChanged(dataNew, dataOld) {
+      //   console.log('data-new', dataNew);
+      //   console.log('data-old', dataOld);
+      //   console.log('path', this.$.query.path);
+      //   // console.log('uid', this.userRemote.uid);
+      // }
 		
 		}
 
