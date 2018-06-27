@@ -257,7 +257,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
         const email = this.text;
         const emailKey = coder.encode(email);
         
-        const timestamp = new Date().getTime();
+        const timestamp = Date.now(); // new Date().getTime();
         const userRemote = this.userRemote;
         const userLocal = this.userLocal;
         // console.log('userRemote\n', userRemote);
@@ -321,13 +321,12 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
       }
 
 			_dispatchEvent(name, data) {
-				/** /
-				const m = this.$.methods;
-				m.fireEvent(name, data);
-				/**/
+        
+        // const m = this.$.methods;
+				// m.fireEvent(name, data);
 				
-				const timestamp = new Date().getTime();
-        const timestampReverse = (-1) * timestamp;
+				const timestamp = Date.now(); // new Date().getTime();
+        const timestampReverse = ( (-1) * timestamp );
 				// const eventData = {
         //   ...{data: data},
         //   ...{timestamp: timestamp},

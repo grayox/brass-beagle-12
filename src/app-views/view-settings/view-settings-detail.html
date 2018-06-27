@@ -272,7 +272,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // 1. add timestamp
         // const data = data;
 				// const timestampedData = { ...data, ...{timestamp: timestamp} };
-        const timestamp = new Date().getTime();
+        const timestamp = Date.now(); // new Date().getTime();
         data.timestamp = timestamp;
         
         // 2. add location-category hash index

@@ -382,7 +382,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
         const data = newSettings;
         // console.log('data\n', data);
         
-        // const timestamp = new Date().getTime();
+        // const timestamp = Date.now(); // new Date().getTime();
 				// const data = { // {new: 'data'}
 				// 	timestamp: timestamp,
 				// 	zipValid: this.zipValid,
@@ -446,7 +446,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 
       _computeNewSettings(o, zipValid, zipCode, zipCity, zipState, zipCounty, zipStateCounty, zipCityStateCounty) {
         // console.log('oldSettings\n', o);
-        const timestamp = new Date().getTime();
+        const timestamp = Date.now(); // new Date().getTime();
         const out = o ? { ...o } : {};
         // if(o) {
         //   out = { ...o };

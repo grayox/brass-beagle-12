@@ -410,9 +410,9 @@ Example usage (v1):
 				const uid = data.uid ? data.uid : this.userRemote.uid;
 				//console.log('uid', uid);
 				//console.log('userRemote', this.userRemote);
-				const timestamp = Date.now(); //new Date().getTime();
+				const timestamp = Date.now(); // new Date().getTime();
 				this.set('timestamp', timestamp);
-        const timestampReverse = (-1) * timestamp;
+        const timestampReverse = ( (-1) * timestamp );
 				this.set('timestampReverse', timestampReverse);
 				data.timestamp = timestamp;
 				data.timestampReverse = timestampReverse;
@@ -553,13 +553,16 @@ Example usage (v1):
 						key = this._array2string_path(path);
 				    // console.log('key\n', key);
 						switch(type) {
+              
 							case 'create':
 								dat = data;
-								break;
+                break;
+                
 							case 'index':
 								//dat = true;
 								dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
-								break;
+                break;
+                
 							case 'update':
 								if(a[i].data) {
 									//console.log('typeof data', typeof a[i].data);
@@ -571,11 +574,12 @@ Example usage (v1):
 									console.warn('Attempted to update node with no "data" property');
 									continue;
 								}
-								break;
-							/**/
+                break;
+                
 							case 'delete':
 								dat = null;
-								break;
+                break;
+                
 							default:
 								//code block
 								continue;

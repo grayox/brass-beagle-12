@@ -347,7 +347,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
         const data = this._computeNewSettings(settings, labelMod, checkedState);
         // console.log('data\n', data); //return;
 
-				// const timestamp = new Date().getTime();
+				// const timestamp = Date.now(); // new Date().getTime();
 				
 				// Save to two locations:
 				//   1. /user/archive for search/retrieve
@@ -441,7 +441,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
         // b = b || this.checkedState;
         // console.log('checkedState\n', b);
         
-        const timestamp = new Date().getTime();
+        const timestamp = Date.now(); // new Date().getTime();
         const out = o ? { ...o } : {};
         // if(o) {
         //   out = { ...o };

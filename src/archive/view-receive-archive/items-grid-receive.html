@@ -141,7 +141,7 @@
 				_save: function(ob) {
 					//console.log('ob', ob);
 
-					/**/ // Reinstated 4/17/2017 // Replaced by snapshot.numChildren() // Reference: https://firebase.google.com/docs/database/web/read-and-write
+					// Reinstated 4/17/2017 // Replaced by snapshot.numChildren() // Reference: https://firebase.google.com/docs/database/web/read-and-write
 					// Increment balances
 					// user.balances
 					var net  =     this.userBalances.net - 1;
@@ -169,19 +169,17 @@
 						entity: 'lead-received',
 						data: data,
 					});
-					/** /
-					this.set('item', {});
-				//} else {
-					console.log('Form validation failed');
-					this.$.dialog.scrollTop = 0;
-					this.errorText = 'Please fill all required fields';
-					this.showToast({
-						//text: 'Success. Thanks! Please login!',
-						text: 'Form failed',
-						type: 'error',
-					});
-
-				/**/
+					
+				// 	this.set('item', {});
+				// //} else {
+				// 	console.log('Form validation failed');
+				// 	this.$.dialog.scrollTop = 0;
+				// 	this.errorText = 'Please fill all required fields';
+				// 	this.showToast({
+				// 		//text: 'Success. Thanks! Please login!',
+				// 		text: 'Form failed',
+				// 		type: 'error',
+				// 	});
 			},
 				
       });

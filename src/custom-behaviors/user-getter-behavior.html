@@ -118,19 +118,19 @@ Use iron-meta to manage state
 				// type: 'remote' | 'local'
 				// Write user data to database // loggedin-view._userDocChanged();
 				// Timestamp is appended at app-methods._initUser()
-				/** /
-				var timestamp = Date.now(); //new Date().getTime();
-				var data = Object.assign({}, u, {
-					timestamp : timestamp ,
-				});
-				/** /
-				this.fire('item-method', {
-					method: 'save',
-					entity: 'user-remote',
-					data: u,
-				});
-				/**/
-				// Append new userRemote object to users/[[uid]]/remote
+        
+        // var timestamp = Date.now(); // new Date().getTime();
+				// var data = Object.assign({}, u, {
+				// 	timestamp : timestamp ,
+				// });
+        
+        // this.fire('item-method', {
+				// 	method: 'save',
+				// 	entity: 'user-remote',
+				// 	data: u,
+				// });
+        
+        // Append new userRemote object to users/[[uid]]/remote
         var entity = [ 'user', type ].join('-'); // 'user-remote'
 				var methods = document.createElement('app-methods'); // http://stackoverflow.com/a/42763681/1640892 // https://github.com/PolymerElements/iron-ajax/blob/master/iron-ajax.html#L442
 				var detail = {

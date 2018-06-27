@@ -244,7 +244,7 @@ Example usage (v1):
 					var uid = data.uid ? data.uid : this.userRemote.uid;
 					//console.log('uid', uid);
 					//console.log('userRemote', this.userRemote);
-					var timestamp = Date.now(); //new Date().getTime();
+					var timestamp = Date.now(); // new Date().getTime();
 					this.set('timestamp', timestamp);
 					data.timestamp = timestamp;
 					var keystub = [ 'users', uid, type, ].join('/');
@@ -286,7 +286,7 @@ Example usage (v1):
 					var a = data.reverse(); // e.g., [ 'email1@example,com', 'email2@example,com', ... ]
 					var i = a.length;
 					var uid = this.user.uid;
-					var timestamp = Date.now(); //new Date().getTime();
+					var timestamp = Date.now(); // new Date().getTime();
 					while(i--) {
 						var newPostKey = a[i]; // e.g., 'email2@example,com'
 						out[ [ 'emails', newPostKey, 'added-by', this.emailKey, timestamp, ].join('/') ] = {

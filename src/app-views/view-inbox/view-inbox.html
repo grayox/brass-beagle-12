@@ -18,6 +18,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/src/app-state/state-media.html">
 <link rel="import" href="/src/app-state/state-user-local.html">
 <!---->
+<link rel="import" href="/src/app-main/app-methods.html">
 <!---->
 <link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
@@ -96,6 +97,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
 
+    <app-methods id="methods"></app-methods>
+
     <!--- ->
     <div class="wrapper split">
 
@@ -136,9 +139,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
+                      xentry-animation="[[animationEntry]]"
+                      xexit-animation="[[animationExit]]"
                       on-animation-end="_onAnimationEnd"
-                      last-animation-type="{{lastAnimationType}}"
-                      last-animation-name="{{lastAnimationName}}"
+                      xlast-animation-type="{{lastAnimationType}}"
+                      xlast-animation-name="{{lastAnimationName}}"
                       xshow
                       >
           <view-inbox-detail xselected="[[selected]]"
@@ -161,6 +166,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         <animated-css id="animated-list-mobile"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
+                      xentry-animation="[[animationEntry]]"
+                      xexit-animation="[[animationExit]]"
                       show
                       >
           <div name="list" on-tap="_showDetailMobile">
@@ -181,6 +188,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
           <animated-css id="animated-detail-mobile"
                         entry-animation="slideInRight"
                         exit-animation="slideOutRight"
+                        xentry-animation="[[animationEntry]]"
+                        xexit-animation="[[animationExit]]"
                         xhidden
                         >
             <!--- ->
@@ -221,7 +230,25 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				mediaType: {
 					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
-				},
+        },
+        
+        userLocal: {
+      		type: Object,
+					notify: true,
+          // observer: '_userLocalChanged',
+        },
+
+        handledItemKeys: {
+          type: Array,
+          notify: true,
+          value: () => [],
+        }
+
+        // animationEntry: {
+        //   type: String,
+        //   notify: true,
+        //   value: () => ''
+        // },
 				
 				// _split: {
 				// 	type: Boolean,
@@ -241,15 +268,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   observer: '_selectedListChanged',
 				// },
 
-				selectedDetail: {
-					type: String,
-					notify: true,
-				},
+				// selectedDetail: {
+				// 	type: String,
+				// 	notify: true,
+				// },
 
-				selected: {
-					type: String,
-					notify: true,
-				},
+				// selected: {
+				// 	type: String,
+				// 	notify: true,
+				// },
 
 				// label: {
 				// 	 type: String,
@@ -262,12 +289,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   notify: true,
         //   value: () => 'list', // 'list' | 'detail'
 				// },
-    
-        userLocal: {
-      		type: Object,
-					notify: true,
-          // observer: '_userLocalChanged',
-        },
 
       }}
 			
@@ -284,14 +305,96 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				return s !== 'mobile';
       }
 
-      //   // handle selected data apart from the animation effect
-      //   this._handleSelectedData(dataNew);
+      _handleAnimationEnd(e) {
+        // handle selected data apart from the animation effect
 
-      _handleSelectedData(o) {
-        console.log('selected-data\n', o);
+        // console.log('e\n', e);
+
+        const selectedItem = this.selectedItem;
+        // console.log('selected-item\n', selectedItem);
+
+        // const data = selectedItem;
+        // const key = data.$key;
+        const key = selectedItem.$key;
+
+        const keys = this.handledItemKeys;
+        // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data#array-mutation
+        
+        const ready = keys.indexOf(key) < 0;
+        console.log('ready\n', ready);
+        if(!ready) return;
+        // if(keys.indexOf(key) > -1) return;
+        // if(this.handledItemKeys.indexOf(key) > -1) return;
+        // console.log('keys', keys);
+
+        const methods = this.$.methods;
+				
         // archive
+          // create archive record
+          // delete inbox record
+          // edit lead record
+
+				const entity = 'lead-received';
+				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
+				//const name = ['update', entity].join('-');
+				
+				// // detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				// const method = 'save'; // 'save'|'delete'
+				// //const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				// const detail = {
+				// 	method: method,
+				// 	entity: entity,
+				// 	data: data,
+				// };
+        // // console.log('detail\n', detail);
+        // methods.method(detail);
+
+				// save lead
+				const timestamp = Date.now();
+				const timestampReverse = ( (-1) * timestamp );
+				// const data = Object.assign({}, ob, {
+				const data = Object.assign(selectedItem, {
+					timestamp : timestamp ,
+					timestampReverse : timestampReverse ,
+				});
+				//this.item.total = parseFloat(this.item.total);
+				//console.log('item', this.item);
+				//this.fire('item-save', this.item);
+				//this.fire('item-save', {
+				// this.fire('item-method', {
+				this._dispatchEvent('item-method', {
+					method: 'save',
+					entity: 'lead-received',
+					data: data,
+				});
+        
+
         // account for lead withdrawal
+
+
+
         // deduct balance
+
+
+
+        // record this key so we don't duplicate
+        this.push('handledItemKeys', key);
+        // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data#array-mutation
+        
+
+      }
+
+      _dispatchEvent(name, data) {
+			  const n = name;
+			  const o = {
+			    bubbles: true, // false, //
+			   	composed: true,
+			   	detail: data,
+			  };
+			  // console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  //console.log('d\n', d);
+			  this.dispatchEvent(d);				
       }
 
 
@@ -332,14 +435,17 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // define variables
         const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
         // const lastAnimationType = detail.lastAnimationType;
-        const lastAnimationType = this.lastAnimationType;
-        const lastAnimationName = this.lastAnimationName;
+        // const lastAnimationType = this.lastAnimationType;
+        // const lastAnimationName = this.lastAnimationName;
         // console.log('last-animation-type', lastAnimationType);
         
-        // return if entry-animation just ended (to avoid infinite loop)
-        if(lastAnimationType !== 'exit') {
-          return;
-        }
+        // if(lastAnimationType === 'exit') { // 'entry'
+        //   // handle selected data apart from the animation effect
+        //   this._handleAnimationEnd();
+        // } else {
+        //   // return if entry-animation just ended (to avoid infinite loop)
+        //   return;
+        // }
         
         // otherwise, the last animation type was an 'exit',
         // so now proceed to implement the next 'entry' animation
@@ -353,11 +459,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // detail.hidden = true;
 
         // set new selectedDetail
-        const selectedList = this.selectedList;
-        this.set('selectedDetail', selectedList);
+        // const selectedList = this.selectedList;
+        // this.set('selectedDetail', selectedList);
 
         // animate new selectedDetail entry
         detail.animateEntry();
+
+        // handle selected data apart from the animation effect
+        this._handleAnimationEnd(e);
         
         // unhide to show animations
         // detail.hidden = false;

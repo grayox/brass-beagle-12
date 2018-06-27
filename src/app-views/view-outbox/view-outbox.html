@@ -137,8 +137,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       on-animation-end="_onAnimationEnd"
-                      last-animation-type="{{lastAnimationType}}"
-                      last-animation-name="{{lastAnimationName}}"
+                      xlast-animation-type="{{lastAnimationType}}"
+                      xlast-animation-name="{{lastAnimationName}}"
                       xshow
                       >
           <view-outbox-detail xselected="[[selected]]"
@@ -222,7 +222,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
 				},
-				
+    
+        userLocal: {
+      		type: Object,
+					notify: true,
+          // observer: '_userLocalChanged',
+        },
+        				
 				// _split: {
 				// 	type: Boolean,
 				// 	notify: true,
@@ -241,15 +247,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   observer: '_selectedListChanged',
 				// },
 
-				selectedDetail: {
-					type: String,
-					notify: true,
-				},
+				// selectedDetail: {
+				// 	type: String,
+				// 	notify: true,
+				// },
 
-				selected: {
-					type: String,
-					notify: true,
-				},
+				// selected: {
+				// 	type: String,
+				// 	notify: true,
+				// },
 
 				// label: {
 				// 	  type: String,
@@ -262,12 +268,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   notify: true,
         //   value: () => 'list', // 'list' | 'detail'
 				// },
-    
-        userLocal: {
-      		type: Object,
-					notify: true,
-          // observer: '_userLocalChanged',
-        },
 
       }}
 			
@@ -321,14 +321,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // define variables
         const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
         // const lastAnimationType = detail.lastAnimationType;
-        const lastAnimationType = this.lastAnimationType;
-        const lastAnimationName = this.lastAnimationName;
-        // console.log('last-animation-type', lastAnimationType);
+        // const lastAnimationType = this.lastAnimationType;
+        // const lastAnimationName = this.lastAnimationName;
+        // // console.log('last-animation-type', lastAnimationType);
         
-        // return if entry-animation just ended (to avoid infinite loop)
-        if(lastAnimationType !== 'exit') {
-          return;
-        }
+        // // return if entry-animation just ended (to avoid infinite loop)
+        // if(lastAnimationType !== 'exit') {
+        //   return;
+        // }
         
         // otherwise, the last animation type was an 'exit',
         // so now proceed to implement the next 'entry' animation
@@ -342,8 +342,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // detail.hidden = true;
 
         // set new selectedDetail
-        const selectedList = this.selectedList;
-        this.set('selectedDetail', selectedList);
+        // const selectedList = this.selectedList;
+        // this.set('selectedDetail', selectedList);
 
         // animate new selectedDetail entry
         detail.animateEntry();

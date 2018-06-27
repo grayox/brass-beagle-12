@@ -220,7 +220,7 @@ Use databinding (from app-main.html) to save calls from iron-ajax
 					//console.log('data', data);
 					var out = {};
 					//var uid = data.uid ? data.uid : this.userRemote.uid;
-					//var timestamp = Date.now(); //new Date().getTime();
+					//var timestamp = Date.now(); // new Date().getTime();
 					//data.timestamp = timestamp;
 					var u = this.userLocal, state = u.state, county = u.county, category = u.category;
 					var keystub = [ 'leads-state-county-categoy-index', state, county, category ].join('/');
@@ -248,7 +248,7 @@ Use databinding (from app-main.html) to save calls from iron-ajax
 					var a = data.reverse(); // e.g., [ 'email1@example,com', 'email2@example,com', ... ]
 					var i = a.length;
 					var uid = this.user.uid;
-					var timestamp = Date.now(); //new Date().getTime();
+					var timestamp = Date.now(); // new Date().getTime();
 					while(i--) {
 						var newPostKey = a[i]; // e.g., 'email2@example,com'
 						out[ [ 'emails', newPostKey, 'added-by', this.emailKey, timestamp, ].join('/') ] = {

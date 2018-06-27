@@ -251,7 +251,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
         // text = text || this.text;
         // console.log('text\n', text);
         
-        const timestamp = new Date().getTime();
+        const timestamp = Date.now(); // new Date().getTime();
         const out = oldSettings ? { ...oldSettings } : {};
         // if(oldSettings) {
         //   out = { ...oldSettings };
@@ -327,7 +327,7 @@ demo | http://jsbin.com/pofapejaxu/1/edit?html,console,output
 			
 			// _save() {
 				
-			// 	const timestamp = new Date().getTime();
+			// 	const timestamp = Date.now(); // new Date().getTime();
 				
 			// 	// Save to two locations:
 			// 	//   1. /user/archive for search/retrieve
