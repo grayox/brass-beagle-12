@@ -313,6 +313,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         const selectedItem = this.selectedItem;
         // console.log('selected-item\n', selectedItem);
 
+        const ready1 = selectedItem && selectedItem.$key;
+        if(!ready1) return;
+
         // const data = selectedItem;
         // const key = data.$key;
         const key = selectedItem.$key;
@@ -320,9 +323,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         const keys = this.handledItemKeys;
         // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data#array-mutation
         
-        const ready = keys.indexOf(key) < 0;
+        const ready2 = keys.indexOf(key) < 0;
         // console.log('ready\n', ready);
-        if(!ready) return;
+        if(!ready2) return;
         // if(keys.indexOf(key) > -1) return;
         // if(this.handledItemKeys.indexOf(key) > -1) return;
         // console.log('keys', keys);

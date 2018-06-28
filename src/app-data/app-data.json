@@ -280,7 +280,7 @@
 			]
 		},
 		"lead-received": {
-			"xread": ["leads", "~@this.data.key@~"],
+			"read": ["leads", "~@this.data.key@~"],
 			"page": "view-inbox", "comment": "page property corresponds to id in loggedin-view.html; for closing dialog",
 			"key": "received", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
@@ -296,7 +296,8 @@
 					"path": ["user-leads-received", "~@this.userRemote.uid@~", "~@this.data.key@~"]
 				}, {
 					"type": "delete", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
-					"xpath": ["leads-state-county-category-index", "~@this.readData.state@~", "~@this.readData.county@~", "~@this.readData.category@~", "~@this.data.key@~"]
+					"xpath": ["leads-state-county-category-index", "~@this.readData.state@~", "~@this.readData.county@~", "~@this.readData.category@~", "~@this.data.key@~"],
+					"path": ["leads-country-region-location-category", "~@this.readData.keyLeadSend@~", "~@this.data.key@~"]
 				}
 			]
 		}
