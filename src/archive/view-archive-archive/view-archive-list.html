@@ -1,0 +1,310 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!---->
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
+<!---->
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+<!---->
+<link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
+<!---->
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<!--- ->
+<link rel="import" href="dashboard-styles.html">
+<link rel="import" href="dashboard-element.html">
+
+<!--- ->
+Demos
+https://gridbyexample.com/patterns/header-asmany-footer/
+https://codepen.io/rachelandrew/pen/zwPEoX
+<!---->
+
+<dom-module id="view-archive-list">
+
+  <template>
+
+    <style include="paper-item-styles"></style>
+    
+    <div role="listbox">
+      <paper-icon-item class="urgent">
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Enter zip code...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item class="urgent">
+        <!--- ->
+        <div class="avatar" slot="item-icon"></div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div xclass="dim">Select lead type...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Required information</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>0/2</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:flag" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>State</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>Mississippi</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:map-marker" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>County</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>Biloxi</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:pin" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Zip</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>90210</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:group" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Available</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>516</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:piggy-bank-coin" xicon="vaadin:compile" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Balance</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>31</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:cloud-upload" alt="outbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Sent</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>213</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar" slot="item-icon">
+          <paper-icon-button icon="vaadin:cloud-download" alt="inbox"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Received</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!---->
+        <div>12</div>
+      </paper-icon-item>
+      <paper-icon-item>
+        <!---->
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:plus" alt="outbox"></paper-icon-button>
+        </div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div class="xdim xitalic">Send new lead...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <!---->
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="vaadin:minus" alt="inbox"></paper-icon-button>
+        </div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div class="xdim xitalic">Receive new lead...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <!---->
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="social:person-add" xicon="vaadin:user-card" alt="invite user"></paper-icon-button>
+        </div>
+        <!---->
+        <paper-item-body xtwo-line>
+          <div class="xdim  xitalic">Invite a contact...</div>
+          <!--- ->
+          <div secondary>Jan 17, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>12</div>
+        <!---->
+      </paper-icon-item>
+      <paper-icon-item>
+        <div class="avatar xblue" slot="item-icon">
+          <paper-icon-button icon="track-changes" alt="zip"></paper-icon-button>
+        </div>
+        <paper-item-body xtwo-line>
+          <div>Add counties...</div>
+          <!--- ->
+          <div secondary>Jan 9, 2014</div>
+          <!---->
+        </paper-item-body>
+        <!--- ->
+        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
+        <!--- ->
+        <div>Off</div>
+        <!---->
+      </paper-icon-item>
+    </div>
+
+  </template>
+
+  <script>
+
+    class ViewArchiveList extends Polymer.Element {
+
+      static get is() { return 'view-archive-list'; }
+
+      /** /
+			static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+      /**/
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/**/
+		
+    }
+
+    customElements.define(ViewArchiveList.is, ViewArchiveList);
+
+  </script>
+
+</dom-module>
