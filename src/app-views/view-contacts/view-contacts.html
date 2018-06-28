@@ -11,8 +11,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-<link rel="import" href="view-outbox-list.html">
-<link rel="import" href="view-outbox-detail.html">
+<link rel="import" href="view-contacts-list.html">
+<link rel="import" href="view-contacts-detail.html">
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-media.html">
@@ -32,7 +32,7 @@ https://gridbyexample.com/patterns/header-asmany-footer/
 https://codepen.io/rachelandrew/pen/zwPEoX
 <!---->
 
-<dom-module id="view-outbox">
+<dom-module id="view-contacts">
 
   <template>
 
@@ -99,7 +99,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <!--- ->
     <div class="wrapper split">
 
-      <view-outbox-list id="list-desktop"
+      <view-contacts-list id="list-desktop"
                         xselected="{{selected}}"
                         xselected="{{selectedList}}"
                         xselected-item="{{selectedList}}"
@@ -107,15 +107,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                         user-local="[[userLocal]]"
                         xon-tap="_showDetailDesktop"
                         >
-      </view-outbox-list>
+      </view-contacts-list>
 
-      <view-outbox-detail xselected="[[selected]]"
+      <view-contacts-detail xselected="[[selected]]"
                           xselected="[[selectedDetail]]"
                           xitem="[[selectedDetail]]"
                           item="[[selectedItem]]"
                           user-local="[[userLocal]]"
                           >
-      </view-outbox-detail>
+      </view-contacts-detail>
 
     </div>
     <!---->
@@ -124,7 +124,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
-        <view-outbox-list id="list-desktop"
+        <view-contacts-list id="list-desktop"
                           xselected="{{selected}}"
                           xselected="{{selectedList}}"
                           xselected-item="{{selectedList}}"
@@ -132,7 +132,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                           user-local="[[userLocal]]"
                           on-tap="_showDetailDesktop"
                           >
-        </view-outbox-list>
+        </view-contacts-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
@@ -141,13 +141,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       xlast-animation-name="{{lastAnimationName}}"
                       xshow
                       >
-          <view-outbox-detail xselected="[[selected]]"
+          <view-contacts-detail xselected="[[selected]]"
                               xselected="[[selectedDetail]]"
                               xitem="[[selectedDetail]]"
                               item="[[selectedItem]]"
                               user-local="[[userLocal]]"
                               >
-          </view-outbox-detail>
+          </view-contacts-detail>
         </animated-css>
       </div>
     </template>
@@ -157,14 +157,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
       <div class="animated-pages-wrapper">
        
-        <!-- view-outbox-list -->
+        <!-- view-contacts-list -->
         <animated-css id="animated-list-mobile"
                       entry-animation="slideInLeft"
                       exit-animation="slideOutLeft"
                       show
                       >
           <div name="list" on-tap="_showDetailMobile">
-            <view-outbox-list id="list-desktop"
+            <view-contacts-list id="list-desktop"
                               xselected="{{selected}}"
                               xselected="{{selectedList}}"
                               xselected-item="{{selectedList}}"
@@ -172,11 +172,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                               user-local="[[userLocal]]"
                               xon-tap="_showDetailDesktop"
                               >
-            </view-outbox-list>
+            </view-contacts-list>
           </div>      
         </animated-css>
 
-        <!-- view-outbox-detail -->
+        <!-- view-contacts-detail -->
         <div name="detail" id="detail">
           <animated-css id="animated-detail-mobile"
                         entry-animation="slideInRight"
@@ -193,13 +193,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       >
             </app-item>
             <!---->
-            <view-outbox-detail xselected="[[selected]]"
+            <view-contacts-detail xselected="[[selected]]"
                                 xselected="[[selectedDetail]]"
                                 xitem="[[selectedDetail]]"
                                 item="[[selectedItem]]"
                                 user-local="[[userLocal]]"
                                 >
-            </view-outbox-detail>
+            </view-contacts-detail>
           </animated-css>
         </div>
         <!---->
@@ -212,9 +212,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
   <script>
 
-    class ViewOutbox extends Polymer.Element {
+    class ViewContacts extends Polymer.Element {
 
-      static get is() { return 'view-outbox'; }
+      static get is() { return 'view-contacts'; }
 
 			static get properties() { return {
 				
@@ -404,7 +404,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 		
     }
 
-    customElements.define(ViewOutbox.is, ViewOutbox);
+    customElements.define(ViewContacts.is, ViewContacts);
 
   </script>
 

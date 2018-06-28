@@ -12,7 +12,7 @@
 <!---->
 <link rel="import" href="/src/app-state/state-user-remote.html">
 
-<dom-module id="database-outbox">
+<dom-module id="database-contacts">
   <template>
 		<style></style>
     <!--- ->
@@ -51,8 +51,8 @@
   </template>
 	
   <script>
-    class DatabaseOutbox extends Polymer.Element {
-      static get is() { return 'database-outbox'; }
+    class DatabaseContacts extends Polymer.Element {
+      static get is() { return 'database-contacts'; }
 
       static get properties() { return {
 
@@ -81,6 +81,6 @@
 		
 		}
 
-    window.customElements.define(DatabaseOutbox.is, DatabaseOutbox);
+    window.customElements.define(DatabaseContacts.is, DatabaseContacts);
   </script>
 </dom-module>

@@ -23,7 +23,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/src/app-database/database-outbox.html">
 
 
-<dom-module id="view-outbox-list">
+<dom-module id="view-contacts-list">
 
   <template>
 
@@ -81,9 +81,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    class ViewOutboxList extends Polymer.Element {
+    class ViewContactsList extends Polymer.Element {
 
-      static get is() { return 'view-outbox-list'; }
+      static get is() { return 'view-contacts-list'; }
 
       static get properties() { return {
 			
@@ -205,7 +205,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		
     }
 
-    customElements.define(ViewOutboxList.is, ViewOutboxList);
+    customElements.define(ViewContactsList.is, ViewContactsList);
 
   </script>
 
