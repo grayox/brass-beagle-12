@@ -321,7 +321,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // reference: https://www.polymer-project.org/1.0/docs/devguide/model-data#array-mutation
         
         const ready = keys.indexOf(key) < 0;
-        console.log('ready\n', ready);
+        // console.log('ready\n', ready);
         if(!ready) return;
         // if(keys.indexOf(key) > -1) return;
         // if(this.handledItemKeys.indexOf(key) > -1) return;
@@ -338,35 +338,72 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
 				//const name = ['update', entity].join('-');
 				
-				// // detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
-				// const method = 'save'; // 'save'|'delete'
-				// //const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
-				// const detail = {
-				// 	method: method,
-				// 	entity: entity,
-				// 	data: data,
-				// };
-        // // console.log('detail\n', detail);
-        // methods.method(detail);
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+        const method = 'save'; // 'save'|'delete'
+        const data = selectedItem;
+        //const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+
+        // fix any $key error
+        if(data && data.$key) {
+
+          // console.log('data\n', data);
+          // console.log('$key\n', data.$key);
+          // console.log('$key\n', data['$key']);
+          // data.key = data['$key'];
+          data.key = data.$key;
+          delete data.$key;
+  
+          // attempt to use promises
+          // function fixKey() {
+          //   return new Promise((resolve, reject) => {
+          //     data.key = data.$key;
+          //     if(data.key == data.$key) {
+          //       resolve(true);
+          //     } else {
+          //       reject(false);
+          //     }
+          //   })
+          // }
+          
+          // fixKey().then(result => {
+          //   delete data.$key;
+          //   console.log(result);
+          //   console.log('data\n', data);
+          //   console.log('$key\n', data.$key);
+          //   console.log('key\n', data.key);
+          // }).catch(error => {
+          //   console.log(error);
+          // });
+
+        }
+
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+        // console.log('detail\n', detail);
+        methods.method(detail);
 
 				// save lead
-				const timestamp = Date.now();
-				const timestampReverse = ( (-1) * timestamp );
-				// const data = Object.assign({}, ob, {
-				const data = Object.assign(selectedItem, {
-					timestamp : timestamp ,
-					timestampReverse : timestampReverse ,
-				});
-				//this.item.total = parseFloat(this.item.total);
-				//console.log('item', this.item);
-				//this.fire('item-save', this.item);
-				//this.fire('item-save', {
-				// this.fire('item-method', {
-				this._dispatchEvent('item-method', {
-					method: 'save',
-					entity: 'lead-received',
-					data: data,
-				});
+				// const timestamp = Date.now();
+				// const timestampReverse = ( (-1) * timestamp );
+				// // const data = Object.assign({}, ob, {
+				// const data = Object.assign(selectedItem, {
+				// 	timestamp : timestamp ,
+				// 	timestampReverse : timestampReverse ,
+				// });
+				// //this.item.total = parseFloat(this.item.total);
+				// // console.log('data\n', data);
+				// //console.log('item', this.item);
+				// //this.fire('item-save', this.item);
+				// //this.fire('item-save', {
+				// // this.fire('item-method', {
+				// this._dispatchEvent('item-method', {
+				// 	method: 'save',
+				// 	entity: 'lead-received',
+				// 	data: data,
+				// });
         
 
         // account for lead withdrawal

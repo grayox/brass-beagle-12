@@ -264,7 +264,7 @@ Example usage (v1):
 			// },
 			
       _readDataChanged(ob) {
-				//console.log('ob', ob);
+				// console.log('ob', ob);
 				if(!!ob) {
 					this.method();
 				}
@@ -323,23 +323,36 @@ Example usage (v1):
 				let out = s;  // '~@foo@~' // returns original argument if no token match
 				const re = /~@(.*?)@~/;
 				const match = re.exec(s); // ['~@foo@~', 'foo']
-				//console.log('s', s);
+				// console.log('s', s);
 				if(!!match && !!match[0] && !!match[1]) {
-					out = s.replace(match[0], eval(match[1]));
+          out = s.replace(match[0], eval(match[1]));
 					//console.log('out', out);
 				}
+        // console.log('out\n', out);
 				return out;
 			}
 
 			_array2string_path(a) {
 				// const timestamp = this.timestamp ? this.timestamp : Date.now();
+        // console.log('a\n', a);
 				if (typeof a != 'object') return a;
-				const out = [];
+				const ar = [];
 				let i = a.length;
 				while(i--) {
-					out[i] = this._evalString4Token(a[i]);
-				}
-				return out.join('/');
+          // console.log('i\n', i);
+          // console.log('a\n', a[i]);
+          // console.log('a\n', a[i]);
+          // if (ar[i] == undefined) debugger;
+					// out[i] = this._evalString4Token(a[i]);
+          let s = this._evalString4Token(a[i]);
+          s = s.replace(/\./g, ','); // replace dots (.) with comma (,)
+          s = s.replace(/\$/g, ''); // eliminate $ as in $key
+          ar[i] = s;
+          // console.log('ar\n', ar[i]);
+        }
+        const out = ar.join('/');
+        // console.log('out\n', out);
+				return out;
 			}
 
 			_showToast(s) {
@@ -500,22 +513,22 @@ Example usage (v1):
 				ajax.params = {
 					k: 'gviot90sqobjc16chfj7',
 					//m: key,
-					/** /
-					m: JSON.stringify({
-						// Must stringify parameter to pass JSON object
-						// https://datatables.net/forums/discussion/14501/post-with-parameters-and-content
-						// Can't yet extract POST body
-						// https://developers.google.com/apps-script/guides/content
-						'invitation-key': key,
-						'inviter-email': this.user.email,
-						'invitee-email': '',
-						'app-url': this.appData.firebase.databaseUrl,
-					}),
-					/**/
-					m: JSON.stringify(data),
+          
+          // m: JSON.stringify({
+					// 	// Must stringify parameter to pass JSON object
+					// 	// https://datatables.net/forums/discussion/14501/post-with-parameters-and-content
+					// 	// Can't yet extract POST body
+					// 	// https://developers.google.com/apps-script/guides/content
+					// 	'invitation-key': key,
+					// 	'inviter-email': this.user.email,
+					// 	'invitee-email': '',
+					// 	'app-url': this.appData.firebase.databaseUrl,
+					// }),
+          
+          m: JSON.stringify(data),
 				};
-				/**/
-				ajax.generateRequest();
+        
+        ajax.generateRequest();
 			}
 
 			// end configurations and initializations
@@ -603,7 +616,42 @@ Example usage (v1):
 				const entity = e.entity; // e.entity {string}: entity name; 'deal'|'bid'|'network'
 				// console.log('entity\n', entity);
 				const data   = e.data;   // e.data {object}: entity data passed from save event; {new: 'data'}
-				// console.log('data\n', data);
+        // console.log('data\n', data);
+        
+        // fix $key error
+        if(data && data.$key) {
+
+          // console.log('data\n', data);
+          // console.log('$key\n', data.$key);
+          // console.log('$key\n', data['$key']);
+          // data.key = data['$key'];
+          data.key = data.$key;
+          delete data.$key;
+          
+          // attempt to use promises
+          // function fixKey() {
+          //   return new Promise((resolve, reject) => {
+          //     data.key = data.$key;
+          //     if(data.key == data.$key) {
+          //       resolve(true);
+          //     } else {
+          //       reject(false);
+          //     }
+          //   })
+          // }
+          
+          // fixKey().then(result => {
+          //   delete data.$key;
+          //   console.log(result);
+          //   console.log('data\n', data);
+          //   console.log('$key\n', data.$key);
+          //   console.log('key\n', data.key);
+          // }).catch(error => {
+          //   console.log(error);
+          // });
+          
+        }
+
 				const appData = this.appData;
 				// console.log('app-data\n', appData);
 				const entities = appData.entities;
@@ -751,9 +799,10 @@ Example usage (v1):
         const methodArg = this.methodArg;
 
 				e = (!!e) ? e : methodArg; // _itemsPath() sets methodArg before calling _readFirebaseData()
-				if(!e) {
-					return;
-				}
+				if(!e) return;
+				// if(!e) {
+				// 	return;
+				// }
 				// console.log('e\n', e);
 				// console.log('method-arg\n', methodArg);
 				// this._resetVariables();
@@ -767,7 +816,8 @@ Example usage (v1):
 				//this.toEditableItem(item); // this.toEditableItem(data);
 				const doc = this.$.document;
 				//e.id = this.editableItemId;
-				// console.log('e', e);
+        // console.log('e\n', e);
+        // if(e.entity == 'lead-received') debugger;
 				e.doc = doc;
 				e.r = doc.db.ref('/');
 				// console.log('e', e);
