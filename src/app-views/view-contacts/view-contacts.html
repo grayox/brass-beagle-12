@@ -11,8 +11,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-<link rel="import" href="view-contacts-list.html">
-<link rel="import" href="view-contacts-detail.html">
+<link rel="import" href="view-outbox-list.html">
+<link rel="import" href="view-outbox-detail.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-media.html">
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
+<!---->
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="/src/app-view/app-item.html">
+<link rel="import" href="/src/custom-elements/animated-css.html">
 
 <!--- ->
 <!--- ->
@@ -21,98 +32,243 @@ https://gridbyexample.com/patterns/header-asmany-footer/
 https://codepen.io/rachelandrew/pen/zwPEoX
 <!---->
 
-<dom-module id="view-contacts">
+<dom-module id="view-outbox">
 
   <template>
 
     <style xinclude="dashboard-styles">
+
       :host {
         --line-color: #DDDDDD;
       }
+
       .split {
         border-bottom: 1px var(--line-color) solid;
         
         display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
         grid-template-columns: 1fr 1fr;
       }
+
+      /* correct css for positioning animated pages */
+
+      #list-desktop {
+        z-index: 1;
+      }
+
+      #detail {
+        position: absolute;
+        top: 0px;
+        width: 100%; /* not 100vw */
+      }
+
+      .animated-pages-wrapper {
+        overflow: hidden;
+      }
+
+      /* other attempts * /
+      .animated-pages-wrapper {
+        width: 200vw;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        vertical-align: top;
+        width: 200vw;
+        height: 120px;
+        display: inline;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .animated-pages-wrapper:first-child {
+        float: left;
+        width: 100vw;
+      }
+      .animated-pages-wrapper:last-child {
+        width: 100vw;
+        margin: 100vw;
+        z-index: 2;
+      }
+      /**/
+
+      /* end: correct css for positioning animated pages */
+
     </style>
 		
-		<!---->
-      <div class="wrapper split">
-				<!--- ->
-        <header class="header">
-					Dashboard
-				</header>
-        
-				<!--- ->
-        <div class="panel">Panel A</div>
-        <div class="panel">Panel B</div>
-        <div class="panel">Panel C</div>
-        <div class="panel">Panel D</div>
-        <div class="panel">Panel E</div>
-        <div class="panel">Panel F</div>
-        <div class="panel">Panel G</div>
-        <div class="panel">Panel H</div>
-        <div class="panel">Panel I</div>
-        <div class="panel">Panel J</div>
-				<!---->
-				
-				<!--- ->
-        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
-        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
-        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
-        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
-				<!---->
-				
-				<!--- ->
-				<shields-io left="left"
-										right="right"
-										color="blue"
-										>
-				</shields-io>
-				<!--- ->
-        <footer class="footer">My footer</footer>
-        <!---->
-        <view-contacts-list></view-contacts-list>
-        <view-contacts-detail></view-contacts-detail>
-        
-        <!--- ->
-        <template is="dom-if" if="{{!_split}}">
-          <view-contacts-list></view-contacts-list>
-          <view-contacts-detail></view-contacts-detail>
-        </template>
-        
-        <template is="dom-if" if="{{_split}}">
-          <div class="split">
-            <view-contacts-list></view-contacts-list>
-            <view-contacts-detail></view-contacts-detail>  		
-          </div>
-        </template>
-        <!---->
+    <!-- state -->
+    <state-media media-type="{{mediaType}}"></state-media>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
 
+    <!--- ->
+    <div class="wrapper split">
+
+      <view-outbox-list id="list-desktop"
+                        xselected="{{selected}}"
+                        xselected="{{selectedList}}"
+                        xselected-item="{{selectedList}}"
+                        selected-item="{{selectedItem}}"
+                        user-local="[[userLocal]]"
+                        xon-tap="_showDetailDesktop"
+                        >
+      </view-outbox-list>
+
+      <view-outbox-detail xselected="[[selected]]"
+                          xselected="[[selectedDetail]]"
+                          xitem="[[selectedDetail]]"
+                          item="[[selectedItem]]"
+                          user-local="[[userLocal]]"
+                          >
+      </view-outbox-detail>
+
+    </div>
+    <!---->
+
+
+    <!-- desktop, tablet -->
+    <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
+      <div class="wrapper split">
+        <view-outbox-list id="list-desktop"
+                          xselected="{{selected}}"
+                          xselected="{{selectedList}}"
+                          xselected-item="{{selectedList}}"
+                          selected-item="{{selectedItem}}"
+                          user-local="[[userLocal]]"
+                          on-tap="_showDetailDesktop"
+                          >
+        </view-outbox-list>
+        <animated-css id="animated-detail-desktop"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      on-animation-end="_onAnimationEnd"
+                      xlast-animation-type="{{lastAnimationType}}"
+                      xlast-animation-name="{{lastAnimationName}}"
+                      xshow
+                      >
+          <view-outbox-detail xselected="[[selected]]"
+                              xselected="[[selectedDetail]]"
+                              xitem="[[selectedDetail]]"
+                              item="[[selectedItem]]"
+                              user-local="[[userLocal]]"
+                              >
+          </view-outbox-detail>
+        </animated-css>
       </div>
-		<!---->
+    </template>
+
+    <!-- with animation and without iron pages -->
+    <!-- mobile -->
+    <template restamp is="dom-if" if="[[!_computeShowSplit(mediaType)]]">
+      <div class="animated-pages-wrapper">
+       
+        <!-- view-outbox-list -->
+        <animated-css id="animated-list-mobile"
+                      entry-animation="slideInLeft"
+                      exit-animation="slideOutLeft"
+                      show
+                      >
+          <div name="list" on-tap="_showDetailMobile">
+            <view-outbox-list id="list-desktop"
+                              xselected="{{selected}}"
+                              xselected="{{selectedList}}"
+                              xselected-item="{{selectedList}}"
+                              selected-item="{{selectedItem}}"
+                              user-local="[[userLocal]]"
+                              xon-tap="_showDetailDesktop"
+                              >
+            </view-outbox-list>
+          </div>      
+        </animated-css>
+
+        <!-- view-outbox-detail -->
+        <div name="detail" id="detail">
+          <animated-css id="animated-detail-mobile"
+                        entry-animation="slideInRight"
+                        exit-animation="slideOutRight"
+                        xhidden
+                        >
+            <!--- ->
+            <paper-icon-button icon="arrow-back" on-tap="_resetList"></paper-icon-button>
+            <!---->
+            <app-item type="subpage-header"
+                      on-subpage-back-button="_showListMobile"
+                      xlabel="[[selected]]"
+                      label="Lead detail"
+                      >
+            </app-item>
+            <!---->
+            <view-outbox-detail xselected="[[selected]]"
+                                xselected="[[selectedDetail]]"
+                                xitem="[[selectedDetail]]"
+                                item="[[selectedItem]]"
+                                user-local="[[userLocal]]"
+                                >
+            </view-outbox-detail>
+          </animated-css>
+        </div>
+        <!---->
+        <!---->      
+      </div>
+    </template>
+    <!---->
 
   </template>
 
   <script>
 
-    class ViewContacts extends Polymer.Element {
+    class ViewOutbox extends Polymer.Element {
 
-      static get is() { return 'view-contacts'; }
+      static get is() { return 'view-outbox'; }
 
 			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
+				
+				mediaType: {
+					type: String, // 'mobile' | 'tablet' | 'desktop'
 					notify: true,
-					//observer: '_mediaWidthChanged',
 				},
+    
+        userLocal: {
+      		type: Object,
+					notify: true,
+          // observer: '_userLocalChanged',
+        },
+        				
+				// _split: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// 	computed: '_computeSplit(mediaType)',
+				// },
+
+        // selectedItem: {
+        //   type: Object,
+        //   notify: true,
+        //   observer: '_selectedItemChanged',
+        // },
+
+				// selectedList: {
+				// 	type: String,
+        //   notify: true,
+        //   observer: '_selectedListChanged',
+				// },
+
+				// selectedDetail: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+
+				// selected: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+
+				// label: {
+				// 	  type: String,
+        //    notify: true,
+        //    computed: '_computeLabel(selected)',
+				// },
+    
+				// subroute: {
+				// 	 type: String,
+        //   notify: true,
+        //   value: () => 'list', // 'list' | 'detail'
+				// },
+
       }}
 			
       constructor() {
@@ -124,12 +280,131 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				//console.log('Component Ready');
 			}
       
-			/**/
-			/**/
+      _computeShowSplit(s) {
+				return s !== 'mobile';
+      }
+
+      // * * * * * start: animations * * * * *
+
+      // _selectedListChanged(dataNew, dataOld) {
+      //   // log to verify
+      //   // console.log('data-old', dataOld);
+      //   // console.log('data-new', dataNew);
+
+      //   // define variables
+      //   const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        
+      //   // check for old value
+      //   if(dataOld) {
+      //     // animate old selectedDetail exit
+      //     detail.animateExit(); // wait for on-animation-end to proceed
+      //   } else {
+      //     // hide to do machinations behind-the-scenes
+      //     // detail.hidden = true;
+
+      //     // set new selectedDetail
+      //     this.set('selectedDetail', dataNew);
+
+      //     // animate new selectedDetail entry
+      //     detail.animateEntry();
+
+      //     // unhide to show animations
+      //     // detail.hidden = false;
+      //   }
+      // }
+
+      _onAnimationEnd(e) {
+        // console.log('on-animation-end', e);
+        // console.log('detail', e.detail); // slideInLeft
+        // console.log('type'  , e.type  ); // animation-end
+     
+        // define variables
+        const detail = this.root.querySelector('#animated-detail-desktop'); // element to animate
+        // const lastAnimationType = detail.lastAnimationType;
+        // const lastAnimationType = this.lastAnimationType;
+        // const lastAnimationName = this.lastAnimationName;
+        // // console.log('last-animation-type', lastAnimationType);
+        
+        // // return if entry-animation just ended (to avoid infinite loop)
+        // if(lastAnimationType !== 'exit') {
+        //   return;
+        // }
+        
+        // otherwise, the last animation type was an 'exit',
+        // so now proceed to implement the next 'entry' animation
+        // console.log('last-animation-name', lastAnimationName);
+
+        // this.set('selectedDetail', dataNew);
+        
+        // wait for promise to return or no element
+        
+        // hide to do machinations behind-the-scenes
+        // detail.hidden = true;
+
+        // set new selectedDetail
+        // const selectedList = this.selectedList;
+        // this.set('selectedDetail', selectedList);
+
+        // animate new selectedDetail entry
+        detail.animateEntry();
+        
+        // unhide to show animations
+        // detail.hidden = false;
+          
+      }
+
+      _showDetailDesktop() {
+        const detail = this.root.querySelector('#animated-detail-desktop');
+        detail.animateExit();
+        detail.animateEntry();
+      }
+
+      _showDetailMobile() {
+        // this.set('subroute', 'detail');
+
+        const list = this.root.querySelector('#animated-list-mobile');
+        // list.animation = 'slideOutLeft';
+        list.animateExit();
+
+        const detail = this.root.querySelector('#animated-detail-mobile');
+        // detail.hidden = false;
+        // detail.animation = 'slideInRight';
+        detail.animateEntry();
+      }
+      
+      _showListMobile() {
+        // this.set('subroute', 'list');
+
+        const list = this.root.querySelector('#animated-list-mobile');
+        // list.animation = 'slideInLeft';
+        list.animateEntry();
+
+        const detail = this.root.querySelector('#animated-detail-mobile');
+        // detail.animation = 'slideOutRight';
+        detail.animateExit();
+      }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   list.hidden = false;
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   detail.hidden = true;
+      // }
+
+      // _afterShowList() {
+      //   const list = this.root.querySelector('#animated-list-mobile');
+      //   list.hidden = true;
+
+      //   const detail = this.root.querySelector('#animated-detail-mobile');
+      //   detail.hidden = false;
+      // }
+
+      // * * * * * end: animations * * * * *
 		
     }
 
-    customElements.define(ViewContacts.is, ViewContacts);
+    customElements.define(ViewOutbox.is, ViewOutbox);
 
   </script>
 

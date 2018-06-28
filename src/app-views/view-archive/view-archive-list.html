@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 <link rel="import" href="/src/app-view/app-item.html">
-<link rel="import" href="/src/app-database/database-outbox.html">
+<link rel="import" href="/src/app-database/database-archive.html">
 
 
 <dom-module id="view-archive-list">
@@ -44,11 +44,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
    
     <!-- state -->
-    <database-outbox items="{{items}}"></database-outbox>
+    <database-archive items="{{items}}"></database-archive>
     <!---->
 
     <app-item type="subheader"
-              label="List of leads sent"
+              label="List of leads received"
               >
     </app-item>
 
