@@ -10,6 +10,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="/src/app-forms/form-contact-details.html">
+
+<!--- ->
 <link rel="import" href="/src/custom-libraries/moment-js.html">
 
 <link rel="import" href="/src/app-view/app-item.html">
@@ -23,7 +26,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-contacts-detail">
 
   <template>
-    <!--- ->
+    <!---->
     <style>
       :host {
         --line-color: #DDDDDD;
@@ -37,112 +40,23 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     </style>
     <!---->
 
-    <!--- ->
-		<form-new-lead></form-new-lead>
-    <!--- ->
+    <!---->
+		<!--- ->
     hello world
     <!---->
 
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
 
+      <!--- ->
       <app-item type="subheader"
-                label="Lead detail"
-                >
-      </app-item>
-
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Name"
-                icon="vaadin:user"
-                xdata="John Doe"
-                data="{{item.name}}"
-                >
-      </app-item>
-              
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Type"
-                icon="vaadin:home"
-                data="{{item.type}}"
-                >
-      </app-item>
-      
-      <app-item type="output-two-line"
-                xtwo-line
-                label="City"
-                icon="star"
-                data="{{item.city}}"
-                >
-      </app-item>
-      
-      <app-item type="output-two-line"
-                xtwo-line
-                label="State"
-                icon="star"
-                data="{{item.state}}"
-                >
-      </app-item>  
-      
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Zip"
-                icon="star"
-                data="{{item.zip}}"
-                >
-      </app-item>
-
-      <!--- ->
-      <paper-item-zip zip-code="{{item.zip}}"></paper-item-zip>
-  
-      <!--- ->
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Zip code"
-                icon="vaadin:map-marker"
-                data="{{item.zip}}"
+                label="Contact detail"
                 >
       </app-item>
       <!---->
-  
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Phone"
-                icon="vaadin:phone"
-                data="{{item.phone}}"
-                >
-      </app-item>
-  
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Email"
-                icon="communication:email"
-                data="{{item.email}}"
-                >
-      </app-item>
-  
-      <!--- ->
-      <select-lead-type selected="{{item.type}}"></select-lead-type>
 
-      <!--- ->
-      <app-item type="button-save"
-                on-save-button-tapped="_tappedSave"
-                on-cancel-button-tapped="_tappedCancel"
-                >
-      </app-item>
-      <!---->
-  
-      <app-item type="output-two-line"
-                xtwo-line
-                label="Submitted"
-                xicon="watch-later"
-                icon="device:access-time"
-                xicon="vaadin:clock"
-                xdata="{{item.submitted}}"
-                data="[[_computeTimeAgo(item.timestamp)]]"
-                >
-      </app-item>
-
+      <form-contact-details></form-contact-details>
+    
     </div>
 
   </template>
