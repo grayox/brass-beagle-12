@@ -16,21 +16,21 @@
     font-size: 15px; /* 13px */
     line-height: 1.15; /* 1.5 */
     min-height: 100vh;
-    background-color: red; /* yellow; /* should never see; indicates problem */
+    background-color: var(--paper-pink-500); /* red; /* yellow; /* should never see; indicates problem */
     
     /* variables */
     
-    /* https://codecrafted.net/randommaterial/                 */
-    /* https://www.materialpalette.com/deep-purple/deep-orange */
-    /* theme-colors.html                                       */
-    /* --dark-primary-color                                    */
-    /* --primary-color                                         */
-    /* --light-primary-color                                   */
-    /* --accent-color                                          */
-    /* --text-icons             #FFFFFF opacity: 1.00          */
-    /* --primary-text           #212121 opacity: 0.87          */
-    /* --secondary-text         #757575 opacity: 0.54          */
-    /* --divider-color-text     #BDBDBD opacity: 0.26          */
+    /* https://codecrafted.net/randommaterial/                  */
+    /* https://www.materialpalette.com/deep-purple/deep-orange  */
+    /* theme-colors.html                                        */
+    /* --dark-primary-color                                     */
+    /* --primary-color                                          */
+    /* --light-primary-color                                    */
+    /* --accent-color                                           */
+    /* --text-icons              #FFFFFF opacity: 1.00          */
+    /* --primary-text            #212121 opacity: 0.87          */
+    /* --secondary-text          #757575 opacity: 0.54          */
+    /* --divider-color-text      #BDBDBD opacity: 0.26          */
     --opacity-normal:   0.87; /* #212121 --primary-text         */
     --opacity-dim:      0.54; /* #757575 --secondary-text       */
     --opacity-divider:  0.26; /* #BDBDBD --divider-color        */
@@ -102,8 +102,10 @@
     font-weight: 600;
     letter-spacing: 0.3em;
     padding: 0 16px;
+    color: black;
+    opacity: var(--opacity-normal);
     /**/
-    color: #202020;
+    color: #212121;
     padding: 0;
     overflow: visible;
     
