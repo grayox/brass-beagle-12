@@ -221,10 +221,14 @@
 				},
 				{
         	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
-					"path": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
+					"path": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.email@~", "~@this.newPostKey@~"]
         },
         {
           "comment": "-----------Properties above this line have been implemented-----------"
+        },
+				{
+        	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"xpath": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
         },
 				{
         	"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",

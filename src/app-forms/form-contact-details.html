@@ -13,6 +13,7 @@
 
 <link rel="import" href="/src/custom-elements/paper-item-zip/paper-item-zip.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
+<link rel="import" href="/src/custom-elements/geo-select/geo-select.html">
 <!---->
 
 <dom-module id="form-contact-details">
@@ -34,11 +35,29 @@
                 label="Contact details"
                 >
       </app-item>
-      
+
+      <app-item type="subheader"
+                label="Required (name, email)"
+                >
+      </app-item>
+
       <app-item type="input-text"
                 label="Name"
                 icon="vaadin:user"
                 data="{{item.name}}"
+                >
+      </app-item>
+
+      <app-item type="input-email"
+                label="Email"
+                invalid="{{invalidEmail}}"
+                icon="communication:email"
+                data="{{item.email}}"
+                >
+      </app-item>
+
+      <app-item type="subheader"
+                label="Optional"
                 >
       </app-item>
   
@@ -47,14 +66,6 @@
                 invalid="{{invalidPhone}}"
                 icon="vaadin:phone"
                 data="{{item.phone}}"
-                >
-      </app-item>
-  
-      <app-item type="input-email"
-                label="Email"
-                invalid="{{invalidEmail}}"
-                icon="communication:email"
-                data="{{item.email}}"
                 >
       </app-item>
     
@@ -74,6 +85,13 @@
       <!---->
 
       <select-lead-type selected="{{item.type}}"></select-lead-type>
+
+      <geo-select xon-geo-select-valid="_handleGeoSelectValid"
+                  geo-country="[[userLocal.geo-select-country]]"
+                  geo-region="[[userLocal.geo-select-region]]"
+                  geo-location="[[userLocal.geo-select-location]]"
+                  >
+      </geo-select>
 
       <!---->
       <div hidden$="{{_hide(formValid)}}">
@@ -241,12 +259,17 @@
         // reference: app-data.json => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]"
         const userSettings = this.userSettings;
         // console.log('user-settings', userSettings);
-        const stem = userSettings['key-lead-send-stem'];
-        const suffix = data.type.toLowerCase();
-        const keyLeadSend = [stem, suffix].join('_');
-        data.keyLeadSend = keyLeadSend;
 
-				const entity = 'lead-sent';
+        // const stem = userSettings['key-lead-send-stem'];
+        // if(data && data.type) {
+        //   const suffix = data.type.toLowerCase();
+        // }
+        // const suffix = data.type.toLowerCase();
+        // const keyLeadSend = [stem, suffix].join('_');
+        // data.keyLeadSend = keyLeadSend;
+
+				const entity = 'user-invite';
+				// const entity = 'lead-sent';
 				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
 				//const name = ['update', entity].join('-');
 				
@@ -310,16 +333,24 @@
         // console.log('email-length-valid', emailLengthValid);
         // console.log('menu-valid', menuValid);
 
-        const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
-        const valid2a = (!!phoneValid) && (!!phoneLengthValid);
-        const valid2b = (!!emailValid) && (!!emailLengthValid);
-        const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
-        const out     = !!(valid1 && valid2);
+        // following group of requirements taken from form-new-lead
+        // const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
+        // const valid2a = (!!phoneValid) && (!!phoneLengthValid);
+        // const valid2b = (!!emailValid) && (!!emailLengthValid);
+        // const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
+        // const out     = !!(valid1 && valid2);
 
         // console.log('valid-1' , valid1 );
         // console.log('valid-2a', valid2a);
         // console.log('valid-2b', valid2b);
         // console.log('valid-2' , valid2 );
+
+        // following group of requirements modified for form-contact-details
+        const valid1 = (!!nameValid); // && (!!zipValid) && (!!menuValid);
+        // const valid2a = (!!phoneValid) && (!!phoneLengthValid);
+        const valid2 = (!!emailValid) && (!!emailLengthValid);
+        // const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
+        const out = !!(valid1 && valid2);
         
         // console.log('form-valid', out);
       

@@ -241,7 +241,11 @@
         // reference: app-data.json => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]"
         const userSettings = this.userSettings;
         // console.log('user-settings', userSettings);
+        
         const stem = userSettings['key-lead-send-stem'];
+        // if(data && data.type) {
+        //   const suffix = data.type.toLowerCase();
+        // }
         const suffix = data.type.toLowerCase();
         const keyLeadSend = [stem, suffix].join('_');
         data.keyLeadSend = keyLeadSend;
