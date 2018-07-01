@@ -125,13 +125,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-contacts-list id="list-desktop"
-                          xselected="{{selected}}"
-                          xselected="{{selectedList}}"
-                          xselected-item="{{selectedList}}"
-                          selected-item="{{selectedItem}}"
-                          user-local="[[userLocal]]"
-                          on-tap="_showDetailDesktop"
-                          >
+                            xselected="{{selected}}"
+                            xselected="{{selectedList}}"
+                            xselected-item="{{selectedList}}"
+                            selected-item="{{selectedItem}}"
+                            user-local="[[userLocal]]"
+                            on-tap="_showDetailDesktop"
+                            >
         </view-contacts-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
@@ -165,13 +165,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       >
           <div name="list" on-tap="_showDetailMobile">
             <view-contacts-list id="list-desktop"
-                              xselected="{{selected}}"
-                              xselected="{{selectedList}}"
-                              xselected-item="{{selectedList}}"
-                              selected-item="{{selectedItem}}"
-                              user-local="[[userLocal]]"
-                              xon-tap="_showDetailDesktop"
-                              >
+                                xselected="{{selected}}"
+                                xselected="{{selectedList}}"
+                                xselected-item="{{selectedList}}"
+                                selected-item="{{selectedItem}}"
+                                user-local="[[userLocal]]"
+                                xon-tap="_showDetailDesktop"
+                                >
             </view-contacts-list>
           </div>      
         </animated-css>
@@ -194,11 +194,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
             </app-item>
             <!---->
             <view-contacts-detail xselected="[[selected]]"
-                                xselected="[[selectedDetail]]"
-                                xitem="[[selectedDetail]]"
-                                item="[[selectedItem]]"
-                                user-local="[[userLocal]]"
-                                >
+                                  xselected="[[selectedDetail]]"
+                                  xitem="[[selectedDetail]]"
+                                  item="[[selectedItem]]"
+                                  user-local="[[userLocal]]"
+                                  >
             </view-contacts-detail>
           </animated-css>
         </div>

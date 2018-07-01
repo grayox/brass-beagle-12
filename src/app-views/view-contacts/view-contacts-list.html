@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 <link rel="import" href="/src/app-view/app-item.html">
-<link rel="import" href="/src/app-database/database-outbox.html">
+<link rel="import" href="/src/app-database/database-contacts.html">
 
 
 <dom-module id="view-contacts-list">
@@ -44,7 +44,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
    
     <!-- state -->
-    <database-outbox items="{{items}}"></database-outbox>
+    <database-contacts items="{{items}}"></database-contacts>
     <!---->
 
     <app-item type="subheader"
@@ -62,16 +62,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                xselectable=".selectable"
                >
       <template>
-        <app-item type="output-two-line"
+        <app-item type="output-one-line"
+                  type="output-two-line"
                   xtwo-line
                   xicon="[[item.icon]]"
                   xicon="star"
                   icon="chevron-right"
                   label="[[item.name]]"
-                  name="[[item.name]]"
+                  xname="[[item.name]]"
                   xdata="[[item.location]]"
-                  data="[[item.city]], [[item.state]]"
-                  dataright="[[_computeTimeAgo(item.timestamp)]]"
+                  xdata="[[item.city]], [[item.state]]"
+                  xdataright="[ [_computeTimeAgo(item.timestamp)]]"
                   >
         </app-item>
       </template>
@@ -172,21 +173,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ]
       }
       
-			_computeTimeAgo(n) {
-				// console.log('item', item);
-        // console.log('n', n);
-        // console.log('typeof-n', typeof n);
+			// _computeTimeAgo(n) {
+			// 	// console.log('item', item);
+      //   // console.log('n', n);
+      //   // console.log('typeof-n', typeof n);
         
-        // const t = item.timestamp;
+      //   // const t = item.timestamp;
         
-        const ready1 = !!n;
-        const ready2 = (typeof n == 'number');
-        const ready = ready1 && ready2;
-        if(!ready) return '';
+      //   const ready1 = !!n;
+      //   const ready2 = (typeof n == 'number');
+      //   const ready = ready1 && ready2;
+      //   if(!ready) return '';
         
-				const s = moment(n).fromNow(true); // http://momentjs.com/docs/#/displaying/fromnow/
-				return s;
-			}
+			// 	const s = moment(n).fromNow(true); // http://momentjs.com/docs/#/displaying/fromnow/
+			// 	return s;
+			// }
 
       // _itemsChanged(dataNew, dataOld) {
       //   console.log('data-old', dataOld);

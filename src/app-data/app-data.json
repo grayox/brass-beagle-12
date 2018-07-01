@@ -17,7 +17,7 @@
     "Example: Creates new record: 'path': ['users', '~@this.userRemote.uid@~', 'settings-archive', '~@this.newPostKey@~'], 'comment-path': 'creates new record'",
 		"Rule 1: every entity needs either 'key' or 'init' property",
 		"Rule 1a: (maybe) 'key' property must match name of parent node in database node tree(?)",
-		"Rule 2: 'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+		"Rule 2: 'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
 		"Rule 2a: 'create' writes entire data object; 'index' only writes timestamp;"
 	],
 	"emailService": {
@@ -67,7 +67,7 @@
 						"Remote | Record user remote",
 						"Path also set at app.methods._initUser()"
 					],
-					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
 					"path": ["users", "~@this.userRemote.uid@~", "remote"]
 				}, {
 					"comments": [
@@ -106,18 +106,18 @@
           "comment-3": "Correction to above: We WILL use the /settings path to get the current settings",
           "comment-4": "We will use a single record at the /settings path and will not use limit-to-last='1' in firebase query",
           "comment-5": "Correction continued: We will use the /settings-archive to record prior settings",
-          "type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
           "path": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
         },
 				{
 					"comment-1": "Renames 'settings' to 'settings-archive'", 
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["users", "~@this.userRemote.uid@~", "settings-archive", "~@this.newPostKey@~"], "comment-path": "creates new record"
 				},
 				{
 					"comment-1": "We only need to create new record; because will use limit-to-last='1' in firebase query",
 					"comment-2": "Therefore, ONLY use this path",
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["users", "~@this.userRemote.uid@~", "settings", "~@this.newPostKey@~"], "comment-path": "creates new record"
 				}
 			]
@@ -133,7 +133,7 @@
 			"xkey": "user-balances",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["users", "~@this.userRemote.uid@~", "balances"]
 				}
 			]
@@ -145,7 +145,7 @@
 			"key": "user-local", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["users", "~@this.userRemote.uid@~", "local", "~@this.newPostKey@~"]
 				}
 			]
@@ -157,11 +157,11 @@
 			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "zip", "~@this.newPostKey@~"], "comment-path": "creates new record"
 				},
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
 				}
 			]
@@ -173,11 +173,11 @@
 			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "input-text", "~@this.newPostKey@~"], "comment-path": "creates new record"
 				},
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
 				}
 			]
@@ -189,11 +189,11 @@
 			"key": "zip", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
 					"path": ["users", "~@this.userRemote.uid@~", "archive", "settings", "input-email", "~@this.newPostKey@~"], "comment-path": "creates new record (because of newPostKey)"
 				},
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
 				}
 			]
@@ -204,43 +204,47 @@
 			"key": "invite", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
         {
-          "type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
           "path": ["invites-outbox", "~@this.newPostKey@~"]
         },
         {
-          "type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["invites-archive", "~@this.newPostKey@~"]
 				},
 				{
-        	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
-					"path": ["invitee-user", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
+					"path": ["invitee-user", "~@this.data.email@~", "~@this.newPostKey@~"]
 				},
 				{
-        	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+        	"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["user-invites", "~@this.userRemote.uid@~", "~@this.newPostKey@~"]
 				},
 				{
-        	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.email@~", "~@this.newPostKey@~"]
         },
         {
           "comment": "-----------Properties above this line have been implemented-----------"
         },
 				{
-        	"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
+					"xpath": ["invitee-user", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
+				},
+				{
+        	"type": "index", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["user-invitees", "~@this.userRemote.uid@~", "~@this.data.emailKey@~", "~@this.newPostKey@~"]
         },
 				{
-        	"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+        	"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["invites-sent", "~@this.data.emailKey@~"]
 				},
         {
           "comment": "user-invites",
-          "type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+          "type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
           "xpath": ["users", "~@this.userRemote.uid@~", "archive", "invite-contact", "~@this.newPostKey@~"]
         },
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["users", "~@this.userRemote.uid@~", "settings"], "comment-path": "overwrites data"
 				}
 			]
@@ -250,19 +254,19 @@
 			"key": "leads", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["leads", "~@this.newPostKey@~"]
 				}, {
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["user-leads-sent", "~@this.userRemote.uid@~", "~@this.newPostKey@~"]
 				}, {
           "comment-path-1": "view-settings-detail => 'key-lead-send-stem' | 'key-lead-receive'",
           "comment-path-2": "form-new-lead => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]",
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["leads-country-region-location-category", "~@this.data.keyLeadSend@~", "~@this.newPostKey@~"]
 				}, {
 					"comment": "----------Paths above this line have been implemented----------",
-					"type": "index", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "index", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["~@this.userSettings['key-lead-send-stem']@~", "~@this.data.type@~", "~@this.newPostKey@~"]
 				}, {
 					"type": "index",
@@ -289,17 +293,17 @@
 			"key": "received", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
 				{
-					"type": "update", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "update", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["leads", "~@this.data.key@~", "received"],
 					"data": {
 						"user": "~@this.userRemote.uid@~",
 						"timestamp": "~@this.timestamp@~"
 					}
 				}, {
-					"type": "create", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"path": ["user-leads-received", "~@this.userRemote.uid@~", "~@this.data.key@~"]
 				}, {
-					"type": "delete", "comment-type": "'create'|'create'|'index'|'update'|'delete' for every 'path'; see above rules",
+					"type": "delete", "comment-type": "'create'|'index'|'update'|'delete'|'inc'|'dec'|'sum'|'diff' for every 'path'; see above rules",
 					"xpath": ["leads-state-county-category-index", "~@this.readData.state@~", "~@this.readData.county@~", "~@this.readData.category@~", "~@this.data.key@~"],
 					"path": ["leads-country-region-location-category", "~@this.readData.keyLeadSend@~", "~@this.data.key@~"]
 				}

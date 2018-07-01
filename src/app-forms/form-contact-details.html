@@ -26,10 +26,29 @@
     <state-user-local user-local="{{userLocal}}"></state-user-local>
     <!---->
 
-    <app-methods id="methods"></app-methods>
+    <app-methods id="methods" show-toast event-dispatch></app-methods>
     
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
+
+      <!---->
+      <div hidden$="{{_hide(formValid)}}">
+        <app-item type="button-save-disabled"
+                  on-save-button-tapped="_tappedSave"
+                  on-cancel-button-tapped="_tappedCancel"
+                  >
+        </app-item>
+      </div>
+
+      <!---->
+      <div hidden$="{{!_hide(formValid)}}">
+        <app-item type="button-save"
+                  on-save-button-tapped="_tappedSave"
+                  on-cancel-button-tapped="_tappedCancel"
+                  >
+        </app-item>
+      </div>
+      <!---->
 
       <app-item type="header"
                 label="Contact details"
@@ -86,6 +105,11 @@
 
       <select-lead-type selected="{{item.type}}"></select-lead-type>
 
+      <app-item type="subheader"
+                label="Geographic market"
+                >
+      </app-item>
+
       <geo-select xon-geo-select-valid="_handleGeoSelectValid"
                   geo-country="[[userLocal.geo-select-country]]"
                   geo-region="[[userLocal.geo-select-region]]"
@@ -93,7 +117,7 @@
                   >
       </geo-select>
 
-      <!---->
+      <!--- ->
       <div hidden$="{{_hide(formValid)}}">
         <app-item type="button-save-disabled"
                   on-save-button-tapped="_tappedSave"
@@ -102,7 +126,7 @@
         </app-item>
       </div>
 
-      <!---->
+      <!--- ->
       <div hidden$="{{!_hide(formValid)}}">
         <app-item type="button-save"
                   on-save-button-tapped="_tappedSave"
@@ -371,13 +395,13 @@
         // console.log('data-old', dataOld);
         // console.log('data-new', dataNew);
 
-        this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
-        this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
-        this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
-        this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
+        // this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
+        // this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
+        // this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
+        // this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
 
         // console.log('form-valid', this.formValid);
-      } 
+      }
       
       _computeEmailValid(invalidEmail) {
         const out = !invalidEmail;
