@@ -9,13 +9,14 @@ Use iron-meta to manage state
 <link rel="import" href="/src/custom-libraries/lodash-js.html">
 
 <!-- state -->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-statistics.html">
+<link rel="import" href="/src/app-state/state-user-remote.html">
+<link rel="import" href="/src/app-state/state-app-data.html">
 <!--- ->
 <link rel="import" href="/src/app-state/state-user.html">
 <!---->
-<link rel="import" href="/src/app-state/state-user-local.html">
-<link rel="import" href="/src/app-state/state-user-settings.html">
-<link rel="import" href="/src/app-state/state-user-remote.html">
-<link rel="import" href="/src/app-state/state-app-data.html">
 
 <link rel="import" href="/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/bower_components/polymerfire/polymerfire.html">
@@ -98,13 +99,14 @@ Example usage (v1):
     <!---->
 		
 		<!-- state -->
+		<state-user-local user-local="{{userLocal}}"></state-user-local>
+		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
+		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+		<state-app-data app-data="{{appData}}"></state-app-data>
 		<!--- ->
     <state-user user-remote="{{userRemote}}"></state-user>
     <!---->
-		<state-user-local user-local="{{userLocal}}"></state-user-local>
-		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
-		<state-user-remote user-remote="{{userRemote}}"></state-user-remote>
-		<state-app-data app-data="{{appData}}"></state-app-data>
     
     <paper-toast id="toast"
                  xclass="fit-bottom"
@@ -423,27 +425,34 @@ Example usage (v1):
 				const uid = data.uid ? data.uid : this.userRemote.uid;
 				//console.log('uid', uid);
 				//console.log('userRemote', this.userRemote);
+
 				const timestamp = Date.now(); // new Date().getTime();
 				this.set('timestamp', timestamp);
         const timestampReverse = ( (-1) * timestamp );
 				this.set('timestampReverse', timestampReverse);
 				data.timestamp = timestamp;
 				data.timestampReverse = timestampReverse;
+
 				const keystub = [ 'users', uid, type, ].join('/');
 				let newPostKey;
 				switch (type) {
+
 					case 'remote':
 						newPostKey = null; // Design decision: Do not write each login; only record latest; using timestamp;
 						//newPostKey = ref.child(keystub).push().key; // const ref = this.$.document.db.ref('/');
 						break;
+
 					case 'local':
 						newPostKey = ref.child(keystub).push().key; // const ref = this.$.document.db.ref('/');
 						break;
+
 					case 'balances':
 						newPostKey = null;
 						break;
+
 					default:
 						//do something;
+
 				}
 				this.set('newPostKey', newPostKey);
 				const targetNode = [ keystub, newPostKey, ].join('/');
@@ -543,13 +552,18 @@ Example usage (v1):
 				//console.log('entity\n', entity);
 				const data       = this.readData ? this.readData : e.data; // e.data {object}: entity data passed from save event; {new: 'data'}
 				//console.log('data\n', data);
+        const stats      = this.userStatistics;
+        const statList   = ['increment', 'decrement', 'sum', 'difference'];
+
 				const newPostKey = e.newPostKey;
 				// console.log('newPostKey\n', newPostKey);
 				//const ob = JSON.parse(JSON.stringify(this.appData.entities[entity])); // Clone to preserve original appData values
 				//const ob = {...this.appData.entities[entity]}; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
 				const ob = Object.assign( {}, this.appData.entities[entity] ); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_operator#Spread_in_object_literals
 				const out = {};
-				//const timestamp = Date.now();
+
+        const timestamp = Date.now();
+        const timestampReverse = ( (-1) * timestamp );
 
 				//console.log('ob', ob);
 				// Path // string interpolation
@@ -559,11 +573,29 @@ Example usage (v1):
 				//console.log('e\n', e);
 				//console.log('ob\n', ob);
 				while(i--) {
-					let type, path, dat, key;
-					if(a[i].type && a[i].path) {
+					let type, path, dat, key, statName, preExistingValue, typeIsStatistic;
+          if(a[i].type && a[i].path) {
 						type = a[i].type;
 						path = a[i].path;
-						key = this._array2string_path(path);
+
+            // handle statistics
+            typeIsStatistic = statList.indexOf(type) > -1;
+            if(typeIsStatistic) {
+
+              // get name of statistic
+              statName = path.pop();
+              path.push(statName);
+
+              // get preExistingValue
+              // statName = a[i].statistic; // e.g, 'count-contacts', 'count-deposits', 'count-withdrawals', 'total-money', 'net-balance', etc.
+              // if(stats && statName && stats[statName]) {
+              //   preExistingValue = stats[statName];
+              // }
+              preExistingValue = (stats && statName && stats[statName]) ? stats[statName] : null;
+
+            }
+
+            key = this._array2string_path(path);
 				    // console.log('key\n', key);
 						switch(type) {
               
@@ -572,8 +604,12 @@ Example usage (v1):
                 break;
                 
 							case 'index':
-								//dat = true;
-								dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
+								// dat = true;
+								// dat = { timestamp: data.timestamp ? data.timestamp : Date.now() };
+								dat = {
+                  timestamp: data.timestamp ? data.timestamp : timestamp,
+                  timestampReverse: data.timestampReverse ? data.timestampReverse : timestampReverse,
+                  };
                 break;
                 
 							case 'update':
@@ -592,10 +628,44 @@ Example usage (v1):
 							case 'delete':
 								dat = null;
                 break;
+              
+              // Instead of separate types, we will use the type 'update'
+              // and a variable stored similarly to 'settings'; but not exactly
+              // 'settings' because 'settings' stores an archived copy and
+              // we don't want to do that for statistic variables; the new variable
+              // path will be called 'statistics'
+
+              // per notes in app-data.json
+              // all of the following type cases must contain a 'statistic' property
+              // at the same levle as the 'type', to indicate which path to fetch/retrieve
+              // and perform the math -- i.e., preExistingValue
+
+							case 'increment':
+								// add one to existing value at target path
+                // dat = data + 1;
+                dat = preExistingValue + 1;
+                break;
+                
+							case 'decrement':
+								// subtract one from existing value at target path
+                // dat = data - 1;
+                dat = preExistingValue - 1;
+                break;
+                
+							case 'sum':
+								// add value to existing value at target path
+                dat = preExistingValue + data;
+                break;
+                
+							case 'difference':
+								// subtract value from existing value at target path
+                dat = preExistingValue - data;
+                break;
                 
 							default:
 								//code block
 								continue;
+
 						}
 					} else {
 						continue;

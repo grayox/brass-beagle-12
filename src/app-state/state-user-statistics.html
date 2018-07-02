@@ -1,0 +1,531 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/src/custom-libraries/lodash-js.html">
+
+<!-- state -->
+<link rel="import" href="state-app-data.html">
+<link rel="import" href="state-user-remote.html">
+<!--- ->
+<link rel="import" href="state-app-views.html">
+<link rel="import" href="state-user-local.html">
+<link rel="import" href="state-app-settings.html">
+<link rel="import" href="/src/app-main/app-methods.html">
+<!---->
+
+<link rel="import" href="/bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<link rel="import" href="/bower_components/polymerfire/polymerfire.html">
+
+
+<dom-module id="state-user-statistics">
+  <template>
+    <style></style>
+
+    <!-- state -->
+    <state-user-remote user-remote="{{userRemote}}"></state-user-remote>
+    <!--- ->
+    <state-app-data app-data="{{appData}}"></state-app-data>
+    <app-methods id="methods"></app-methods>
+    <state-app-views app-views="{{appViews}}"></state-app-views>
+    <state-user-local user-settings="{{userSettings}}"></state-user-local>
+    <state-app-settings app-settings="{{appSettings}}"></state-app-settings>
+    <!---->
+
+    <!--- /->
+    <app-localstorage-document id="storage"
+                               xlog
+                               session-only
+                               key="user-settings"
+                               data="[[userSettings]]"
+                               >
+    </app-localstorage-document>
+		<!--- ->
+		<app-localstorage-document xlog xsession-only key="user-settings-home" data="{{userSettingsHome}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-mortgage" data="{{userSettingsMortgage}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-insurance" data="{{userSettingsInsurance}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-financial" data="{{userSettingsFinancial}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-text" data="{{userSettingsText}}"> </app-localstorage-document>	
+		<app-localstorage-document xlog xsession-only key="user-settings-email" data="{{userSettingsEmail}}"> </app-localstorage-document>	
+		<!--- ->
+    <app-localstorage-document xlog session-only key="user-settings-zip" data="{{userSettingsZip}}"> </app-localstorage-document>	
+    <app-localstorage-document xlog session-only key="user-settings-switch" data="{{userSettingsSwitch}}"> </app-localstorage-document>	
+    <app-localstorage-document xlog session-only key="user-settings-input" data="{{userSettingsInput}}"> </app-localstorage-document>	
+    <!---->
+    
+    <!--- ->
+    <firebase-query id="query"
+                    app-name="app"
+                    name="app"
+                    path="/users/[[userRemote.uid]]/settings"
+                    xpath="/users/[[userUid]]/settings"
+                    data="{{userSettings}}"
+                    xdata="{{userLocal}}"
+                    xlog
+                    xlimit-to-last="1"
+                    xlimit-to-first="1"
+                    xorder-by-child="timestamp"
+                    xorder-by-value="timestamp"
+                    >
+    </firebase-query>
+    <!---->
+    <firebase-document id="doc"
+                       app-name="app"
+                       name="app"
+                       xpath="/users/[[userRemote.uid]]/settings"
+                       path="/users/[[userRemote.uid]]/statistics"
+                       xdata="{{userSettings}}"
+                       data="{{userStatistics}}"
+                       sequential-transactions
+                       xdata="{{userSettingsStored}}"
+                       xon-data-changed="_handleDataChanged"
+                       xzero-value="_handleZeroValue"
+                       xtransactions-complete="_handleTransactionsComplete"
+                       xis-new='_handleIsNew'
+                       >
+    </firebase-document>
+    <!---->
+	
+	</template>
+
+  <script>
+    // state-user-settings fetches settings data from database (getter)
+    // state-user-local distributes local user data throughout app (setter)
+    // user-settings is the data source for user-local
+    // user-local distributes the necessary data to the other elements
+    // we avoid calling user-settings other elements to minimize calls to the database
+    // so use local-app-storage to transmit userSettings to user-local, to minimize database calls
+    class stateUserStatistics extends Polymer.Element {
+      static get is() { return 'state-user-statistics'; }
+
+      static get properties() { return {
+				userStatistics: {
+					type: Object,
+					notify: true,
+					// observer: '_userSettingsChanged', // doesn't recognize sub-property changes; listen for event: on-data-changed
+          // value: () => {
+          //   // to user-local
+          //   const out = {
+          //     'auto-email-leads': false,
+          //     'auto-text-leads': false,
+          //     city: "Enter zip",
+          //     'counties-list': "Select",
+          //     county: "Enter zip",
+          //     email: "Enter",
+          //     'lead-type': "Select",
+          //     'notify-you-email': false,
+          //     'notify-you-text': true,
+          //     phone: "Add",
+          //     'req-info': '0/2',
+          //     state: 'Enter zip',
+          //     zip: 'Enter zip',
+          //   }
+          //   // console.log('out\n', out);
+          //   return out;
+          // },
+        },
+				
+        // userSettingsOld: {
+				// 	type: Object,
+				//   // notify: true,
+				//   // observer: '_userSettingsChanged',
+        // },
+
+        // userSettingsStored: {
+				// 	type: Object,
+				//   notify: true,
+				//   observer: '_userSettingsStoredChanged',
+        // },
+        
+				userRemote: {
+					type: Object,
+					notify: true,
+					// observer: '_userRemoteChanged',
+				},
+
+				// appData: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appDataChanged',
+				// },
+
+				// appViews: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appViewsChanged',
+				// },
+
+				// appSettings: {
+				// 	type: Object,
+				// 	// notify: true,
+				// 	// observer: '_appSettingsChanged',
+				// },
+				
+        // userSettingsHome: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsMortgage: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsInsurance: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsFinancial: {
+				// 	type: Boolean,
+				// 	notify: true,
+				// },
+				// userSettingsText: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				// userSettingsEmail: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				// userSettingsZip: {
+				// 	type: String,
+				// 	notify: true,
+				// },
+				
+        // userSettingsZip: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+				// userSettingsSwitch: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+				// userSettingsInput: {
+        //   type: Object,
+				// 	notify: true,
+				// },
+        
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			ready() {
+        super.ready();
+        // window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+        // this.$.storage.destroy();
+      }
+
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     // '_userSettingsStoredChanged(userSettingsStored.*)',
+      //     '_userSettingsChanged(userSettings.*)',
+      //   ]
+      // }
+
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   // console.log('uid\n', this.userRemote.uid);
+      //   // console.log('userSettings\n', r);
+      //   console.log('data-old\n', dataOld);
+      //   console.log('data-new\n', dataNew);
+      // }
+
+      //   // conditionals
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const nogo1 =          !dataNew          ; // console.log('nogo-1', nogo1);
+      //   const nogo2 = _.isEmpty(dataNew)         ; // console.log('nogo-2', nogo2);
+      //   const nogo3 = _.isEqual(dataNew, dataOld); // console.log('nogo-3', nogo3);
+      //   const nogo  = nogo1 || nogo2 || nogo3;
+      //   if(nogo) {
+      //     // this.set('userSettings', dataOld);
+      //     return;
+      //   }
+        
+      //   // Object.assign(dataOld, dataNew);
+      //   this._handleDataChanged(dataNew, dataOld);
+      // }
+
+		  // _dispatchEvent(name, data) {
+			// 	const n = name;
+			// 	const o = {
+			// 	  bubbles: true,
+			// 		composed: true,
+			// 		detail: data,
+			// 	};
+			// 	//console.log('o\n', o);
+			// 	const d = new CustomEvent(n, o);
+			// 	//console.log('d\n', d);
+			// 	this.dispatchEvent(d);				
+      // }
+      
+      // _handleDataChanged(dataNew, dataOld) {
+      //   // databinding observer-based
+        
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const nogo1 =          !dataNew          ; /*console.log('nogo-1', nogo1);*/ if(nogo1) return;
+      //   const nogo2 = _.isEmpty(dataNew)         ; /*console.log('nogo-2', nogo2);*/ if(nogo2) return;
+      //   const nogo3 = _.isEqual(dataNew, dataOld); /*console.log('nogo-3', nogo3);*/ if(nogo3) return;
+      //   const nogo = nogo1 || nogo2 || nogo3;
+      //   // console.log('nogo', nogo);
+      //   if(nogo) return;
+
+      //   console.log('data-new', dataNew);
+      //   console.log('user-settings', this.userSettings);
+
+      //   // dispatch event
+      //   const data = dataNew;
+      //   // console.log('data', data);
+      //   this._dispatchEvent('user-settings-data-changed', data);
+      // }
+
+      // _handleDataChanged(e) {
+      //   // event-based
+      
+      //   console.log('data-changed', e);
+      //   // const dataNew = this.userSettings;
+      //   // console.log('data-new', dataNew);
+        
+      //   // dirty-check for changes to prevent redundant calls firing multiple events
+      //   const detail = e.detail;
+      //   const value = detail.value;
+      //   // delete value.base;
+      //   const dataNew = value;
+      //   const dataOld = this.userSettingsOld;
+        
+      //   const check1 = _.isEmpty(dataNew);
+      //   // console.log('check1', check1);
+      //   const check2 = _.isEqual(dataNew, dataOld);
+      //   // console.log('check2', check2);
+      //   const nogo = check1 || check2;
+      //   // console.log('nogo', nogo);
+      //   if(nogo) return;
+
+      //   // update old value
+      //   this.set('userSettingsOld', dataNew);
+
+      //   // dispatch event
+      //   // const data = e.detail;
+      //   const data = dataNew;
+      //   // console.log('data', data);
+      //   this._dispatchEvent('user-settings-data-changed', data);
+      // }
+
+      // _userSettingsStoredChanged(d) {
+      //   console.log('user-settings-stored', d);
+      //   const nogo = _.isEmpty(d);
+      //   if(nogo) return;
+
+      //   //console.log('user-settings-stored', d);
+      //   this.set('userSettings', d);
+      // }
+
+      // _initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld) {
+        
+      //   // these three req variables prevent this method from firing more than once
+
+      //   const req1 = (typeof userSettings === 'object') && _.isEmpty(userSettings);
+      //   if(!req1) return;
+        
+      //   // const req2 = (typeof userSettingsOld === 'object') && _.isEmpty(userSettingsOld);
+      //   const req2 = (typeof userSettingsOld === 'undefined');
+      //   if(!req2) return;
+        
+      //   const req3 = ( typeof userRemote === 'object' ) &&
+      //                ( typeof appData    === 'object' ) &&
+      //                ( typeof appViews   === 'object' )  ;
+      //   if(!req3) return;
+
+      //   // the following code block is temp solution until we can get a single returned value from database
+      //   // const testData = this.testData();
+      //   // // console.log('test-data\n', testData);
+      //   // return testData;
+
+      //   // console.log('user-remote\n', userRemote);
+      //   // console.log('app-data\n', appData);
+      //   // console.log('app-views\n', appViews);
+      //   // // console.log('app-settings\n', appSettings);
+      //   // console.log('user-settings\n', userSettings);
+      //   // console.log('user-settings-old\n', userSettingsOld);
+
+      //   //console.log('ready to initialize user settings');
+      //   //console.log('transactions-complete\n', this.$.doc.transactionsComplete().then());
+      //   // this.$.doc.transactionsComplete()
+      //   //           .then(response => console.log('transactions-complete\n', response));
+            
+      //   // if(databaseHasBeenInitialized) return;
+
+      //   // const init = this._computeInitialUserSettings(appViews);
+      //   // this.saveUserSettings(init);
+      // }
+
+      // _handleTransactionsComplete(e) {
+      //   console.log('transactions-complete\n', e);
+      // }
+
+      // _handleIsNew(e) {
+      //   console.log('is-new\n', e);
+      // }
+
+      // _handleZeroValue(e) {
+      //   console.log('handle-zero-value\n', e);
+      // }
+
+      // _computeInitialUserSettings(appViews) {
+      //   console.log('app-views\n', appViews);
+      //   // return {j:5, o:'N', new: 'data'};
+
+      //   if(!appViews) return;
+
+      //   // logic:
+      //   //   1. loop thru app-views.items
+      //   //   2. if item.data = 'settings', set setting.item = item.value;
+
+      //   const out = {};
+      //   const items = appViews.items;
+      //   const keys = Object.keys(items);
+      //   let i = keys.length;
+      //   while(i--) {
+      //     let key = keys[i];
+      //     let item = items[key];
+      //     let data = item.data;
+      //     if(data === 'settings' || data === 'Settings') {
+      //       out[key] = item.value;
+      //     }
+      //   }
+      //   console.log('out\n', out);
+      //   return out;
+      // }
+
+      // saveUserSettings(data) {
+      //   // console.log('data\n',data);
+        
+			// 	const entity = 'user-settings';
+				
+			// 	const methods = this.$.methods;
+			// 	// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+			// 	const method = 'save'; // 'save'|'delete'
+			// 	//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+			// 	const detail = {
+			// 		method: method,
+			// 		entity: entity,
+			// 		data: data,
+			// 	};
+			// 	// console.log('detail\n', detail);
+			// 	methods.method(detail);
+      // }
+
+      // _appDataChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'appData');
+      // }
+
+      // _appSettingsChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'appSettings');
+      // }
+      
+      // _userRemoteChanged(dataNew, dataOld) {
+      //   console.log('user-remote-old\n', dataOld);
+      //   console.log('user-remote-new\n', dataNew);
+      // }
+
+      // _userRemoteChanged(newData, oldData) {
+      //   this._resetOldData(newData, oldData, 'userRemote');
+      // }
+
+      // _updateDatabase(userRemote, appData, appSettings) {
+      //   // abort if all variables not present
+      //   const ready = appData && userRemote;
+      //   if(!ready) return;
+        
+      //   console.log('app-data\n', appData);
+      //   console.log('app-settings\n', appSettings);
+      //   // // abort if any property of userRemote is a function
+      //   // const o = Object.assign(userRemote, {});
+      //   // let keys = Object.keys(o);
+      //   // const abort = keys.reduce((c, v, i, a) => {
+      //   //   if(typeof o[v] === 'function') {
+      //   //     a.splice(1);  // break; // https://stackoverflow.com/a/47441371/1640892
+      //   //     // console.log('Aborted save because user-remote contains funtion');
+      //   //     return true;
+      //   //   }
+      //   //   return false;
+      //   // }, false);
+      // }
+
+      // get zeroValue() {
+      //   return { new: 'data', j: 5, o: 'N' };
+      // }
+
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old\n', oldData);
+      //   console.log('user-settings-new\n', newData);
+      // }
+
+      // _userSettingsChanged(newData, oldData) {
+      //   console.log('user-settings-old\n', oldData);
+      //   console.log('user-settings-new\n', newData);
+
+      //   const doc = this.$.doc;
+      //   // following throws error: doc.transactionsComplete() is not a function
+      //   // const trans = doc.transactionsComplete().then((resolve, reject) => {
+      //   //   console.log('resolve\n', resolve);
+      //   // });
+      //   // following returns true when node is not empty
+      //   // if(doc.valueIsEmpty()) console.log('empty');
+        
+      //   //this.set('userSettingsOld', oldData);
+
+      //   const req1 = (typeof newData === 'object') && _.isEmpty(newData);
+      //   const req2 = (typeof oldData === 'object') && _.isEmpty(oldData);
+      //   if( req1 && req2 ){
+      //     // console.log('hai');
+      //     // console.log('app-data\n', this.appData);
+      //     // console.log('app-settings\n', this.appSettings);
+      //   }
+      //   // this._resetOldData(newData, oldData, 'userSettings');
+      //   this._handleNullValue(newData);
+      // }
+
+      // _resetOldData(newData, oldData, propertyName) {
+      //   // console.log(propertyName, 'data-old\n', oldData);
+      //   // console.log(propertyName, 'data-new\n', newData);
+      //   // const userLoggedIn = this.userLoggedIn;
+      //   // if(oldData && !newData && userLoggedIn) {
+      //   if(oldData && !newData) {
+      //     this.set(propertyName, oldData);
+      //   }
+      //   return;
+      // }
+
+      // _handleNullValue(o) {
+      //   //if(o !== {}) return;
+      //   //const init = { new: 'data', j: 5, o: 'N' };
+      //   const init = this._computeInitialUserSettings(this.appViews);
+      //   this.saveUserSettings(init);
+      // }
+
+      // testData() {
+      //   const out = {
+      //     'auto-email-leads': false,
+      //     'auto-text-leads': false,
+      //     city: "Enter zip",
+      //     'counties-list': "Select",
+      //     county: "Enter zip",
+      //     email: "Enter",
+      //     'lead-type': "Select",
+      //     'notify-you-email': false,
+      //     'notify-you-text': true,
+      //     phone: "Add",
+      //     'req-info': '0/2',
+      //     state: 'Enter zip',
+      //     zip: 'Enter zip',
+      //   }
+      //   // console.log('out\n', out);
+      //   return out;
+      // }
+			
+    }
+
+    window.customElements.define(stateUserStatistics.is, stateUserStatistics);
+  </script>
+</dom-module>

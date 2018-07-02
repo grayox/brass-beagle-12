@@ -19,23 +19,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 
-<!---->
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-<link rel="import" href="/bower_components/paper-item/paper-icon-item.html">
-<!---->
-<link rel="import" href="/bower_components/paper-item/paper-item-body.html">
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-statistics.html">
+
 <!---->
 <link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
+<link rel="import" href="/src/custom-styles/paper-item-styles.html">
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 
-<link rel="import" href="dashboard-styles.html">
+<!--- ->
 <link rel="import" href="dashboard-element.html">
+<link rel="import" href="dashboard-styles.html">
+<!--- ->
 
-<!--- ->
-<!--- ->
 Demos
 https://gridbyexample.com/patterns/header-asmany-footer/
 https://codepen.io/rachelandrew/pen/zwPEoX
@@ -46,6 +44,10 @@ https://codepen.io/rachelandrew/pen/zwPEoX
   <template>
 
     <style include="paper-item-styles"></style>
+
+		<!-- state -->
+		<state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
     
     <div role="listbox">
       <paper-icon-item class="urgent">
@@ -82,166 +84,111 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         <div>12</div>
         <!---->
       </paper-icon-item>
-      <paper-icon-item>
-        <paper-ripple></paper-ripple>
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:warning" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Required information</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>0/2</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:flag" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>State</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>Mississippi</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-          <!--- ->
-          <paper-ripple></paper-ripple>
-          <!---->
-          <div class="avatar" slot="item-icon">
-          <paper-icon-button icon="vaadin:bullseye" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>County</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>Davis Co.</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar" slot="item-icon">
-          <paper-icon-button icon="vaadin:pin" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>City</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>Biloxi</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:map-marker" alt="zip"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Zip</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>90210</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:group" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Available</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>516</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar" slot="item-icon">
-          <paper-icon-button icon="vaadin:piggy-bank-coin" xicon="vaadin:compile" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Balance</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>31</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:cloud-upload" alt="outbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Sent</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>213</div>
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!--- ->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar" slot="item-icon">
-          <paper-icon-button icon="vaadin:cloud-download" alt="inbox"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Received</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!---->
-        <div>12</div>
-      </paper-icon-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="star"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Required items"
+                xname="[[item.name]]"
+                data="0/2"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:flag"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="State"
+                xname="[[item.name]]"
+                data="Mississippi"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:flag"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Location"
+                xname="[[item.name]]"
+                data="Jefferson"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:group"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Available"
+                xname="[[item.name]]"
+                data="516"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:piggy-bank-coin"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Balance"
+                xname="[[item.name]]"
+                data="31"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:cloud-upload"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Sent"
+                xname="[[item.name]]"
+                data="213"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
+      <app-item type="output-one-line"
+                xtype="output-two-line"
+                xtwo-line
+                xicon="[[item.icon]]"
+                icon="vaadin:cloud-download"
+                xicon="chevron-right"
+                xlabel="[[item.name]]"
+                label="Received"
+                xname="[[item.name]]"
+                data="12"
+                xdata="[[item.location]]"
+                xdata="[[item.city]], [[item.state]]"
+                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                >
+      </app-item>
       <paper-icon-item class="editable">
         <!---->
         <paper-ripple></paper-ripple>
@@ -331,15 +278,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-dashboard-list'; }
 
-      /** /
-			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
-      }}
-      /**/
+      // static get properties() { return {
+			// 	mediaWidth: {
+			// 		type: Number, // 0, 1, 2, 3
+			// 		notify: true,
+			// 		//observer: '_mediaWidthChanged',
+			// 	},
+      // }}
 			
       constructor() {
         super();
@@ -350,8 +295,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 				//console.log('Component Ready');
 			}
       
-			/**/
-			/**/
 		
     }
 
