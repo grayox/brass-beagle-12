@@ -15,19 +15,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-<!---->
-<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
-
 <!-- state -->
 <link rel="import" href="/src/app-state/state-user-settings.html">
 <link rel="import" href="/src/app-state/state-user-statistics.html">
+
+<!--- ->
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<!---->
+
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 
 <!---->
 <link rel="import" href="/bower_components/paper-item/paper-item-shared-styles.html">
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
 <!---->
 <link rel="import" href="/src/custom-styles/paper-item-styles.html">
+
+<link rel="import" href="/src/custom-libraries/numeral-js.html">
 
 <!--- ->
 <link rel="import" href="dashboard-element.html">
@@ -50,224 +56,139 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
     
     <div role="listbox">
-      <paper-icon-item class="urgent">
-        <paper-ripple></paper-ripple>
-        <!--- ->
-        <div class="avatar" slot="item-icon"></div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div xclass="dim">Enter zip code...</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>12</div>
-        <!---->
-      </paper-icon-item>
-      <paper-icon-item class="urgent">
-        <paper-ripple></paper-ripple>
-        <!--- ->
-        <div class="avatar" slot="item-icon"></div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div xclass="dim">Select lead type...</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>12</div>
-        <!---->
-      </paper-icon-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
-                icon="star"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Required items"
-                xname="[[item.name]]"
-                data="0/2"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+
+      <app-item label="Balances"
+                type="subheader"
                 >
       </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
-                icon="vaadin:flag"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="State"
-                xname="[[item.name]]"
-                data="Mississippi"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
-                >
-      </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
-                icon="vaadin:flag"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Location"
-                xname="[[item.name]]"
-                data="Jefferson"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
-                >
-      </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
-                icon="vaadin:group"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Available"
-                xname="[[item.name]]"
-                data="516"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
-                >
-      </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
+
+      <app-item label="Net"
+                type="output-one-line"
                 icon="vaadin:piggy-bank-coin"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Balance"
-                xname="[[item.name]]"
-                data="31"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                data="[[_showNumber(userStatistics.net-balance)]]"
                 >
       </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
+
+      <app-item label="Deposits"
+                type="output-one-line"
+                xicon="vaadin:cloud-upload"
+                icon="vaadin:plus"
+                data="[[_showNumber(userStatistics.count-sent)]]"
+                >
+      </app-item>
+
+      <app-item label="Withdrawals"
+                type="output-one-line"
+                xicon="vaadin:cloud-download"
+                icon="vaadin:minus"
+                data="[[_showNumber(userStatistics.count-received)]]"
+                >               
+      </app-item>
+
+      <app-item label="Inventories"
+                type="subheader"
+                >
+      </app-item>
+
+      <app-item label="Outbox"
+                type="output-one-line"
+                xicon="vaadin:group"
                 icon="vaadin:cloud-upload"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Sent"
-                xname="[[item.name]]"
-                data="213"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                xdata="516"
+                data="[[_showNumber(userStatistics.count-received)]]"
                 >
       </app-item>
-      <app-item type="output-one-line"
-                xtype="output-two-line"
-                xtwo-line
-                xicon="[[item.icon]]"
+
+      <app-item label="Inbox"
+                type="output-one-line"
+                xicon="vaadin:group"
                 icon="vaadin:cloud-download"
-                xicon="chevron-right"
-                xlabel="[[item.name]]"
-                label="Received"
-                xname="[[item.name]]"
-                data="12"
-                xdata="[[item.location]]"
-                xdata="[[item.city]], [[item.state]]"
-                xdataright="[ [_computeTimeAgo(item.timestamp)]]"
+                xdata="516"
+                data="[[_showNumber(userStatistics.count-received)]]"
                 >
       </app-item>
-      <paper-icon-item class="editable">
-        <!---->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:plus" alt="outbox"></paper-icon-button>
-        </div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div class="xdim xitalic">Send new lead...</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>12</div>
-        <!---->
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!---->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="vaadin:minus" alt="inbox"></paper-icon-button>
-        </div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div class="xdim xitalic">Receive new lead...</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>12</div>
-        <!---->
-      </paper-icon-item>
-      <paper-icon-item xclass="editable">
-        <!---->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="social:person-add" xicon="vaadin:user-card" alt="invite user"></paper-icon-button>
-        </div>
-        <!---->
-        <paper-item-body xtwo-line>
-          <div class="xdim  xitalic">Invite a contact...</div>
-          <!--- ->
-          <div secondary>Jan 17, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>12</div>
-        <!---->
-      </paper-icon-item>
-      <paper-icon-item class="editable">
-        <!---->
-        <paper-ripple></paper-ripple>
-        <!---->
-        <div class="avatar xblue" slot="item-icon">
-          <paper-icon-button icon="track-changes" alt="zip"></paper-icon-button>
-        </div>
-        <paper-item-body xtwo-line>
-          <div>Add counties...</div>
-          <!--- ->
-          <div secondary>Jan 9, 2014</div>
-          <!---->
-        </paper-item-body>
-        <!--- ->
-        <paper-icon-button icon="star" alt="favourite this!"></paper-icon-button>
-        <!--- ->
-        <div>Off</div>
-        <!---->
-      </paper-icon-item>
+
+      <app-item label="Archive"
+                type="output-one-line"
+                icon="vaadin:database"
+                xdata="516"
+                data="[[_showNumber(userStatistics.count-received)]]"
+                >
+      </app-item>
+
+      <app-item label="Contacts"
+                type="output-one-line"
+                icon="social:person-add"
+                data="[[_showNumber(userStatistics.count-contacts)]]"
+                >               
+      </app-item>
+
+      <app-item label="Key settings"
+                type="subheader"
+                >
+      </app-item>
+
+      <app-item label="Required"
+                type="output-one-line"
+                icon="vaadin:power-off"
+                xdata="0/2"
+                data="[[_showRequired(userSettings)]]"
+                >
+      </app-item>
+
+      <app-item label="Category"
+                type="output-one-line"
+                icon="vaadin:puzzle-piece"
+                data="[[userSettings.lead-type]]"
+                >
+      </app-item>
+
+      <app-item label="Location"
+                type="output-one-line"
+                icon="track-changes"
+                data="[[userSettings.geo-select-location]]"
+                >
+      </app-item>
+
+      <app-item label="State"
+                type="output-one-line"
+                icon="vaadin:flag"
+                data="[[userSettings.geo-select-region]]"
+                >
+      </app-item>
+
+      <app-item label="Available actions"
+                type="subheader"
+                >
+      </app-item>
+
+      <app-item label="Send new lead..."
+                type="output-one-line"
+                xicon="chevron-right"
+                xicon="vaadin:chevron-right"
+                icon="vaadin:angle-right"
+                xdata=""
+                >
+      </app-item>
+
+      <app-item label="Review available leads..."
+                type="output-one-line"
+                xicon="chevron-right"
+                xicon="vaadin:chevron-right"
+                icon="vaadin:angle-right"
+                xdata=""
+                >
+      </app-item>
+
+      <app-item label="Invite a contact..."
+                type="output-one-line"
+                xicon="chevron-right"
+                xicon="vaadin:chevron-right"
+                icon="vaadin:angle-right"
+                xdata=""
+                >
+      </app-item>
+
     </div>
 
   </template>
@@ -294,7 +215,25 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
-      
+
+      _showNumber(n) {
+        const out = n ? numeral(n).format('0,0') : 0;
+        return out;
+      }
+
+      _showRequired(userSettings) {
+        // const userSettings = this.userSettings;
+
+        const ready = userSettings;
+        if(!ready) return;
+
+        let i = 0;
+        if(userSettings['geo-select-valid']) i++;
+        if(userSettings['lead-type']) i++;
+
+        const out = [i, 2].join('/');
+        return out;
+      }
 		
     }
 
