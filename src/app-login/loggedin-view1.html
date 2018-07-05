@@ -424,56 +424,52 @@ using squared paper-items as menu buttons that extend all the way to the edge
           this.$[s].open();
         },
 				
-				/** /
-				_setViewgrid: function(e) {
-					var b = e.detail;
-          console.log('viewgrid', b);
-					// Resize iron-list after display: none
-					//document.querySelector('iron-list').fire('iron-resize');
-					// Per https://www.webcomponents.org/element/PolymerElements/iron-list/iron-list#resizing
-        },
+				// _setViewgrid: function(e) {
+				// 	var b = e.detail;
+        //   console.log('viewgrid', b);
+				// 	// Resize iron-list after display: none
+				// 	// document.querySelector('iron-list').fire('iron-resize');
+				// 	// Per https://www.webcomponents.org/element/PolymerElements/iron-list/iron-list#resizing
+        // },
 				
-				_setViewstate: function(e) {
-					var s = e.detail;
-          console.log('viewstate', s);
-        },
-				/**/
+				// _setViewstate: function(e) {
+				// 	var s = e.detail;
+        //   console.log('viewstate', s);
+        // },
 				
 				_computeSpacer: function(n) {
 					return n > 3;
 				},
 				
-				/** /
-				_userChanged: function(u) {
-					if(u) {
-						//console.log('user', u);
-						var doc = this.$['doc-user'];
-						var path = [ 'users' , u.uid ].join('/');
-						doc.path = path;
-					}					
-				},
-				/** /
-				_userDocChanged: function(user) {
-					console.log('user', user);
-					if( this.loggedIn
-						  && (!this.userInitialized)
-						  && (!Object.keys(user).length)
-						  && (user.constructor === Object)
-						){
-						//console.log('userDoc', user);
-						var detail = {
-							method: 'save',
-							entity: 'user',
-							data: {
-								user: this.user,
-								signup: this.loginData,
-							},
-						};
-						//console.log('detail', detail);
-						this.$['app-methods'].method(detail); //this.fire('item-method', detail);
-					}
-				},
-				/**/
+				// _userChanged: function(u) {
+				// 	if(u) {
+				// 		//console.log('user', u);
+				// 		var doc = this.$['doc-user'];
+				// 		var path = [ 'users' , u.uid ].join('/');
+				// 		doc.path = path;
+				// 	}					
+				// },
+				
+        // _userDocChanged: function(user) {
+				// 	console.log('user', user);
+				// 	if( this.loggedIn
+				// 		  && (!this.userInitialized)
+				// 		  && (!Object.keys(user).length)
+				// 		  && (user.constructor === Object)
+				// 		){
+				// 		//console.log('userDoc', user);
+				// 		var detail = {
+				// 			method: 'save',
+				// 			entity: 'user',
+				// 			data: {
+				// 				user: this.user,
+				// 				signup: this.loginData,
+				// 			},
+				// 		};
+				// 		//console.log('detail', detail);
+				// 		this.$['app-methods'].method(detail); //this.fire('item-method', detail);
+				// 	}
+				// },
 				
         _logout: function() {
           this.set('loggedIn', false); //this.loggedIn = false;

@@ -62,13 +62,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 >
       </app-item>
 
-      <app-item label="Net"
-                type="output-one-line"
-                icon="vaadin:piggy-bank-coin"
-                data="[[_showNumber(userStatistics.net-balance)]]"
-                >
-      </app-item>
-
       <app-item label="Deposits"
                 type="output-one-line"
                 xicon="vaadin:cloud-upload"
@@ -83,6 +76,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 icon="vaadin:minus"
                 data="[[_showNumber(userStatistics.count-received)]]"
                 >               
+      </app-item>
+
+      <app-item label="Net"
+                type="output-one-line"
+                xicon="vaadin:piggy-bank-coin"
+                icon="view-stream"
+                data="[[_showNumber(userStatistics.net-balance)]]"
+                >
       </app-item>
 
       <app-item label="Inventories"

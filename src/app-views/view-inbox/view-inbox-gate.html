@@ -1,0 +1,218 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<link rel="import" href="/src/app-state/state-user-statistics.html">
+
+<link rel="import" href="view-inbox.html">
+
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+
+<link rel="import" href="/src/custom-elements/geo-select/geo-select.html">
+<link rel="import" href="/src/custom-elements/select-lead-type.html">
+<link rel="import" href="/src/app-forms/form-new-lead.html">
+<!--- ->
+<!--- ->
+Demos
+https://gridbyexample.com/patterns/header-asmany-footer/
+https://codepen.io/rachelandrew/pen/zwPEoX
+<!---->
+
+<dom-module id="view-inbox-gate">
+
+  <template>
+
+    <style>
+      paper-card {
+        width: calc(100% - 3em);
+        text-align: start;
+        margin: 1.5em;
+        padding-top: 1em;
+        /** /
+
+        /** /
+        --paper-card-background-color: #FFC107;
+
+        --paper-card-header-color: white;
+        /** /
+        
+        --paper-card-header-image: {
+          width: 50px;
+          height: 50px;
+          margin-left: 200px;
+          background-color: #FFC107;
+        };
+        /**/
+      }
+      iron-collapse {
+        width: 100%;
+      }
+      paper-icon-button {
+        float: right;
+      }
+    </style>
+		
+    <!-- state -->
+    <state-media media-type="{{mediaType}}"></state-media>
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
+		
+
+    <app-methods id="methods"></app-methods>
+
+    <template restamp is="dom-if" if="[[_computeShow()]]">
+      <view-inbox></view-inbox>
+    </template>
+
+    <div hidden="[[_computeShow()]]">
+      <paper-card heading="Inbox locked 🔒"
+                  ximage="http://placehold.it/350x150/FFC107/000000"
+                  alt="Inbox locked"
+                  >
+        <div class="card-content">
+          Access inbox by completing all below actions
+        </div>
+        <div class="card-actions">
+          <paper-button id="button-type"        on-tap="_collapseOpen" data-args="type"    >Select lead type</paper-button>
+          <paper-button id="button-location"    on-tap="_collapseOpen" data-args="location">Choose location</paper-button>
+          <paper-button id="button-lead"        on-tap="_collapseOpen" data-args="lead"    >Submit lead</paper-button>
+          <paper-icon-button id="pib" hidden icon="expand-less" on-tap="_collapseClose" title="Close collapse"></paper-icon-button>
+          <iron-collapse id="collapse">
+            <div hidden id="collapse-type">
+              <select-lead-type></select-lead-type>
+            </div>
+            <div hidden id="collapse-location">
+              <geo-select></geo-select>
+            </div>
+            <div hidden id="collapse-lead">
+              <form-new-lead></form-new-lead>
+            </div>
+          </iron-collapse>
+        </div>
+      
+      </paper-card>
+    </div>
+
+  </template>
+
+  <script>
+
+    class ViewInboxGate extends Polymer.Element {
+
+      static get is() { return 'view-inbox-gate'; }
+
+			static get properties() { return {
+				
+				// mediaType: {
+				// 	type: String, // 'mobile' | 'tablet' | 'desktop'
+				// 	notify: true,
+        // },
+        
+        // userLocal: {
+      	// 	type: Object,
+				// 	notify: true,
+        //   // observer: '_userLocalChanged',
+        // },
+        
+        // collapse: {
+      	// 	type: String,
+				// 	notify: true,
+        //   // observer: '_userLocalChanged',
+        // },
+
+      }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+      _computeShow(s) {
+				return false;
+      }
+
+      _collapseOpen(e) {
+        // console.log('e\n', e);
+        // e.target.getAttribute('data-args').split;
+        const target = e.target;
+        // console.log('target\n', target);
+        const arg = target.getAttribute('data-args');
+        // console.log('arg\n', arg); // 'lead' | 'type' | 'location'
+        // this.set('collapse', arg);
+        const collapse = this.$.collapse;
+        collapse.opened = true;
+
+        this._collapseShow(arg);
+
+        const pib = this.$.pib;
+        pib.hidden = false;
+      }
+
+      _collapseClose() {
+        const collapse = this.$.collapse;
+        collapse.opened = false;
+
+        const pib = this.$.pib;
+        
+        // cleanup
+        const c1 = this.$['collapse-type'];
+        const c2 = this.$['collapse-location'];
+        const c3 = this.$['collapse-lead'];
+        c1.hidden = c2.hidden = c3.hidden = pib.hidden = true;
+
+        this._enableAllButtons(true);
+      }
+
+      _enableAllButtons(b) {
+        const b1 = this.$['button-type'];
+        const b2 = this.$['button-location'];
+        const b3 = this.$['button-lead'];
+        b1.disabled = b2.disabled = b3.disabled = !b;
+      }
+
+      _collapseShow(s) {
+        const idString = ['#collapse', s].join('-');
+        // console.log('idString', idString);
+        const target = this.root.querySelector(idString);
+        target.hidden = false;
+
+        this._enableAllButtons(false);
+        // switch(s) {
+        //   case n:
+        //     code block
+        //     break;
+        //   case n:
+        //     code block
+        //     break;
+        //   default:
+        //     code block
+        // }
+      }
+		
+    }
+
+    customElements.define(ViewInboxGate.is, ViewInboxGate);
+
+  </script>
+
+</dom-module>

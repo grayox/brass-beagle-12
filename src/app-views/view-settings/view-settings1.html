@@ -280,13 +280,11 @@
 				//console.log('opening...');
 				var dialog = this.$.dialog;
 				
-				/** /
-				//The following two lines are only necessary because of this bug:
-				//https://github.com/PolymerElements/paper-dialog/issues/152
-				//var body = document.querySelector('body');
-        //Polymer.dom(body).appendChild(dialog);
-				/**/
-        
+				// The following two lines are only necessary because of this bug:
+				// https://github.com/PolymerElements/paper-dialog/issues/152
+				// var body = document.querySelector('body');
+        // Polymer.dom(body).appendChild(dialog);
+			  
 				//console.log(dialog);
 				dialog.open();
 				//console.log('opened!');

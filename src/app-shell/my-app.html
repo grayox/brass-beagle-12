@@ -52,7 +52,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="/src/app-views/view-dashboard/view-dashboard.html">
 <link rel="import" href="/src/app-views/view-outbox/view-outbox.html">
+<!--- ->
 <link rel="import" href="/src/app-views/view-inbox/view-inbox.html">
+<!---->
+<link rel="import" href="/src/app-views/view-inbox/view-inbox-gate.html">
 <link rel="import" href="/src/app-views/view-archive/view-archive.html">
 <link rel="import" href="/src/app-views/view-contacts/view-contacts.html">
 <link rel="import" href="/src/app-views/view-settings/view-settings.html">
@@ -104,26 +107,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 xfallback-selection="view-dashboard"
                 >
 		  <!---->
-		  <view-dashboard name="view-dashboard"></view-dashboard>
+		  <view-dashboard  name="view-dashboard"></view-dashboard>
 		  <!--- ->
 			<div>Outbox</div>
 		  <!---->
-		  <view-outbox    name="view-outbox"></view-outbox>
+		  <view-outbox     name="view-outbox"></view-outbox>
 		  <!--- ->
 			<div>Inbox</div>
+		  <!--- ->
+      <view-inbox      name="view-inbox"></view-inbox>
 		  <!---->
-		  <view-inbox     name="view-inbox"></view-inbox>
-			<view-archive   name="view-archive"></view-archive>
-		  <view-contacts  name="view-contacts"></view-contacts>
-			<view-settings  name="view-settings"></view-settings>
+		  <view-inbox-gate name="view-inbox"></view-inbox-gate>
+			<view-archive    name="view-archive"></view-archive>
+		  <view-contacts   name="view-contacts"></view-contacts>
+			<view-settings   name="view-settings"></view-settings>
 			<!--- ->
-		  <view-account   name="view-account"></view-account>
+		  <view-account    name="view-account"></view-account>
 			<!---->
 		  
 		  <!---->
-		  <view-feedback  name="view-feedback"></view-feedback>
-		  <view-help      name="view-help"></view-help>
-		  <view-logout    name="view-logout"></view-logout>
+		  <view-feedback   name="view-feedback"></view-feedback>
+		  <view-help       name="view-help"></view-help>
+		  <view-logout     name="view-logout"></view-logout>
 		  <!---->
     </iron-pages>
 		
