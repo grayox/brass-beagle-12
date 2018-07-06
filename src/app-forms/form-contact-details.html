@@ -229,20 +229,20 @@
 				super();
 			}
 			
-			// ready() {
-      //   super.ready();
-      //   window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-      // }
-
-      static get observers() {
-        return [
-          // '_updateDatabase(userRemote, appData, appSettings)',
-          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
-          // '_userSettingsStoredChanged(userSettingsStored.*)',
-          // '_computeAppSettings(appViews, userLocal.*)',
-          '_itemChanged(item.*)',
-        ]
+			ready() {
+        super.ready();
+        // window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
       }
+
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     // '_userSettingsStoredChanged(userSettingsStored.*)',
+      //     // '_computeAppSettings(appViews, userLocal.*)',
+      //     '_itemChanged(item.*)',
+      //   ]
+      // }
 			
 			// _itemChanged(o) {
 			// 	console.log('item', o);
@@ -391,17 +391,17 @@
       //   return out;
       // }
 
-      _itemChanged(dataNew, dataOld) {
-        // console.log('data-old', dataOld);
-        // console.log('data-new', dataNew);
+      // _itemChanged(dataNew, dataOld) {
+      //   // console.log('data-old', dataOld);
+      //   // console.log('data-new', dataNew);
 
-        // this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
-        // this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
-        // this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
-        // this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
+      //   // this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
+      //   // this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
+      //   // this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
+      //   // this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
 
-        // console.log('form-valid', this.formValid);
-      }
+      //   // console.log('form-valid', this.formValid);
+      // }
       
       _computeEmailValid(invalidEmail) {
         const out = !invalidEmail;

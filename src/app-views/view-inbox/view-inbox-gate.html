@@ -13,15 +13,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
 <!-- state -->
+<!--- ->
 <link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
 <link rel="import" href="/src/app-state/state-user-settings.html">
 <link rel="import" href="/src/app-state/state-user-statistics.html">
 
 <link rel="import" href="view-inbox.html">
 
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 
 <link rel="import" href="/src/custom-elements/geo-select/geo-select.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
@@ -38,6 +43,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
   <template>
 
     <style>
+
       paper-card {
         width: calc(100% - 3em);
         text-align: start;
@@ -59,28 +65,37 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         };
         /**/
       }
+
       iron-collapse {
         width: 100%;
       }
+
       paper-icon-button {
         float: right;
       }
+
+      .collapse-child {
+        margin: 1.5em 0;
+      }
+
     </style>
 		
     <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
+    <!--- ->
     <state-media media-type="{{mediaType}}"></state-media>
     <state-user-local user-local="{{userLocal}}"></state-user-local>
-    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
-		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
+    <!---->
 		
 
     <app-methods id="methods"></app-methods>
 
-    <template restamp is="dom-if" if="[[_computeShow()]]">
+    <template restamp is="dom-if" if="[[_show]]">
       <view-inbox></view-inbox>
     </template>
 
-    <div hidden="[[_computeShow()]]">
+    <div hidden="[[_show]]">
       <paper-card heading="Inbox locked 🔒"
                   ximage="http://placehold.it/350x150/FFC107/000000"
                   alt="Inbox locked"
@@ -89,18 +104,38 @@ https://codepen.io/rachelandrew/pen/zwPEoX
           Access inbox by completing all below actions
         </div>
         <div class="card-actions">
-          <paper-button id="button-type"        on-tap="_collapseOpen" data-args="type"    >Select lead type</paper-button>
-          <paper-button id="button-location"    on-tap="_collapseOpen" data-args="location">Choose location</paper-button>
-          <paper-button id="button-lead"        on-tap="_collapseOpen" data-args="lead"    >Submit lead</paper-button>
-          <paper-icon-button id="pib" hidden icon="expand-less" on-tap="_collapseClose" title="Close collapse"></paper-icon-button>
+          <paper-button id="button-type"     hidden$="[[_hideType]]"     on-tap="_collapseOpen" data-args="type"    >Select lead type</paper-button>
+          <paper-button id="button-location" hidden$="[[_hideLocation]]" on-tap="_collapseOpen" data-args="location">Choose location</paper-button>
+          <paper-button id="button-lead"     hidden$="[[_hideBalance]]"  on-tap="_collapseOpen" data-args="lead"    >Submit lead</paper-button>
+          <paper-icon-button id="pib"
+                             hidden
+                             xicon="expand-less"
+                             icon="vaadin:angle-up"
+                             on-tap="_collapseClose"
+                             title="Close collapse"
+                             >
+          </paper-icon-button>
           <iron-collapse id="collapse">
-            <div hidden id="collapse-type">
+            <div hidden class="collapse-child" id="collapse-type">
+              <p>
+                What type of leads do you want to receive?
+                You can change this later in settings. <iron-icon icon="settings"></iron-icon>
+              </p>
               <select-lead-type></select-lead-type>
             </div>
-            <div hidden id="collapse-location">
+            <div hidden class="collapse-child" id="collapse-location">
+              <p>
+                Where are you located?
+                You can change this later in settings. <iron-icon icon="settings"></iron-icon>
+              </p>
               <geo-select></geo-select>
             </div>
-            <div hidden id="collapse-lead">
+            <div hidden class="collapse-child" id="collapse-lead">
+              <p>
+                To view new leads, you need to have a positive lead balance
+                (donate more leads than you recieve).
+                You can access this form from anywhere by clicking the circle button at the bottom.
+              </p>
               <form-new-lead></form-new-lead>
             </div>
           </iron-collapse>
@@ -136,6 +171,34 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         //   // observer: '_userLocalChanged',
         // },
 
+        _show: { // type
+      		type: Boolean,
+					notify: true,
+          computed: '_computeShow(_hideType, _hideLocation, _hideBalance)'
+          // observer: '_userLocalChanged',
+        },
+
+        _hideType: { // type
+      		type: Boolean,
+					notify: true,
+          // computed: '_computeReadyGate1(userSettings)'
+          // observer: '_userLocalChanged',
+        },
+
+        _hideLocation: { // location
+      		type: Boolean,
+					notify: true,
+          // computed: '_computeReadyGate2()'
+          // observer: '_userLocalChanged',
+        },
+
+        _hideBalance: { // balance
+      		type: Boolean,
+					notify: true,
+          // computed: '_computeReadyGate3()'
+          // observer: '_userLocalChanged',
+        },
+
       }}
 			
       constructor() {
@@ -146,9 +209,37 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
+
+      static get observers() {
+        return [
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          // '_userSettingsStoredChanged(userSettingsStored.*)',
+          // '_computeAppSettings(appViews, userLocal.*)',
+          '_computeReady(userSettings.*, userStatistics.*)',
+        ]
+      }
+
+      _computeReady(userSettings, userStatistics) {
+        // console.log('user-settings', userSettings);
+        // console.log('user-statistics', userStatistics);
+ 
+        const hideType = !!(userSettings && userSettings.value && userSettings.value['lead-type'] &&  userSettings.value['lead-type'].length);
+        const hideLocation = !!(userSettings && userSettings.value && userSettings.value['geo-select-valid']);
+        const hideBalance = !!(userStatistics && userStatistics.value && userStatistics.value['net-balance']);
+
+        // console.log('hide-type', hideType);
+        // console.log('hide-location', hideLocation);
+        // console.log('hide-balance', hideBalance);
+
+        this.set('_hideType', hideType);
+        this.set('_hideLocation', hideLocation);
+        this.set('_hideBalance', hideBalance);
+      }
       
-      _computeShow(s) {
-				return false;
+      _computeShow(b1, b2, b3) {
+				// return false;
+				return b1 && b2 && b3;
       }
 
       _collapseOpen(e) {
