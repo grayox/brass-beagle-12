@@ -25,7 +25,7 @@
     <state-user-local user-local="{{userLocal}}"></state-user-local>
     <!---->
 
-    <app-methods id="methods" xshow-toast exvent-dispatch></app-methods>
+    <app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
     
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
@@ -314,7 +314,8 @@
         // console.log('email-length-valid', emailLengthValid);
         // console.log('menu-valid', menuValid);
 
-        const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
+        // const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
+        const valid1  = (!!nameValid) && (!!menuValid);
         const valid2a = (!!phoneValid) && (!!phoneLengthValid);
         const valid2b = (!!emailValid) && (!!emailLengthValid);
         const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
