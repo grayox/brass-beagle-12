@@ -150,7 +150,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 (donate more leads than you recieve).
                 You can access this form from anywhere by clicking the circle button at the bottom.
               </p>
-              <form-new-lead on-new-lead-created="_onNewLeadCreated"></form-new-lead>
+              <form-new-lead xon-new-lead-created="_onNewLeadCreated"></form-new-lead>
             </div>
           </iron-collapse>
         </div>
@@ -257,10 +257,10 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         this.set('_hideBalance', hideBalance);
       }
 
-      _onNewLeadCreated() {
-        this.set('_hideBalance', true);
-        // this._computeReady();
-      }
+      // _onNewLeadCreated() {
+      //   this.set('_hideBalance', true);
+      //   // this._computeReady();
+      // }
       
       _computeShow(b1, b2, b3) {
 				// return false;
