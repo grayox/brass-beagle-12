@@ -266,6 +266,8 @@
         // console.log('detail\n', detail);
 				methods.method(detail);
 
+        this._dispatchEvent('new-lead-created', detail);
+
         // new Promise().then()
         // this._resetItem();       
       }
@@ -314,8 +316,8 @@
         // console.log('email-length-valid', emailLengthValid);
         // console.log('menu-valid', menuValid);
 
-        // const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
-        const valid1  = (!!nameValid) && (!!menuValid);
+        // const valid1  = (!!nameValid) && (!!menuValid);
+        const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
         const valid2a = (!!phoneValid) && (!!phoneLengthValid);
         const valid2b = (!!emailValid) && (!!emailLengthValid);
         const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email

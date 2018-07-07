@@ -41,9 +41,9 @@
 	"comment-nav-menu-2": "Reminder: After editing nav-menu items, manually edit /src/app-shell/my-app.html (previously loggedin-view.html) to match pages order sequence",
 	"nav-menu": [
 		{ "label": "Dashboard" , "name": "view-dashboard" , "icon": "vaadin:dashboard"      } ,
-		{ "label": "Outbox"    , "name": "view-outbox"    , "icon": "vaadin:cloud-upload"   } ,
 		{ "label": "Inbox"     , "name": "view-inbox"     , "icon": "vaadin:cloud-download" } ,
 		{ "label": "Archive"   , "name": "view-archive"   , "icon": "vaadin:database"       } ,
+		{ "label": "Outbox"    , "name": "view-outbox"    , "icon": "vaadin:cloud-upload"   } ,
 		{ "label": "Contacts"  , "name": "view-contacts"  , "icon": "social:person-add"     } ,
 		{ "label": "Settings"  , "name": "view-settings"  , "icon": "settings"              }
 	],
@@ -144,7 +144,7 @@
         {
           "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
           "type": "increment",
-          "path": ["leads-country-region-location-category-count", "~@this.data.keyLeadSend@~"]
+          "path": ["leads-country-region-location-category-count", "~@this.userSettings['key-lead-receive']@~"]
         },
         {
           "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",

@@ -91,21 +91,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 >
       </app-item>
 
-      <app-item label="Outbox"
-                type="output-one-line"
-                xicon="vaadin:group"
-                icon="vaadin:cloud-upload"
-                xdata="516"
-                data="[[_showNumber(userStatistics.count-received)]]"
-                >
-      </app-item>
-
       <app-item label="Inbox"
                 type="output-one-line"
                 xicon="vaadin:group"
                 icon="vaadin:cloud-download"
                 xdata="516"
-                data="[[_showNumber(userStatistics.count-received)]]"
+                data="[[_showNumber(userStatistics.count-withdrawals)]]"
                 >
       </app-item>
 
@@ -113,7 +104,16 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 type="output-one-line"
                 icon="vaadin:database"
                 xdata="516"
-                data="[[_showNumber(userStatistics.count-received)]]"
+                data="[[_showNumber(userStatistics.count-withdrawals)]]"
+                >
+      </app-item>
+      
+      <app-item label="Outbox"
+                type="output-one-line"
+                xicon="vaadin:group"
+                icon="vaadin:cloud-upload"
+                xdata="516"
+                data="[[_showNumber(userStatistics.count-deposits)]]"
                 >
       </app-item>
 

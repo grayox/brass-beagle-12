@@ -78,6 +78,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         margin: 1.5em 0;
       }
 
+      /**/
+      ul {
+        list-style-image: url('/bower_components/vaadin-icons/assets/png/lock.png');
+      }
+      /**/
+
     </style>
 		
     <!-- state -->
@@ -91,17 +97,25 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
     <app-methods id="methods"></app-methods>
 
-    <template restamp is="dom-if" if="[[_show]]">
+    <template restamp is="dom-if" if="[[_showChanged(_show)]]">
       <view-inbox></view-inbox>
     </template>
 
-    <div hidden="[[_show]]">
+    <div hidden$="[[_showChanged(_show)]]">
       <paper-card heading="Inbox locked 🔒"
                   ximage="http://placehold.it/350x150/FFC107/000000"
                   alt="Inbox locked"
                   >
         <div class="card-content">
-          Access inbox by completing all below actions
+          <p>Problems:</p>
+          <ul>
+            <li hidden$="[[_hideType]]">We don&rsquo;t know what type of leads you want</li>
+            <li hidden$="[[_hideLocation]]">We don&rsquo;t know your location</li>
+            <li hidden$="[[_hideBalance]]">Your lead balance is zero</li>
+          </ul>
+          <p>
+            Access inbox by completing all below actions
+          </p>
         </div>
         <div class="card-actions">
           <paper-button id="button-type"     hidden$="[[_hideType]]"     on-tap="_collapseOpen" data-args="type"    >Select lead type</paper-button>
@@ -136,7 +150,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 (donate more leads than you recieve).
                 You can access this form from anywhere by clicking the circle button at the bottom.
               </p>
-              <form-new-lead></form-new-lead>
+              <form-new-lead on-new-lead-created="_onNewLeadCreated"></form-new-lead>
             </div>
           </iron-collapse>
         </div>
@@ -221,12 +235,18 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       _computeReady(userSettings, userStatistics) {
+      // _computeReady(userSettingsArg, userStatisticsArg) {
+
+        // const userSettings = userSettingsArg || this.userSettings;
+        // const userStatistics = userStatisticsArg || this.userStatistics;
+
         // console.log('user-settings', userSettings);
         // console.log('user-statistics', userStatistics);
  
-        const hideType = !!(userSettings && userSettings.value && userSettings.value['lead-type'] &&  userSettings.value['lead-type'].length);
-        const hideLocation = !!(userSettings && userSettings.value && userSettings.value['geo-select-valid']);
-        const hideBalance = !!(userStatistics && userStatistics.value && userStatistics.value['net-balance']);
+        // use .base instead of .value because the structure of .value object changes when the value changes
+        const hideType = !!(userSettings && userSettings.base && userSettings.base['lead-type'] &&  userSettings.base['lead-type'].length);
+        const hideLocation = !!(userSettings && userSettings.base && userSettings.base['geo-select-valid']);
+        const hideBalance = !!(userStatistics && userStatistics.base && userStatistics.base['net-balance']);
 
         // console.log('hide-type', hideType);
         // console.log('hide-location', hideLocation);
@@ -236,10 +256,31 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         this.set('_hideLocation', hideLocation);
         this.set('_hideBalance', hideBalance);
       }
+
+      _onNewLeadCreated() {
+        this.set('_hideBalance', true);
+        // this._computeReady();
+      }
       
       _computeShow(b1, b2, b3) {
 				// return false;
-				return b1 && b2 && b3;
+
+        // console.log( 'b1' , 'hide-type'     , b1 );
+        // console.log( 'b2' , 'hide-location' , b2 );
+        // console.log( 'b3' , 'hide-balance'  , b3 );
+ 
+        const out = b1 && b2 && b3;
+        // console.log('out', out); 
+				return out;
+      }
+
+      _showChanged(b) {
+        // reload page to show dom-if
+        // false loads from cache; true loads from server
+        // https://www.w3schools.com/jsref/met_loc_reload.asp
+        // bug: causes infinite loop
+        // if(b) location.reload(false);
+        return b;
       }
 
       _collapseOpen(e) {
