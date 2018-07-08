@@ -11,6 +11,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/src/custom-styles/split-screen-styles.html">
+<link rel="import" href="/src/custom-styles/split-screen-animation.html">
+
 <link rel="import" href="view-outbox-list.html">
 <link rel="import" href="view-outbox-detail.html">
 
@@ -36,61 +40,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
   <template>
 
-    <style xinclude="dashboard-styles">
-
-      :host {
-        --line-color: #DDDDDD;
-      }
-
-      .split {
-        border-bottom: 1px var(--line-color) solid;
-        
-        display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
-        grid-template-columns: 1fr 1fr;
-      }
-
-      /* correct css for positioning animated pages */
-
-      #list-desktop {
-        z-index: 1;
-      }
-
-      #detail {
-        position: absolute;
-        top: 0px;
-        width: 100%; /* not 100vw */
-      }
-
-      .animated-pages-wrapper {
-        overflow: hidden;
-      }
-
-      /* other attempts * /
-      .animated-pages-wrapper {
-        width: 200vw;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        vertical-align: top;
-        width: 200vw;
-        height: 120px;
-        display: inline;
-        display: inline-block;
-        white-space: nowrap;
-      }
-      .animated-pages-wrapper:first-child {
-        float: left;
-        width: 100vw;
-      }
-      .animated-pages-wrapper:last-child {
-        width: 100vw;
-        margin: 100vw;
-        z-index: 2;
-      }
-      /**/
-
-      /* end: correct css for positioning animated pages */
-
-    </style>
+    <style include="split-screen-styles split-screen-animation"></style>
 		
     <!-- state -->
     <state-media media-type="{{mediaType}}"></state-media>

@@ -1,5 +1,8 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
+<link rel="import" href="/src/custom-styles/split-screen-styles.html">
+<link rel="import" href="/src/custom-styles/split-screen-animation.html">
+
 <link rel="import" href="/src/app-main/app-methods.html">
 <!-- state -->
 <link rel="import" href="/src/app-state/state-media.html">
@@ -17,65 +20,14 @@
 
 <dom-module id="view-settings">
   <template>
-		<style>
 
-			:host {
-				--line-color: #DDDDDD;
-			}
-
-      /* correct css for positioning animated pages */
-
-      #list-desktop {
-        z-index: 1;
-      }
-
-      #detail {
-        position: absolute;
-        top: 0px;
-        width: 100%; /* not 100vw */
-      }
-
-      .animated-pages-wrapper {
-        overflow: hidden;
-      }
-
-      /* other attempts * /
-      .animated-pages-wrapper {
-        width: 200vw;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        vertical-align: top;
-        width: 200vw;
-        height: 120px;
-        display: inline;
-        display: inline-block;
-        white-space: nowrap;
-      }
-      .animated-pages-wrapper:first-child {
-        float: left;
-        width: 100vw;
-      }
-      .animated-pages-wrapper:last-child {
-        width: 100vw;
-        margin: 100vw;
-        z-index: 2;
-      }
-      /**/
-
-      /* end: correct css for positioning animated pages */
-
+    <style include="split-screen-styles split-screen-animation">
+    
       paper-icon-button {
         text-align: left;
       }
 
-			.split {
-				border-bottom: 1px var(--line-color) solid;
-				
-				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
-				grid-template-columns: 1fr 1fr;
-			}
-
-		</style>
+    </style>
 		
 		<!-- v.3 | css-grid layout, responsive, two columns -->
 

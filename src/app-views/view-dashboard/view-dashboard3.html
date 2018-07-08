@@ -11,10 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-
-<link rel="import" href="/src/custom-styles/split-screen-styles.html">
-<link rel="import" href="/src/custom-styles/split-screen-animation.html">
-
 <link rel="import" href="view-dashboard-list.html">
 <link rel="import" href="view-dashboard-detail.html">
 
@@ -29,10 +25,17 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
   <template>
 
-    <style include="split-screen-styles split-screen-animation"></style>
-		<!--- ->
-    <style include="dashboard-styles"></style>
-		<!---->
+    <style xinclude="dashboard-styles">
+      :host {
+        --line-color: #DDDDDD;
+      }
+      .split {
+        border-bottom: 1px var(--line-color) solid;
+        
+        display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+        grid-template-columns: 1fr 1fr;
+      }
+    </style>
 		
 		<!---->
       <div class="wrapper split">

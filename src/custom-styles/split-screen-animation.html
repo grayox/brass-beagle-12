@@ -1,0 +1,55 @@
+<!--- ->
+Copyright (c) 2015-2017 Atlas Laboratories (atlaslive@gmail.com) - All rights reserved.
+Read full copyright notice and disclaimer contained in file labeled copyright-notice.md located in the root directory.
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="split-screen-animation">
+  <template>
+    <style>
+
+      /* correct css for positioning animated pages */
+
+      #list-desktop {
+        z-index: 1;
+      }
+
+      #detail {
+        position: absolute;
+        top: 0px;
+        width: 100%; /* not 100vw */
+      }
+
+      .animated-pages-wrapper {
+        overflow: hidden;
+      }
+
+      /* other attempts * /
+      .animated-pages-wrapper {
+        width: 200vw;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        vertical-align: top;
+        width: 200vw;
+        height: 120px;
+        display: inline;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .animated-pages-wrapper:first-child {
+        float: left;
+        width: 100vw;
+      }
+      .animated-pages-wrapper:last-child {
+        width: 100vw;
+        margin: 100vw;
+        z-index: 2;
+      }
+      /**/
+
+      /* end: correct css for positioning animated pages */
+      
+		</style>
+  </template>
+</dom-module>

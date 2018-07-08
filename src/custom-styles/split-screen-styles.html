@@ -1,0 +1,25 @@
+<!--- ->
+Copyright (c) 2015-2017 Atlas Laboratories (atlaslive@gmail.com) - All rights reserved.
+Read full copyright notice and disclaimer contained in file labeled copyright-notice.md located in the root directory.
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<dom-module id="split-screen-styles">
+  <template>
+    <style>
+
+      :host {
+        --line-color: #DDDDDD;
+      }
+
+      .split {
+        border-bottom: 1px var(--line-color) solid;
+        
+        display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+        grid-template-columns: 1fr 1fr;
+      }
+      
+		</style>
+  </template>
+</dom-module>
