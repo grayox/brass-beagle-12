@@ -11,6 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 
 <link rel="import" href="/src/custom-libraries/moment-js.html">
+<link rel="import" href="/src/custom-elements/states-abbreviations/states-abbreviations.html">
 
 <link rel="import" href="/src/app-view/app-item.html">
 
@@ -23,25 +24,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-outbox-detail">
 
   <template>
-    <!--- ->
-    <style>
-      :host {
-        --line-color: #DDDDDD;
-        border-left: 1px var(--line-color) solid;
-      }
 
-      div {
-        padding: 0;
-        margin: 0;
-      }
-    </style>
-    <!---->
-
-    <!--- ->
-		<form-new-lead></form-new-lead>
-    <!--- ->
-    hello world
-    <!---->
+    <style></style>
+    
+    <!-- state -->
+    <states-abbreviations states-abbreviations="{{statesAbbreviations}}"></states-abbreviations>
 
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
@@ -80,7 +67,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 xtwo-line
                 label="State"
                 icon="star"
-                data="{{item.state}}"
+                xdata="{{item.state}}"
+                data="{{_computeStateName(item.state, statesAbbreviations)}}"
                 >
       </app-item>  
       
@@ -175,6 +163,20 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 			ready() {
         super.ready();
 				//console.log('Component Ready');
+      }
+
+      _computeStateName(s, o) {
+        const ready1 = !!s;
+        if(!ready1) return '';
+
+        const ready2 = !!o;
+        if(!ready2) return s;
+
+        const ready = ready1 && ready2;
+        if(!ready) return;
+
+        const out = o[s];
+        return out;
       }
       
 			_computeTimeAgo(n) {

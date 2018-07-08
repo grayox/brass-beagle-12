@@ -11,8 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!---->
 
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
-<link rel="import" href="dashboard-detail-zip.html">
-<link rel="import" href="/src/custom-elements/select-lead-type.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-item-styles.html">
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
 
 <!--- ->
 <!--- ->
@@ -24,18 +25,62 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-dashboard-detail">
 
   <template>
-    <style>
-      :host {
-        --line-color: #DDDDDD;
-        border-left: 1px var(--line-color) solid;
+    <style include="xpaper-item-styles paper-material-styles">
+      :host, html {
+        --word-break-and-wrapping: {
+          /** /
+          color: violet;
+          /**/
+          float: left;
+          display: inline; 
+          word-wrap: break-word;
+          word-break: break-all; 
+          overflow-wrap: break-word;
+          white-space: normal; /* this is key! https://stackoverflow.com/a/28809964/1640892 */
+          /** /
+          overflow: auto;
+          /**/
+        };
       }
+
+      div.wrapper {
+        @apply --paper-material;
+        @apply --paper-material-elevation-1;
+        @apply --word-break-and-wrapping;
+
+        /**/
+        background-color: white;
+
+        /** /
+        material design reference:
+        https://material.io/design/components/cards.html#specs
+        /** /
+        width: calc(100% - 3em);
+        width: calc(50% - 32px);
+        width: 344px;
+        width: calc(100% - 32px);
+        /**/
+        width: fit-content;
+        text-align: start;
+        margin: 16px;
+        padding: 16px;
+        /**/
+      }
+      
+      .font-weight-normal {
+        font-weight: normal;
+      }
+
     </style>
 
-    <!--- ->
-		<dashboard-detail-zip></dashboard-detail-zip>
-    <!---->
-		<select-lead-type></select-lead-type>
-    <!---->
+    <div class="wrapper paper-item">
+      <h2 class="font-weight-normal">
+        hello world
+      </h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      </p>
+    </div>
 
   </template>
 
@@ -45,16 +90,14 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-dashboard-detail'; }
 
-      /** /
-			static get properties() { return {
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
-      }}
-      /**/
-			
+      // static get properties() { return {
+			// 	mediaWidth: {
+			// 		type: Number, // 0, 1, 2, 3
+			// 		notify: true,
+			// 		//observer: '_mediaWidthChanged',
+			// 	},
+      // }}
+      
       constructor() {
         super();
       }
@@ -63,9 +106,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
-      
-			/**/
-			/**/
 		
     }
 

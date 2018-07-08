@@ -7,7 +7,7 @@
 <!---->
 <!---->
 
-<dom-module id="state-states-abbreviations">
+<dom-module id="states-abbreviations">
   <template>
 		<style></style>
 		<app-localstorage-document xlog xsession-only key="states-abbreviations" data="{{statesAbbreviations}}"></app-localstorage-document>
@@ -15,6 +15,7 @@
 		<iron-ajax id="ajax"
 							 auto
 							 url="/src/custom-elements/states-abbreviations/states-abbreviations.json"
+							 xurl="states-abbreviations.json"
 							 handle-as="json"
 							 xon-response="_handleAjaxResponse"
 							 xdebounce-duration="300"
@@ -25,8 +26,8 @@
   </template>
 
   <script>
-    class StateStatesAbbreviations extends Polymer.Element {
-      static get is() { return 'state-states-abbreviations'; }
+    class StatesAbbreviations extends Polymer.Element {
+      static get is() { return 'states-abbreviations'; }
 
       static get properties() { return {
 				
@@ -97,6 +98,6 @@
 
     }
 
-    window.customElements.define(StateStatesAbbreviations.is, StateStatesAbbreviations);
+    window.customElements.define(StatesAbbreviations.is, StatesAbbreviations);
   </script>
 </dom-module>
