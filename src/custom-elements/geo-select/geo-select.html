@@ -459,6 +459,21 @@
 				return out;
       }
       
+      _scrollIntoView() {
+        // auto scroll to top of page, with animation
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+        const top = document.body;
+        top.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start', // 'end', 
+          inline: 'nearest', // 'end', // 'start', //
+        });
+
+        // https://api.jquery.com/scrollTop/
+        // $('#top').scrollTop();
+        // $(window).scrollTop();
+      }
+
       _appMenuDomChangeRegion() {
 
         // prepare region window
@@ -471,19 +486,7 @@
         y.hidden = true;
         y.opened = false;
 
-        // auto scroll to top of page, with animation
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-        const top = document.body;
-        top.scrollIntoView({
-          behavior: "smooth",
-          block: "start", // "end", 
-          inline: "nearest", // "end", // "start", //
-        });
-        
-        // https://api.jquery.com/scrollTop/
-        // $('#top').scrollTop();
-        // $(window).scrollTop();
-
+        this._scrollIntoView();
       }
    
       _appMenuDomChangeLocation() {
@@ -493,19 +496,7 @@
         y.hidden = false;
         y.opened = true;
 
-        // auto scroll to top of page, with animation
-        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
-        const top = document.body;
-        top.scrollIntoView({
-          behavior: "smooth",
-          block: "start", // "end", 
-          inline: "nearest", // "end", // "start", //
-        });
-
-        // https://api.jquery.com/scrollTop/
-        // $('#top').scrollTop();
-        // $(window).scrollTop();
-
+        this._scrollIntoView();
       }
 
 			_computeGeoKey(country, region, location) {

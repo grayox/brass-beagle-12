@@ -70,13 +70,17 @@
       "init": "_initUser('remote', e)",
 			"paths": [
 				{
-					"comments": [
+          "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
+          "type": "increment",
+          "path": ["app-statistics", "count-user-remote"]
+        }, {
+          "comments": [
 						"Remote | Record user remote",
 						"Path also set at app.methods._initUser()"
 					],
 					"type": "create", "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference'; every 'path' must have a 'type' that is any one of the preceding; see app-methods._itemPaths()",
-					"path": ["users", "~@this.userRemote.uid@~", "remote"]
-				}, {
+          "path": ["users", "~@this.userRemote.uid@~", "remote"]
+        }, {
 					"comments": [
 						"----------Entities above this line have been implemented----------",
 						"Lineage | Memorialize and record network ancestry (descent from root node) of current user"
@@ -142,6 +146,10 @@
 			"key": "leads", "comment-key": "every entity needs either 'key' or 'init' property",
 			"paths": [
         {
+          "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
+          "type": "increment",
+          "path": ["app-statistics", "count-lead-sent"]
+        }, {
           "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
           "type": "increment",
           "path": ["leads-country-region-location-category-count", "~@this.userSettings['key-lead-receive']@~"]
@@ -214,6 +222,10 @@
         {
           "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
           "type": "increment",
+          "path": ["app-statistics", "count-lead-received"]
+        }, {
+          "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
+          "type": "increment",
           "path": ["users", "~@this.userRemote.uid@~", "statistics", "count-withdrawals"]
         },
         {
@@ -256,6 +268,10 @@
       "key": "invite",
 			"paths": [
 				{
+          "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
+          "type": "increment",
+          "path": ["app-statistics", "count-user-invite"]
+        }, {
           "comment-type": "'create'|'index'|'update'|'delete'||'increment'|'decrement'|'sum'|'difference' for every 'path'; see above rules",
           "type": "increment",
           "note-statistic": "deprecated use of statistic property in favor of path.pop(); path.push(); in app-methods",

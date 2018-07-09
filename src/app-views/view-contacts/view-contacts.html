@@ -301,6 +301,23 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // unhide to show animations
         // detail.hidden = false;
           
+        this._scrollIntoView();
+          
+      }
+    
+      _scrollIntoView() {
+        // auto scroll to top of page, with animation
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+        const top = document.body;
+        top.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start', // 'end', 
+          inline: 'nearest', // 'end', // 'start', //
+        });
+
+        // https://api.jquery.com/scrollTop/
+        // $('#top').scrollTop();
+        // $(window).scrollTop();
       }
 
       _showDetailDesktop() {

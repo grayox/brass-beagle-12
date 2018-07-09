@@ -285,6 +285,22 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // https://www.w3schools.com/jsref/met_loc_reload.asp
         // bug: causes infinite loop
         // if(b) location.reload(false);
+
+        if(b) {
+          // auto scroll to top of page, with animation
+          // https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView
+          const top = document.body;
+          top.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start', // 'end', 
+            inline: 'nearest', // 'end', // 'start', //
+          });
+  
+          // https://api.jquery.com/scrollTop/
+          // $('#top').scrollTop();
+          // $(window).scrollTop();
+        }
+
         return b;
       }
 
