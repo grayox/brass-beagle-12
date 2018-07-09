@@ -54,139 +54,148 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 		<state-user-statistics user-statistics="{{userStatistics}}"></state-user-statistics>
     
     <div role="listbox">
+        
+      <iron-selector role="listbox"
+                     selected="{{selected}}"
+                     xattr-for-selected="name"
+                     attr-for-selected="label"
+                     xselectable=".selectable"
+                     >
 
-      <app-item label="Balances"
-                type="subheader"
-                >
-      </app-item>
+        <app-item label="Balances"
+                  type="subheader"
+                  >
+        </app-item>
+  
+        <app-item label="Deposits"
+                  type="output-one-line"
+                  xicon="vaadin:cloud-upload"
+                  icon="vaadin:plus"
+                  data="[[_showNumber(userStatistics.count-deposits)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Withdrawals"
+                  type="output-one-line"
+                  xicon="vaadin:cloud-download"
+                  icon="vaadin:minus"
+                  data="[[_showNumber(userStatistics.count-withdrawals)]]"
+                  >               
+        </app-item>
+  
+        <app-item label="Net"
+                  type="output-one-line"
+                  xicon="vaadin:piggy-bank-coin"
+                  icon="view-stream"
+                  data="[[_showNumber(userStatistics.net-balance)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Inventories"
+                  type="subheader"
+                  >
+        </app-item>
+  
+        <app-item label="Inbox"
+                  type="output-one-line"
+                  xicon="vaadin:group"
+                  icon="vaadin:cloud-download"
+                  xdata="516"
+                  data="[[_showNumber(userStatistics.count-withdrawals)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Archive"
+                  type="output-one-line"
+                  icon="vaadin:database"
+                  xdata="516"
+                  data="[[_showNumber(userStatistics.count-withdrawals)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Outbox"
+                  type="output-one-line"
+                  xicon="vaadin:group"
+                  icon="vaadin:cloud-upload"
+                  xdata="516"
+                  data="[[_showNumber(userStatistics.count-deposits)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Contacts"
+                  type="output-one-line"
+                  icon="social:person-add"
+                  data="[[_showNumber(userStatistics.count-contacts)]]"
+                  >               
+        </app-item>
+  
+        <app-item label="Key settings"
+                  type="subheader"
+                  >
+        </app-item>
+  
+        <app-item label="Required"
+                  type="output-one-line"
+                  icon="vaadin:power-off"
+                  xdata="0/2"
+                  data="[[_showRequired(userSettings)]]"
+                  >
+        </app-item>
+  
+        <app-item label="Category"
+                  type="output-one-line"
+                  icon="vaadin:puzzle-piece"
+                  data="[[userSettings.lead-type]]"
+                  >
+        </app-item>
+  
+        <app-item label="Location"
+                  type="output-one-line"
+                  icon="track-changes"
+                  data="[[userSettings.geo-select-location]]"
+                  >
+        </app-item>
+  
+        <app-item label="State"
+                  type="output-one-line"
+                  icon="vaadin:flag"
+                  data="[[userSettings.geo-select-region]]"
+                  >
+        </app-item>
+  
+        <app-item label="Available actions"
+                  type="subheader"
+                  >
+        </app-item>
+  
+        <app-item label="Send new lead..."
+                  type="output-one-line"
+                  xicon="chevron-right"
+                  xicon="vaadin:chevron-right"
+                  icon="vaadin:angle-right"
+                  xdata=""
+                  >
+        </app-item>
+  
+        <app-item label="Review available leads..."
+                  type="output-one-line"
+                  xicon="chevron-right"
+                  xicon="vaadin:chevron-right"
+                  icon="vaadin:angle-right"
+                  xdata=""
+                  >
+        </app-item>
+  
+        <app-item label="Invite a contact..."
+                  type="output-one-line"
+                  xicon="chevron-right"
+                  xicon="vaadin:chevron-right"
+                  icon="vaadin:angle-right"
+                  xdata=""
+                  >
+        </app-item>
 
-      <app-item label="Deposits"
-                type="output-one-line"
-                xicon="vaadin:cloud-upload"
-                icon="vaadin:plus"
-                data="[[_showNumber(userStatistics.count-deposits)]]"
-                >
-      </app-item>
-
-      <app-item label="Withdrawals"
-                type="output-one-line"
-                xicon="vaadin:cloud-download"
-                icon="vaadin:minus"
-                data="[[_showNumber(userStatistics.count-withdrawals)]]"
-                >               
-      </app-item>
-
-      <app-item label="Net"
-                type="output-one-line"
-                xicon="vaadin:piggy-bank-coin"
-                icon="view-stream"
-                data="[[_showNumber(userStatistics.net-balance)]]"
-                >
-      </app-item>
-
-      <app-item label="Inventories"
-                type="subheader"
-                >
-      </app-item>
-
-      <app-item label="Inbox"
-                type="output-one-line"
-                xicon="vaadin:group"
-                icon="vaadin:cloud-download"
-                xdata="516"
-                data="[[_showNumber(userStatistics.count-withdrawals)]]"
-                >
-      </app-item>
-
-      <app-item label="Archive"
-                type="output-one-line"
-                icon="vaadin:database"
-                xdata="516"
-                data="[[_showNumber(userStatistics.count-withdrawals)]]"
-                >
-      </app-item>
-
-      <app-item label="Outbox"
-                type="output-one-line"
-                xicon="vaadin:group"
-                icon="vaadin:cloud-upload"
-                xdata="516"
-                data="[[_showNumber(userStatistics.count-deposits)]]"
-                >
-      </app-item>
-
-      <app-item label="Contacts"
-                type="output-one-line"
-                icon="social:person-add"
-                data="[[_showNumber(userStatistics.count-contacts)]]"
-                >               
-      </app-item>
-
-      <app-item label="Key settings"
-                type="subheader"
-                >
-      </app-item>
-
-      <app-item label="Required"
-                type="output-one-line"
-                icon="vaadin:power-off"
-                xdata="0/2"
-                data="[[_showRequired(userSettings)]]"
-                >
-      </app-item>
-
-      <app-item label="Category"
-                type="output-one-line"
-                icon="vaadin:puzzle-piece"
-                data="[[userSettings.lead-type]]"
-                >
-      </app-item>
-
-      <app-item label="Location"
-                type="output-one-line"
-                icon="track-changes"
-                data="[[userSettings.geo-select-location]]"
-                >
-      </app-item>
-
-      <app-item label="State"
-                type="output-one-line"
-                icon="vaadin:flag"
-                data="[[userSettings.geo-select-region]]"
-                >
-      </app-item>
-
-      <app-item label="Available actions"
-                type="subheader"
-                >
-      </app-item>
-
-      <app-item label="Send new lead..."
-                type="output-one-line"
-                xicon="chevron-right"
-                xicon="vaadin:chevron-right"
-                icon="vaadin:angle-right"
-                xdata=""
-                >
-      </app-item>
-
-      <app-item label="Review available leads..."
-                type="output-one-line"
-                xicon="chevron-right"
-                xicon="vaadin:chevron-right"
-                icon="vaadin:angle-right"
-                xdata=""
-                >
-      </app-item>
-
-      <app-item label="Invite a contact..."
-                type="output-one-line"
-                xicon="chevron-right"
-                xicon="vaadin:chevron-right"
-                icon="vaadin:angle-right"
-                xdata=""
-                >
-      </app-item>
+      </iron-selector>
 
     </div>
 
@@ -198,13 +207,21 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-dashboard-list'; }
 
-      // static get properties() { return {
-			// 	mediaWidth: {
-			// 		type: Number, // 0, 1, 2, 3
-			// 		notify: true,
-			// 		//observer: '_mediaWidthChanged',
-			// 	},
-      // }}
+      static get properties() { return {
+  
+        // mediaWidth: {
+        // 	type: Number, // 0, 1, 2, 3
+        // 	notify: true,
+        // 	//observer: '_mediaWidthChanged',
+        // },
+        
+        selected: {
+          type: String,
+          notify: true,
+          //observer: '_selectedChanged',
+        },
+        
+      }}
 			
       constructor() {
         super();

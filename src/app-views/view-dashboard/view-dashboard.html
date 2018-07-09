@@ -74,18 +74,17 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     </div>
     <!---->
 
-
     <!-- desktop, tablet -->
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-dashboard-list id="list-desktop"
-                          xselected="{{selected}}"
-                          xselected="{{selectedList}}"
-                          xselected-item="{{selectedList}}"
-                          selected-item="{{selectedItem}}"
-                          user-local="[[userLocal]]"
-                          on-tap="_showDetailDesktop"
-                          >
+                             selected="{{selected}}"
+                             xselected="{{selectedList}}"
+                             xselected-item="{{selectedList}}"
+                             xselected-item="{{selectedItem}}"
+                             user-local="[[userLocal]]"
+                             on-tap="_showDetailDesktop"
+                             >
         </view-dashboard-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
@@ -95,12 +94,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       xlast-animation-name="{{lastAnimationName}}"
                       xshow
                       >
-          <view-dashboard-detail xselected="[[selected]]"
-                              xselected="[[selectedDetail]]"
-                              xitem="[[selectedDetail]]"
-                              item="[[selectedItem]]"
-                              user-local="[[userLocal]]"
-                              >
+          <view-dashboard-detail selected="[[selected]]"
+                                 xselected="[[selectedDetail]]"
+                                 xitem="[[selectedDetail]]"
+                                 xitem="[[selectedItem]]"
+                                 user-local="[[userLocal]]"
+                                 >
           </view-dashboard-detail>
         </animated-css>
       </div>
@@ -119,13 +118,13 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       >
           <div name="list" on-tap="_showDetailMobile">
             <view-dashboard-list id="list-desktop"
-                              xselected="{{selected}}"
-                              xselected="{{selectedList}}"
-                              xselected-item="{{selectedList}}"
-                              selected-item="{{selectedItem}}"
-                              user-local="[[userLocal]]"
-                              xon-tap="_showDetailDesktop"
-                              >
+                                 selected="{{selected}}"
+                                 xselected="{{selectedList}}"
+                                 xselected-item="{{selectedList}}"
+                                 xselected-item="{{selectedItem}}"
+                                 user-local="[[userLocal]]"
+                                 xon-tap="_showDetailDesktop"
+                                 >
             </view-dashboard-list>
           </div>      
         </animated-css>
@@ -147,12 +146,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       >
             </app-item>
             <!---->
-            <view-dashboard-detail xselected="[[selected]]"
-                                xselected="[[selectedDetail]]"
-                                xitem="[[selectedDetail]]"
-                                item="[[selectedItem]]"
-                                user-local="[[userLocal]]"
-                                >
+            <view-dashboard-detail selected="[[selected]]"
+                                   xselected="[[selectedDetail]]"
+                                   xitem="[[selectedDetail]]"
+                                   xitem="[[selectedItem]]"
+                                   user-local="[[userLocal]]"
+                                   >
             </view-dashboard-detail>
           </animated-css>
         </div>
@@ -171,11 +170,20 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       static get is() { return 'view-dashboard'; }
 
 			static get properties() { return {
+
 				mediaWidth: {
 					type: Number, // 0, 1, 2, 3
 					notify: true,
 					//observer: '_mediaWidthChanged',
 				},
+
+        // note: selectedItem is not a necessary property for other analogous elements (view mediator components)
+				selected: {
+					type: String,
+					notify: true,
+					//observer: '_selectedChanged',
+				},
+
       }}
 			
       constructor() {

@@ -25,31 +25,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-dashboard-detail">
 
   <template>
-    <style include="xpaper-item-styles paper-material-styles">
-      :host, html {
-        --word-break-and-wrapping: {
-          /** /
-          color: violet;
-          /**/
-          float: left;
-          display: inline; 
-          word-wrap: break-word;
-          word-break: break-all; 
-          overflow-wrap: break-word;
-          white-space: normal; /* this is key! https://stackoverflow.com/a/28809964/1640892 */
-          /** /
-          overflow: auto;
-          /**/
-        };
-      }
-
+    <style include="paper-item-styles paper-material-styles">
+ 
       div.wrapper {
         @apply --paper-material;
         @apply --paper-material-elevation-1;
-        @apply --word-break-and-wrapping;
-
+        
         /**/
         background-color: white;
+        opacity: var(--opacity-normal);
 
         /** /
         material design reference:
@@ -58,28 +42,226 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         width: calc(100% - 3em);
         width: calc(50% - 32px);
         width: 344px;
+        width: fit-content;
         width: calc(100% - 32px);
         /**/
-        width: fit-content;
+        width: calc(100% - 64px);
         text-align: start;
         margin: 16px;
         padding: 16px;
+        /**/
+
+        /* allow wrapping */
+        white-space: normal; /* this is critically important! https://stackoverflow.com/a/28809964/1640892 */
+        /** /
+        color: violet;
+        /** /
+        float: left;
+        display: inline; 
+        word-wrap: break-word;
+        word-break: break-all; 
+        overflow-wrap: break-word;
+        overflow: auto;
         /**/
       }
       
       .font-weight-normal {
         font-weight: normal;
       }
+      
+      .font-weight-bold {
+        font-weight: bold;
+      }
+
+      p {
+        line-height: 1.15em;
+      }
+
+      .dim {
+        opacity: var(--opacity-dim);
+      }
+
+      .italic {
+        font-style: italic;
+      }
 
     </style>
 
     <div class="wrapper paper-item">
       <h2 class="font-weight-normal">
-        hello world
+        [[selected]]
       </h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+      
+      <div hidden$="[[!_computeStringIsBalances(selected)]]">
+        <p>
+          Define your status on the platform
+        </p>
+        <p>
+          deposits &minus; withdrawals &equals; net balance
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsDeposits(selected)]]">
+        <p>
+          Leads you submitted and referred into the network.
+          To make a deposit, click the little round circular button at the bottom then fill out the form.
+          The form&rsquo;s button will be disabled until all the required fiels are completed.
+          <ul>
+            <li>name</li>
+            <li>phone number or email</li>
+            <li>zip code</li>
+            <li>lead type</li>
+          </ul>
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsWithdrawals(selected)]]">
+        <p>
+          Number of leads you took out of your inbox (by clicking it)
+          and placed into your archive.
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsNet(selected)]]">
+        <p>
+          Difference between your deposits and withdrawals.
+          You must maintain a positive net balance to take leads out of the inbox.
+          If your net balance reaches zero, your inbox will lock until you deposit more leads.
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsInventories(selected)]]">
+        <p>
+          Keeps a running total of the size of all the lists you have created
+          and, in the case of your inbox, have available to you
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsInbox(selected)]]">
+        <p>
+          List of all leads matching your type category and market location
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsArchive(selected)]]">
+        <p>
+          List of all previously available leads you selected that are now exclusively yours
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsOutbox(selected)]]">
+        <p>
+          List of all leads you submitted and referred into the network
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsContacts(selected)]]">
+        <p>
+          List of all contacts you referred to join the network
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsKeySettings(selected)]]">
+        <p>
+          Necessary information to filling your inbox and receiving your deposits
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsRequired(selected)]]">
+        <p>
+          The number to the right of the slash (/) refers to the two requird fields:
+          <ul>
+            <li>category</li>
+            <li>location</li>
+          </ul>
+        </p>
+        <p>The number to the left of the slash indicates how many of the required fields you completed</p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsCategory(selected)]]">
+        <p>
+          Type of leads you selected to receive
+          <ul>
+            <li><span class="font-weight-bold">Home</span> &mdash; select this if you are a real estate broker or agent selling homes to residential buyers</li>
+            <li><span class="font-weight-bold">Mortgage</span> &mdash; select this if you are a real estate mortgage broker or agent selling financing to home buyers</li>
+            <li><span class="font-weight-bold">Insurance</span> &mdash; select this if you are an insurance broker or agent selling property and casualty policies</li>
+            <li><span class="font-weight-bold">Financial</span> &mdash; select this if you are a financial planner and advise clients on their personal finances</li>
+          </ul>
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsLocation(selected)]]">
+        <p>
+          The third level of your location selection.
+          (In some small states or regions, it can be the only third level choice.
+          In that case, the third level choice is usually identical to the name of the state or region.)
+        </p>
+        <p>
+          To specify the location of your market, you must identify all three levels:
+          <ul>
+            <li>country</li>
+            <li>state or region</li>
+            <li>location</li>
+          </ul>
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsState(selected)]]">
+        <p>
+          The second level of your location selection. (Called &ldquo;region&rdquo; in certain countries.)
+        </p>
+        <p>
+          To specify the location of your market, you must identify all three levels:
+          <ul>
+            <li>country</li>
+            <li>state or region</li>
+            <li>location</li>
+          </ul>
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsAvailableActions(selected)]]">
+        <p>
+          The third level of your location selection.
+          (In some small states or regions, it can be the only third level choice.
+          In that case, the third level choice is usually identical to the name of the state or region.)
+        </p>
+        <p>
+          To specify the location of your market, you must identify all three levels:
+          <ul>
+            <li>country</li>
+            <li>state or region</li>
+            <li>location</li>
+          </ul>
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsSendNewLead(selected)]]">
+        <p>
+          Increase your deposits and net balance. Send over a lead and it will appear in your outbox.
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsReviewAvailableLeads(selected)]]">
+        <p>
+          Check your inbox to see what leads are available for you.
+          Select one by clicking it and we will deposit into your archive.
+        </p>
+      </div>
+      
+      <div hidden$="[[!_computeStringIsInviteAContact(selected)]]">
+        <p>
+          If you want to send leads to one of your contacts, invite them to join the network
+        </p>
+      </div>
+
+      <div class="dim italic">
+        <p>
+          This box is in the details section. You clicked the list section to the left.
+          This pattern is repeated throughout the app.
+        </p>
+      </div>
+
     </div>
 
   </template>
@@ -90,13 +272,21 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       static get is() { return 'view-dashboard-detail'; }
 
-      // static get properties() { return {
-			// 	mediaWidth: {
-			// 		type: Number, // 0, 1, 2, 3
-			// 		notify: true,
-			// 		//observer: '_mediaWidthChanged',
-			// 	},
-      // }}
+      static get properties() { return {
+
+				// mediaWidth: {
+				// 	type: Number, // 0, 1, 2, 3
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+
+				selected: {
+					type: String,
+					notify: true,
+					//observer: '_selectedChanged',
+				},
+
+      }}
       
       constructor() {
         super();
@@ -106,6 +296,32 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         super.ready();
 				//console.log('Component Ready');
 			}
+
+      _computeStringIsTarget(s, target) {
+        const sIsTarget = (s === target);
+        // const sIsNotTarget = !typeIsTarget;
+        const out = sIsTarget;
+        return out;
+      }
+
+      _computeStringIsBalances             (s) { return this._computeStringIsTarget ( s, 'Balances')}
+      _computeStringIsDeposits             (s) { return this._computeStringIsTarget ( s, 'Deposits')}
+      _computeStringIsWithdrawals          (s) { return this._computeStringIsTarget ( s, 'Withdrawals')}
+      _computeStringIsNet                  (s) { return this._computeStringIsTarget ( s, 'Net')}
+      _computeStringIsInventories          (s) { return this._computeStringIsTarget ( s, 'Inventories')}
+      _computeStringIsInbox                (s) { return this._computeStringIsTarget ( s, 'Inbox')}
+      _computeStringIsArchive              (s) { return this._computeStringIsTarget ( s, 'Archive')}
+      _computeStringIsOutbox               (s) { return this._computeStringIsTarget ( s, 'Outbox')}
+      _computeStringIsContacts             (s) { return this._computeStringIsTarget ( s, 'Contacts')}
+      _computeStringIsKeySettings          (s) { return this._computeStringIsTarget ( s, 'Key settings')}
+      _computeStringIsRequired             (s) { return this._computeStringIsTarget ( s, 'Required')}
+      _computeStringIsCategory             (s) { return this._computeStringIsTarget ( s, 'Category')}
+      _computeStringIsLocation             (s) { return this._computeStringIsTarget ( s, 'Location')}
+      _computeStringIsState                (s) { return this._computeStringIsTarget ( s, 'State')}
+      _computeStringIsAvailableActions     (s) { return this._computeStringIsTarget ( s, 'Available actions')}
+      _computeStringIsSendNewLead          (s) { return this._computeStringIsTarget ( s, 'Send new lead...')}
+      _computeStringIsReviewAvailableLeads (s) { return this._computeStringIsTarget ( s, 'Review available leads...')}
+      _computeStringIsInviteAContact       (s) { return this._computeStringIsTarget ( s, 'Invite a contact...')}
 		
     }
 
