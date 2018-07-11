@@ -8,16 +8,22 @@
 			:host {}
 
 			.login {
+        /** /
 				width: 300px;
 				margin: 16px auto;
+        /**/
+        width: 100vw;
 			}
 
 			.login paper-input,
 			.login gold-email-input
 			{
-				width: 100%;
+				width: 100vw;
 				--paper-input-container-input-color: var(--text-primary-color);
 				--paper-input-container-underline: {
+          /** /
+					background: rgba(255, 255, 255, 0.8);
+          /**/
 					background: rgba(255, 255, 255, 0.2);
 				}
 			}

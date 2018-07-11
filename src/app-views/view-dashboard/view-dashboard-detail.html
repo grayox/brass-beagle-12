@@ -15,6 +15,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-styles/element-styles/paper-item-styles.html">
 <link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
 
+<link rel="import" href="/src/app-forms/form-new-lead.html">
+<link rel="import" href="/src/app-forms/form-contact-details.html">
+
 <!--- ->
 <!--- ->
 Demos
@@ -257,18 +260,20 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
       <div class="dim italic">
         <p>
-          This box is in the details section. You clicked the list section to the left.
-          This pattern is repeated throughout the app.
+          This box is an item detail. You clicked a list item to reveal it.
+          The pattern: click-list-item-to-reveal-detail is repeated throughout the app.
         </p>
       </div>
 
     </div>
 
-    <!--- ->
-    <div class="paper-item">
-      Hello world
-    </div>
     <!---->
+    <div xclass="xpaper-item" hidden$="[[!_computeStringIsSendNewLead(selected)]]">
+      <form-new-lead></form-new-lead>
+    </div>
+    <div xclass="xpaper-item" hidden$="[[!_computeStringIsInviteAContact(selected)]]">
+      <form-contact-details></form-contact-details>
+    </div>
 
   </template>
 
@@ -304,9 +309,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 			}
 
       _computeStringIsTarget(s, target) {
+        // console.log('s\n', s);
+        // console.log('target\n', target);
         const sIsTarget = (s === target);
         // const sIsNotTarget = !typeIsTarget;
         const out = sIsTarget;
+        // console.log('out\n', out);
         return out;
       }
 

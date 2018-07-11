@@ -6,6 +6,11 @@
   /** /
   @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400');
   @import url('https://fonts.googleapis.com/css?family=Lato:300,400');
+  /** /
+  @font-face {
+    font-family: 'Roboto';
+    src: url('/bower_components/font-roboto/roboto.html');
+  }
   /**/
   
   html,
@@ -35,16 +40,6 @@
     --opacity-dim:      0.54; /* #757575 --secondary-text       */
     --opacity-divider:  0.26; /* #BDBDBD --divider-color        */
     --opacity-disabled: 0.26; /* #BDBDBD --divider-color        */
-
-    /* https://developer.apple.com/ios/human-interface-guidelines/visual-design/color/ */
-    --apple-ios-red:       rgb( 255,  59,  48 );
-    --apple-ios-orange:    rgb( 255, 149,   0 );
-    --apple-ios-yellow:    rgb( 255, 204,   0 );
-    --apple-ios-green:     rgb(  76, 217, 100 );
-    --apple-ios-teal-blue: rgb(  90, 200, 250 );
-    --apple-ios-blue:      rgb(   0, 122, 255 );
-    --apple-ios-purple:    rgb(  88,  86, 214 );
-    --apple-ios-pink:      rgb( 255,  45,  85 );
     
     --water: #1879DB; /* #187CDD #1778DC */
     --water-light: #1B87E3;
@@ -54,30 +49,85 @@
     --charcoal-dark: rgb(67, 67, 67); /*#434343;*/
     --mist: #FAFAFA;
 
-    /* highlight */
-    --highlight: var(--paper-amber-500);/*var(--paper-red-500);/*#FFBB00;/*#FFFF00;#FFEE00;>#FFEA00;#FFDD00;#FFCC00;#FFBB00;#FFAA00;#FF9900;#FF8800;yellow;/*#DB6318;*/
+    /* highlight * /
     --highlight: red;
     --highlight: var(--apple-ios-pink);
     --highlight: var(--apple-ios-yellow);
     --highlight: var(--paper-blue-500);
-    --highlight: var(--paper-pink-500);
     --highlight: var(--paper-teal-500);
+    --highlight: var(--paper-pink-500);
     --highlight: var(--paper-indigo-500);
-    --highlight: var(--paper-light-blue-500);
     --highlight: var(--paper-purple-500);
+    --highlight: var(--paper-amber-500);/*var(--paper-red-500);/*#FFBB00;/*#FFFF00;#FFEE00;>#FFEA00;#FFDD00;#FFCC00;#FFBB00;#FFAA00;#FF9900;#FF8800;yellow;/*#DB6318;* /
+    --highlight: var(--paper-light-blue-500);
+    --highlight: var(--paper-purple-200);
+    --highlight: var(--paper-pink-400);
+    --highlight: var(--paper-purple-700);
+    --highlight: var(--paper-orange-700);
+    --highlight: var(--paper-amber-700);
+    --highlight: var(--paper-pink-700);
+    /**/
     
-    /* primary */
+    /* primary * /
+    /* color tool: https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=6002ee * /
+    
     --app-primary-color: var(--water);
+    --app-primary-color-light: var(--water-light);
+    --app-primary-color-dark: var(--water-dark);
+    
     --app-primary-color: var(--apple-ios-blue);
     --app-primary-color: var(--paper-red-500);
     --app-primary-color: var(--paper-blue-500);
-    --app-primary-color: var(--paper-purple-500);
-    --app-primary-color: var(--paper-light-blue-500);
     --app-primary-color: var(--paper-indigo-500);
-    --app-primary-color: var(--paper-pink-500);
+    --app-primary-color: var(--paper-light-blue-500);
+    --app-primary-color: var(--paper-purple-500);
+    --app-primary-color: var(--paper-orange-500);
+    --app-primary-color: var(--paper-deep-purple-500);
+    --app-primary-color: var(--paper-deep-orange-500);
+    /**/
 
-    --app-primary-color-light: var(--water-light);
-    --app-primary-color-dark: var(--water-dark);
+    /* https://material.io/tools/color/#!/?view.left=0&view.right=0&primary.color=FFC107 * /
+    --app-primary-color: var(--paper-amber-500); /* #ffc107 * /
+    --app-primary-color-light: #fff350;
+    --app-primary-color-dark: #c79100;
+    /**/
+
+    /* https://material.io/design/color/the-color-system.html#tools-for-picking-colors */
+    /* https://material.io/tools/color/#!/?view.left=0&view.right=0 */
+    /** /
+    --app-primary-color: var(--paper-red-500);
+
+
+    /** /
+    --app-primary-color: var(--paper-pink-500); /* #e91e63 * /
+    --app-primary-color-dark: #b0003a;
+    --app-primary-color-light: #ff6090;
+    /** /
+    --app-primary-color: var(--paper-purple-a400);
+    
+
+    /**/
+    --app-primary-color: var(--paper-deep-purple-a700); /* #6200ea */
+    --app-primary-color-dark: #0a00b6;
+    --app-primary-color-light: #9d46ff;
+    /** /
+    --app-primary-color: var(--paper-indigo-a700), #304ffe;
+    --app-primary-color-dark: #0026ca;
+    --app-primary-color-light: #7a7cff;
+    /** /
+    --app-primary-color: var(--paper-blue-a700);
+    --app-primary-color: var(--paper-light-blue-a700);
+    --app-primary-color: var(--paper-green-a700);
+    --app-primary-color: var(--paper-light-green-a700);
+    --app-primary-color: var(--paper-yellow-a700);
+    --app-primary-color: var(--paper-amber-500);
+    --app-primary-color: var(--paper-amber-a700);
+    --app-primary-color: var(--paper-orange-a700);
+    --app-primary-color: var(--paper-orange-500);
+    --app-primary-color: var(--paper-deep-orange-a700);
+    --app-primary-color: var(--paper-deep-orange-500);
+    /**/
+
 
     --app-background-color: var(--mist);
     --app-highlight-color: var(--highlight);
@@ -86,8 +136,8 @@
     --dashboard-element-hover: var(--charcoal-dark);
 
     --primary-color: var(--app-primary-color);
-    --primary-color-light: var(--app-primary-color-light);
     --primary-color-dark: var(--app-primary-color-dark);
+    --primary-color-light: var(--app-primary-color-light);
     --accent-color: var(--app-highlight-color);
   }
   
@@ -114,6 +164,9 @@
   }
   
   app-main[unresolved] > img.brand {
+    /*/ /
+    margin-top: 50%;
+    /**/
     margin-top: 25%;
     height: 8em;
     max-width: 50vw;
