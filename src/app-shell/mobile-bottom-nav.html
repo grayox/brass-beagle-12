@@ -9,23 +9,43 @@
 <link rel="import" href="/src/app-state/state-view.html">
 <!---->
 
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
+
 <!--- ->
 https://www.webcomponents.org/element/greenyouse/bottom-nav
 https://github.com/greenyouse/bottom-nav
 <!---->
 <link rel="import" href="/bower_components/bottom-nav/bottom-nav.html">
+<link rel="import" href="/bower_components/bottom-nav/bottom-toolbar.html">
+<link rel="import" href="/bower_components/bottom-nav/bottom-tab.html">
 
 <dom-module id="mobile-bottom-nav">
 
   <template>
 
 		<style>
-		
-      bottom-nav {
-        background-color: var(--app-primary-color);
-        color: #FFFFFF;
+
+      .hidden {
+        display: none;
       }
-     
+
+      bottom-nav {
+        color: #FFFFFF;
+        background-color: var(--app-primary-color-dark);
+        /** /
+        background-color: var(--app-primary-color);
+        background-color: var(--app-primary-color-light);
+        /**/
+      }
+
+      /** /
+      .highlight {
+        background-color: var(--app-primary-color);
+      }
+
+      /** /
       .grey {
         background-color: #465C64;
       }
@@ -41,6 +61,7 @@ https://github.com/greenyouse/bottom-nav
       .darkbrown {
         background-color: #6C4845;
       }
+      /**/
 			
 		</style>
 		
@@ -52,18 +73,28 @@ https://github.com/greenyouse/bottom-nav
 		<state-view view-label="{{viewLabel}}"></state-view>
 		<!---->
 		
-		<!---->
-    <bottom-nav shadow>
+		<!--- ->
+		<bottom-nav shadow>
       <bottom-toolbar selected="0">
         <bottom-tab selected-class="grey"      label="Movies & TV" icon="star"></bottom-tab>
         <bottom-tab selected-class="green"     label="Music"       icon="star"></bottom-tab>
         <bottom-tab selected-class="brown"     label="Books"       icon="star"></bottom-tab>
         <bottom-tab selected-class="darkbrown" label="Newstand"    icon="star"></bottom-tab>
       </bottom-toolbar>
-    </bottom-nav>		
-		<!---->
-		Hello World
-	
+    </bottom-nav>
+    <!---->
+    
+    <bottom-nav shadow>
+      <bottom-toolbar selected="{{selected}}">
+        <bottom-tab xselected-class="xhighlight" label="Dashboard" icon="vaadin:dashboard"      ></bottom-tab>
+        <bottom-tab xselected-class="xhighlight" label="Inbox"     icon="vaadin:cloud-download" ></bottom-tab>
+        <bottom-tab xselected-class="xhighlight" label="Archive"   icon="vaadin:database"       ></bottom-tab>
+        <bottom-tab class="hidden"               label="Outbox"    icon="vaadin:cloud-upload"   ></bottom-tab>
+        <bottom-tab xselected-class="xhighlight" label="Contacts"  icon="social:person-add"     ></bottom-tab>
+        <bottom-tab xselected-class="xhighlight" label="Settings"  icon="settings"              ></bottom-tab>
+      </bottom-toolbar>
+    </bottom-nav>
+
   </template>
 
   <script>
@@ -72,17 +103,27 @@ https://github.com/greenyouse/bottom-nav
 
       static get is() { return 'mobile-bottom-nav'; }
 
-			/**/
 			static get properties() { return {
-			  /** /
-				user: {
-				  type: Object,
-				  notify: true,
-          //observer: '_userChanged',
+
+			  // user: {
+				//   type: Object,
+				//   notify: true,
+        //   //observer: '_userChanged',
+        // },
+
+			  selected: {
+				  type: Number,
+				  // notify: true,
+          observer: '_selectedChanged',
         },
-				/**/
+
+			  route: {
+				  type: String,
+				  notify: true,
+          observer: '_routeChanged',
+        },
+
 	    }}
-			/**/
 			
       constructor() {
         super();
@@ -91,6 +132,34 @@ https://github.com/greenyouse/bottom-nav
 			ready() {
         super.ready();
 				//console.log('Component Ready');
+			}
+
+      _routeChanged(dataNew, dataOld) {
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+        this.set('selected', dataNew);
+      }
+
+      _selectedChanged(dataNew, dataOld) {
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+
+        // dispatch event
+        const name = 'mobile-bottom-nav-selected-changed';
+        const detail = dataNew;
+        this._dispatchEvent(name, detail);
+      }
+
+      _dispatchEvent(name, detail) {
+				//this.fire('name', detail);
+				// const n = 'mobile-bottom-nav-selected-changed';
+				const o = {
+					bubbles: true,
+					composed: true,
+					detail: detail,
+				};
+				const d = new CustomEvent(name, o);
+        this.dispatchEvent(d);
 			}
 			
     }

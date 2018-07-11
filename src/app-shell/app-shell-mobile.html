@@ -51,8 +51,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="drawer-mobile.html">
 <link rel="import" href="overflow-menu.html">
 <link rel="import" href="my-app.html">
-<!--- ->
+<!---->
 <link rel="import" href="mobile-bottom-nav.html">
+<!--- ->
 
 <link rel="import" href="/bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <!--- ->
@@ -176,7 +177,7 @@ https://stackoverflow.com/a/45498792/1640892
 			  </app-drawer>
 			  <div id="main-content">
 			  	<my-app></my-app>
-					<!--- ->
+					<!---->
 					<mobile-bottom-nav></mobile-bottom-nav>
 					<!---->
 			  </div>
@@ -196,40 +197,40 @@ https://stackoverflow.com/a/45498792/1640892
 
       static get is() { return 'app-shell-mobile'; }
 
-			/**/
-			static get properties() { return {
-			  /** /
-				user: {
-				  type: Object,
-				  notify: true,
-          //observer: '_userChanged',
-        },
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
-			  /** /
-				route: {
-				  type: Number,
-				  notify: true,
-        },
-	    	appData: {
-				  type: Object,
-				  notify: true,
-        },
-			  /**/
-	    	viewLabel: {
+			
+      static get properties() { return {
+			  
+        // user: {
+				//   type: Object,
+				//   notify: true,
+        //   //observer: '_userChanged',
+        // },
+				// mediaWidth: {
+				// 	type: Number, // 0, 1, 2, 3
+				// 	notify: true,
+				// 	//observer: '_mediaWidthChanged',
+				// },
+			  // /** /
+				// route: {
+				//   type: Number,
+				//   notify: true,
+        // },
+	    	// appData: {
+				//   type: Object,
+				//   notify: true,
+        // },
+			  
+        viewLabel: {
 				  type: String,
 				  notify: true,
           //computed: '_computeViewLabel(route)',
           //computed: '_computeViewLabel(route, appData)', // changes not observed
           observer: '_viewLabelChanged',
         },
-			  /**/
-	    }}
-			/**/
-			
+	
+      }}
+	
+  		
       constructor() {
         super();
       }
@@ -250,30 +251,27 @@ https://stackoverflow.com/a/45498792/1640892
 				drawer.opened = false;
 			}
 			
-			/**/
-    	_toggle() {
+			_toggle() {
 				//console.log('Toggle method engaged');
 				var drawer = this.$.drawer;
 				drawer.toggle();
 			}
-			/** /
-			_userChanged(user) {
-				console.log('user', user);
-			}
-			/**/
-			/** /
-			_mediaWidthChanged(n) {
-				//console.log('media-width', n);
-				//this.$.username.hidden = !n;
-			}
 			
-			/**/
-			_viewLabelChanged(s) {
+      // _userChanged(user) {
+			// 	console.log('user', user);
+			// }
+			
+      // _mediaWidthChanged(n) {
+			// 	//console.log('media-width', n);
+			// 	//this.$.username.hidden = !n;
+			// }
+			
+			
+      _viewLabelChanged(s) {
 				//console.log('viewLabel', s);
 				this._close();
 			}
-			/**/
-			
+			      
     }
 
     customElements.define(AppShellMobile.is, AppShellMobile);

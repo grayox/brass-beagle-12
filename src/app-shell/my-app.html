@@ -76,17 +76,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         z-index: 1;
   
         position: fixed;
-        bottom: 30px;          
         right: 25px;
+        bottom: 75px;          
         /** /
+        bottom: 30px;          
         left: 35%;
         left: 200px;
         /**/
         
-        /**/
+        /**  /
         --paper-fab-background: var(--app-primary-color);
-        --paper-fab-background: var(--accent-color);
         /**/
+        --paper-fab-background: var(--accent-color);
       }
 
     </style>		
@@ -147,11 +148,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       static get is() { return 'my-app'; }
 
 			static get properties() { return {
-				// route: {
-				// 	type: Number,
-				// 	notify: true,
-				// 	//observer: '_routeChanged',
-				// },
+				route: {
+					type: Number,
+					notify: true,
+					//observer: '_routeChanged',
+				},
 	    }}
 			
       constructor() {
@@ -161,11 +162,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			ready() {
         super.ready();
 				//console.log('Component Ready');
+        window.addEventListener('mobile-bottom-nav-selected-changed', e => this._onMobileBottomNavSelectedChanged(e));
 			}
       
 			// _routeChanged(route) {
 			// 	console.log('route', route);
       // }
+
+      _onMobileBottomNavSelectedChanged(e) {
+        // console.log('e\n', e);
+        const detail = e.detail;
+        this.set('route', detail);
+      }
       
       _openForm() {
         const form = this.$.form;
