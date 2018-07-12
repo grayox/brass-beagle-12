@@ -22,7 +22,7 @@
 <link rel="import" href="/src/app-view/app-menu.html">
 <link rel="import" href="/src/custom-libraries/lodash-js.html">
 
-<dom-module id="select-lead-type">
+<dom-module id="select-thumb">
   <template>
 		<style include="paper-item-styles">
       iron-collapse {
@@ -48,7 +48,8 @@
               xkey="[[key]]"
               xsubheader="[[regionName]]"
               xsubheader="Location"
-              subheader="Lead type"
+              xsubheader="Lead type"
+              subheader="Rate it!"
               xitems="[[menuItems]]"
               items="[[items]]"
               xitems="[[geoLocationItems]]"
@@ -65,8 +66,8 @@
   </template>
 
   <script>
-		class SelectLeadType extends Polymer.Element {
-      static get is() { return 'select-lead-type'; }
+		class SelectThumb extends Polymer.Element {
+      static get is() { return 'select-thumb'; }
 
       static get properties() {
         
@@ -78,21 +79,31 @@
             value: () =>
               [
                 {
-                  "name": "Home",
-                  "label": "Home",
-                  "icon": "home",
+                  "name": "good",
+                  "label": "This lead is legitimate",
+                  // "icon": "vaadin:thumbs-up",
+                  "icon": "vaadin:thumbs-up-o",
                 }, {
-                  "name": "Mortgage",
-                  "label": "Mortgage",
-                  "icon": "account-balance",
-                }, {
-                  "name": "Insurance",
-                  "label": "Insurance",
-                  "icon": "vaadin:diploma",
-                }, {
-                  "name": "Financial",
-                  "label": "Financial",
-                  "icon": "assessment",
+                  "name": "bad",
+                  "label": "This lead is not valid",
+                  // "icon": "vaadin:thumbs-down",
+                  "icon": "vaadin:thumbs-down-o",
+                // }, {
+                //   "name": "Home",
+                //   "label": "Home",
+                //   "icon": "home",
+                // }, {
+                //   "name": "Mortgage",
+                //   "label": "Mortgage",
+                //   "icon": "account-balance",
+                // }, {
+                //   "name": "Insurance",
+                //   "label": "Insurance",
+                //   "icon": "vaadin:diploma",
+                // }, {
+                //   "name": "Financial",
+                //   "label": "Financial",
+                //   "icon": "assessment",
                 }
               ]         
           },
@@ -161,7 +172,7 @@
         //   }
         // }
         
-        const name = 'lead-type-selected';
+        const name = 'thumb-selected';
         this._dispatchEvent(name, detail);
       }
 
@@ -180,6 +191,6 @@
 			
 		}
 				
-    window.customElements.define(SelectLeadType.is, SelectLeadType);
+    window.customElements.define(SelectThumb.is, SelectThumb);
   </script>
 </dom-module>
