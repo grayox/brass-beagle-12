@@ -61,7 +61,9 @@
               xon-app-menu-dom-change="_onDomChange"
               on-menu-selected-property-changed="_onMenuSelectedPropertyChanged"
               >
-    </app-menu>       
+    </app-menu>
+    Selected: [[selected]],
+    Accepted: [[accepted]]
 
   </template>
 
@@ -80,14 +82,24 @@
               [
                 {
                   "name": "good",
-                  "label": "This lead is legitimate",
+                  "label": "This lead is acceptable",
                   // "icon": "vaadin:thumbs-up",
                   "icon": "vaadin:thumbs-up-o",
+                // }, {
+                //   "name": "good",
+                //   "label": "This lead is acceptable",
+                //   "icon": "vaadin:thumbs-up",
+                //   // "icon": "vaadin:thumbs-up-o",
                 }, {
                   "name": "bad",
                   "label": "This lead is not valid",
                   // "icon": "vaadin:thumbs-down",
                   "icon": "vaadin:thumbs-down-o",
+                // }, {
+                //   "name": "bad",
+                //   "label": "This lead is not valid",
+                //   "icon": "vaadin:thumbs-down",
+                //   // "icon": "vaadin:thumbs-down-o",
                 // }, {
                 //   "name": "Home",
                 //   "label": "Home",
@@ -112,6 +124,13 @@
 						type: String,
             notify: true,
             // observer: '_selectedChanged', // causes infinite loop error; call stack exceeds maximum size
+					},
+
+					accepted: {
+						type: Boolean,
+            notify: true,
+            // observer: '_selectedChanged', // causes infinite loop error; call stack exceeds maximum size
+            value: () => null,
 					},
 
 				};
@@ -185,8 +204,16 @@
         // console.log('menu-selected-property-changed', e);
         // this._dispatchEvent('menu-selected-property-changed', e);
 
-        const detail = e.detail.label;
-        this._selectedChanged(detail);
+        const d = e.detail
+        // const label = d.label;
+        const name = d.name;
+
+        const accepted = name === 'good';
+
+        this.set('accepted', accepted);
+
+        // this._selectedChanged(name);
+        this._selectedChanged(accepted);
       }
 			
 		}

@@ -34,7 +34,10 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
 
-      <select-thumb></select-thumb>
+      <select-thumb on-thumb-selected="_handleLeadTypeSelected"
+                    accepted="[[item.accepted]]"
+                    >
+      </select-thumb>
 
       <app-item type="subheader"
                 label="Lead detail"
@@ -46,7 +49,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 label="Name"
                 icon="vaadin:user"
                 xdata="John Doe"
-                data="{{item.name}}"
+                data="[[item.name]]"
                 >
       </app-item>
               
@@ -54,7 +57,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 xtwo-line
                 label="Type"
                 icon="vaadin:home"
-                data="{{item.type}}"
+                data="[[item.type]]"
                 >
       </app-item>
       
@@ -62,7 +65,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 xtwo-line
                 label="City"
                 icon="star"
-                data="{{item.city}}"
+                data="[[item.city]]"
                 >
       </app-item>
       
@@ -70,8 +73,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 xtwo-line
                 label="State"
                 icon="star"
-                xdata="{{item.state}}"
-                data="{{_computeStateName(item.state, statesAbbreviations)}}"
+                xdata="[[item.state]]"
+                data="[[_computeStateName(item.state, statesAbbreviations)]]"
                 >
       </app-item>  
       
@@ -79,7 +82,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 xtwo-line
                 label="Zip"
                 icon="star"
-                data="{{item.zip}}"
+                data="[[item.zip]]"
                 >
       </app-item>
 

@@ -75,13 +75,15 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <template restamp is="dom-if" if="[[_computeShowSplit(mediaType)]]">
       <div class="wrapper split">
         <view-archive-list id="list-desktop"
-                          xselected="{{selected}}"
-                          xselected="{{selectedList}}"
-                          xselected-item="{{selectedList}}"
-                          selected-item="{{selectedItem}}"
-                          user-local="[[userLocal]]"
-                          on-tap="_showDetailDesktop"
-                          >
+                           xselected="{{selected}}"
+                           xselected="{{selectedList}}"
+                           xselected-item="{{selectedList}}"
+                           selected-item="{{selectedItem}}"
+                           user-local="[[userLocal]]"
+                           xon-tap="_showDetailDesktop"
+                           xon-selected-changed="_showDetailDesktop"
+                           on-selected-item-changed="_showDetailDesktop"
+                           >
         </view-archive-list>
         <animated-css id="animated-detail-desktop"
                       entry-animation="slideInLeft"
@@ -113,15 +115,17 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       exit-animation="slideOutLeft"
                       show
                       >
-          <div name="list" on-tap="_showDetailMobile">
+          <div name="list" xon-tap="_showDetailMobile">
             <view-archive-list id="list-desktop"
-                              xselected="{{selected}}"
-                              xselected="{{selectedList}}"
-                              xselected-item="{{selectedList}}"
-                              selected-item="{{selectedItem}}"
-                              user-local="[[userLocal]]"
-                              xon-tap="_showDetailDesktop"
-                              >
+                               xselected="{{selected}}"
+                               xselected="{{selectedList}}"
+                               xselected-item="{{selectedList}}"
+                               selected-item="{{selectedItem}}"
+                               user-local="[[userLocal]]"
+                               xon-tap="_showDetailMobile"
+                               xon-selected-changed="_showDetailMobile"
+                               on-selected-item-changed="_showDetailMobile"
+                               >
             </view-archive-list>
           </div>      
         </animated-css>
@@ -144,11 +148,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
             </app-item>
             <!---->
             <view-archive-detail xselected="[[selected]]"
-                                xselected="[[selectedDetail]]"
-                                xitem="[[selectedDetail]]"
-                                item="[[selectedItem]]"
-                                user-local="[[userLocal]]"
-                                >
+                                 xselected="[[selectedDetail]]"
+                                 xitem="[[selectedDetail]]"
+                                 item="[[selectedItem]]"
+                                 user-local="[[userLocal]]"
+                                 >
             </view-archive-detail>
           </animated-css>
         </div>
@@ -321,12 +325,18 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       _showDetailDesktop() {
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
+
         const detail = this.root.querySelector('#animated-detail-desktop');
         detail.animateExit();
         detail.animateEntry();
       }
 
       _showDetailMobile() {
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
+
         // this.set('subroute', 'detail');
 
         const list = this.root.querySelector('#animated-list-mobile');

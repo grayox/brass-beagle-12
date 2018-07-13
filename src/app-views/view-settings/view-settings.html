@@ -52,6 +52,8 @@
                             geo-select-location-region="[[userLocal.geo-select-location-region]]"
                             lead-type="[[userLocal.lead-type]]"
                             xon-tap="_showDetailDesktop"
+                            on-selected-changed="_showDetailDesktop"
+                            xon-selected-item-changed="_showDetailDesktop"
                             >
         </view-settings-list>
         <animated-css id="animated-detail-desktop"
@@ -84,11 +86,14 @@
                       exit-animation="slideOutLeft"
                       show
                       >
-          <div name="list" on-tap="_showDetailMobile">
+          <div name="list" xon-tap="_showDetailMobile">
             <view-settings-list selected="{{selected}}"
                                 xuser-local="[[userLocal]]"
                                 geo-select-location-region="[[userLocal.geo-select-location-region]]"
                                 lead-type="[[userLocal.lead-type]]"
+                                xon-tap="_showDetailMobile"
+                                on-selected-changed="_showDetailMobile"
+                                xon-selected-item-changed="_showDetailMobile"
                                 >
             </view-settings-list>
           </div>      
@@ -644,12 +649,18 @@
       }
 
       _showDetailDesktop() {
+        const ready = !!this.selectedItem;
+        if(!ready) return;
+        
         const detail = this.root.querySelector('#animated-detail-desktop');
         //detail.animateExit();
         detail.animateEntry();
       }
 
       _showDetailMobile() {
+        const ready = !!this.selectedItem;
+        if(!ready) return;
+        
         // this.set('subroute', 'detail');
 
         const list = this.root.querySelector('#animated-list-mobile');

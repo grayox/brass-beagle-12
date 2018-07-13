@@ -83,7 +83,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                              xselected-item="{{selectedList}}"
                              xselected-item="{{selectedItem}}"
                              user-local="[[userLocal]]"
-                             on-tap="_showDetailDesktop"
+                             xon-tap="_showDetailDesktop"
+                             on-selected-changed="_showDetailDesktop"
+                             xon-selected-item-changed="_showDetailDesktop"
                              >
         </view-dashboard-list>
         <animated-css id="animated-detail-desktop"
@@ -116,14 +118,16 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                       exit-animation="slideOutLeft"
                       show
                       >
-          <div name="list" on-tap="_showDetailMobile">
+          <div name="list" xon-tap="_showDetailMobile">
             <view-dashboard-list id="list-desktop"
                                  selected="{{selected}}"
                                  xselected="{{selectedList}}"
                                  xselected-item="{{selectedList}}"
                                  xselected-item="{{selectedItem}}"
                                  user-local="[[userLocal]]"
-                                 xon-tap="_showDetailDesktop"
+                                 xon-tap="_showDetailMobile"
+                                 on-selected-changed="_showDetailMobile"
+                                 xon-selected-item-changed="_showDetailMobile"
                                  >
             </view-dashboard-list>
           </div>      
@@ -286,12 +290,18 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       _showDetailDesktop() {
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
+        
         const detail = this.root.querySelector('#animated-detail-desktop');
         detail.animateExit();
         detail.animateEntry();
       }
 
       _showDetailMobile() {
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
+        
         // this.set('subroute', 'detail');
 
         const list = this.root.querySelector('#animated-list-mobile');

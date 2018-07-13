@@ -174,8 +174,9 @@
         // console.log('menu-selected-property-changed', e);
         // this._dispatchEvent('menu-selected-property-changed', e);
 
-        const detail = e.detail.label;
-        this._selectedChanged(detail);
+        const d = e.detail
+        const label = d.label;
+        this._selectedChanged(label);
       }
 			
 		}
