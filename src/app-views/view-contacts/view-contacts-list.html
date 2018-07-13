@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				selectedItem: {
 					type: Object,
 					notify: true,
-          //observer: '_selectedItemChanged',
+          observer: '_selectedItemChanged',
         },
 
 			  items: {
@@ -163,14 +163,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 				//console.log('Component Ready');
 			}
 
-      static get observers() {
-        return [
-          // '_updateDatabase(userRemote, appData, appSettings)',
-          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
-          // '_userSettingsStoredChanged(userSettingsStored.*)',
-          // '_userSettingsChanged(userSettings.*)',
-          // '_selectedItemChanged(selectedItem.*)',
-        ]
+      // static get observers() {
+      //   return [
+      //     // '_updateDatabase(userRemote, appData, appSettings)',
+      //     // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+      //     // '_userSettingsStoredChanged(userSettingsStored.*)',
+      //     // '_userSettingsChanged(userSettings.*)',
+      //     // '_selectedItemChanged(selectedItem.*)',
+      //   ]
+      // }
+
+      _selectedItemChanged(dataNew, dataOld) {
+        // console.log('data-old\n', dataOld);
+        // console.log('data-new\n', dataNew);
+
+        const ready1 = !dataNew;
+        if(!ready1) return;
+        const ready2 = !!dataOld;
+        if(!ready2) return;
+        const ready3 = (typeof dataOld == 'object');
+        if(!ready3) return;
+
+        const ready  = ready1 && ready2 && ready3;
+        if(ready) this.set('selectedItem', dataOld);
       }
       
 			// _computeTimeAgo(n) {

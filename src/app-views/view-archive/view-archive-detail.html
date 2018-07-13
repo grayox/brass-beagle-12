@@ -34,11 +34,6 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     <div role="listbox">
     <!-- wrap app-items in <div role="listbox"></div> to prevent spaces between items -->
 
-      <select-thumb on-thumb-selected="_handleLeadTypeSelected"
-                    accepted="[[item.accepted]]"
-                    >
-      </select-thumb>
-
       <app-item type="subheader"
                 label="Lead detail"
                 >
@@ -136,6 +131,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
                 data="[[_computeTimeAgo(item.timestamp)]]"
                 >
       </app-item>
+
+      <select-thumb xon-thumb-selected="_handleLeadTypeSelected"
+                    accepted="[[item.accepted]]"
+                    >
+      </select-thumb>
 
     </div>
 
