@@ -294,6 +294,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // if(!ready) return;
         
         const detail = this.root.querySelector('#animated-detail-desktop');
+        if(!detail) return;
+
         detail.animateExit();
         detail.animateEntry();
       }
@@ -319,11 +321,11 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
         const list = this.root.querySelector('#animated-list-mobile');
         // list.animation = 'slideInLeft';
-        list.animateEntry();
+        if(list) list.animateEntry();
 
         const detail = this.root.querySelector('#animated-detail-mobile');
         // detail.animation = 'slideOutRight';
-        detail.animateExit();
+        if(detail) detail.animateExit();
       }
 
       // _afterShowList() {

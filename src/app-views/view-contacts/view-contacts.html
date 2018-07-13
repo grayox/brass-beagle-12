@@ -330,6 +330,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         if(!ready) return;
         
         const detail = this.root.querySelector('#animated-detail-desktop');
+        if(!detail) return;
+
         detail.animateExit();
         detail.animateEntry();
       }
@@ -342,12 +344,12 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 
         const list = this.root.querySelector('#animated-list-mobile');
         // list.animation = 'slideOutLeft';
-        list.animateExit();
+        if(list) list.animateExit();
 
         const detail = this.root.querySelector('#animated-detail-mobile');
         // detail.hidden = false;
         // detail.animation = 'slideInRight';
-        detail.animateEntry();
+        if(detail) detail.animateEntry();
       }
       
       _showListMobile() {

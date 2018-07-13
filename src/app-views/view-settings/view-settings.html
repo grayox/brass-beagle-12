@@ -653,7 +653,9 @@
         if(!ready) return;
         
         const detail = this.root.querySelector('#animated-detail-desktop');
-        //detail.animateExit();
+        if(!detail) return;
+
+       //detail.animateExit();
         detail.animateEntry();
       }
 
@@ -665,12 +667,12 @@
 
         const list = this.root.querySelector('#animated-list-mobile');
         // list.animation = 'slideOutLeft';
-        list.animateExit();
+        if(list) list.animateExit();
 
         const detail = this.root.querySelector('#animated-detail-mobile');
         // detail.hidden = false;
         // detail.animation = 'slideInRight';
-        detail.animateEntry();
+        if(detail) detail.animateEntry();
       }
       
       _showListMobile() {
