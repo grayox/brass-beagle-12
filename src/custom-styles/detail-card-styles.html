@@ -1,0 +1,71 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-item-styles.html">
+<link rel="import" href="/bower_components/paper-styles/element-styles/paper-material-styles.html">
+
+<dom-module id="detail-card-styles">
+  <template>
+		<!---->
+    <style include="paper-item-styles paper-material-styles">
+ 
+      .paper-item {
+        @apply --paper-material;
+        @apply --paper-material-elevation-1;
+        
+        /**/
+        background-color: white;
+        opacity: var(--opacity-normal);
+
+        /** /
+        material design reference:
+        https://material.io/design/components/cards.html#specs
+        /** /
+        width: calc(100% - 3em);
+        width: calc(50% - 32px);
+        width: 344px;
+        width: fit-content;
+        width: calc(100% - 32px);
+        /**/
+        width: calc(100% - 64px);
+        text-align: start;
+        margin: 16px;
+        padding: 16px;
+        /**/
+
+        /* allow wrapping */
+        white-space: normal; /* this is critically important! https://stackoverflow.com/a/28809964/1640892 */
+        /** /
+        color: violet;
+        /** /
+        float: left;
+        display: inline; 
+        word-wrap: break-word;
+        word-break: break-all; 
+        overflow-wrap: break-word;
+        overflow: auto;
+        /**/
+      }
+      
+      .font-weight-normal {
+        font-weight: normal;
+      }
+      
+      .font-weight-bold {
+        font-weight: bold;
+      }
+
+      p {
+        line-height: 1.15em;
+      }
+
+      .dim {
+        opacity: var(--opacity-dim);
+      }
+
+      .italic {
+        font-style: italic;
+      }
+
+    </style>
+  </template>
+</dom-module>

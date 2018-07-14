@@ -146,7 +146,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
             <app-item type="subpage-header"
                       on-subpage-back-button="_showListMobile"
                       xlabel="[[selected]]"
-                      label="Return to list"
+                      label="Return to menu"
                       >
             </app-item>
             <!---->
@@ -290,6 +290,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       _showDetailDesktop() {
+        // delete this section when not using <iron-list> e.g., dashboard, settings
         // const ready = !!this.selectedItem;
         // if(!ready) return;
         
@@ -301,6 +302,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       }
 
       _showDetailMobile() {
+        // delete this section when not using <iron-list> e.g., dashboard, settings
         // const ready = !!this.selectedItem;
         // if(!ready) return;
         

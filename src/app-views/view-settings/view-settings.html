@@ -111,7 +111,8 @@
             <!---->
             <app-item type="subpage-header"
                       on-subpage-back-button="_showListMobile"
-                      label="[[selected]]"
+                      xlabel="[[selected]]"
+                      label="Return to menu"
                       >
             </app-item>
             <!---->
@@ -649,8 +650,9 @@
       }
 
       _showDetailDesktop() {
-        const ready = !!this.selectedItem;
-        if(!ready) return;
+        // delete this section when not using <iron-list> e.g., dashboard, settings
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
         
         const detail = this.root.querySelector('#animated-detail-desktop');
         if(!detail) return;
@@ -660,8 +662,9 @@
       }
 
       _showDetailMobile() {
-        const ready = !!this.selectedItem;
-        if(!ready) return;
+        // delete this section when not using <iron-list> e.g., dashboard, settings
+        // const ready = !!this.selectedItem;
+        // if(!ready) return;
         
         // this.set('subroute', 'detail');
 

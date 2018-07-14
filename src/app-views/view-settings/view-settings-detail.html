@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="/src/custom-libraries/lodash-js.html">
 
+<link rel="import" href="/src/custom-styles/detail-card-styles.html">
 <!--- ->
 <link rel="import" href="dashboard-detail-zip.html">
 <link rel="import" href="/src/custom-elements/select-lead-type.html">
@@ -40,8 +41,8 @@ https://codepen.io/rachelandrew/pen/zwPEoX
 <dom-module id="view-settings-detail">
 
   <template>
-    <style>
-
+    <style include="detail-card-styles">
+      /** /
       #req-info > p:first-of-type {
         padding-top: 3em; 
       }
@@ -51,7 +52,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         padding: 0.5em 2.5em;
         opacity: var(--opacity-dim);
       }
-
+      /**/
     </style>
 
     <!-- state -->
@@ -71,15 +72,25 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     [[selected]]
     <!---->
     <div hidden id="req-info">
-      <p>
-        We must filter your leads.
-      </p>
-      <p>
-        Select your lead type and location.
-      </p>
-      <p>
-        Then you can start swapping leads!
-      </p>
+      <div class="paper-item">
+        <h2 class="font-weight-normal">
+          Required information
+        </h2>
+        <p>
+          We must filter your leads (so we know which ones to show you).
+        </p>
+        <p>
+          Select your lead type
+          <iron-icon icon="vaadin:puzzle-piece"></iron-icon> (type of services you provide)
+          and your location <iron-icon icon="track-changes"></iron-icon>.
+        </p>
+        <p>
+          Then you can start taking leads!
+        </p>
+        <p class="italic">
+          Provided you have a positive lead balance (contributed more valid leads than you have taken)
+        </p>
+      </div>
     </div>
     <!--- ->
     <template restamp is="dom-if" if="[[selected]]=='lead-type'">
