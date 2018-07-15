@@ -390,10 +390,17 @@
 				// console.log('geo-country\n', geoCountry);
 				// console.log('geo-location-country\n', geoLocationsData[geoCountry]);
         const ready1 = geoLocationsData;
-        const ready2 = geoCountry && geoLocationsData[geoCountry];
-        // const ready3 = geoRegion && geoLocationsData[geoCountry][geoRegion];
+        if(!ready1) return;
 
-        const ready = ready1 && ready2;// && ready3;
+        const ready2 = geoCountry;
+        if(!ready2) return;
+        
+        const ready3 = geoLocationsData[geoCountry];
+        if(!ready3) return;
+
+        // const ready4 = geoRegion && geoLocationsData[geoCountry][geoRegion];
+        
+        const ready = ready1 && ready2 && ready3;// && ready4;
         if(!ready) return;
 
         // // cleanup
