@@ -178,7 +178,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         </p>
       </div>
       
-      <div hidden$="[[!_computeStringIsSendNewLead(selected)]]">
+      <div hidden$="[[!_computeStringIsAddNewLead(selected)]]">
         <p>
           Increase your deposits and net balance. Send over a lead and it will appear in your outbox.
         </p>
@@ -208,7 +208,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
     </div>
 
     <!---->
-    <div xclass="xpaper-item" hidden$="[[!_computeStringIsSendNewLead(selected)]]">
+    <div xclass="xpaper-item" hidden$="[[!_computeStringIsAddNewLead(selected)]]">
       <form-new-lead></form-new-lead>
     </div>
     <div xclass="xpaper-item" hidden$="[[!_computeStringIsInviteAContact(selected)]]">
@@ -273,7 +273,7 @@ https://codepen.io/rachelandrew/pen/zwPEoX
       _computeStringIsLocation             (s) { return this._computeStringIsTarget ( s, 'Location')}
       _computeStringIsState                (s) { return this._computeStringIsTarget ( s, 'State')}
       _computeStringIsAvailableActions     (s) { return this._computeStringIsTarget ( s, 'Available actions')}
-      _computeStringIsSendNewLead          (s) { return this._computeStringIsTarget ( s, 'Send new lead...')}
+      _computeStringIsAddNewLead           (s) { return this._computeStringIsTarget ( s, 'Add new lead...')}
       _computeStringIsReviewAvailableLeads (s) { return this._computeStringIsTarget ( s, 'Review available leads...')}
       _computeStringIsInviteAContact       (s) { return this._computeStringIsTarget ( s, 'Invite a contact...')}
 		
