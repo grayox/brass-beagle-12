@@ -1,0 +1,316 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<script src="/bower_components/paper-input/paper-textarea.html"></script>
+
+<!-- state -->
+<link rel="import" href="/src/app-state/state-user-settings.html">
+<!--- ->
+<link rel="import" href="/src/app-state/state-user-local.html">
+<!---->
+
+<!---->
+<link rel="import" href="/src/custom-styles/paper-card-styles.html">
+<!---->
+
+<dom-module id="form-feedback">
+  <template>
+    <style include="paper-card-styles">
+      h3 {
+        font-weight: 100;
+        opacity: var(--opacity-dim);
+      }
+    </style>
+
+    <!-- state -->
+    <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
+    <!--- ->
+    <state-user-local user-local="{{userLocal}}"></state-user-local>
+    <!---->
+
+    <app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
+    
+    <div class="paper-item">
+      <h3>
+        We&rsquo;re listening
+      </h3>
+      <paper-textarea rows="5" max-rows="10">
+        Voluptate tempor enim nisi amet excepteur sit commodo. Eiusmod nisi magna laborum occaecat ex labore. Irure enim elit qui Lorem id sit qui aliqua in eu exercitation reprehenderit amet. Do eiusmod nostrud laboris amet ullamco. Eu aliqua labore duis culpa occaecat exercitation nulla exercitation nostrud.
+      </paper-textarea>
+    </div>
+		
+	</template>
+
+  <script>
+    class FormFeedback extends Polymer.Element {
+      static get is() { return 'form-feedback'; }
+
+      static get properties() { return {
+
+        // userLocal: {
+        //   type: Object,
+        //   // notify: true,
+        //   observer: '_userLocalChanged',
+        // },
+
+        userSettings: {
+          type: Object,
+          // notify: true,
+          // observer: '_userSettingsChanged',
+        },
+				
+        item: {
+					type: Object,
+					notify: true,
+          value: () => ({}),
+					// observer: '_itemChanged',
+				},
+
+        invalidPhone: {
+          type: Boolean,
+          notify: true,
+        },
+
+        invalidEmail: {
+          type: Boolean,
+          notify: true,
+        },
+
+        formValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computeFormValid(nameValid, zipValid, phoneValid, emailValid, phoneLengthValid, emailLengthValid, menuValid)',
+        },
+
+        zipValid: {
+          type: Boolean,
+          notify: true,
+        },
+
+        nameValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeNameValid(item)',
+        },
+
+        menuValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeMenuValid(item)',
+        },
+
+        emailValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computeEmailValid(invalidEmail)',
+        },
+
+        phoneValid: {
+          type: Boolean,
+          notify: true,
+          computed: '_computePhoneValid(invalidPhone)',
+        },
+
+        emailLengthValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computeEmailLengthValid(invalidEmail)', // _itemChanged()
+        },
+
+        phoneLengthValid: {
+          type: Boolean,
+          notify: true,
+          // computed: '_computePhoneLengthValid(invalidPhone)', // _itemChanged()
+        },
+
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			// ready() {
+      //   super.ready();
+      //   window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      // }
+
+      static get observers() {
+        return [
+          // '_updateDatabase(userRemote, appData, appSettings)',
+          // '_initializeDatabase(userRemote, appData, appViews, userSettings, userSettingsOld)',
+          // '_userSettingsStoredChanged(userSettingsStored.*)',
+          // '_computeAppSettings(appViews, userLocal.*)',
+          '_itemChanged(item.*)',
+        ]
+      }
+			
+			// _itemChanged(o) {
+			// 	console.log('item', o);
+			// }
+
+      // _userLocalChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      // _userSettingsChanged(dataNew, dataOld) {
+      //   console.log('data-old', dataOld);
+      //   console.log('data-new', dataNew);
+      // }
+
+      _tappedCancel() {
+        this._resetItem();
+        this._dispatchCloseDialog();
+      }
+			
+      _tappedSave() {
+        const data = this.item;
+        this._save(data);
+        this._dispatchCloseDialog();
+        this._resetItem();
+      }
+
+      _save(r) {
+        const data = r || this.item;
+
+        // set timestamps (and reverse)
+        const timestamp = Date.now(); // new Date().getTime();
+        const timestampReverse = ( (-1) * timestamp );
+        data.timestamp = timestamp;
+        data.timestampReverse = timestampReverse;
+
+        // deal with key index
+        // reference: app-data.json => data.keyLeadSend => userSettings[['key-lead-send-stem', data.type].join('_')]"
+        const userSettings = this.userSettings;
+        // console.log('user-settings', userSettings);
+        
+        const stem = userSettings['key-lead-send-stem'];
+        // if(data && data.type) {
+        //   const suffix = data.type.toLowerCase();
+        // }
+        const suffix = data.type.toLowerCase();
+        const keyLeadSend = [stem, suffix].join('_');
+        data.keyLeadSend = keyLeadSend;
+
+				const entity = 'lead-sent';
+				//const entity = [ XFIX, label, ].join('-'); // 'user-switch-mortgage'
+				//const name = ['update', entity].join('-');
+				
+				const methods = this.$.methods;
+				// detail = {method: 'save'|'delete', entity: 'deal'|'bid'|'network', data: {new:'data'}}
+				const method = 'save'; // 'save'|'delete'
+				//const entity = 'user-switch'; // 'zip'|'deal'|'bid'|'network'
+				const detail = {
+					method: method,
+					entity: entity,
+					data: data,
+				};
+        // console.log('detail\n', detail);
+				methods.method(detail);
+
+        this._dispatchEvent('feedback-created', detail);
+
+        // new Promise().then()
+        // this._resetItem();       
+      }
+
+      _resetItem() {
+        this.set('item', {});
+      }
+
+      _dispatchEvent(name, data) {
+			  const n = name;
+			  const o = {
+			    bubbles: false, //true,
+			   	composed: true,
+			   	detail: data,
+			  };
+			  // console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  //console.log('d\n', d);
+			  this.dispatchEvent(d);				
+      }
+
+      // _dispatchSaveItem() {
+      //   // at present time (june 2018), we will decentralize save operations by policy
+      //   // this preserves and facilitates maximum flexibility in the save method at each node
+      //   // therefore, do not dispatch an event
+      // }
+
+      _dispatchCloseDialog() {
+        // this._dispatchEvent(name, data);
+        this._dispatchEvent('close-dialog');
+      }
+
+      // begin: form validation
+
+      _hide(b) {
+        return !!b;
+      }
+
+      _computeFormValid(nameValid, zipValid, phoneValid, emailValid, phoneLengthValid, emailLengthValid, menuValid) {
+
+        // console.log('name-valid', nameValid);
+        // console.log('zip-valid', zipValid);
+        // console.log('phone-valid', phoneValid);
+        // console.log('email-valid', emailValid);
+        // console.log('phone-length-valid', phoneLengthValid);
+        // console.log('email-length-valid', emailLengthValid);
+        // console.log('menu-valid', menuValid);
+
+        // const valid1  = (!!nameValid) && (!!menuValid);
+        const valid1  = (!!nameValid) && (!!zipValid) && (!!menuValid);
+        const valid2a = (!!phoneValid) && (!!phoneLengthValid);
+        const valid2b = (!!emailValid) && (!!emailLengthValid);
+        const valid2  = (!!valid2a) || (!!valid2b); // valid phone or valid email
+        const out     = !!(valid1 && valid2);
+
+        // console.log('valid-1' , valid1 );
+        // console.log('valid-2a', valid2a);
+        // console.log('valid-2b', valid2b);
+        // console.log('valid-2' , valid2 );
+        
+        // console.log('form-valid', out);
+      
+        return !!out;
+      }
+
+      // _computeNameValid(item) {
+      //   const out = item.name && item.name.length;
+      //   return out;
+      // }
+      
+      // _computeMenuValid(item) {
+      //   const out = item.type && item.type.length;
+      //   return out;
+      // }
+
+      _itemChanged(dataNew, dataOld) {
+        // console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+
+        this.set('nameValid'        , !!dataNew.base.name  && !!dataNew.base.name.length         );
+        this.set('menuValid'        , !!dataNew.base.type  && !!dataNew.base.type.length         );
+        this.set('emailLengthValid' , !!dataNew.base.email && !!dataNew.base.email.length        );
+        this.set('phoneLengthValid' , !!dataNew.base.phone &&  (dataNew.base.phone.length === 12));
+
+        // console.log('form-valid', this.formValid);
+      } 
+      
+      _computeEmailValid(invalidEmail) {
+        const out = !invalidEmail;
+        return out;
+      }
+      
+      _computePhoneValid(invalidPhone) {
+        const out = !invalidPhone;
+        return out;
+      }
+
+      // end: form validation
+		
+		}
+
+    window.customElements.define(FormFeedback.is, FormFeedback);
+  </script>
+</dom-module>

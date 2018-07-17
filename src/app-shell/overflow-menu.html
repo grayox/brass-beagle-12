@@ -57,6 +57,8 @@
 				}
 			}
 			paper-listbox {
+        margin: 0;
+        padding: 0;
 				--paper-listbox-selected-item: {
 					background-color: white;
 					font-weight: normal;  
@@ -82,20 +84,30 @@
 											 >
       <paper-icon-button slot="dropdown-trigger" icon="more-vert"></paper-icon-button>
       
-      <!-- <paper-listbox> causes css shadow abberation in margin/padding; change do something else; -->
-      <xpaper-listbox slot="dropdown-content"
+      <!--- ->
+      <paper-listbox> causes css shadow abberation in margin/padding; change to something else;
+      edit: above problem apparently corrected with margin: 0; padding: 0;
+      <!---->
+      <paper-listbox slot="dropdown-content"
 										 id="listbox"
-									   selected="[[route]]"
+									   xselected="[[route]]"
+									   selected="{{selected}}"
 									   attr-for-selected="name"
 									   xfallback-selection="None"
 									   on-iron-select="_onIronSelect"
 										 >
 			  <template is="dom-repeat" items="[[appData.overflow-menu]]">
+          <!--- ->
 					<a name="[[item.name]]" href="#/[[item.name]]">
+          <!---->
+          <div name="[[item.name]]">
             <paper-item>[[item.label]]</paper-item>
+          </div>
+          <!--- ->
           </a>
+          <!---->
         </template>
-      </xpaper-listbox>
+      </paper-listbox>
 
     </paper-menu-button>
 		
@@ -123,82 +135,97 @@
       static get is() { return 'overflow-menu'; }
 
       static get properties() {
-				/**/
+
         return {
-					route: {
-						//type: Number,
-						type: String,
-						notify: true,
-						//observer: '_selectedChanged',
-					}
+          
+					// selected: {
+					// 	//type: Number,
+					// 	type: String,
+					// 	notify: true,
+					// 	observer: '_selectedChanged',
+					// },
+
+					// route: {
+					// 	//type: Number,
+					// 	type: String,
+					// 	notify: true,
+					// 	//observer: '_selectedChanged',
+					// },
+
         };
-				/**/
+
       }
 			
 			constructor() {
 				super();
 			}
 
-			/** /
-      _handleTap(e) {
-				var a = e.target.getAttribute('data-args').split(',');
-				var s = a[0];
-				//console.log('s', s);
-				this.set('selected', s);
-				const n = 'user-action-select';
-				const o = {
-						detail: {
-							selected: this.selected,
-						}};
-				const d = new CustomEvent(n, o);
-        this.dispatchEvent(d);
-				//this.set('selected', undefined);
-      }
-			/**/
+			// _handleTap(e) {
+			// 	var a = e.target.getAttribute('data-args').split(',');
+			// 	var s = a[0];
+			// 	//console.log('s', s);
+			// 	this.set('selected', s);
+			// 	const n = 'user-action-select';
+			// 	const o = {
+			// 			detail: {
+			// 				selected: this.selected,
+			// 			}};
+			// 	const d = new CustomEvent(n, o);
+      //   this.dispatchEvent(d);
+			// 	//this.set('selected', undefined);
+      // }
 			
-			/** /
-			_selectedChanged(newValue, oldValue) {
-				console.log('newValue', newValue, 'oldValue', oldValue,);
-				if(!newValue) return;
-        this.dispatchEvent(new CustomEvent(
-					'user-action-select', {
-						detail: {
-							selected: newValue,
-						}
-					}
-				));
-				this.set('selected', null);
-			}
-			/**/
+			// _selectedChanged(dataNew, dataOld) {
+			// 	console.log('dataOld\n', dataOld);
+			// 	console.log('dataNew\n', dataNew);
+
+      //   const ready = dataNew;
+      //   if(!ready) return;
+
+      //   this.dispatchEvent(new CustomEvent(
+			// 		'user-action-select', {
+			// 			detail: {
+			// 				selected: newValue,
+			// 			}
+			// 		}
+			// 	));
+			// 	this.set('selected', null);
+			// }
 			
-			/**/
 			_onIronSelect(e) {
 				//console.log('e', e);
-				/**/
-				// For selecting strings...
+				
+        // for selecting strings...
 				var a = e.path[0].getAttribute('attr-for-selected'); // 'item-name'
-				console.log('a\n', a);
+				// console.log('a\n', a);
 				var s = e.detail.item//.getAttribute(a); // 'profile', 'preferences', 'logout'
-				/**/
-				// For selecting numbers...
+				
+        // for selecting numbers...
 				var l = this.$.listbox;
 				var s = l.selected; // 0, 1, 2 ...
-				/**/
-				console.log('s\n', s);
-				console.log('route\n', this.route);
-				var d = new CustomEvent(
-					'user-action-select', {
-						bubbles: true,
-						detail: {
-							selected: s,
-						},
-					}
-				);
-				this.dispatchEvent(d);
-				//console.log('d', d);
+				
+        // console.log('s\n', s); // 'help', 'feedback', 'logout'
+				// console.log('route\n', this.route);
+
+        const name = 'overflow-menu-selected-changed';
+        const data = s;
+        this._dispatchEvent(name, data);
+
 				this.reset(l);
 			}
-			/**/
+
+      _dispatchEvent(name, data) {
+			  const n = name;
+			  const o = {
+			    bubbles: true,
+			   	composed: true,
+			   	detail: data,
+			  };
+			  console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  console.log('d\n', d);
+			  this.dispatchEvent(d);				
+      }
 			
 			reset(l) {
 				//var l = this.$.listbox;

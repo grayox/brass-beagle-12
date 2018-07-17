@@ -50,9 +50,9 @@
 	"comment-overflow-menu-1": "Reference: https://material.io/guidelines/patterns/settings.html",
 	"comment-overflow-menu-2": "Reference: https://material.io/guidelines/patterns/help-feedback.html",
 	"overflow-menu": [
-		{ "label": "Feedback"  , "name": "view-feedback"  , "icon": "feedback"              } ,
-		{ "label": "Help"      , "name": "view-help"      , "icon": "help"                  } ,
-		{ "label": "Logout"    , "name": "view-logout"    , "icon": "power-settings-new"    }
+		{ "label": "Feedback"  , "name": "feedback"       , "icon": "feedback"              } ,
+		{ "label": "Help"      , "name": "help"           , "icon": "help"                  } ,
+		{ "label": "Logout"    , "name": "logout"         , "icon": "power-settings-new"    }
 	],
 	"comment-unused-nav-menu-items": "Temp storage for dev purposes only for views not used in production",
 	"unused-nav-menu-items": [
