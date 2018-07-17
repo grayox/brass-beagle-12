@@ -5,7 +5,10 @@
 <dom-module id="loggedin-view">
 	<template>
 
-		<style></style>
+    <style></style>
+    
+    <new-lead-dialog id="form-new-lead-dialog"></new-lead-dialog>
+    <feedback-dialog id="feedback"></feedback-dialog>
 
     <app-shell></app-shell>
 		
@@ -32,8 +35,40 @@
 			ready() {
         super.ready();
 				//console.log('Component Ready');
-				//window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-			}
+        window.addEventListener('overflow-menu-selected-changed' , e => this._onOverflowMenuSelectedChanged(e));
+        window.addEventListener('paper-fab-tapped'               , e => this._onPaperFabTapped             (e));
+      }
+      
+      _onOverflowMenuSelectedChanged(e) {
+        // console.log('e\n', e);
+        const detail = e.detail;
+        // console.log('detail\n', detail); // 'feedback', 'help', 'logout'
+        if(detail == 'logout') {
+          console.log('execute logout...');
+        } else {
+          this._openDialog(detail);
+        }
+      }
+      
+      _onPaperFabTapped(e) {
+        // console.log('e\n', e);
+        const detail = e.detail;
+        console.log('detail\n', detail);
+        this._openDialog(detail);
+      }
+     
+      _openDialog(s) {
+        // console.log('s\n', s); // 'feedback', 'help', 'logout'
+        // const dialog = this.$.dialog;
+        const dialog = this.$[s];
+        dialog.opened = true;
+      }
+      
+      // _closeDialog() {
+      //   const dialog = this.$.dialog;
+      //   dialog.opened = false;
+      // }
+
 		
     }
 

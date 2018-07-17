@@ -96,12 +96,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		<!-- state -->
 		<state-route route="{{route}}"></state-route>
     
-    <paper-fab icon="add"
-               elevation="1"
-               data-form="form-new-lead-dialog"
-               on-tap="_fabTap"
-               >
-    </paper-fab>
+    <paper-fab icon="add" elevation="1" data-form="form-new-lead-dialog" on-tap="_buttonTap"></paper-fab>
+
+    <new-lead-dialog id="form-new-lead-dialog"></new-lead-dialog>
+    <feedback-dialog id="form-feedback-dialog"></feedback-dialog>
 
 		<!--- ->
     Hello world
@@ -178,29 +176,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         const detail = e.detail;
         this.set('route', detail);
       }
+
+      _onOverflowMenuSelectedChanged(e) {
+        // console.log('e\n', e);
+        const detail = e.detail;
+        console.log('detail\n', detail);
+
+        // this.set('route', detail);
+      }
+     
+      _openForm(s) {
+        // const form = this.$.form;
+        const form = this.$[s];
+        form.opened = true;
+      }
       
-      _fabTap(e) {
+      _closeForm() {
+        const form = this.$.form;
+        form.opened = false;
+      }
+      
+      _buttonTap(e) {
         // console.log('e', e);
         const form = e.target.getAttribute('data-form');
         console.log('form', form);
         
-        //this._openForm(form);
-        const name = 'paper-fab-tapped';
-        const data = form;
-        this._dispatchEvent(name, data);
-      }
-
-      _dispatchEvent(name, data) {
-			  const n = name;
-			  const o = {
-			    bubbles: true,
-			   	composed: true,
-			   	detail: data,
-			  };
-			  console.log('o\n', o);
-			  const d = new CustomEvent(n, o);
-			  //console.log('d\n', d);
-			  this.dispatchEvent(d);				
+        this._openForm(form);
       }
 		
     }

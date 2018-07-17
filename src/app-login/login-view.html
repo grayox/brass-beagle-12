@@ -112,64 +112,61 @@ Use with login-panel-plus.html
 					Polymer.NeonAnimationRunnerBehavior,
 					//Polymer.IronResizableBehavior,
 				],
-				/** /
-        properties: {
-					/** /
-					userRemote: {
-            type: Object,
-						statePath: 'userRemote',
-						//observer: '_userRemoteChanged',
-          },
-					/** /
-					loggedIn: {
-						type: Boolean,
-						statePath: 'loggedIn'
-					},
-					/**/
-					/** /
-			  },
-				/**/
-				
-				// Redux
+        
+        // properties: {
+        
+          // userRemote: {
+          //   type: Object,
+					// 	statePath: 'userRemote',
+					// 	//observer: '_userRemoteChanged',
+          // },
+        
+          // loggedIn: {
+					// 	type: Boolean,
+					// 	statePath: 'loggedIn'
+					// },
+        
+        // },
+        
+        // Redux
 				// https://github.com/Polymer/polycasts/blob/master/ep61-redux/friend-input.html
-				/** /
-	      actions: {
-		      add: function(name) {
-			      return {
-				      type: 'ADD_FRIEND',
-				      friend: name,
-			      };
-		      }
-	      },
-	      addFriend: function() {
-		      var input = this.$.field;
-		      if (input.value) {
-			      this.dispatch('add', input.value);
-			      input.value = '';
-			      input.focus();
-		      }
-	      },
-				/** /
-				actions: {
-		      updateTryKey: function(str) {
-			      return {
-				      type: 'TRY_KEY',
-				      payload: str,
-			      };
-		      },
-	      },
+        
+        // actions: {
+		    //   add: function(name) {
+			  //     return {
+				//       type: 'ADD_FRIEND',
+				//       friend: name,
+			  //     };
+		    //   }
+	      // },
+	      // addFriend: function() {
+		    //   var input = this.$.field;
+		    //   if (input.value) {
+			  //     this.dispatch('add', input.value);
+			  //     input.value = '';
+			  //     input.focus();
+		    //   }
+	      // },
+        
+        // actions: {
+		    //   updateTryKey: function(str) {
+			  //     return {
+				//       type: 'TRY_KEY',
+				//       payload: str,
+			  //     };
+		    //   },
+	      // },
 	      // endRedux
 
-				/** /
-        _logIn: function() {
-          this.set('loggedIn', true); //this.loggedIn = true;
-        },
-				/** /
-				listeners: {
-					//login: 'reset',
-				},
-				/**/
-
+      
+        // _logIn: function() {
+        //   this.set('loggedIn', true); //this.loggedIn = true;
+        // },
+        
+        // listeners: {
+				// 	//login: 'reset',
+				// },
+        
 				attached: function() {
 					var DELAY = 3500;
 					this.async(function() {
