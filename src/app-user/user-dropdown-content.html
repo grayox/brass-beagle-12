@@ -145,61 +145,65 @@
 				super();
 			}
 
-			/** /
-      _handleTap(e) {
-				var a = e.target.getAttribute('data-args').split(',');
-				var s = a[0];
-				//console.log('s', s);
-				this.set('selected', s);
-				const n = 'user-action-select';
-				const o = {
-						detail: {
-							selected: this.selected,
-						}};
-				const d = new CustomEvent(n, o);
-        this.dispatchEvent(d);
-				//this.set('selected', undefined);
-      }
-			/**/
-			
-			/** /
-			_selectedChanged(newValue, oldValue) {
-				console.log('newValue', newValue, 'oldValue', oldValue,);
-				if(!newValue) return;
-        this.dispatchEvent(new CustomEvent(
-					'user-action-select', {
-						detail: {
-							selected: newValue,
-						}
-					}
-				));
-				this.set('selected', null);
-			}
-			/**/
-			
+      // _handleTap(e) {
+			// 	var a = e.target.getAttribute('data-args').split(',');
+			// 	var s = a[0];
+			// 	//console.log('s', s);
+			// 	this.set('selected', s);
+			// 	const n = 'user-action-select';
+			// 	const o = {
+			// 			detail: {
+			// 				selected: this.selected,
+			// 			}};
+			// 	const d = new CustomEvent(n, o);
+      //   this.dispatchEvent(d);
+			// 	//this.set('selected', undefined);
+      // }
+      
+			// _selectedChanged(newValue, oldValue) {
+			// 	console.log('newValue', newValue, 'oldValue', oldValue,);
+			// 	if(!newValue) return;
+      //   this.dispatchEvent(new CustomEvent(
+			// 		'user-action-select', {
+			// 			detail: {
+			// 				selected: newValue,
+			// 			}
+			// 		}
+			// 	));
+			// 	this.set('selected', null);
+			// }
+      
 			_onIronSelect(e) {
 				//console.log('e', e);
-				/** /
-				// For selecting strings...
-				var a = e.path[0].getAttribute('attr-for-selected'); // 'item-name'
-				console.log('a', a);
-				var s = e.detail.item//.getAttribute(a); // 'profile', 'preferences', 'logout'
-				/**/
-				// For selecting numbers...
+        
+        // // For selecting strings...
+				// var a = e.path[0].getAttribute('attr-for-selected'); // 'item-name'
+				// console.log('a', a);
+				// var s = e.detail.item//.getAttribute(a); // 'profile', 'preferences', 'logout'
+        
+        // For selecting numbers...
 				const l = this.$.listbox;
 				const s = l.selected; // 0, 1, 2 ...
-				/**/
-				//console.log('s', s);
-				const d = new CustomEvent(
-					'user-action-select', {
-						bubbles: true,
-					  composed: true,
-					  detail: {
-							selected: s,
-						},
-					}
-				);
-				this.dispatchEvent(d);
+        
+        //console.log('s', s);
+
+				// const d = new CustomEvent(
+				// 	'user-action-select', {
+				// 		bubbles: true,
+				// 	  composed: true,
+				// 	  detail: {
+				// 			selected: s,
+				// 		},
+				// 	}
+				// );
+        // this.dispatchEvent(d);
+
+        const name = 'user-action-select';
+        const data = {
+          selected: s,
+        };
+        this._dispatchEvent(name, data);
+        
 				//console.log('d', d);
 				this.reset(l);
 			}
@@ -215,18 +219,39 @@
       //   auth.signOut();
       // }
 
+      // _logout() {
+			// 	const d = new CustomEvent(
+			// 		'logout', {
+			// 			bubbles: true,
+			// 		  composed: true,
+			// 		  // detail: {
+			// 			// 	// selected: s,
+			// 			// },
+			// 		}
+			// 	);
+			// 	this.dispatchEvent(d);
+			// 	// console.log('d', d);        
+      // }
+
+      // this method is the active logout method
+      // sends logout event > triggers logout execution
       _logout() {
-				const d = new CustomEvent(
-					'logout', {
-						bubbles: true,
-					  composed: true,
-					  // detail: {
-						// 	// selected: s,
-						// },
-					}
-				);
-				this.dispatchEvent(d);
-				// console.log('d', d);        
+        const name = 'logout';
+        const data = null;
+        this._dispatchEvent(name, data);
+      }
+
+      _dispatchEvent(name, data) {
+			  const n = name;
+			  const o = {
+			    bubbles: true,
+			   	composed: true,
+			   	detail: data,
+			  };
+			  // console.log('o\n', o);
+			  const d = new CustomEvent(n, o);
+			  //console.log('d\n', d);
+			  this.dispatchEvent(d);				
       }
 			
     }

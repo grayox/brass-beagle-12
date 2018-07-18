@@ -124,20 +124,18 @@ https://stackoverflow.com/a/45498792/1640892
 
       static get is() { return 'drawer-desktop'; }
 
-			/** /
-			static get properties() { return {
-				user: {
-				  type: Object,
-				  notify: true,
-          //observer: '_userChanged',
-        },
-				mediaWidth: {
-					type: Number, // 0, 1, 2, 3
-					notify: true,
-					//observer: '_mediaWidthChanged',
-				},
-      }}
-			/**/
+			// static get properties() { return {
+			// 	user: {
+			// 	  type: Object,
+			// 	  notify: true,
+      //     //observer: '_userChanged',
+      //   },
+			// 	mediaWidth: {
+			// 		type: Number, // 0, 1, 2, 3
+			// 		notify: true,
+			// 		//observer: '_mediaWidthChanged',
+			// 	},
+      // }}
 			
       constructor() {
         super();
@@ -147,13 +145,11 @@ https://stackoverflow.com/a/45498792/1640892
         super.ready();
 				//console.log('Component Ready');
 			}
+    
+      // _userChanged(user) {
+			// 	console.log('user', user);
+			// }
 
-			/** /
-			_userChanged(user) {
-				console.log('user', user);
-			}
-			/**/
-		
     }
 
     customElements.define(DrawerDesktop.is, DrawerDesktop);

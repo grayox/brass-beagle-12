@@ -24,11 +24,12 @@
 
     <state-user-auth id="auth"
                      user-logged-in="{{userLoggedIn}}"
-                     on-logout="logout"
+                     xon-logout="xlogout"
                      >
     </state-user-auth>
 		
-		<login-view hidden$="{{userLoggedIn}}"></login-view>
+    <login-view hidden$="{{userLoggedIn}}"></login-view>
+    
 		<template restamp is="dom-if" if="[[userLoggedIn]]">
 		  <loggedin-view hidden$="{{!userLoggedIn}}"></loggedin-view>
 		</template>
