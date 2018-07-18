@@ -1,7 +1,8 @@
 <link rel="import" href="/bower_components/polymer/polymer-element.html">
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-<script src="/bower_components/paper-input/paper-textarea.html"></script>
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 
 <!-- state -->
 <link rel="import" href="/src/app-state/state-user-settings.html">
@@ -16,9 +17,21 @@
 <dom-module id="form-feedback">
   <template>
     <style include="paper-card-styles">
-      h3 {
-        font-weight: 100;
-        opacity: var(--opacity-dim);
+      :host {
+        --lighten-text: {
+          font-weight: 100;
+          opacity: var(--opacity-dim);
+        };
+      }
+      h3, p {
+        @apply(--lighten-text);
+      }
+      paper-card {
+        --paper-card-header-text: {
+          @apply(--lighten-text);
+          font-weight: 100;
+          opacity: var(--opacity-dim);
+        };
       }
     </style>
 
@@ -30,14 +43,38 @@
 
     <app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
     
+    <!--- ->
     <div class="paper-item">
+      <!--- ->
       <h3>
         We&rsquo;re listening
       </h3>
-      <paper-textarea rows="5" max-rows="10">
-        Voluptate tempor enim nisi amet excepteur sit commodo. Eiusmod nisi magna laborum occaecat ex labore. Irure enim elit qui Lorem id sit qui aliqua in eu exercitation reprehenderit amet. Do eiusmod nostrud laboris amet ullamco. Eu aliqua labore duis culpa occaecat exercitation nulla exercitation nostrud.
+      <!--- ->
+      <paper-textarea rows="0"
+                      max-rows="10"
+                      label="Give us your feedback"
+                      value="{{value}}"
+                      >
       </paper-textarea>
     </div>
+    <!---->
+    <paper-card xheading="Emmental"
+                heading="We&rsquo;re listening"
+                ximage="http://placehold.it/350x150/FFC107/000000"
+                xalt="Emmental">
+      <div class="card-content">
+        <paper-textarea rows="0"
+                        max-rows="10"
+                        label="Give us your feedback"
+                        value="{{value}}"
+                        >
+        </paper-textarea>
+      </div>
+      <div class="card-actions">
+        <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+        <paper-button on-tap="_tappedSend">Send</paper-button>
+      </div>
+    </paper-card>
 		
 	</template>
 
@@ -53,74 +90,10 @@
         //   observer: '_userLocalChanged',
         // },
 
-        userSettings: {
-          type: Object,
-          // notify: true,
-          // observer: '_userSettingsChanged',
-        },
-				
-        item: {
-					type: Object,
-					notify: true,
-          value: () => ({}),
-					// observer: '_itemChanged',
-				},
-
-        invalidPhone: {
-          type: Boolean,
+        value: {
+          type: String,
           notify: true,
-        },
-
-        invalidEmail: {
-          type: Boolean,
-          notify: true,
-        },
-
-        formValid: {
-          type: Boolean,
-          notify: true,
-          computed: '_computeFormValid(nameValid, zipValid, phoneValid, emailValid, phoneLengthValid, emailLengthValid, menuValid)',
-        },
-
-        zipValid: {
-          type: Boolean,
-          notify: true,
-        },
-
-        nameValid: {
-          type: Boolean,
-          notify: true,
-          // computed: '_computeNameValid(item)',
-        },
-
-        menuValid: {
-          type: Boolean,
-          notify: true,
-          // computed: '_computeMenuValid(item)',
-        },
-
-        emailValid: {
-          type: Boolean,
-          notify: true,
-          computed: '_computeEmailValid(invalidEmail)',
-        },
-
-        phoneValid: {
-          type: Boolean,
-          notify: true,
-          computed: '_computePhoneValid(invalidPhone)',
-        },
-
-        emailLengthValid: {
-          type: Boolean,
-          notify: true,
-          // computed: '_computeEmailLengthValid(invalidEmail)', // _itemChanged()
-        },
-
-        phoneLengthValid: {
-          type: Boolean,
-          notify: true,
-          // computed: '_computePhoneLengthValid(invalidPhone)', // _itemChanged()
+          // observer: '_stringChanged',
         },
 
 			}}
@@ -215,7 +188,8 @@
       }
 
       _resetItem() {
-        this.set('item', {});
+        // this.set('item', {});
+        this.set('value', null);
       }
 
       _dispatchEvent(name, data) {

@@ -1,0 +1,88 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/vaadin-dialog/vaadin-dialog.html">
+
+<!--- ->
+<link rel="import" href="form-feedback.html">
+<!---->
+
+<dom-module id="help-dialog">
+
+  <template>
+
+		<style></style>		
+    
+    <!--- ->
+    <iron-a11y-keys id="a11y"
+                    xtarget="[[target]]"
+                    keys="enter"
+                    xon-keys-pressed="onEnter"
+                    xon-keys-pressed="_save"
+                    on-keys-pressed="_tappedSave"
+                    >
+    </iron-a11y-keys>
+    <!---->
+
+    <vaadin-dialog id="dialog"
+                   xno-close-on-esc
+                   no-close-on-outside-click
+                   >
+      <template>
+        <!---->
+        <div on-tap="_closeDialog">&times;</div>
+        <!---->
+        Non dolor culpa minim deserunt ea voluptate dolore consectetur excepteur velit nulla est aute sunt. Officia non proident enim quis elit irure aliquip incididunt id consectetur enim enim. Adipisicing magna do cillum magna duis duis consectetur enim ex ad nostrud. Ut irure mollit amet anim fugiat. Cillum excepteur id exercitation do deserunt Lorem. Incididunt minim commodo irure nulla irure esse officia excepteur non Lorem non.
+      </template>
+    </vaadin-dialog>
+
+  </template>
+
+  <script>
+
+    class HelpDialog extends Polymer.Element {
+
+      static get is() { return 'help-dialog'; }
+
+			static get properties() { return {
+
+				opened: {
+					type: Boolean,
+          notify: true,
+          value: () => false,
+					observer: '_openedChanged',
+        },
+
+		  }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			_openedChanged(dataNew, dataOld) {
+				// console.log('data-old', dataOld);
+        // console.log('data-new', dataNew);
+        
+        const dialog = this.$.dialog;
+        dialog.opened = dataNew;
+      }
+
+      _openDialog() {
+        this.set('opened', true);
+      }
+      
+      _closeDialog() {
+        this.set('opened', false);
+      }
+
+    }
+
+    customElements.define(HelpDialog.is, HelpDialog);
+
+  </script>
+
+</dom-module>

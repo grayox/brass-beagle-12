@@ -2,6 +2,10 @@
 
 <link rel="import" href="/src/app-shell/app-shell.html">
 
+<link rel="import" href="/src/app-forms/new-lead-dialog.html">
+<link rel="import" href="/src/app-forms/feedback-dialog.html">
+<link rel="import" href="/src/app-forms/help-dialog.html">
+
 <dom-module id="loggedin-view">
 	<template>
 
@@ -9,6 +13,7 @@
     
     <new-lead-dialog id="form-new-lead-dialog"></new-lead-dialog>
     <feedback-dialog id="feedback"></feedback-dialog>
+    <help-dialog id="help"></help-dialog>
 
     <app-shell></app-shell>
 		
@@ -53,12 +58,12 @@
       _onPaperFabTapped(e) {
         // console.log('e\n', e);
         const detail = e.detail;
-        console.log('detail\n', detail);
+        // console.log('detail\n', detail);
         this._openDialog(detail);
       }
      
       _openDialog(s) {
-        // console.log('s\n', s); // 'feedback', 'help', 'logout'
+        console.log('s\n', s); // 'feedback', 'help', 'logout'
         // const dialog = this.$.dialog;
         const dialog = this.$[s];
         dialog.opened = true;
