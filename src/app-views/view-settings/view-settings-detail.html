@@ -160,6 +160,9 @@ https://codepen.io/rachelandrew/pen/zwPEoX
         // console.log('s-old', sOld);
         // console.log('s-new', sNew);
 
+        const ready = sNew;
+        if(!ready) return;
+
         // without dom-if
 
         if(sOld) this.$[sOld].hidden = true;

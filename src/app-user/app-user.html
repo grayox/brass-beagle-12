@@ -45,12 +45,14 @@ http://jsbin.com/kadugokade/edit?html,console,output
         display: flex;
         align-items: center;
         /**/
-			}
+      }
+      
 			paper-menu-button {
 				--paper-menu-button: {
 					width: 100%;
 				}
-			}
+      }
+      
 			user-dropdown-trigger: {
 				--paper-menu-button: {
 					height: 100%;
@@ -96,21 +98,12 @@ http://jsbin.com/kadugokade/edit?html,console,output
 											 vertical-offset="[[offsetVertical]]"
 											 horizontal-offset="[[offsetHorizontal]]"
 											 on-user-action-select="onUserActionSelect"
-											 >
-			<!--- ->
-			<button slot="dropdown-trigger">Click</button>
-			<!---->
-			<slot name="trigger" slot="dropdown-trigger">
-				<!-- Default content (slot within a slot) -->
-			  <user-dropdown-trigger></user-dropdown-trigger>
-			  <!---->
-			</slot>
-			<!---->
-			<slot name="content" slot="dropdown-content">
-				<!-- Default content (slot within a slot) -->
-				<user-dropdown-content></user-dropdown-content>
-			</slot>
-			<!---->
+											 >      
+      <user-dropdown-trigger slot="dropdown-trigger"></user-dropdown-trigger>
+			<overflow-menu-content slot="dropdown-content"></overflow-menu>
+      <!--- ->
+      <user-dropdown-content slot="dropdown-content"></user-dropdown-content>
+      <!---->
 		</paper-menu-button>
   </template>
 
@@ -144,10 +137,10 @@ http://jsbin.com/kadugokade/edit?html,console,output
 				super();
 			}
 			
-			// ready() {
-      //   super.ready();
-      //   window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
-      // }
+			ready() {
+        super.ready();
+        // window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
       
       afterNextRender() {
 				this.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));

@@ -11,9 +11,13 @@
 <link rel="import" href="/bower_components/paper-item/paper-item.html">
 <link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
 
+<link rel="import" href="/src/app-shell/overflow-menu.html">
+
 <dom-module id="user-dropdown-content">
   <template>
 
+    <!-- uncomment -->
+    <!---->
 		<style>
 			/**/
 			paper-item {
@@ -58,7 +62,13 @@
 			hr {
 				opacity: 0.33;
 				margin: 8px 0;
-			}
+      }
+    </style>
+    <!---->
+    
+    <!-- keep commented -->
+    <!--- ->
+    <style>
 			/** /
 			.my-menu {
 				padding: 8px 0;
@@ -76,7 +86,8 @@
 				background: #eee;
 			}
 			/**/
-		</style>
+    </style>
+    <!---->
 
 		<!--- ->
     <firebase-auth id="auth"
@@ -87,6 +98,7 @@
     <state-user-auth id="auth"></state-user-auth>
     <!---->
 
+    <!---->
     <paper-listbox id="listbox"
 									 xselected="{{selected}}"
 									 xattr-for-selected="item-name"
@@ -101,26 +113,7 @@
       <paper-item item-name="show"        on-tap="_show"  >Show</paper-item>
       <!---->
     </paper-listbox>
-		
-		<!--- ->
-		<paper-listbox>
-			<paper-item on-tap="_handleTap" data-args="Edit Profile">Edit Profile</paper-item>
-			<paper-item on-tap="_handleTap" data-args="Preferences" >Preferences </paper-item>
-			<hr />
-			<paper-item on-tap="_handleTap" data-args="Logout"      >Logout      </paper-item>
-		</paper-listbox>
-		
-    <!--- ->
-		<paper-listbox>
-			<a href="#" class="my-menu-item" on-tap="_show"   data-args="Edit Profile">Edit Profile</a>
-			<a href="#" class="my-menu-item" on-tap="_show"   data-args="Preferences" >Preferences </a>
-			<hr />
-      <a href="#" class="my-menu-item" on-tap="_logout" data-args="Logout"      >Logout      </a>
-      <!--- ->
-      <a href="#" class="my-menu-item" on-tap="_show"   data-args="Show"        >Show        </a>
-      <!---->
-		</paper-listbox>
-		<!---->
+    <!---->
 		
   </template>
 
@@ -129,16 +122,16 @@
       static get is() { return 'user-dropdown-content'; }
 
       static get properties() {
-				/** /
-        return {
-					selected: {
-						type: Number,
-						//type: String,
-						//notify: true,
-						//observer: '_selectedChanged',
-					}
-        };
-				/**/
+  
+        // return {
+				// 	selected: {
+				// 		type: Number,
+				// 		//type: String,
+				// 		//notify: true,
+				// 		//observer: '_selectedChanged',
+				// 	}
+        // };
+  
       }
 			
 			constructor() {
