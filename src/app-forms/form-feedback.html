@@ -16,6 +16,7 @@
 
 <dom-module id="form-feedback">
   <template>
+    <!--- ->
     <style include="paper-card-styles">
       :host {
         --lighten-text: {
@@ -34,6 +35,7 @@
         };
       }
     </style>
+    <!---->
 
     <!-- state -->
     <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
@@ -43,30 +45,27 @@
 
     <app-methods id="methods" xshow-toast xevent-dispatch></app-methods>
     
+    <h2>
+      We&rsquo;re listening
+    </h2>
+    <paper-textarea xrows="1"
+                    xmax-rows="10"
+                    xlabel="Give us your feedback"
+                    xvalue="{{value}}"
+                    >
+    </paper-textarea>
+    <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+    <paper-button on-tap="_tappedSend">Send</paper-button>
     <!--- ->
-    <div class="paper-item">
-      <!--- ->
-      <h3>
-        We&rsquo;re listening
-      </h3>
-      <!--- ->
-      <paper-textarea rows="0"
-                      max-rows="10"
-                      label="Give us your feedback"
-                      value="{{value}}"
-                      >
-      </paper-textarea>
-    </div>
-    <!---->
     <paper-card xheading="Emmental"
                 heading="We&rsquo;re listening"
                 ximage="http://placehold.it/350x150/FFC107/000000"
                 xalt="Emmental">
       <div class="card-content">
-        <paper-textarea rows="0"
+        <paper-textarea rows="5"
                         max-rows="10"
                         label="Give us your feedback"
-                        value="{{value}}"
+                        xvalue="{{value}}"
                         >
         </paper-textarea>
       </div>
@@ -75,6 +74,7 @@
         <paper-button on-tap="_tappedSend">Send</paper-button>
       </div>
     </paper-card>
+    <!---->
 		
 	</template>
 

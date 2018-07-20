@@ -6,6 +6,9 @@
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/vaadin-icons/vaadin-icons.html">
 
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+
 <!--- ->
 <link rel="import" href="form-feedback.html">
 <!---->
@@ -14,7 +17,18 @@
 
   <template>
 
-		<style></style>		
+    <style>
+      /** /
+      h3 {
+        font-weight: 100;
+        opacity: var(--opacity-light);
+      }
+      /**/
+      .close-button {
+        text-align: end;
+      }  
+      /**/
+    </style>		
     
     <!--- ->
     <iron-a11y-keys id="a11y"
@@ -29,12 +43,20 @@
 
     <vaadin-dialog id="dialog"
                    xno-close-on-esc
-                   no-close-on-outside-click
+                   xno-close-on-outside-click
                    >
       <template>
+
+        <paper-icon-button class="close-button"
+                           icon="clear"
+                           on-tap="_closeDialog"
+                           >
+        </paper-icon-button>
+                            
         <!---->
-        <div on-tap="_closeDialog">&times;</div>
-        <!---->
+        <h2>
+          Instructions are in the dashboard
+        </h2>
         <p>
           Instructions for this app are contained in the <iron-icon icon="vaadin:dashboard"></iron-icon> Dashboard.
           If you are on a mobile device or smart phone, you need to first click your navigation pulldown menu
@@ -46,6 +68,11 @@
           After reading the individual items, click the arrow at the top of the description to return you to the
           main menu. Then click the next item and repeat.
         </p>
+
+        <paper-button class="close-button"
+                      on-tap="_closeDialog"
+                      >Got it!</paper-button>
+
       </template>
     </vaadin-dialog>
 
