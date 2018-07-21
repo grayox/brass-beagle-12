@@ -22,6 +22,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/src/app-view/app-item.html">
 <link rel="import" href="/src/app-database/database-outbox.html">
 
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+
+
 
 <dom-module id="view-outbox-list">
 
@@ -42,10 +45,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /**/
       }
     </style>
+    <style>
+      paper-textarea {
+        color: black;
+      }
+    </style>
    
     <!-- state -->
     <database-outbox items="{{items}}"></database-outbox>
     <!---->
+
+    <paper-textarea xrows="1"
+                    xmax-rows="10"
+                    label="Give us your feedback"
+                    xvalue="{{value}}"
+                    >
+    </paper-textarea>
+    <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+    <paper-button on-tap="_tappedSend">Send</paper-button>
 
     <app-item type="subheader"
               label="List of leads sent"

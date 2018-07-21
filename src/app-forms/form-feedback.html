@@ -36,7 +36,12 @@
       }
     </style>
     <!---->
-
+    <style>
+      paper-textarea {
+        color: black;
+      }
+    </style>
+    
     <!-- state -->
     <state-user-settings user-settings="{{userSettings}}"></state-user-settings>
     <!--- ->
@@ -48,14 +53,25 @@
     <h2>
       We&rsquo;re listening
     </h2>
-    <paper-textarea xrows="1"
-                    xmax-rows="10"
-                    xlabel="Give us your feedback"
-                    xvalue="{{value}}"
-                    >
-    </paper-textarea>
-    <paper-button on-tap="_tappedCancel">Cancel</paper-button>
-    <paper-button on-tap="_tappedSend">Send</paper-button>
+    <div>
+      <paper-textarea xrows="1"
+                      xmax-rows="10"
+                      label="Give us your feedback"
+                      xvalue="{{value}}"
+                      >
+      </paper-textarea>
+      <paper-button on-tap="_tappedCancel">Cancel</paper-button>
+      <paper-button on-tap="_tappedSend">Send</paper-button>
+    </div>
+
+    hello world
+
+    <div class="mdc-text-field">
+      <input type="text" id="my-text-field" class="mdc-text-field__input">
+      <label class="mdc-floating-label" for="my-text-field">Hint text</label>
+      <div class="mdc-line-ripple"></div>
+    </div>
+
     <!--- ->
     <paper-card xheading="Emmental"
                 heading="We&rsquo;re listening"
