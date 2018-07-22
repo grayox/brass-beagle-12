@@ -54,6 +54,13 @@ bower install
 
 ## Version History
 
+### v11
+1. Completed most look and feel of app
+2. Encountered problem implementing `paper-textarea`
+3. Updated bower components but could not successfully revert after updates introduced breaking changes
+4. Decided to upgrade to Polymer 3 for perceived upgrade in NPMs ability to manage nested dependencies
+5. TODO: Re-establish proper look and feel of app; proceed to release
+
 ### v10
 1. Began solidity smart contracts -- /src/smart-contracts/x.sol
 2. Pausing attempt to programmatically populate views and pages from views.json file
