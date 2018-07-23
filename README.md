@@ -59,7 +59,11 @@ bower install
 2. Encountered problem implementing `paper-textarea`
 3. Updated bower components but could not successfully revert after updates introduced breaking changes
 4. Decided to upgrade to Polymer 3 for perceived upgrade in NPMs ability to manage nested dependencies
-5. TODO: Re-establish proper look and feel of app; proceed to release
+5. Hopefully, upgrade to Polymer 3 will provide opportunity to fix compatibility (and potential build) issues
+6. TODO:
+   a. [Engage Polymer Modularizer](https://github.com/Polymer/polymer-modulizer) to convert from Polymer 2 to Polymer 3
+   a. Re-establish proper look and feel of app
+   b. Proceed to release
 
 ### v10
 1. Began solidity smart contracts -- /src/smart-contracts/x.sol
