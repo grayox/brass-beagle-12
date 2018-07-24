@@ -68,6 +68,10 @@ bower install
            echo 'PASTE TOKEN HEX HERE' > ./github-token
            echo '90704943f394dac18b0c879e3d055fa864905b18' > ./github-token
            modulizer grayox/brass-beagle-12 --npm-version 6.2.0
+           stackoverflow question: https://stackoverflow.com/q/51489106/1640892
+           justpasteit: 
+               Edit link: https://justpaste.it/edit/21986608/2f467377088fe05d
+               Short link: https://jpst.it/1jTQM
    b. Re-establish proper look and feel of app
    c. Proceed to release
 
