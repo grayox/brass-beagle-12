@@ -63,10 +63,10 @@ bower install
 6. TODO:
    a. [Engage Polymer Modularizer](https://github.com/Polymer/polymer-modulizer) to convert from Polymer 2 to Polymer 3
       1. generate a token here: https://github.com/settings/tokens
-      2. token: 90704943f394dac18b0c879e3d055fa864905b18
+      2. tokens: d013b252fbcd52456d46933c9587206aeb01d268
       3. then at command line:
            echo 'PASTE TOKEN HEX HERE' > ./github-token
-           echo '90704943f394dac18b0c879e3d055fa864905b18' > ./github-token
+           echo 'd013b252fbcd52456d46933c9587206aeb01d268' > ./github-token
            modulizer grayox/brass-beagle-12 --npm-version 6.2.0
            stackoverflow question: https://stackoverflow.com/q/51489106/1640892
            justpasteit: 
