@@ -62,8 +62,14 @@ bower install
 5. Hopefully, upgrade to Polymer 3 will provide opportunity to fix compatibility (and potential build) issues
 6. TODO:
    a. [Engage Polymer Modularizer](https://github.com/Polymer/polymer-modulizer) to convert from Polymer 2 to Polymer 3
-   a. Re-establish proper look and feel of app
-   b. Proceed to release
+      1. generate a token here: https://github.com/settings/tokens
+      2. token: 90704943f394dac18b0c879e3d055fa864905b18
+      3. then at command line:
+           echo 'PASTE TOKEN HEX HERE' > ./github-token
+           echo '90704943f394dac18b0c879e3d055fa864905b18' > ./github-token
+           modulizer grayox/brass-beagle-12 --npm-version 6.2.0
+   b. Re-establish proper look and feel of app
+   c. Proceed to release
 
 ### v10
 1. Began solidity smart contracts -- /src/smart-contracts/x.sol
