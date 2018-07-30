@@ -1,0 +1,893 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<!--- ->
+Instead of vaadin=date-picker, use https://github.com/bendavis78/paper-date-picker
+<link rel="import" href="/bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
+<!---->
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+
+<link rel="import" href="/bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animation.html">
+
+<link rel="import" href="../../custom-styles/editor-styles.html">
+<link rel="import" href="../../custom-styles/paper-listbox-styles.html">
+<link rel="import" href="../../custom-styles/dialog-animated-tabs-styles.html">
+<link rel="import" href="../../custom-behaviors/zip-code-api-behavior.html">
+<link rel="import" href="../../custom-elements/form-valid.html">
+<link rel="import" href="../../custom-elements/custom-toast.html">
+
+<!--- ->
+<link rel="import" href="sub-editor.html">
+<link rel="import" href="editor-tab-a.html">
+<link rel="import" href="editor-tab-b.html">
+<!--- ->
+http://plnkr.co/edit/bPUclBOpghNFVmKMbOzc?p=preview | v.current
+http://plnkr.co/edit/cnSYvupw2WYRd1kDlYwF?p=preview
+http://plnkr.co/edit/wyk9jb8cD4nufYQMI3L8?p=preview
+http://plnkr.co/edit/qD0MvyBbbThiGvkeRpWx?p=preview
+http://plnkr.co/edit/op1KYcUkEMSk7TdRjhuH?p=preview | v.1
+<!---->
+
+<dom-module id="item-editor">
+  <template>
+		<style include="dialog-animated-tabs-styles"></style>
+    <style include="editor-styles">
+			:host {
+			  paper-input[disabled] {
+					--paper-input-container-input-color: red;
+					--paper-input-container-disabled: {
+						opacity: 1;
+					}
+				}
+			}
+		</style>
+
+
+		<!--- ->
+    <iron-media-query query="(min-height: 900px)"
+											query-matches="{{tallWindow}}"
+											>
+		</iron-media-query>
+		<!---->
+		
+		<custom-toast id="toast"></custom-toast>
+    <app-route route="{{route}}"
+							 pattern="/:action"
+							 data="{{routeData}}"
+							 >
+		</app-route>
+		<paper-dialog id="dialog"
+								  modal xautofocus
+								  xalways-on-top
+								  xno-cancel-on-esc-key
+									opened="{{_showDialog(route.path)}}"
+									entry-animation="scale-up-animation"
+									exit-animation="fade-out-animation"
+									>
+      <div class="main-layout layout horizontal">
+        <h2 id="header">
+					[[caption]]
+					<!--- ->
+					<iron-icon id="info"
+										 icon="info"
+										 class="light"
+										 >
+					</iron-icon>
+					<!---->
+				</h2>
+				<paper-tooltip id="rulesTextHeader"
+											 for="header"
+											 xposition="right"
+											 xfit-to-visible-bounds
+											 >
+				</paper-tooltip>
+        <span class="flex"></span>
+        <paper-icon-button icon="close"
+													 on-tap="close"
+													 class="close-button self-start"
+													 >
+				</paper-icon-button>
+      </div>
+			
+			<form-valid id="form-valid"
+									valid="{{validForm}}"
+									email="[[item.email]]"
+									phone="[[item.phone]]"
+									zip="[[item.zip]]"
+									state="[[item.state]]"
+									county="[[item.county]]"
+									city="[[item.city]]"
+									category="[[item.category]]"
+									name-first="[[item.nameFirst]]"
+									name-last="[[item.nameLast]]"
+									>
+			</form-valid>
+			
+			<div class="form">
+				<form is="iron-form" id="form">
+					<iron-a11y-keys keys="enter" on-keys-pressed="_save"></iron-a11y-keys>
+
+					<div class="layout vertical">
+						<div class="layout horizontal wide">
+							<paper-input id="create-name-first"
+													 name="name-first"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="First Name"
+													 value="{{item.nameFirst}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!---->
+							</paper-input>
+							<paper-input id="create-name-last"
+													 name="name-last"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Last Name"
+													 value="{{item.nameLast}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!---->
+							</paper-input>
+						</div><!-- first name | last name -->
+						<div class="layout horizontal wide">
+							<!---->
+							<paper-input id="create-email"
+													 name="email"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Email"
+													 value="{{item.email}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!---->
+							</paper-input>
+							<!--- ->
+							<gold-email-input id="create-email"
+													      name="email"
+													      label="your email address"
+																auto-validate
+																>
+							</gold-email-input>
+							<!---->
+							<paper-input id="create-phone"
+													 name="phone"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Phone"
+													 value="{{item.phone}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!---->
+							</paper-input>
+						</div><!-- email | phone -->
+						<div class="layout horizontal wide">
+							<!--- ->
+							<paper-input id="create-address"
+													 name="address"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Street Address"
+													 value="{{item.address}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!--- ->
+							</paper-input>
+							<!---->
+							<paper-input id="create-zip"
+													 name="zip"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Zip Code"
+													 value="{{item.zip}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!---->
+								<div suffix>[[zipCityStateCounty]]</div>
+								<!---->
+							</paper-input>
+						</div><!-- address | zip -->
+						
+						<div id="category-div" class="layout horizontal wide">
+							<category-menu category="{{item.category}}"></category-menu>
+            	<!--- ->
+							<paper-input id="create-zip"
+													 name="zip"
+													 xis="iron-input"
+													 xprevent-invalid-input
+													 xallowed-pattern="[0-9]"
+													 class="align-left wide"
+													 label="Zip Code"
+													 value="{{item.zip}}"
+													 xtype="number"
+													 type="string"
+													 xmin="1000"
+													 xmax="99"
+													 step="1000"
+													 xlength="55"
+													 required
+													 xmaxlength="2"
+													 xtype="text"
+													 xpattern="\d*"
+													 disabled$="[[!isNew]]"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!--- ->
+								<div suffix>USD</div>
+								<!--- ->
+							</paper-input>
+							<!---->
+						</div><!-- category -->
+					</div>
+				</form>
+			</div>
+
+		  <div class="buttons" hidden$="[[!isNew]]">
+        <paper-button id="button-delete"
+											on-tap="_delete"
+											class="delete-button"
+											xdialog-dismiss
+											hidden
+											>Delete</paper-button>
+        <paper-button id="button-cancel"
+											on-tap="close"
+											class="cancel-button"
+											xdialog-dismiss
+											xhidden
+											>Cancel</paper-button>
+        <paper-button id="button-save"
+											raised
+											on-tap="_save"
+											class="save-button"
+											xdialog-confirm
+											xhidden
+											>Save</paper-button>
+      </div>
+      <span id="error" hidden$="[[!errorMessage]]">{{errorText}}</span>
+    </paper-dialog>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'item-editor',
+				behaviors: [
+					///ReduxBehavior,
+					///AsyncActionsBehavior,
+					///MyBehaviors.UserSetterBehavior,
+					///MyBehaviors.ZipCodeApiBehavior,
+					///Polymer.NeonAnimationRunnerBehavior,
+					///Polymer.IronResizableBehavior,
+				],
+        properties: {
+          service: Object,
+          merchants: Array,
+          terms: {
+						type: Object,
+						notify: true,
+					},
+          engagement: {
+						type: Object,
+						notify: true,
+					},
+					/** /
+          terms: Object,
+          engagement: Object,
+					/**/
+					item: {
+            type: Object,
+            notify: true,
+						//computed: '_computeItem(terms.*, engagement.*)',
+						value: function() {
+							return {};
+						},
+          },
+					validForm: Boolean,
+					caption: {
+            type: String,
+            computed: '_getCaption(item)',
+          },
+          errorText: String,
+          db: Object,
+          _receiptURL: {
+            type: String,
+            notify: true,
+            value: 'images/default-receipt.png',
+          },
+          route: Object,
+          routeData: Object,
+					// Edit
+					subEditorOpened: Boolean,
+					key: {
+						type: String,
+						notify: true,
+					},
+					isNew: Boolean,
+					selected: {
+						type: Number,
+						value: function() {
+							return 0;
+						},
+					},
+					rulesText: {
+						type: String,
+						value: function() {
+							return [
+						    '<h2>Rules</h2>',
+								'<p>Enter a number between 1 and 99 indicating ',
+								'how many points you wish to risk on this contract.</p>',
+								'<h3>All contracts settle at 100 points.</h3>',
+								'<ol><li>Every contract settles at 100 points awarded to the winner.</li>',
+								'<li>The total number of points risked on both sides of the contract must total 100.</li>',
+								'<li>In the event of a tie, all points risked are refunded and no new points are awarded.</li>',
+								'<li>The number of points you risk represents your implied probability of your team winning.</li></ol>',
+							].join('');
+						},
+					},
+					// endEdit
+        },
+				
+				/**/
+        observers: [
+					//'_updateReceiptURL(item._attachments.*)',
+					//'itemChanged(item)',
+					'itemPropertyChanged(item.*)',
+				],
+				/**/
+				
+				/** /
+				listeners: {
+					//resize: '_onResize',
+				},
+				/**/
+
+				attached: function() {
+          this._boundOnResize = this._onResize.bind(this);
+          window.addEventListener('resize', this._boundOnResize);
+					// Edit
+					this.$.rulesTextHeader.innerHTML = this.rulesText;
+					this.set('itemPropertyBeingChanged' , false);
+					// endEdit
+        },
+
+        detached: function() {
+          window.removeEventListener('resize', this._boundOnResize);
+        },
+
+        _onResize: function() {
+          this.$.dialog.notifyResize();
+        },
+
+        _showDialog: function() {
+          return this.item && this.route.path && this.route.path === '/edit';
+        },
+
+        _getCaption: function(item) {
+					//console.log('isNew', this.isNew);
+          //if (item.$key/*_id*/) {//(!this.isNew) {// Creates async issue?
+					if(this.isNew) {
+            return 'Submit New Lead'//'Add Item';
+          } else {
+            return 'Edit Lead'//'Edit Item';
+          }
+        },
+
+				/** /
+        _showReceipt: function() {
+          return this.item._id && this.item.status !== 'new' ||
+            this.item._attachments && this.item._attachments.receipt;
+        },
+
+				/** /
+        _updateReceiptURL: function() {
+          if (this.item._attachments && this.item._attachments.receipt) {
+            if (this.item._attachments.receipt.data instanceof File ||  
+              this.item._attachments.receipt.data instanceof Blob) {
+              this._receiptURL = URL.createObjectURL(this.item._attachments.receipt.data);
+            } else {
+              this.db.getAttachment(this.item._id, 'receipt')
+                .then(function(blob) {
+                  this._receiptURL = URL.createObjectURL(blob);
+                }.bind(this))
+                .catch(function(err) {
+                  console.log(err);
+                });
+            }
+          } else {
+            this._receiptURL = 'images/default-receipt.png';
+          }
+          this.$.dialog.notifyResize();
+        },
+				/**/
+
+        listeners: {
+          'iron-form-invalid': '_formInvalid',
+          //'iron-overlay-opened': '_onIronOverlayOpened',
+        },
+
+				/** /
+        // Read canvas content and returns a Blob.
+        // For browsers not supporting canvas.toBlob
+        _canvasToBlob: function(canvas) {
+          var reg = new RegExp('^data:(.*);.*,(.*)');
+          var arr = reg.exec(canvas.toDataURL());
+          var bstr = atob(arr[2]);
+          var n = bstr.length;
+          var u8arr = new Uint8Array(n);
+          while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+          }
+          return new Blob([u8arr], {
+            type: arr[1]
+          });
+        },
+				/**/
+
+				/** /
+        // Read a file and return a Blob. If it's an image it converts and
+        // resizes using a canvas.
+        // TODO: move this to vaadin-upload as a utility method
+        _resizeImage: function(file, callback, mimeType, maxWidth, maxHeight) {
+          var img = document.createElement('img');
+          var reader = new FileReader();
+          reader.onload = function() {
+            if (!/^image/.test(file.type)) {
+              callback(reader.result);
+            } else if (file.type === mimeType && (!maxWidth || !maxWidth)) {
+              callback(reader.result);
+            } else {
+              img.addEventListener('load', function() {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                if (img.width > img.height && img.width > maxWidth) {
+                  canvas.width = maxWidth;
+                  canvas.height = img.height * maxWidth / img.width;
+                } else if (img.height > img.width && img.height > maxHeight) {
+                  canvas.height = maxHeight;
+                  canvas.width = img.width * maxHeight / img.height;
+                } else {
+                  canvas.height = img.height;
+                  canvas.width = img.width;
+                }
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                if (canvas.toBlob) {
+                  canvas.toBlob(callback, mimeType, 0.9);
+                } else {
+                  callback(this._canvasToBlob(canvas));
+                }
+              }.bind(this));
+              img.src = reader.result;
+            }
+          }.bind(this);
+          reader.readAsDataURL(file);
+        },
+				/**/
+
+				/** /
+        _handleUpload: function(e) {
+          var file = e.detail.file;
+          this._resizeImage(file, function(data) {
+            this.item._attachments = this.item._attachments || {};
+            this.set('item._attachments.receipt', {
+              type: 'image/jpeg',
+              data: data
+            });
+          }.bind(this), 'image/jpeg', 1000, 1000);
+
+          this.$.upload.files = [];
+          e.preventDefault();
+        },
+				/**/
+				configPhone: function() {
+					var p = this.item.phone;
+					if(p) {
+						p = p.replace(/\D/g, '');
+					}
+				  if(!!p && p.length==10) {
+						this.set('item.phone', p);
+					} else {
+						console.error('Unexpected phone number');
+					}
+				},
+			
+				_save: function() {
+					//console.log('item', this.item);
+					this.$.error.innerText = '';
+					//var form = this.isNew ? this.$$('#form-create') : this.$$('#form-update') ; // Only necessary for dom-if
+					var form = this.$.form;
+					/**/
+					var valid = this.validForm;
+					if (valid) {
+					//if (form.validate()) {
+						
+						/**/ // Reinstated 4/17/2017 // Replaced by snapshot.numChildren() // Reference: https://firebase.google.com/docs/database/web/read-and-write
+						// Increment balances
+						// user.balances
+						var net = 1 + this.userBalances.net;
+						var up  = 1 + this.userBalances.up;
+						this.fire('item-method', {
+							method: 'save',
+							entity: 'user-balances',
+							data: {
+								net: net,
+								up: up,
+							},
+						});
+						/** / // Replaced by snapshot.numChildren() // Reference: https://firebase.google.com/docs/database/web/read-and-write
+						// userAvailableLeadsCount
+						var leadsCount = 1 + this.userAvailableLeadsCount;
+						this.fire('item-method', {
+							method: 'save',
+							entity: 'leads-count',
+							data: leadsCount,
+						});
+						/**/
+						
+						// Config phone number
+					  this.configPhone();
+						
+						// Save lead
+						var timestamp = Date.now();
+						var data = Object.assign({}, this.item, {
+							timestamp : timestamp ,
+						});
+						//this.item.total = parseFloat(this.item.total);
+						//console.log('item', this.item);
+						//this.fire('item-save', this.item);
+						//this.fire('item-save', {
+						this.fire('item-method', {
+							method: 'save',
+							entity: 'lead-sent',
+							data: data,
+						});
+					  /**/
+						this.set('item', {});
+					} else {
+						console.log('Form validation failed');
+						this.$.dialog.scrollTop = 0;
+						this.errorText = 'Please fill all required fields';
+				    this.showToast({
+				      //text: 'Success. Thanks! Please login!',
+				      text: 'Form failed',
+				      type: 'error',
+				    });
+					}
+					/**/
+				},
+				
+        open: function(item) {
+					// Edit
+					var isNew = !(item.$key);
+					this.set('isNew', !!isNew);
+					// http://plnkr.co/edit/VcDWOxWXGDRUM7UMN940?p=preview
+					// http://plnkr.co/edit/1wZRpIyiZMlwAYTzlYag?p=preview
+					// http://plnkr.co/edit/igZPkYx47ywJSCVTpKZF?p=preview
+					//console.log('isNew', isNew);
+					//console.log('item', item);
+					if(!isNew) {
+						this.set('key', item.$key); // Pass parent/super-key to sub-editor
+					  //console.log('isNew', this.isNew);
+					  //console.log('item', item);
+						/** /
+						var terms = item.terms;
+					  this.set('terms', {});
+						this.set('terms', terms);
+						/**/
+						this.set('terms', item.terms);
+						/** /
+						var engagement = item.engagement;
+						this.set('engagement', {});
+						this.set('engagement', engagement);
+						/**/
+						this.set('engagement', item.engagement);
+						/**/
+						//this.$$('#tab-a').item = terms;
+						//this.$['tab-a'].item = terms;
+						//this.$['tab-a'].isNew = isNew;
+					}
+					// this._clearAll();
+					//this.set('longDate', moment(item.date).format('dddd, MMMM Do, YYYY'));
+					// endEdit
+					
+					// Create a copy of the item to be edited so we don't automatically flush changes to db
+          ///this.item = JSON.parse(JSON.stringify(item));
+					/** /
+          // File objects don't survive the JSON dance, so copy that over manually
+          if (item._attachments) {
+            this.set('item._attachments', item._attachments);
+          }
+					/** /
+
+          //this.$.upload.files = [];
+
+					/** /
+          if (!item.status) {
+            this.item.status = 'new';
+          }
+
+          if (item.total) {
+            this.$.total.value = item.total.toFixed(2);
+          }
+					/**/
+
+					/** /
+					// Disable buttons incompatible with context
+          this.$['button-delete'].hidden =  this.isNew;//!(this.item.$key/*_id && this.item.status === 'new'* /);
+          this.$['button-save'  ].hidden = !this.isNew;
+					/**/
+					
+          // Ensure that the scroll is returned to top on mobile
+          this.async(function() {
+            this.$.dialog.scrollTop = 0;
+          });
+
+					//console.log('isNew', this.isNew);
+          this.set('route.path', '/edit');
+					//console.log('item', this.item);
+					//console.log('key', this.item.$key);
+					
+        },				
+
+        close: function() {
+          var _this = this;
+          this.async(function() {
+            // Prevent tap from leaking through to underlying page
+            _this.set('route.path', '');
+            //_this.set('item', {});//_this.item = {}; // Throws because item only has a getter
+  			  }, 100);
+					//console.log('item', this.item);
+					// Edit
+					//console.log('isNew', this.isNew);
+					if(this.isNew) {
+						this._clearAll();
+					}
+					if(this.subEditorOpened) {
+						this.$['sub-editor'].toggle();
+					}
+					//console.log('item', this.item);
+					// endEdit
+        },
+
+        _delete: function() {
+          //this.fire('item-delete', this.item);
+					//this.fire('item-delete', {
+					this.fire('item-method', {
+						method: 'delete',
+						entity: 'deal',
+						data: this.item,
+					});
+        },
+				
+				showToast: function(ob) {
+					var toast = this.$.toast;
+					toast.show(ob);
+				},
+				
+				// Edit
+				
+				_formInvalid: function() {
+					console.log('Do stuff here when form is invalid.');
+				},
+				
+				_onDomChange: function() {
+					if(this.$.scrollable && this.$.dialog) {
+						this.$.scrollable.dialogElement = this.$.dialog;
+					}
+					/**/
+					if(this.$$('#rules-text-wager')) {
+					  // Do not use $.rules-text-wager; Syntax does not recognize dynamic nodes // http://stackoverflow.com/a/24589493
+					  this.$$('#rules-text-wager').innerHTML = this.rulesText;
+					}
+				},
+								
+				
+				/** /
+				itemChanged: function(item) {
+					this.set('isNew', !(item.$key));
+					console.log('isNew', this.isNew);
+					console.log('item', this.item);
+				},
+				
+				/**/
+				itemPropertyChanged: function(ob) {
+					//console.log('ob', ob);
+					if (!this.itemPropertyBeingChanged) {
+						this.set('itemPropertyBeingChanged', true); // prevent recursion
+						// Change stuff
+						if( this.item ) {
+							// Filter Index // http://stackoverflow.com/a/28036032/1640892
+							/** /
+							this.set('item.filterindex',
+											   Math.floor ( Math.pow(10, 12) * this.item.rate   )
+											 + Math.floor ( Math.pow(10,  9) * this.item.ltv    )
+											 + Math.floor ( Math.pow(10,  3) * this.item.amount )
+											 + Math.floor ( Math.pow(10,  0) * this.item.tenor  )
+											);
+							/**/
+							this.set('zipCode'     , this.item.zip                          );//console.log('zipCode', this.zipCode);
+						  this.set('item.city'   , this.zipCity   ? this.zipCity   : false); //.toLowerCase().replace(/\./g, ',').replace(/\s/g, '-') );
+						  this.set('item.county' , this.zipCounty ? this.zipCounty : false); //.toLowerCase().replace(/\./g, ',').replace(/\s/g, '-') );
+						  this.set('item.state'  , this.zipState  ? this.zipState  : false); //.toLowerCase().replace(/\./g, ',').replace(/\s/g, '-') );
+						}
+						/** /
+						// Force data system to pick up subproperty changes
+						// https://www.polymer-project.org/1.0/docs/devguide/model-data
+						//console.log('item1', this.item);
+						/** /
+            //var item = this.item;
+            //this.item = {};
+            //this.item = item;
+						/** /
+						//console.log('item2', this.item);
+						/**/
+						this.set('itemPropertyBeingChanged', false);
+					}
+        },
+				/**/
+														 
+				_clearAll: function() {
+					/** /
+					this.set('terms', {});
+					this.set('engagement', {});
+					this.set('item', {});
+					/** /
+					var a = Polymer.dom(this.root).querySelectorAll('.form-field');
+					for (each in a) {
+						each.value = null;
+					}
+					/** /
+					var i = a.length;
+					while (i--) {
+						a[i].value = null;
+					}
+					/** /
+					console.log('a', a);
+					/** /
+					this.set('item', {});
+					this.set('amount', '');
+					this.set('collateral', '');
+					/**/
+				},
+				
+				/** /
+				show: function() {
+					console.log('item', this.item);
+					console.log('terms', this.terms);
+					console.log('engagement', this.engagement);
+					console.log('isNew', this.isNew);
+					console.log('direction', this.direction);
+				},
+				/**/
+				
+				// endEdit
+				
+      });
+    })();
+  </script>
+</dom-module>

@@ -1,0 +1,124 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../../redux-store/redux-store.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/iron-list/iron-list.html">
+
+<link rel="import" href="items-grid-item.html">
+
+<link rel="import" href="../../custom-styles/iron-list-grid-styles.html">
+
+<dom-module id="items-grid">
+  <template>
+		<style include="iron-list-grid-styles"></style>
+		<style>
+			div.card {
+				width: 200px;
+				height: 80px;
+				color: var(--paper-grey-500);
+			}
+		</style>
+		
+		<iron-list id="list"
+							 xmedia-width="[[mediaWidth]]"
+							 items="[[items]]"
+							 xas="item"
+							 xfilters="[[filters]]"
+							 grid
+							 >
+			<template>
+				<div>
+					<items-grid-item key="[[item.$key]]"
+													 timestamp="[[item.timestamp]]"
+													 name-first="[[item.nameFirst]]"
+													 name-last="[[item.nameLast]]"
+													 >
+					</items-grid-item>
+				</div>
+			</template>
+		</iron-list>
+		<!---->
+    <paper-fab icon="add"
+							 id="add-button"
+							 on-tap="_showItemEditor"
+							 xon-tap="show">
+		</paper-fab>
+		<!---->
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'items-grid',
+				behaviors: [
+					//ReduxBehavior,
+					Polymer.IronResizableBehavior,
+				],
+				properties: {
+          items: Array,
+					/** /
+					dataSource: Function,
+          filters: {
+						type: Object,
+						notify: true,
+					},
+					/**/
+					selectedItem: {
+						type: Object,
+						notify: true,
+					},
+          sortColumn: String,
+          sortDirection: String,
+					// Edit
+					/** /
+					mediaWidth: { // xsmall, small, medium, large
+						type: String,
+						notify: true,
+						statePath: 'mediaWidth',
+					},
+					/**/
+					// endEdit
+				},
+				
+				/**/
+				observers: [
+          '_selectedItemChanged(selectedItem)'   ,
+					//'_computeDataSource(items, filters.*)' , 
+				],
+				/**/
+				
+        _deselecting: function(e) {
+          e.preventDefault();
+					this._selectedItemChanged(e.detail.item);
+        },
+
+				_selectedItemChanged: function(ob) {
+					//console.log('selectedItem', ob);
+					this.fire('item-edit', ob);
+				},
+
+				_showItemEditor: function() {
+          this.fire('item-edit', {}/*this.selectedItem*/);
+        },
+				
+				reset: function() {
+					this.set('selectedItem', null);
+				},
+
+				_computeSelectedStr: function(ob) {
+				  return JSON.stringify(ob);
+        },
+
+				show: function() {
+					console.log('selectedItem', this.selectedItem);
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

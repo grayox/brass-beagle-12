@@ -1,0 +1,84 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="toolbar-dialog.html">
+<link rel="import" href="toolbar-dialog-styles.html">
+<link rel="import" href="toolbar-dialog-behavior.html">
+<!---->
+<!---->
+
+<link rel="import" href="/bower_components/google-youtube/google-youtube.html">
+
+<dom-module id="dialog-info">
+  <template>
+		<style include="toolbar-dialog-styles"></style>
+		<toolbar-dialog>
+			<div class="dialog-body">
+        <div class="instructions">
+
+          <div class="text">
+            <p>
+              We use Six Degrees of Separation
+							to build a global network
+							that makes deals happen.
+						</p>
+						<h3>Instructions</h3>
+            <ol>
+							<!---->
+							<li>
+								Login, then navigate to the &ldquo;Network&rdquo; page.
+							</li>
+							<li>
+								Enter the email addresses of other professionals in your network
+								who might know someone more likely to participate in the available deals.
+							</li>
+							<li>
+								Click the &ldquo;Invite&rdquo; button to invite your professional contacts.
+							</li>
+							<li>
+								You earn a fee for every deal done by your network.
+								The more deals your network does, the more you earn.
+								So add as many contacts as you can!
+							</li>
+							<!---->
+						</ol>
+						<p>
+							Watch the below video to learn more about the science behind our network.
+						</p>
+					  <!---->
+            <google-youtube id="video"
+														video-id="TcxZSmzPw8k"
+														height="270px"
+														width="480px"
+														rel="0"
+														>
+						</google-youtube>
+					  <!---->
+          </div>
+        </div>
+      </div>
+    </toolbar-dialog>
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'dialog-info',
+				
+				/**/
+				behaviors: [
+					MyBehaviors.ToolbarDialogBehavior,
+				],
+				/**/
+				
+				listeners: {
+					'toolbar-dialog-close': 'close',
+				},
+				
+				close: function() {
+					this.$.video.pause();
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

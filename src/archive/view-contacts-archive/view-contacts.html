@@ -1,0 +1,136 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<!--- ->
+<!---->
+
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="view-contacts-list.html">
+<link rel="import" href="view-contacts-detail.html">
+
+<!--- ->
+<!--- ->
+Demos
+https://gridbyexample.com/patterns/header-asmany-footer/
+https://codepen.io/rachelandrew/pen/zwPEoX
+<!---->
+
+<dom-module id="view-contacts">
+
+  <template>
+
+    <style xinclude="dashboard-styles">
+      :host {
+        --line-color: #DDDDDD;
+      }
+      .split {
+        border-bottom: 1px var(--line-color) solid;
+        
+        display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+        grid-template-columns: 1fr 1fr;
+      }
+    </style>
+		
+		<!---->
+      <div class="wrapper split">
+				<!--- ->
+        <header class="header">
+					Dashboard
+				</header>
+        
+				<!--- ->
+        <div class="panel">Panel A</div>
+        <div class="panel">Panel B</div>
+        <div class="panel">Panel C</div>
+        <div class="panel">Panel D</div>
+        <div class="panel">Panel E</div>
+        <div class="panel">Panel F</div>
+        <div class="panel">Panel G</div>
+        <div class="panel">Panel H</div>
+        <div class="panel">Panel I</div>
+        <div class="panel">Panel J</div>
+				<!---->
+				
+				<!--- ->
+        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
+        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
+        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
+        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
+        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
+        <dashboard-element item-value="31"  item-label="Available Leads"></dashboard-element>
+        <dashboard-element item-value="31"  item-label="Leads Balance"  ></dashboard-element>
+        <dashboard-element item-value="213" item-label="Leads Sent"     ></dashboard-element>
+        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
+        <dashboard-element item-value="12"  item-label="Leads Received" ></dashboard-element>
+				<!---->
+				
+				<!--- ->
+				<shields-io left="left"
+										right="right"
+										color="blue"
+										>
+				</shields-io>
+				<!--- ->
+        <footer class="footer">My footer</footer>
+        <!---->
+        <view-contacts-list></view-contacts-list>
+        <view-contacts-detail></view-contacts-detail>
+        
+        <!--- ->
+        <template is="dom-if" if="{{!_split}}">
+          <view-contacts-list></view-contacts-list>
+          <view-contacts-detail></view-contacts-detail>
+        </template>
+        
+        <template is="dom-if" if="{{_split}}">
+          <div class="split">
+            <view-contacts-list></view-contacts-list>
+            <view-contacts-detail></view-contacts-detail>  		
+          </div>
+        </template>
+        <!---->
+
+      </div>
+		<!---->
+
+  </template>
+
+  <script>
+
+    class ViewContacts extends Polymer.Element {
+
+      static get is() { return 'view-contacts'; }
+
+			static get properties() { return {
+				mediaWidth: {
+					type: Number, // 0, 1, 2, 3
+					notify: true,
+					//observer: '_mediaWidthChanged',
+				},
+      }}
+			
+      constructor() {
+        super();
+      }
+			
+			ready() {
+        super.ready();
+				//console.log('Component Ready');
+			}
+      
+			/**/
+			/**/
+		
+    }
+
+    customElements.define(ViewContacts.is, ViewContacts);
+
+  </script>
+
+</dom-module>

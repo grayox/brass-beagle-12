@@ -1,0 +1,32 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<dom-module id="my-element">
+  <template>
+		<style></style>
+	</template>
+
+  <script>
+    class MyElement extends Polymer.Element {
+      static get is() { return 'my-element'; }
+
+      static get properties() { return {
+				// properties go here
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/** /
+			ready() {
+        super.ready();
+        window.addEventListener('user-action-select', (e) => this.onUserActionSelect(e));
+      }
+			/**/
+		
+		}
+
+    window.customElements.define(MyElement.is, MyElement);
+  </script>
+</dom-module>

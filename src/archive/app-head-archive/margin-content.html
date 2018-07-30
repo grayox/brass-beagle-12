@@ -1,0 +1,280 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<!--- ->
+<link rel="import" href="../app-state/my-redux-store.html">
+<link rel="import" href="/src/custom-behaviors/user-setter-behavior.html">
+Use iron-meta to manage state
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
+<!---->
+
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-progress/paper-progress.html">
+<link rel="import" href="/bower_components/paper-badge/paper-badge.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icons/image-icons.html">
+
+<link rel="import" href="/src/custom-styles/paper-listbox-styles.html">
+<link rel="import" href="/src/custom-elements/label-badge.html">
+
+<dom-module id="margin-content">
+  <template>
+		<style include="paper-listbox-styles"></style>
+		
+		<style>
+			
+			xpaper-item {
+				--paper-item: {
+					text-align: center;
+				};
+			}
+			
+	    paper-progress {
+        display: block;
+        width: 100%;
+        margin: 0;
+				
+        --paper-progress-active-color: var(--paper-light-blue-500);
+        --paper-progress-secondary-color: var(--paper-light-blue-100);
+      }
+
+			/** /
+			--paper-menu {
+			  margin-bottom: 3em;
+			}
+			paper-menu {
+			  margin-bottom: 3em;
+				--paper-menu: {
+					margin-bottom: 3em;
+				}
+			}
+			paper-menu:last-child {
+				margin-bottom: 3em;
+			}
+			/**/
+			
+			/**/
+			paper-badge {
+				--paper-badge-margin-left: 0;
+				--paper-badge-margin-bottom: 0;
+			}
+			/**/
+			
+		</style>
+		
+		<!--- ->
+		<paper-menu>
+			<paper-item on-tap="_openSettings"><iron-icon icon="view-list"     ></iron-icon></paper-item>
+			<paper-item on-tap="_openSettings"><iron-icon icon="apps"          ></iron-icon></paper-item>
+			<paper-item                       >                                             </paper-item>
+			<paper-item on-tap="_openZip"     ><iron-icon icon="track-changes" ></iron-icon></paper-item>
+			<paper-item on-tap="_openCategory"><iron-icon icon="fingerprint"   ></iron-icon></paper-item>
+			<paper-item on-tap="_openSettings"><iron-icon icon="image:flash-on"></iron-icon></paper-item>
+		</paper-menu>
+		<!--- ->
+		<paper-menu>
+			<paper-item on-tap="_openDialog" data-arg="settings"><iron-icon icon="view-list"     ></iron-icon></paper-item>
+			<paper-item on-tap="_openDialog" data-arg="settings"><iron-icon icon="apps"          ></iron-icon></paper-item>
+		</paper-menu>
+		<!---->
+		<paper-menu selected="{{viewstate}}"
+								attr-for-selected="name">
+      <template is="dom-repeat"
+								items="[[viewstates]]">
+        <paper-item class="hover"
+										name="[[item.name]]">
+					<iron-icon icon="[[item.icon]]"></iron-icon>
+				</paper-item>
+      </template>
+		</paper-menu>
+		
+		<!--- ->
+		<div class="spacer"></div>
+		<!---->
+		
+		<paper-progress value="75"
+										xsecondary-progress="80"
+										>
+		</paper-progress>
+		<paper-item disabled
+							  xcenter-justified xflex
+								xcenter-center
+								flex horizontal layout center center-justified
+								>
+			<span>
+				[[userBalances.net]]
+				<paper-badge xfor="balance"
+										 xlabel="3"
+										 label="[[userAvailableLeadsCount]]"
+										 hidden$="[[!userAvailableLeadsCount]]"
+										 >
+				</paper-badge>
+			</span>
+		</paper-item>
+		<label-badge value="15"
+								 label="k"
+								 description="Revenue"
+								 >
+		</label-badge>
+		<!--- ->
+		<div class="spacer"></div>
+		<!---->
+		
+		<paper-menu selected="{{selected}}"
+								attr-for-selected="name">
+      <template is="dom-repeat"
+								items="[[dialogs]]">
+        <paper-item class="hover"
+										name="[[item.name]]">
+					<iron-icon icon="[[item.icon]]"></iron-icon>
+				  <paper-tooltip>[[item.name]]</paper-tooltip>
+				</paper-item>
+      </template>
+		</paper-menu>
+		<!---->
+
+  </template>
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'margin-content',
+				behaviors: [
+					/** /
+					ReduxBehavior,
+					AsyncActionsBehavior,
+					MyBehaviors.UserSetterBehavior,
+					/**/
+					//Polymer.NeonAnimationRunnerBehavior,
+					//Polymer.IronResizableBehavior,
+				],
+				properties: {
+					// redux
+					/** /
+					viewGrid: {
+						type: Boolean,
+						statePath: 'viewGrid',
+					},
+					/**/
+					viewState: {
+						type: String,
+						statePath: 'viewState',
+						observer: '_viewStateChanged',
+					},
+					/**/
+					// endRedux
+					selected: {
+						type: String,
+						observer: '_selectedChanged',
+					},
+					viewstate: {
+						type: String,
+						observer: '_viewstateChanged',
+					},
+					/** /
+					viewgrid: {
+						type: Boolean,
+						computed: '_computeViewgrid(viewstate)',
+					},
+					/**/
+					dialogs: {
+						type: Array,
+						value: function() {
+							return [
+							  { name: 'zip'      , icon: 'track-changes'  , },
+							  { name: 'category' , icon: 'fingerprint'    , },
+							  { name: 'settings' , icon: 'image:flash-on' , },
+							];
+						},
+					},
+ 					viewstates: {
+						type: Array,
+						value: function() {
+							return [
+							  { name: 'grid'  , icon: 'apps'      },
+							  { name: 'table' , icon: 'view-list' },
+							];
+						},
+					},
+        },
+				
+				// Redux
+				// https://github.com/Polymer/polycasts/blob/master/ep61-redux/friend-input.html
+				/** /
+	      actions: {
+		      add: function(name) {
+			      return {
+				      type: 'ADD_FRIEND',
+				      friend: name,
+			      };
+		      },
+		      _updateMediaWidth: function(index) {
+						var mediaWidth = index;
+						return {
+				      type: 'MEDIA_WIDTH',
+				      payload: {
+								mediaWidth : mediaWidth ,
+							}
+			      };
+		      }
+	      },
+	      addFriend: function() {
+		      var input = this.$.field;
+		      if (input.value) {
+			      this.dispatch('add', input.value);
+			      input.value = '';
+			      input.focus();
+		      }
+	      },
+				/** /
+				actions: {
+		      updateViewstate: function(s) {
+						var viewState = s;
+						var viewGrid = (s === 'grid');
+			      return {
+				      type: 'VIEWSTATE',
+				      payload: {
+								viewState : viewState ,
+								viewGrid  : viewGrid  ,
+							}
+			      };
+		      },
+	      },
+				/**/
+	      // endRedux
+				
+				_selectedChanged: function(s) {
+					if(!s) return;
+					//console.log(s);//return;
+					this.fire('margin-dialog', s);
+					this.set('selected', null);
+				},
+				/**/
+				_viewstateChanged: function(s) {
+					if(!s) return;
+					//console.log(s);//return;
+				  //this.fire('margin-viewstate', s);
+					this.dispatch('updateViewstate', s);
+				},
+				_viewStateChanged: function(s) {
+					if(!s) return;
+					var viewstate = this.viewstate;
+					if(s == viewstate) {
+						return;
+					} else {
+						this.set('viewstate', s);
+					}
+				},
+				/** /
+				_computeViewgrid: function(s) {
+					var b = (s === 'grid');
+				  this.fire('margin-viewgrid', b);
+					return b;
+				},
+				/**/
+      });
+    })();
+  </script>
+</dom-module>

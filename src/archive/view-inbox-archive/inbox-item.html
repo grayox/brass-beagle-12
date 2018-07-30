@@ -1,0 +1,239 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/src/custom-elements/avatar-hash.html">
+<link rel="import" href="/src/custom-libraries/moment-js.html">
+
+<link rel="import" href="item-controls.html">
+
+<dom-module id="inbox-item">
+  <template>
+		
+    <style>
+			
+			/* css grid */
+			
+			:host {
+				
+				/** /
+				Spec
+				https://material.io/guidelines/layout/metrics-keylines.html#metrics-keylines-keylines-spacing
+				--row-height: 72px;
+				/**/
+				--row-height: 80px;
+				
+				--font-size-primary: 16px;
+				--font-size-secondary: 14px;
+				
+				--background-color-hover: #FFFFFF; /* white; */
+				--border-color: #DDDDDD;
+				--border-radius: 4px;
+				--horizontal-padding: 24px;
+				
+				--opacity-extra-dim: 0.2;
+				
+        /** /
+				width: 30vw;
+				grid-gap: 1em;
+				background-color: #EEEEEE;
+				/**/
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+				grid-template-columns: 18fr 1fr;
+				grid-auto-rows: var(--row-height);
+				/** /
+				justify-content: center;
+				align-content: center;
+				justify-items: center;
+				grid-template-areas:
+				  "a a a a b b b b b
+				   a a a a b b b b b
+				   c c c c d d d d d";
+				grid-auto-rows: minmax(80px, auto); /* flex; stretches if content exceeds target height */
+				/**/
+				
+				border-bottom: 1px solid var(--border-color);
+				cursor: pointer;
+			}
+			
+			/** /
+			:host > * {
+				display: flex;
+				align-items: center;
+			}
+			
+			/** /
+			:host(:hover) {
+				background-color: white;
+			}
+			/**/
+			
+			.start {
+				/** /
+				background-color: #EEEEEE;
+				/**/
+				display: grid; /* https://css-tricks.com/snippets/css/complete-guide-grid/ | http://grid.malven.co/ */
+				grid-template-columns: 1fr 9fr;
+				
+				/** /
+				display: flex;
+				/**/
+				align-items: center;					
+			}
+			
+			.text {
+				text-align: left;
+			}
+			
+			.start:hover {
+				background-color: #FFFFFF;
+				border-right: 1px solid var(--border-color);
+				border-radius: var(--border-radius);
+			}
+			
+			.end {				
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			
+			.end:hover {
+				background-color: red;
+				color: white;
+				opacity: 1.0;
+				
+				border-left: 1px solid var(--border-color);
+				border-radius: var(--border-radius);
+			}
+			
+			.pad {
+				padding: 0 var(--horizontal-padding);
+			}
+			
+      .primary {
+        font-size: var(font-size-primary);
+      }
+      .secondary {
+        font-size: var(font-size-secondary);
+      }
+      .dim {
+        opacity: var(--opacity-dim);
+      }			
+			.extra-dim {
+        opacity: var(--opacity-extra-dim);
+      }			
+			
+
+		</style>
+		
+		
+		<div class="start">
+		  <paper-ripple></paper-ripple>
+			<avatar-hash class="pad"
+									 message="[[random]]"
+									 xsize="50"
+									 placeholder="/images/user.jpg"
+									 >
+			</avatar-hash>
+			<div class="text">
+				<div class="secondary dim">[[item.category]]</div>
+				<div class="primary">[[item.city]] [[item.state]]</div>
+				<div class="secondary dim">[[timeAgo]]</div>
+			</div>
+		</div>
+		
+		<item-controls class="end extra-dim pad"
+									 on-inbox-item-control-tapped="_handleInboxItemControlTapped"
+									 >
+		  <paper-ripple></paper-ripple>
+		</item-controls>
+		
+	</template>
+
+  <script>
+    class InboxItem extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'inbox-item'; }
+
+      static get properties() { return {
+				item: {
+					type: Object,
+					//notify: true,
+					//observer: '_itemChanged',
+				},
+				random: {
+					type: Number,
+					notify: true,
+					value: () => {
+						// return a random number with P digits
+						const P = 10; // number of digits in returned number
+						const x = Math.random();
+						//console.log('x', x);
+						const y = Math.pow(10, P);
+						//console.log('y', y);
+						const z = Math.round(x * y);
+					  //console.log('z', z);
+						return z;
+					},
+				},
+				timeAgo: {
+					type: String,
+					computed: '_computeTimeAgo(item)',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+				
+				// add 'tap' handler
+        this.addEventListener('tap', (e) => this._handleTap(e)); // yields desired behavior: fires once only for tapped item in <iron-list>
+        //window.addEventListener('tap', (e) => this._handleTap(e)); // yields undesired behavior: fires once per item in <iron-list>
+  		}
+			/**/
+			
+			/** /
+			_itemChanged(item) {
+				console.log('item', item);
+			}
+			/**/
+			
+			_handleTap(e) {
+				//console.log('e', e);
+				const item = this.item;
+				//console.log('item', this.item);
+				console.log('item', item);
+				const n = 'inbox-item-tapped';
+				const o = {
+					//bubbles: true,
+					//composed: true,
+					detail: {item: item},
+				};
+				const d = new CustomEvent(n, o);
+				this.dispatchEvent(d);
+			}
+			
+			_handleInboxItemControlTapped() {
+				//console.log('e', e);
+				const item = this.item;
+				console.log('item', this.item);
+			}
+			
+			_computeTimeAgo(item) {
+				//console.log('item', item);
+				const t = item.timestamp;
+				const s = moment(t).fromNow(); // http://momentjs.com/docs/#/displaying/fromnow/
+				return s;
+			}
+			
+		}
+
+    window.customElements.define(InboxItem.is, InboxItem);
+  </script>
+</dom-module>

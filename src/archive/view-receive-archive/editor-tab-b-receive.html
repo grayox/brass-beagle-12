@@ -1,0 +1,366 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-date-picker/paper-date-picker.html">
+<!--- ->
+Instead of vaadin=date-picker, use https://github.com/bendavis78/paper-date-picker
+<link rel="import" href="/bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<!--- ->
+Submenu Layout
+http://jsbin.com/buhawuruke/1/edit?html,output
+<!---->
+<link rel="import" href="../../custom-styles/paper-submenu-styles.html">
+<!---->
+
+<dom-module id="editor-tab-b-receive">
+  <template>
+		
+    <style include="paper-submenu-styles"></style>
+		<!---->
+    <style>
+			:host {
+				paper-input[disabled] {
+					--paper-input-container-input-color: red;
+					--paper-input-container-disabled: {
+						opacity: 1;
+					}
+				}
+			}
+			
+			/** /
+			paper-input {				
+				--paper-input-container-input: {
+					direction: rtl;
+				}
+			}
+			/**/
+			
+			paper-input.align-right {
+				--paper-input-container-input: {
+					text-align: right;
+				}			
+			}
+			
+			
+		</style>
+		<!---->
+
+		
+		<div id="create" class="layout horizontal">
+			
+			<div class="layout vertical xwide">
+				<!--- ->
+				<paper-dialog-scrollable id="scrollable" class="flex">
+					<paper-textarea id="create-description_b"
+													name="description_b"
+													label="Description"
+													value="{{item.description_b}}"
+													disabled$="[[!isNew]]"
+													>
+					</paper-textarea>
+				</paper-dialog-scrollable>
+				<!---->
+				<paper-input id="create-issuer"
+										 name="issuer"
+										 xclass="align-right"
+										 label="Issuer"
+										 value="{{item.issuer}}"
+										 type="text"
+										 char-counter
+										 maxlength="25"
+										 required
+										 disabled$="[[!isNew]]"
+										 >
+					<!--- ->
+					<div prefix>USD$</div>
+					<!--- ->
+					<div suffix>%</div>
+					<!---->
+				</paper-input>
+
+				<!--- ->
+				<vaadin-date-picker id="create-effective"
+														name="effective"
+														label="Effective Date"
+														value="{{item.effectiveDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</vaadin-date-picker>
+				<vaadin-date-picker id="create-expiration"
+														name="expiration"
+														label="Expiration Date"
+														value="{{item.expirationDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</vaadin-date-picker>
+				<!---->
+				<paper-date-picker id="create-effective"
+													 name="effective"
+													 label="Effective Date"
+													 value="{{item.effectiveDate}}"
+													 disabled$="[[!isNew]]"
+													 xrequired
+													 >
+				</paper-date-picker>
+				<paper-date-picker id="create-expiration"
+													 name="expiration"
+													 label="Expiration Date"
+													 value="{{item.expirationDate}}"
+													 disabled$="[[!isNew]]"
+													 xrequired
+													 >
+				</paper-date-picker>
+				<paper-toggle-button id="create-extension"
+														 name="extension"
+														 checked="{{item.extensionOption}}"
+														 tooltip="Does the engagement have an extension option?"
+														 >Extension Option</paper-toggle-button>
+			</div>
+			
+			<div class="layout vertical">
+
+				<h3>Fees</h3>
+				
+				<paper-menu attr-for-item-title="label" multi>
+
+					<paper-submenu label="Engagement">
+						<paper-item class="menu-trigger">Engagement</paper-item>
+						<paper-menu class="menu-content sublist">
+							<paper-item class="input">
+								<paper-input id="create-engagement-fee"
+														 name="engagement-fee"
+														 xis="iron-input"
+														 xprevent-invalid-input
+														 xallowed-pattern="[0-9.]"
+														 class="align-right"
+														 label="Engagement Fee"
+														 value="{{item.engagementFee}}"
+														 xtype="text"
+														 type="number"
+														 min="0"
+														 xmax="99"
+														 step="any"
+														 xlength="55"
+														 xrequired
+														 xmaxlength="2"
+														 xpattern="\d*"
+														 disabled$="[[!isNew]]"
+														 tooltip="Amount paid by Issuer at the signing of the engagement"
+														 >
+									<!--- ->
+									<div prefix>USD$</div>
+									<!---->
+									<div suffix>%</div>
+									<!---->
+								</paper-input>
+							</paper-item>
+						</paper-menu>
+					</paper-submenu>
+
+					<paper-submenu label="Milestone">
+						<paper-item class="menu-trigger">Milestone</paper-item>
+						<paper-menu class="menu-content sublist">
+							<paper-item class="input">
+								<paper-input id="create-milestone-fee"
+														 name="milestone-fee"
+														 xis="iron-input"
+														 xprevent-invalid-input
+														 xallowed-pattern="[0-9.]"
+														 class="align-right"
+														 label="Milestone Fee"
+														 value="{{item.milestoneFee}}"
+														 xtype="text"
+														 type="number"
+														 min="0"
+														 xmax="99"
+														 step="any"
+														 xlength="55"
+														 xrequired
+														 xmaxlength="2"
+														 xpattern="\d*"
+														 disabled$="[[!isNew]]"
+														 tooltip="Amount paid by Issuer upon completion of a specified project accomplishment"
+														 >
+									<!--- ->
+									<div prefix>USD$</div>
+									<!---->
+									<div suffix>%</div>
+									<!---->
+								</paper-input>
+							</paper-item>
+						</paper-menu>
+					</paper-submenu>
+
+					<paper-submenu label="Success">
+						<paper-item class="menu-trigger">Success</paper-item>
+						<paper-menu class="menu-content sublist" multi>
+							<paper-submenu label="Cash">
+								<paper-item class="menu-trigger">Cash</paper-item>
+								<paper-menu class="menu-content sublist2">
+									<paper-item class="input">
+										<paper-input id="create-cash-success-fee"
+																 name="cash-success-fee"
+																 xis="iron-input"
+																 xprevent-invalid-input
+																 xallowed-pattern="[0-9.]"
+																 class="align-right"
+																 label="Cash Success Fee"
+																 value="{{item.cashSuccessFee}}"
+																 xtype="text"
+																 type="number"
+																 min="0"
+																 xmax="99"
+																 step="any"
+																 xlength="55"
+																 xrequired
+																 xmaxlength="2"
+																 xpattern="\d*"
+																 disabled$="[[!isNew]]"
+																 tooltip="Cash amount to be paid at the closing of a Transaction (Equity, Debt, Loan, or other) as a % of Transaction size"
+																 >
+											<!--- ->
+											<div prefix>USD$</div>
+											<!---->
+											<div suffix>%</div>
+											<!---->
+										</paper-input>
+									</paper-item>
+								</paper-menu>
+							</paper-submenu>
+							<paper-submenu label="Equity">
+								<paper-item class="menu-trigger">Equity</paper-item>
+								<paper-menu class="menu-content sublist2" multi>
+									<paper-submenu label="Grant">
+										<paper-item class="menu-trigger">Grant</paper-item>
+										<paper-menu class="menu-content sublist3" multi>
+											<paper-item class="input">
+												<paper-input id="create-equity-success-fee-grant"
+																		 name="equity-success-fee-grant"
+																		 xis="iron-input"
+																		 xprevent-invalid-input
+																		 xallowed-pattern="[0-9.]"
+																		 class="align-right"
+																		 label="Equity Grant"
+																		 value="{{item.equitySuccessFeeGrant}}"
+																		 xtype="text"
+																		 type="number"
+																		 min="0"
+																		 xmax="99"
+																		 step="any"
+																		 xlength="55"
+																		 xrequired
+																		 xmaxlength="2"
+																		 xpattern="\d*"
+																		 disabled$="[[!isNew]]"
+																		 tooltip="Equity compensation to be awarded at the closing of a Transaction"
+																		 >
+													<!--- ->
+													<div prefix>USD$</div>
+													<!---->
+													<div suffix>%</div>
+													<!---->
+												</paper-input>
+											</paper-item>
+										</paper-menu>
+									</paper-submenu>
+									<paper-submenu label="Warrants">
+										<paper-item class="menu-trigger">Warrants</paper-item>
+										<paper-menu class="menu-content sublist3" multi>
+											<paper-item class="input">
+												<paper-input id="create-equity-success-fee-warrants"
+																		 name="equity-success-fee-warrants"
+																		 xis="iron-input"
+																		 xprevent-invalid-input
+																		 xallowed-pattern="[0-9.]"
+																		 class="align-right"
+																		 label="Equity Warrants"
+																		 value="{{item.equitySuccessFeeWarrants}}"
+																		 xtype="text"
+																		 type="number"
+																		 min="0"
+																		 xmax="99"
+																		 step="any"
+																		 xlength="55"
+																		 xrequired
+																		 xmaxlength="2"
+																		 xpattern="\d*"
+																		 disabled$="[[!isNew]]"
+																		 tooltip="Equity compensation to be awarded at the closing of a Transaction"
+																		 >
+													<!--- ->
+													<div prefix>USD$</div>
+													<!---->
+													<div suffix>%</div>
+													<!---->
+												</paper-input>
+											</paper-item>
+										</paper-menu>
+									</paper-submenu>
+								</paper-menu>
+							</paper-submenu>
+						</paper-menu>
+					</paper-submenu>
+
+				</paper-menu>
+				
+			</div>
+
+		</div>				
+	
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'editor-tab-b-receive',
+				
+				behaviors: [
+					//Polymer.NeonAnimationRunnerBehavior,
+					Polymer.NeonAnimatableBehavior,
+					Polymer.IronResizableBehavior,
+				],
+				
+        properties: {
+					isNew: Boolean,
+					item: {
+						type: Object,
+						notify: true,
+						value: function() {
+							return {};
+						},
+						/**/
+					},
+			  },
+
+      });
+    })();
+  </script>
+</dom-module>

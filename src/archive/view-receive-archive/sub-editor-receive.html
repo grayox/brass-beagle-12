@@ -1,0 +1,520 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<!--- ->
+Instead of vaadin=date-picker, use https://github.com/bendavis78/paper-date-picker
+<link rel="import" href="/bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<!--- ->
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<!---->
+
+<link rel="import" href="../../custom-elements/number-string.html">
+<link rel="import" href="../../custom-libraries/moment-js.html">
+<link rel="import" href="../../custom-styles/editor-styles.html">
+<!---->
+
+
+<dom-module id="sub-editor-receive">
+  <template>
+		<style include="editor-styles">
+			paper-fab {
+				--paper-fab-background: var(--primary-color);
+				position: absolute;
+				top: 1em;
+				left: 12em;
+			}
+			paper-input {
+				margin: 1em;
+			}
+			paper-card {
+				--paper-card-header-text: {
+					font-weight: 100;
+					opacity: 0.6;
+					xfont-style: italic;
+					font-size: 18px;
+				}
+				/** /
+				--paper-card-background-color: var(--paper-grey-100);
+				/**/
+				--paper-card-background-color: #fefefe;
+			}
+		</style>
+
+
+		<paper-fab id="fab"
+							 mini
+							 icon="add-shopping-cart"
+							 on-tap="toggle"
+							 xhidden$="[[opened]]"
+							 xentry-animation="scale-up-animation"
+							 xexit-animation="scale-down-animation"
+							 >
+		</paper-fab>
+
+		<iron-collapse id="collapse"
+									 opened="{{opened}}"
+									 xno-animation
+									 xhorizontal
+									 >
+			<paper-card id="card"
+									animated
+									animatedShadow
+									heading="Make a non-binding indicative bid"
+									>
+				<div class="card-content">
+					<form is="iron-form"
+								id="form"
+								class="form layout vertical"
+								>
+						<div class="layout horizontal">
+							<div class="layout vertical">
+								<number-string id="number-string"
+															 string="{{amount}}"
+															 number="{{item.amount}}"
+															 abbreviation="{{abbr}}"
+															 format="0,0"
+															 xdirection="[[direction]]"
+															 direction="string-to-number"
+															 >
+								</number-string>
+								<paper-input id="amount"
+														 name="amount"
+														 xis="iron-input"
+														 xprevent-invalid-input
+														 xallowed-pattern="[0-9]"
+														 class="align-right"
+														 label="Amount"
+														 value="{{amount}}"
+														 xtype="number"
+														 type="string"
+														 xmin="1000"
+														 xmax="99"
+														 step="1000"
+														 xlength="55"
+														 required
+														 xmaxlength="2"
+														 xtype="text"
+														 xpattern="\d*"
+														 disabled$="[[!isNew]]"
+														 >
+									<!---->
+									<div prefix>$</div>
+									<!---->
+									<div suffix>USD</div>
+									<!---->
+								</paper-input>
+								<span class="light">[[abbr]]</span>
+							</div>
+							<paper-input id="rate"
+													 name="rate"
+													 value="{{item.rate}}"
+													 label="Rate"
+													 class="align-right"
+													 type="number"
+													 step=".1"
+													 >
+								<!--- ->
+								<div prefix>$</div>
+								<!---->
+								<div suffix>%</div>
+								<!---->
+							</paper-input>
+						</div>
+
+					</form>	
+				</div>
+				<div class="card-actions">
+					<paper-button id="button-delete"
+												on-tap="_delete"
+												class="delete-button"
+												xdialog-dismiss
+												hidden
+												>Delete</paper-button>
+					<paper-button id="button-cancel"
+												xon-tap="close"
+												on-tap="toggle"
+												class="cancel-button"
+												xdialog-dismiss
+												xhidden
+												>Cancel</paper-button>
+					<paper-button id="button-save"
+												raised
+												on-tap="_save"
+												class="save-button"
+												xdialog-confirm
+												xhidden
+												>Save</paper-button>
+				</div>
+			</paper-card>
+			
+		</iron-collapse>
+
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'sub-editor-receive',
+
+				behaviors: [
+					//Polymer.NeonAnimationRunnerBehavior ,
+				],
+				
+        properties: {
+					
+					/** /
+					animationConfig: {
+						value: function() {
+							return {
+								/** /
+								fabEntry: [
+									{
+										name: 'scale-up-animation',
+										node: this.$.fab,
+										timing: {
+											duration: 750,
+										},
+									}, 
+									/** /
+									{
+										name: 'transform-animation',
+										node: this.$.fab,
+										transformTo: 'rotate(360deg)',
+										timing: {
+											duration: 750,
+										},
+									},
+									/** /
+								], 
+								fabExit: [
+									{
+										name: 'scale-down-animation', //'fade-out-animation',
+										node: this.$.fab,
+										timing: {
+											duration: 750,
+										},
+									}, 
+									/** /
+									{
+										name: 'transform-animation',
+										node: this.$.fab,
+										transformTo: 'rotate(360deg)',
+										timing: {
+											duration: 750,
+										},
+									},
+									/** /
+								],
+								/** /
+							};
+						},
+					},
+					/**/
+					
+					service: Object,
+          merchants: Array,
+          item: {
+            type: Object,
+            notify: true,
+            value: function() {
+              return {};
+            },
+          },
+          caption: {
+            type: String,
+            computed: '_getCaption(item)'
+          },
+          errorText: String,
+          db: Object,
+          _receiptURL: {
+            type: String,
+            notify: true,
+            value: 'images/default-receipt.png'
+          },
+          route: Object,
+          routeData: Object,
+					// Edit
+					isNew: Boolean,
+					direction: String,
+					abbr: String,
+					superKey: String,
+					opened: {
+						type: Boolean,
+            notify: true,
+						value: function() {
+							return false;
+						},
+					},
+					rulesText: {
+						type: String,
+						value: function() {
+							return [
+						    '<h2>Rules</h2>',
+								'<p>Enter a number between 1 and 99 indicating ',
+								'how many points you wish to risk on this contract.</p>',
+								'<h3>All contracts settle at 100 points.</h3>',
+								'<ol><li>Every contract settles at 100 points awarded to the winner.</li>',
+								'<li>The total number of points risked on both sides of the contract must total 100.</li>',
+								'<li>In the event of a tie, all points risked are refunded and no new points are awarded.</li>',
+								'<li>The number of points you risk represents your implied probability of your team winning.</li></ol>',
+							].join('');
+						},
+					},
+					// endEdit
+        },
+				
+
+        observers: [
+					//'_updateReceiptURL(item._attachments.*)',
+					'itemChanged(item)',
+					'itemSubChanged(item.*)',
+				],
+
+				attached: function() {
+          this._boundOnResize = this._onResize.bind(this);
+          window.addEventListener('resize', this._boundOnResize);
+					// Edit
+					//this.$.rulesTextHeader.innerHTML = this.rulesText;
+					this.set('itemSubBeingChanged' , false);
+					// endEdit
+        },
+
+        detached: function() {
+          window.removeEventListener('resize', this._boundOnResize);
+				},
+
+        _onResize: function() {
+          this.$.collapse.notifyResize();
+        },
+				
+        _getCaption: function(item) {
+					//console.log('isNew', this.isNew);
+          if (item.$key/*_id*/) {//(!this.isNew) {// Creates async issue?
+            return 'Delete your deal'//'Edit Item';
+          } else {
+            return 'Create new deal'//'Add Item';
+          }
+        },
+
+        listeners: {
+          'iron-form-invalid': '_formInvalid',
+					'neon-animation-finish': '_onNeonAnimationFinish',	
+        },
+
+        _save: function() {
+          //this.$.error.innerText = '';
+          //var form = this.isNew ? this.$$('#form-create') : this.$$('#form-update') ; // Only necessary for dom-if
+					var data, form = this.$.form;
+          if (form.validate()) {
+            //this.item.total = parseFloat(this.item.total);
+						//console.log('item', this.item);
+            //this.fire('item-save', this.item);
+						/** /
+            this.fire('item-save', {
+							name: 'bid',
+							data: this.item,
+						});
+						/**/
+						data = this.item;
+						data.parent = this.superKey;
+						//console.log('data', data);//return;
+						this.fire('item-method', {
+							method: 'save',
+							entity: 'bid',
+							data: data,
+						});
+          } else {
+            console.log('Form validation failed');
+            this.$.dialog.scrollTop = 0;
+            this.errorText = 'Please fill all required fields';
+          }
+        },
+
+        open: function(item) {
+					
+					// Edit
+					this._clearAll();
+					//this.set('longDate', moment(item.date).format('dddd, MMMM Do, YYYY'));
+					// endEdit
+					
+					// Create a copy of the item to be edited so we don't automatically flush changes to db
+          this.item = JSON.parse(JSON.stringify(item));
+					/** /
+          // File objects don't survive the JSON dance, so copy that over manually
+          if (item._attachments) {
+            this.set('item._attachments', item._attachments);
+          }
+					/** /
+
+          //this.$.upload.files = [];
+
+					/** /
+          if (!item.status) {
+            this.item.status = 'new';
+          }
+
+          if (item.total) {
+            this.$.total.value = item.total.toFixed(2);
+          }
+					/**/
+
+					// Disable buttons incompatible with context
+          this.$['button-delete'].hidden =  this.isNew;//!(this.item.$key/*_id && this.item.status === 'new'*/);
+          this.$['button-save'  ].hidden = !this.isNew;
+					
+          // Ensure that the scroll is returned to top on mobile
+          this.async(function() {
+            this.$.dialog.scrollTop = 0;
+          });
+
+          this.set('route.path', '/edit');
+
+        },			
+
+        close: function() {
+          var _this = this;
+          this.async(function() {
+            // Prevent tap from leaking through to underlying page
+            _this.set('route.path', '');
+            _this.set('item', {});//_this.item = {};
+          }, 100);
+					//console.log('item', this.item);
+					// Edit
+					if(this.isNew) {
+						this._clearAll();
+					}
+					// endEdit
+        },
+
+        _delete: function() {
+          //this.fire('item-delete', this.item);
+					/** /
+					this.fire('item-delete', {
+						name: 'bid',
+						data: this.item,
+					});
+					/**/
+					this.fire('item-method', {
+						method: 'delete',
+						entity: 'bid',
+						data: this.item,
+					});
+        },
+				
+				// Edit
+				
+				_formInvalid: function() {
+					console.log('Do stuff here when form is invalid.');
+				},
+				
+				itemChanged: function(item) {
+					this.set('isNew', !(item.$key));
+				},
+				
+				itemSubChanged: function() {
+					if (!this.itemSubBeingChanged) {
+						this.set('itemSubBeingChanged', true); // prevent recursion
+						// Change stuff
+						if( this.item ) {
+							// Rate
+							if (this.item.rate) {
+								this.set( 'item.rate' , Math.round(parseFloat(this.item.rate*10000))/10000 ); // covert to number and round
+							}
+							/** /
+							// LTV
+							if (this.item.amount && this.item.collateral) {
+								this.set( 'item.ltv' , Math.round(parseFloat(this.item.amount/this.item.collateral*10000))/10000 ); // To save to database
+								this.set( 'ltv' , numeral(this.item.ltv).format('0.0%'));
+							} else {
+								this.set( 'ltv' , '...' );
+								this.set( 'item.ltv' , null     ); // To save to database
+							}
+							/** /
+							// Tenor
+							if (this.item.maturity && this.item.origination) {
+								var start = moment(this.item.origination);//moment('2016-10-15');
+								var end   = moment(this.item.maturity   );//moment('2018-10-15');
+								var dif   = end.from(start, true  ); // http://momentjs.com/docs/#/displaying/from/
+								var days  = end.diff(start, 'days'); // http://momentjs.com/docs/#/displaying/difference/
+								this.set( 'tenor'      , dif   );
+								this.set( 'item.tenor' , days  ); // To save (and sort) by days
+							} else {
+								this.set( 'tenor'      , '...' );
+								this.set( 'item.tenor' , null  ); // To save to database
+							}
+							/** /
+							// Filter Index // http://stackoverflow.com/a/28036032/1640892
+							this.set('item.filterindex',
+											   Math.floor ( Math.pow(10, 12) * this.item.rate   )
+											 + Math.floor ( Math.pow(10,  9) * this.item.ltv    )
+											 + Math.floor ( Math.pow(10,  3) * this.item.amount )
+											 + Math.floor ( Math.pow(10,  0) * this.item.tenor  )
+											);
+							/**/
+						}
+						this.set('itemSubBeingChanged', false);
+					}
+        },
+						
+				_computeDirection: function(isNew) {
+					return isNew ? 'string-to-number' : 'number-to-string' ;
+				},
+				
+				_clearAll: function() {
+					this.set('bid', null);
+					this.set('rate', null);
+					this.set('item', {
+						bid: null,
+						rate: null,
+					});
+				},	
+				
+				_onNeonAnimationFinish: function() {
+					//this.$.fab.hidden = this.opened;
+				  this.set( '$.fab.hidden' , this.opened );
+				},
+				
+				toggle: function() {
+				  this.set( '$.fab.hidden' , false );
+					//var opened = this.opened;
+					//this.set('opened', !opened);
+					this.$.collapse.toggle();
+					if(this.opened) {
+						this.playAnimation('fabExit');
+					} else {
+						this._clearAll();
+						this.playAnimation('fabEntry');
+					}
+				},
+				
+      });
+    })();
+  </script>
+</dom-module>

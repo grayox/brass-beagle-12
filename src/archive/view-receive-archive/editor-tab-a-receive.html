@@ -1,0 +1,355 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-form/iron-form.html">
+<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="/bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<!--- ->
+Instead of vaadin=date-picker, use https://github.com/bendavis78/paper-date-picker
+<link rel="import" href="/bower_components/vaadin-date-picker/vaadin-date-picker.html">
+<link rel="import" href="/bower_components/vaadin-combo-box/vaadin-combo-box.html">
+<link rel="import" href="/bower_components/vaadin-upload/vaadin-upload.html">
+<link rel="import" href="/bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+<!---->
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="/bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="/bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<!---->
+<link rel="import" href="/src/custom-elements/number-string.html">
+<link rel="import" href="/src/custom-libraries/moment-js.html">
+<!---->
+
+<dom-module id="editor-tab-a-receive">
+  <template>
+    <style include="editor-styles">
+			:host {
+				paper-input[disabled] {
+					--paper-input-container-input-color: red;
+					--paper-input-container-disabled: {
+						opacity: 1;
+					}
+				}
+			}
+		</style>
+
+		<div id="create" class="layout horizontal">
+			<div class="layout vertical">
+				<!--- ->
+				<button on-tap="_show">Show Item</button>
+				<!--- ->
+				<vaadin-date-picker id="create-origination"
+														name="origination"
+														label="Target Origination"
+														value="{{item.originationDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</vaadin-date-picker>
+				<vaadin-date-picker id="create-maturity"
+														name="maturity"
+														label="Target Maturity"
+														value="{{item.maturityDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</vaadin-date-picker>
+				<!---->
+				<paper-date-picker id="create-origination"
+														name="origination"
+														label="Target Origination"
+														value="{{item.originationDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</paper-date-picker>
+				<paper-date-picker id="create-maturity"
+														name="maturity"
+														label="Target Maturity"
+														value="{{item.maturityDate}}"
+														disabled$="[[!isNew]]"
+														xrequired
+														>
+				</paper-date-picker>
+				<div class="layout horizontal">
+					<span class="light">Tenor&nbsp;</span>[[tenorHumanized]]
+				</div>
+				<number-string id="number-string-amount"
+											 string="{{amountString}}"
+											 number="{{item.amount}}"
+											 format="0,0"
+											 abbreviation="{{amtAbbr}}"
+											 xdirection="[[direction]]"
+											 direction="string-to-number"
+											 >
+				</number-string>
+				<paper-input id="create-amount"
+										 name="amount"
+										 xis="iron-input"
+										 xprevent-invalid-input
+										 xallowed-pattern="[0-9]"
+										 class="align-right"
+										 label="Original Principal"
+										 value="{{amountString}}"
+										 xtype="number"
+										 type="string"
+										 xmin="1000"
+										 xmax="99"
+										 step="1000"
+										 xlength="55"
+										 required
+										 xmaxlength="2"
+										 xtype="text"
+										 xpattern="\d*"
+										 disabled$="[[!isNew]]"
+										 >
+					<!---->
+					<div prefix>$</div>
+					<!---->
+					<div suffix>USD</div>
+					<!---->
+				</paper-input>
+				<!---->
+				<span class="light">[[amtAbbr]]</span>
+				<!---->
+				<number-string id="number-string-collateral"
+											 string="{{collateralString}}"
+											 number="{{item.collateral}}"
+											 format="0,0"
+											 direction="[[direction]]"
+											 xdirection="string-to-number"
+											 >
+				</number-string>
+				<paper-input id="create-collateral"
+										 name="collateral"
+										 xis="iron-input"
+										 xprevent-invalid-input
+										 xallowed-pattern="[0-9]"
+										 class="align-right"
+										 label="Collateral Value"
+										 value="{{collateralString}}"
+										 xtype="number"
+										 type="string"
+										 xmin="1000"
+										 xmax="99"
+										 step="1000"
+										 xlength="55"
+										 xrequired
+										 xmaxlength="2"
+										 xtype="text"
+										 xpattern="\d*"
+										 disabled$="[[!isNew]]"
+										 >
+					<!---->
+					<div prefix>$</div>
+					<!---->
+					<div suffix>USD</div>
+					<!---->
+				</paper-input>
+				<div class="layout horizontal">
+					<span class="light">LTV&nbsp;</span>[[ltvString]]
+				</div>
+				<paper-input id="create-rate"
+										 name="rate"
+										 xis="iron-input"
+										 xprevent-invalid-input
+										 xallowed-pattern="[0-9.]"
+										 class="align-right"
+										 label="Interest Rate"
+										 value="{{item.rate}}"
+										 xtype="text"
+										 type="number"
+										 min="0"
+										 xmax="99"
+										 xstep="any"
+										 step="0.001"
+										 xlength="55"
+										 xrequired
+										 xmaxlength="5"
+										 xpattern="\d*"
+										 disabled$="[[!isNew]]"
+										 >
+					<!--- ->
+					<div prefix>USD$</div>
+					<!---->
+					<div suffix>%</div>
+					<!---->
+				</paper-input>
+			</div>
+			<!---->
+			<div class="layout vertical wide">
+				<paper-input id="create-title"
+										 name="title"
+										 xclass="align-right"
+										 label="Title"
+										 value="{{item.title}}"
+										 type="text"
+										 char-counter
+										 maxlength="25"
+										 required
+										 disabled$="[[!isNew]]"
+										 >
+					<!--- ->
+					<div prefix>USD$</div>
+					<!--- ->
+					<div suffix>%</div>
+					<!---->
+				</paper-input>
+				<paper-dropdown-menu id="create-type"
+														 name="type"
+														 label="Offering type"
+														 selected-item-label="{{item.dealType}}">
+					<paper-listbox class="dropdown-content">
+						<!---->
+						<template is="dom-repeat" items="[[menuItems]]" xas="item">
+							<paper-item name="[[item]]" label="[[item]]">[[item]]</paper-item>
+						</template>
+						<!---->
+					</paper-listbox>
+				</paper-dropdown-menu>
+        <paper-dialog-scrollable id="scrollable" class="flex">
+					<paper-textarea id="create-description"
+													name="description"
+													label="Description"
+													value="{{item.dealDescription}}"
+													disabled$="[[!isNew]]"
+													>
+					</paper-textarea>
+				</paper-dialog-scrollable>
+      <!---->
+			</div>
+		</div>
+		
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+
+      Polymer({
+        is: 'editor-tab-a-receive',
+				
+				behaviors: [
+					//Polymer.NeonAnimationRunnerBehavior,
+					Polymer.NeonAnimatableBehavior,
+					Polymer.IronResizableBehavior,
+				],
+				
+        properties: {
+					menuItems: Array,
+					tenorHumanized: String,
+					ltvString: String,
+					amtAbbr: String,
+					isNew: Boolean,
+					item: {
+						type: Object,
+						notify: true,
+						value: function() {
+							return {};
+						},
+						/**/
+					},
+					tenor: {
+						type: Number,
+						computed: '_computeTenor(item.originationDate, item.maturityDate)',
+					},
+					ltv: {
+						type: Number,
+						computed: '_computeLtv(item.amount, item.collateral)',
+					},
+					direction: {
+						type: String,
+						computed: '_computeDirection(isNew)',
+					},
+					/** /
+					rate: {
+						type: Number,
+						//observer: '_rateChanged',
+						value: function() {
+							return null;
+						},
+					},
+					rate: Number,
+					title: String,
+					amount: Number,
+					dealType: String,
+					collateral: Number,
+					maturityDate: String,
+					dealDescription: String,
+					originationDate: String,
+					/**/
+			  },
+				
+				attached: function() {
+					this.set('menuItems', [ 'Equity securities', 'Debt securities', 'Loan', ]);
+					this.set('itemBeingChanged' , false);
+				},
+								
+				_computeDirection: function(isNew) {
+					return isNew ? 'string-to-number' : 'number-to-string' ;
+				},
+				
+				_computeTenor: function(maturity, origination) {
+					// Tenor
+					if (maturity && origination) {
+						let start = moment(origination);//moment('2016-10-15');
+						let end   = moment(maturity   );//moment('2018-10-15');
+						let dif   = start.from(end, true  ); // http://momentjs.com/docs/#/displaying/from/
+						let days  = start.diff(end, 'days'); // http://momentjs.com/docs/#/displaying/difference/
+						this.set( 'tenorHumanized' , dif   );
+						return days; // To save (and sort) by days
+					} else {
+						this.set( 'tenorHumanized' , '...' );
+						return null; // To save to database
+					}
+				},
+				
+				_computeLtv: function(amount, collateral) {
+					// LTV
+					if (amount && collateral) {
+						var out = Math.round(parseFloat(amount/collateral*10000))/10000;
+						this.set( 'ltvString' , numeral(out).format('0.0%'));
+						return out; // To save to database
+					} else {
+						this.set( 'ltvString' , '...' );
+						return null; // To save to database
+					}
+				},
+				
+				/** /
+				_rateChanged: function(rate) {
+					// Rate
+					if (!this.itemBeingChanged) {
+						this.set('itemBeingChanged', true); // prevent recursion
+						// Change stuff
+						if (rate) {
+							this.set('rate', Math.round(parseFloat(this.item.rate*10000))/10000 ) ; // covert to number and round
+						}
+						this.set('itemBeingChanged', false);
+					}
+				},
+				/** /
+				
+				_show: function() {
+					//this.update();
+					console.log('isNew', this.isNew);
+					console.log('item', this.item);
+				},
+				/**/
+	
+      });
+    })();
+  </script>
+</dom-module>

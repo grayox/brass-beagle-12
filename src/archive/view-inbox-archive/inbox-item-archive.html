@@ -1,0 +1,172 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/src/custom-elements/avatar-hash.html">
+<link rel="import" href="/src/custom-libraries/moment-js.html">
+
+<link rel="import" href="item-controls.html">
+
+<dom-module id="inbox-item">
+  <template>
+		
+    <style>
+			
+			/* original, iron-flex-layout */
+			
+			:host {
+				--font-size-primary: 16px;
+				--font-size-secondary: 14px;
+				
+				--background-color-hover: #FFFFFF; /* white; */
+				--border-color: #DDDDDD;
+				
+        display: block;
+        @apply --paper-font-common-base;
+        font-family: 'Roboto', 'Lato', sans-serif;
+				text-align: left;
+      
+				@apply --layout-horizontal;
+				@apply --layout-center;
+        cursor: pointer;
+				padding: 16px 22px;
+				border-bottom: 1px solid var(--border-color);
+				
+				color: black;
+				opacity: var(--opacity-normal);
+      }
+			:host(:hover) {
+        background-color: var(--background-color-hover);
+			}
+			/** /
+      :host(.iron-selected) {
+				border: none;
+        outline: 0;
+        background-color: #DDD;
+      }
+			/**/
+      .pad {
+        @apply --layout-flex;
+        @apply --layout-vertical;
+				padding: 0 16px;
+      }
+      .primary {
+        font-size: var(font-size-primary);
+      }
+      .secondary {
+        font-size: var(font-size-secondary);
+      }
+      .dim {
+        opacity: var(--opacity-dim);
+      }
+		</style>
+		
+		<!--- ->
+    Reference: https://github.com/PolymerElements/iron-list/blob/master/demo/selection.html
+		<!--- ->
+		<img class="avatar"
+				 xsrc="[[item.image]]"
+				 src="//lorempixel.com/40/40/"
+				 >
+		<!---->
+		
+		
+		<!-- state -->
+		<state-media media-width="{{mediaWidth}}"></state-media>
+		
+		<avatar-hash message="[[random]]"
+								 xsize="50"
+								 placeholder="/images/user.jpg"
+								 >
+		</avatar-hash>
+		
+		<div class="pad">
+			<div class="secondary dim">[[item.category]]</div>
+			<div class="primary">[[item.city]] [[item.state]]</div>
+			<div class="secondary dim">[[timeAgo]]</div>
+		</div>
+		
+		<item-controls item="[[item]]"></item-controls>
+		
+	</template>
+
+  <script>
+    class InboxItem extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'inbox-item'; }
+
+      static get properties() { return {
+				item: {
+					type: Object,
+					//notify: true,
+					//observer: '_itemChanged',
+				},
+				random: {
+					type: Number,
+					notify: true,
+					value: () => {
+						// return a random number with P digits
+						const P = 10; // number of digits in returned number
+						const x = Math.random();
+						//console.log('x', x);
+						const y = Math.pow(10, P);
+						//console.log('y', y);
+						const z = Math.round(x * y);
+					  //console.log('z', z);
+						return z;
+					},
+				},
+				timeAgo: {
+					type: String,
+					computed: '_computeTimeAgo(item)',
+				},
+			}}
+			
+			constructor() {
+				super();
+			}
+			
+			/**/
+			ready() {
+        super.ready();
+				
+				// add 'tap' handler
+        this.addEventListener('tap', (e) => this._handleTap(e)); // yields desired behavior: fires once only for tapped item in <iron-list>
+        //window.addEventListener('tap', (e) => this._handleTap(e)); // yields undesired behavior: fires once per item in <iron-list>
+  		}
+			/**/
+			
+			/** /
+			_itemChanged(item) {
+				console.log('item', item);
+			}
+			/**/
+			
+			_handleTap(e) {
+				const item = this.item;
+				//console.log('e', e);
+				//console.log('item', this.item);
+				//console.log('item', item);
+				const n = 'inbox-item-tapped';
+				const o = {
+					//bubbles: true,
+					//composed: true,
+					detail: {item: item},
+				};
+				const d = new CustomEvent(n, o);
+				this.dispatchEvent(d);
+			}
+			
+			_computeTimeAgo(item) {
+				//console.log('item', item);
+				const t = item.timestamp;
+				const s = moment(t).fromNow(); // http://momentjs.com/docs/#/displaying/fromnow/
+				return s;
+			}
+			
+		}
+
+    window.customElements.define(InboxItem.is, InboxItem);
+  </script>
+</dom-module>

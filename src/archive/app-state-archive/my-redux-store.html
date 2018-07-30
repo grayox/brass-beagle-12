@@ -1,0 +1,47 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<!---->
+<link rel="import" href="/bower_components/polymer-redux/polymer-redux.html">
+<!---->
+
+<link rel="import" href="my-redux-actions.html">
+<link rel="import" href="my-redux-middleware.html">
+<link rel="import" href="my-redux-reducers.html">
+<link rel="import" href="my-redux-selectors.html">
+
+<!--- ->
+Redux: https://www.captaincodeman.com/2017/07/19/project-structure-for-using-redux-with-polymer-20
+Alternative: "Mixins:
+  https://www.captaincodeman.com/2017/07/06/managing-state-in-polymer-20-beyond-parent-child-binding
+  https://plnkr.co/edit/fLjnqVaZmI8h1r7t954y?p=preview
+<!---->
+
+<script>
+(function() {
+	const MyApp = window.MyApp || {};
+
+  const composeEnhancers = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+    : Redux.compose;
+
+  const enhancer = composeEnhancers(
+    Redux.applyMiddleware(...MyApp.middleware),
+  );
+
+  const store = Redux.createStore(MyApp.rootReducer, enhancer);
+
+  const reduxMixin = PolymerRedux(store);
+
+  // @mixinFunction
+  const actionsMixin = (superClass) => {
+    return class extends reduxMixin(superClass) {
+      static get actions() {
+        return MyApp.actions;
+      }
+    }
+  }
+
+  // @mixinFunction
+  MyApp.ReduxMixin = Polymer.dedupingMixin(actionsMixin);
+
+}());
+</script>
