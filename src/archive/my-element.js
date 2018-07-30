@@ -1,4 +1,8 @@
 // source: https://www.polymer-project.org/3.0/docs/about_30
+// online editing: https://stackblitz.com // font: lato, sans-serif
+// original anon polymer project: https://8y9neu.run.stackblitz.io
+// list of starter projects on stackblitz.com: https://stackblitz.com/@e111077
+// lit-element hello world: https://stackblitz.com/edit/lit-element-hello-world
 
 // Import the PolymerElement base class and html helper
 import {PolymerElement, html} from '@polymer/polymer';
