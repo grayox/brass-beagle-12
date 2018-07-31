@@ -91,13 +91,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- <script src="./node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script> -->
 
     <!-- Load your application shell -->
-    <script type="module" src="src/my-app.js"></script>
+    <!-- <script type="module" src="src/my-app.js"></script> -->
+    <script type="module" src="src/app-main/app-main.js"></script>
 
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {
         margin: 0;
         font-family: "Roboto", "Noto", sans-serif;
+        /* font-family: "Lato", "Roboto", "Noto", sans-serif; */
         line-height: 1.5;
         min-height: 100vh;
         background-color: #eeeeee;
@@ -105,7 +107,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
   </head>
   <body>
-    <my-app></my-app>
+    <!-- <my-app></my-app> -->
+    <app-main></app-main>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>

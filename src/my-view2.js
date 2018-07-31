@@ -11,6 +11,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
 
+// import '@polymer/paper-input/paper-input.js';
+// import '@polymer/paper-input/paper-textarea.js';
+
 class MyView2 extends PolymerElement {
   static get template() {
     return html`
@@ -28,6 +31,9 @@ class MyView2 extends PolymerElement {
         <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
         <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
       </div>
+
+      <!-- <paper-input></paper-input> -->
+      <!-- <paper-textarea></paper-textarea> -->
     `;
   }
 }

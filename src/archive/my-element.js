@@ -5,9 +5,12 @@
 // lit-element hello world: https://stackblitz.com/edit/lit-element-hello-world
 
 // Import the PolymerElement base class and html helper
-import {PolymerElement, html} from '@polymer/polymer';
 
 // Import an element
+
+// import {PolymerElement, html} from '@polymer/polymer';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+
 import '@polymer/paper-checkbox/paper-checkbox.js';
 
 // Define an element class
@@ -31,4 +34,5 @@ class LikeableElement extends PolymerElement {
 }
 
 // Register the element with the browser
-customElements.define('likeable-element', LikeableElement);
+// customElements.define('likeable-element', LikeableElement);
+window.customElements.define('likeable-element', LikeableElement);
